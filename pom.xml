@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.dows.cloud</groupId>
-    <artifactId>dows-account</artifactId>
+    <artifactId>dows-uim</artifactId>
     <version>20220701</version>
     <packaging>pom</packaging>
 
@@ -13,18 +13,15 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <account.version>${project.version}</account.version>
     </properties>
 
     <modules>
-        <module>account-api</module>
-        <module>account-crud</module>
-        <module>account-biz</module>
-        <module>account-boot</module>
-        <module>account-rest</module>
-        <module>account-feign</module>
-        <module>account-pojo</module>
-        <module>account-config</module>
+        <module>dows-account</module>
+        <module>dows-rbac</module>
+        <module>dows-tenant</module>
+        <module>dows-user</module>
+        <module>uim-application</module>
+        <module>dows-member</module>
     </modules>
 
     <dependencyManagement>
@@ -35,32 +32,6 @@
                 <version>20220701</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.dows.cloud</groupId>
-                <artifactId>account-api</artifactId>
-                <version>${account.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.dows.cloud</groupId>
-                <artifactId>account-crud</artifactId>
-                <version>${account.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.dows.cloud</groupId>
-                <artifactId>account-biz</artifactId>
-                <version>${account.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.dows.cloud</groupId>
-                <artifactId>account-rest</artifactId>
-                <version>${account.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.dows.cloud</groupId>
-                <artifactId>account-boot</artifactId>
-                <version>${account.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
