@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>dows-account</artifactId>
+        <groupId>org.dows.cloud</groupId>
+        <version>20220701</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>account-rest</artifactId>
+    <packaging>pom</packaging>
+
+
+    <modules>
+        <module>account-rest-admin</module>
+        <module>account-rest-developer</module>
+        <module>account-rest-tenant</module>
+        <module>account-rest-user</module>
+    </modules>
+</project>
