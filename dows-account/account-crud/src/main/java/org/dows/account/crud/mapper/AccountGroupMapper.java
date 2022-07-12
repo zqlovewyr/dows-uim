@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -28,8 +27,8 @@ public interface AccountGroupMapper extends BaseMapper<AccountGroup> {
 
     @Select("select b.*,t.org_id from account_group t left join account_organization b on t.org_id = b.id " +
             "${ew.customSqlSegment}")
-    IPage<GroupVo> accountGroupList(Page<TenantVo> pageInfo, @Param(Constants.WRAPPER) QueryWrapper<AccountGroup> wrapper);
+    IPage accountGroupList(@Param(Constants.WRAPPER) QueryWrapper<AccountGroup> wrapper);
 
     @Select("@AccountGroupMapper.countByGroup")
-    List<CountDTO> countByGroup(@Param("orgIds") List<Long> groupIdList);
+    List countByGroup(@Param("orgIds") List<Long> groupIdList);
 }

@@ -21,25 +21,23 @@
         </dependency>
 
 
-        <!--        <dependency>
-                    <groupId>org.dows.cloud</groupId>
-                    <artifactId>tenant-api</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.dows.cloud</groupId>
-                    <artifactId>rbac-pojo</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.dows.cloud</groupId>
-                    <artifactId>tenant-pojo</artifactId>
-                </dependency>-->
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>tenant-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>rbac-pojo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>tenant-pojo</artifactId>
+        </dependency>
 
 
         <dependency>
             <groupId>org.dows.framework</groupId>
             <artifactId>crud-mybatis</artifactId>
         </dependency>
-
-
     </dependencies>
 </project>
