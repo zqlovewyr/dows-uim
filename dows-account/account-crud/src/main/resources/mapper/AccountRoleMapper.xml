@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dows.account.crud.mapper.AccountRoleMapper">
+
+    <resultMap type="org.dows.account.crud.entity.AccountRole" id="AccountRoleMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="roleId" column="role_id" jdbcType="INTEGER"/>
+        <result property="roleName" column="role_name" jdbcType="VARCHAR"/>
+        <result property="roleCode" column="role_code" jdbcType="VARCHAR"/>
+        <result property="principalId" column="principal_id" jdbcType="VARCHAR"/>
+        <result property="principalName" column="principal_name" jdbcType="VARCHAR"/>
+        <result property="principalTyp" column="principal_typ" jdbcType="INTEGER"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+        <result property="ver" column="ver" jdbcType="INTEGER"/>
+        <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+        <result property="dt" column="dt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+</mapper>

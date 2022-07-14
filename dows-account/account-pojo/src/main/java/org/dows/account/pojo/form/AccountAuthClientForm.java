@@ -10,7 +10,7 @@ import java.io.Serializable;
 /**
  * @description: 账号-授权客户端(AccountAuthClient)Form类
  * @author: VX:PN15855012581
- * @create: 2021-09-10 15:41:22
+ * @create: 2022-07-14 21:33:14
  */
 @Data
 @ToString
@@ -21,7 +21,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @ApiModel(value = "AccountAuthClient对象", description = "账号-授权客户端")
 public class AccountAuthClientForm implements Serializable {
-    private static final long serialVersionUID = -62207193450275512L;
+    private static final long serialVersionUID = 594288440147812214L;
 
     @ApiModelProperty(value = "app secret")
     private String appSecret;

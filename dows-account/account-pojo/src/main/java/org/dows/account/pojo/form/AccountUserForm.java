@@ -10,7 +10,7 @@ import java.io.Serializable;
 /**
  * @description: 账号-用户维度信息(AccountUser)Form类
  * @author: VX:PN15855012581
- * @create: 2021-09-10 15:41:38
+ * @create: 2022-07-14 21:33:56
  */
 @Data
 @ToString
@@ -21,12 +21,12 @@ import java.io.Serializable;
 @NoArgsConstructor
 @ApiModel(value = "AccountUser对象", description = "账号-用户维度信息")
 public class AccountUserForm implements Serializable {
-    private static final long serialVersionUID = 619047435161979243L;
+    private static final long serialVersionUID = 107772338009179556L;
 
     @ApiModelProperty(value = "账号id")
-    private Long accountId;
+    private String accountId;
     @ApiModelProperty(value = "用户ID")
-    private Long userId;
+    private String userId;
     @ApiModelProperty(value = "租户ID")
     private String tenantId;
 }

@@ -1,19 +1,16 @@
 package org.dows.account.crud.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Update;
 import org.dows.account.crud.entity.AccountIdentifier;
+import org.dows.framework.crud.mybatis.MybatisCrudMapper;
 
 /**
  * 账号-标识(AccountIdentifier)
  *
  * @author VX:PN15855012581
- * @since 2021-09-10 15:41:24
+ * @since 2022-07-14 21:33:23
  */
 @Mapper
-public interface AccountIdentifierMapper extends BaseMapper<AccountIdentifier> {
+public interface AccountIdentifierMapper extends MybatisCrudMapper<AccountIdentifier> {
 
-    @Update("@AccountIdentifierMapper.updateAccountIdentifier")
-    int updateAccountIdentifier(AccountIdentifier accountIdentifier);
 }

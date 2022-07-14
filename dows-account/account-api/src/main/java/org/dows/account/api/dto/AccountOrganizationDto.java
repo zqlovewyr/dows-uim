@@ -12,7 +12,7 @@ import java.util.Date;
 /**
  * @description: 账号-组织架构维度信息(AccountOrganization)DTO类
  * @author: VX:PN15855012581
- * @create: 2021-08-25 14:24:47
+ * @create: 2022-07-14 21:33:39
  */
 @Data
 @ToString
@@ -23,65 +23,40 @@ import java.util.Date;
 @NoArgsConstructor
 @ApiModel(value = "AccountOrganization对象", description = "账号-组织架构维度信息")
 public class AccountOrganizationDto implements Serializable {
-    private static final long serialVersionUID = -75429587271706338L;
+    private static final long serialVersionUID = 263514608676855738L;
 
-    /**
-     * 账号-权限ID
-     */
-    @ApiModelProperty(value = "账号-权限ID")
-    //主键ID
-    //@JsonSerialize(using= ToStringSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @ApiModelProperty(value = "数据库自增ID")
     private Long id;
-    /**
-     * 父ID
-     */
+    @ApiModelProperty(value = "分布式ID")
+    private String orgId;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty(value = "父ID")
     private Long orgPid;
-    /**
-     * 组code
-     */
-    @ApiModelProperty(value = "组code")
-    private String orgCode;
-    /**
-     * 组织架构名
-     */
     @ApiModelProperty(value = "组织架构名")
     private String orgName;
-    /**
-     * 组织类型(0:group组,1:element元素)
-     */
+    @ApiModelProperty(value = "组code")
+    private String orgCode;
+    @ApiModelProperty(value = "名称首字母")
+    private String nameLetter;
     @ApiModelProperty(value = "组织类型(0:group组,1:element元素)")
-    private Integer orgTyp;
-    /**
-     * 组织架构ICON
-     */
+    private Integer orgType;
     @ApiModelProperty(value = "组织架构ICON")
     private String orgIcon;
-    /**
-     * 排序
-     */
     @ApiModelProperty(value = "排序")
     private Integer sorted;
-    /**
-     * 租户ID
-     */
     @ApiModelProperty(value = "租户ID")
     private String tenantId;
-    /**
-     * 乐观锁, 默认: 0
-     */
+    @ApiModelProperty(value = "关联的主体公司")
+    private String companyId;
+    @ApiModelProperty(value = "状态")
+    private Integer status;
+    @ApiModelProperty(value = "描述")
+    private String descr;
     @ApiModelProperty(value = "乐观锁, 默认: 0")
     private Integer ver;
-    /**
-     * 时间戳/创建时间
-     */
     @ApiModelProperty(value = "时间戳/创建时间")
     private Date dt;
-    /**
-     * 是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0
-     */
     @ApiModelProperty(value = "是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
 
