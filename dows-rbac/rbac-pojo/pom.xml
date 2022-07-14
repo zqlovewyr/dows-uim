@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>dows-rbac</artifactId>
+        <groupId>org.dows.cloud</groupId>
+        <version>20220701</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>rbac-pojo</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.dows.framework</groupId>
+            <artifactId>crud-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>2.0.2</version>
+        </dependency>
+    </dependencies>
+</project>
