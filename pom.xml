@@ -2,39 +2,27 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>dows-parent</artifactId>
+        <groupId>org.dows.framework</groupId>
+        <version>20220701</version>
+    </parent>
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.dows.cloud</groupId>
     <artifactId>dows-uim</artifactId>
     <version>20220701</version>
     <packaging>pom</packaging>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-    </properties>
-
     <modules>
         <module>dows-account</module>
         <module>dows-rbac</module>
         <module>dows-tenant</module>
+        <module>dows-company</module>
         <module>dows-user</module>
         <module>uim-application</module>
         <module>dows-member</module>
+        <module>dows-tenant</module>
     </modules>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.dows.framework</groupId>
-                <artifactId>dows-dependencies</artifactId>
-                <version>20220701</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
 
 </project>

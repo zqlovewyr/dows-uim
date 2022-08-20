@@ -15,10 +15,10 @@
             <groupId>org.dows.cloud</groupId>
             <artifactId>account-crud</artifactId>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>auth-api</artifactId>
-        </dependency>
+        </dependency>-->
 
         <!--        <dependency>
                     <groupId>org.dows.cloud</groupId>

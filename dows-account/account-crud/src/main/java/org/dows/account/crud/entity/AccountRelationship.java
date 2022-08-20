@@ -48,23 +48,23 @@ public class AccountRelationship implements CrudEntity {
     private String vector;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("推荐账号ID, 没有推荐人则为 -1")
-    private Long fromAccountId;
+    private String fai;
     @ApiModelProperty("推荐账号名")
-    private String fromAccountName;
+    private String fan;
     @ApiModelProperty("推荐账号手机")
-    private String fromAccountPhone;
+    private String fap;
     @ApiModelProperty("推荐用户ID")
-    private String formUserId;
+    private String fui;
     @ApiModelProperty("被推荐账号ID")
-    private String toAccountId;
+    private String tai;
     @ApiModelProperty("被推荐账号名")
-    private String toAccountName;
+    private String tan;
     @ApiModelProperty("被推荐账号手机")
-    private String toAccountPhone;
+    private String tap;
     @ApiModelProperty("被推荐用户ID")
-    private String toUserId;
-    @ApiModelProperty("租户ID")
-    private String tenantId;
+    private String tui;
+    @ApiModelProperty("应用ID")
+    private String appId;
     @JsonIgnore
     private Integer ver;
     @TableField(fill = FieldFill.INSERT)

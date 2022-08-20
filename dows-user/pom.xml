@@ -2,41 +2,28 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>dows-uim</artifactId>
+        <groupId>org.dows.cloud</groupId>
+        <version>20220701</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.dows.cloud</groupId>
-    <artifactId>dows-account</artifactId>
-    <version>20220701</version>
+    <artifactId>dows-user</artifactId>
     <packaging>pom</packaging>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <account.version>${project.version}</account.version>
-    </properties>
-
     <modules>
-        <module>account-api</module>
-        <module>account-crud</module>
-        <module>account-biz</module>
-        <module>account-boot</module>
-        <module>account-rest</module>
-        <module>account-feign</module>
-        <module>account-pojo</module>
-        <module>account-config</module>
+        <module>user-api</module>
+        <module>user-crud</module>
+        <module>user-biz</module>
+        <module>user-boot</module>
+        <module>user-rest</module>
+        <module>user-feign</module>
+        <module>user-pojo</module>
+        <module>user-config</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.dows.framework</groupId>
-                <artifactId>dows-dependencies</artifactId>
-                <version>20220701</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
             <dependency>
                 <groupId>org.dows.cloud</groupId>
                 <artifactId>account-api</artifactId>
@@ -64,6 +51,5 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
 
 </project>

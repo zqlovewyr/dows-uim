@@ -90,14 +90,4 @@ public class RbacPermission implements CrudEntity {
     private Long categoryId;
 
     private Integer isPlatform;
-
-    /**
-     * 获取主键值
-     *
-     * @return 主键值
-     */
-//    @Override
-//    public Serializable pkVal() {
-//        return this.id;
-//    }
 }

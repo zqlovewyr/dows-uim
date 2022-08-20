@@ -1,6 +1,7 @@
 package org.dows.account.biz;
 
 import lombok.RequiredArgsConstructor;
+import org.dows.account.api.dto.AccountInfo;
 import org.dows.account.crud.service.AccountInstanceService;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,11 @@ import org.springframework.stereotype.Service;
  */
 @RequiredArgsConstructor
 @Service
-public class AccountInstanceBiz {
+public class AccountBiz {
     private final AccountInstanceService service;
 
+    public AccountInfo findAccount(String username) {
+
+        return new AccountInfo();
+    }
 }

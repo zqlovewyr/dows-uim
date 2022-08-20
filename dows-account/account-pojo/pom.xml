@@ -15,10 +15,10 @@
                     <groupId>org.dows.cloud</groupId>
                     <artifactId>rbac-pojo</artifactId>
                 </dependency>-->
-        <dependency>
+<!--        <dependency>
             <groupId>org.dows.framework</groupId>
             <artifactId>framework-validate</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.dows.framework</groupId>
             <artifactId>crud-api</artifactId>

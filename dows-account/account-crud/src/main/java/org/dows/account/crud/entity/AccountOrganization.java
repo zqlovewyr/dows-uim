@@ -33,11 +33,12 @@ public class AccountOrganization implements CrudEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("数据库自增ID")
     private Long id;
-    @ApiModelProperty("分布式ID")
-    private String orgId;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("父ID")
-    private Long orgPid;
+    private Long pid;
+
+    @ApiModelProperty("分布式ID")
+    private String orgId;
     @ApiModelProperty("组织架构名")
     private String orgName;
     @ApiModelProperty("组code")
@@ -50,6 +51,8 @@ public class AccountOrganization implements CrudEntity {
     private String orgIcon;
     @ApiModelProperty("排序")
     private Integer sorted;
+    @ApiModelProperty("应用ID")
+    private String appId;
     @ApiModelProperty("租户ID")
     private String tenantId;
     @ApiModelProperty("关联的主体公司")

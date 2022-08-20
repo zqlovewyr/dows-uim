@@ -21,10 +21,7 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>org.dows.cloud</groupId>
-            <artifactId>tenant-api</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>rbac-pojo</artifactId>
