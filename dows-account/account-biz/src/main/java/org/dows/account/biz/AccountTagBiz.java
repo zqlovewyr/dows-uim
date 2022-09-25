@@ -1,7 +1,7 @@
 package org.dows.account.biz;
 
 import lombok.RequiredArgsConstructor;
-import org.dows.account.crud.service.AccountTagService;
+import org.dows.account.service.AccountTagService;
 import org.springframework.stereotype.Service;
 
 /**

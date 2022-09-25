@@ -2,8 +2,8 @@ package org.dows.account.rest.admin.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dows.account.crud.entity.AccountInstance;
-import org.dows.account.crud.service.AccountInstanceService;
+import org.dows.account.entity.AccountInstance;
+import org.dows.account.service.AccountInstanceService;
 import org.dows.account.rest.admin.PrincipalRoleRest;
 import org.springframework.web.bind.annotation.RestController;
 

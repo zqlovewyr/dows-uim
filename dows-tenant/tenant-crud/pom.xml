@@ -11,4 +11,16 @@
     <artifactId>tenant-crud</artifactId>
 
 
+    <dependencies>
+
+
+
+
+
+        <dependency>
+            <groupId>org.dows.framework</groupId>
+            <artifactId>crud-mybatis</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>

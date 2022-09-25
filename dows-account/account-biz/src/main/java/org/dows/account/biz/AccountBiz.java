@@ -2,7 +2,7 @@ package org.dows.account.biz;
 
 import lombok.RequiredArgsConstructor;
 import org.dows.account.api.dto.AccountInfo;
-import org.dows.account.crud.service.AccountInstanceService;
+import org.dows.account.service.AccountInstanceService;
 import org.springframework.stereotype.Service;
 
 /**

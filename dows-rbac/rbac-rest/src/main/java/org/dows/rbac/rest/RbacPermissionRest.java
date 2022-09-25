@@ -8,10 +8,10 @@ import org.dows.framework.api.Response;
 import org.dows.rbac.api.RbacPermissionApi;
 import org.dows.rbac.pojo.form.PermTypeQuery;
 import org.dows.rbac.pojo.form.PermUpdate;
-import org.dows.rbac.pojo.query.PermCateQuery;
-import org.dows.rbac.pojo.query.PermListQuery;
-import org.dows.rbac.pojo.vo.PermSimpleVo;
-import org.dows.rbac.pojo.vo.PermVo;
+import org.dows.rbac.query.PermCateQuery;
+import org.dows.rbac.query.PermListQuery;
+import org.dows.rbac.vo.PermSimpleVo;
+import org.dows.rbac.vo.PermVo;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

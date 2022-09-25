@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.dows.rbac.crud.mapper.RabcDataMapper">
+<mapper namespace="org.dows.rbac.mapper.RabcDataMapper">
 
-    <resultMap type="org.dows.rbac.crud.entity.RabcData" id="RabcDataMap">
+    <resultMap type="org.dows.rbac.entity.RabcData" id="RabcDataMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="resourceId" column="resource_id" jdbcType="VARCHAR"/>
         <result property="resourcePid" column="resource_pid" jdbcType="INTEGER"/>

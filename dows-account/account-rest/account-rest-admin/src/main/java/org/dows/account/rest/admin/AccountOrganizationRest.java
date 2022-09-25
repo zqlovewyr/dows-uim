@@ -2,7 +2,6 @@ package org.dows.account.rest.admin;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.dows.account.form.*;
 import org.dows.rbac.vo.GroupVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -10,7 +9,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.dows.account.api.AccountOrganizationApi;
 import org.dows.account.pojo.IdsUpdate;
 import org.dows.account.pojo.form.BatchUpdateStatusForm;
-import org.dows.account.pojo.vo.AccountVo;
+import org.dows.account.vo.AccountVo;
 import org.dows.framework.api.Response;
 import org.springframework.web.bind.annotation.*;
 

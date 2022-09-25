@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.dows.account.crud.mapper.AccountInstanceMapper">
+<mapper namespace="org.dows.account.mapper.AccountInstanceMapper">
 
-    <resultMap type="org.dows.account.crud.entity.AccountInstance" id="AccountInstanceMap">
+    <resultMap type="org.dows.account.entity.AccountInstance" id="AccountInstanceMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="accountId" column="account_id" jdbcType="VARCHAR"/>
         <result property="accountName" column="account_name" jdbcType="VARCHAR"/>

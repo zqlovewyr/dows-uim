@@ -4,8 +4,8 @@ import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.dto.UserDto;
-import org.dows.account.crud.entity.AccountIdentifier;
-import org.dows.account.crud.service.AccountIdentifierService;
+import org.dows.account.entity.AccountIdentifier;
+import org.dows.account.service.AccountIdentifierService;
 import org.dows.account.rest.admin.AccountIdentifierRest;
 import org.springframework.web.bind.annotation.RestController;
 

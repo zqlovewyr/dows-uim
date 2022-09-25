@@ -1,7 +1,7 @@
 package org.dows.rbac.biz;
 
 import lombok.RequiredArgsConstructor;
-import org.dows.rbac.crud.service.RbacMenuService;
+import org.dows.rbac.service.RbacMenuService;
 import org.springframework.stereotype.Service;
 
 /**

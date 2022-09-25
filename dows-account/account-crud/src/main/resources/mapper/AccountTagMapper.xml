@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.dows.account.crud.mapper.AccountTagMapper">
+<mapper namespace="org.dows.account.mapper.AccountTagMapper">
 
-    <resultMap type="org.dows.account.crud.entity.AccountTag" id="AccountTagMap">
+    <resultMap type="org.dows.account.entity.AccountTag" id="AccountTagMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="accountId" column="account_id" jdbcType="INTEGER"/>
         <result property="tagCategory" column="tag_category" jdbcType="VARCHAR"/>
