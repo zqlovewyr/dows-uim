@@ -21,7 +21,6 @@
         <module>dows-company</module>
         <module>dows-user</module>
         <module>dows-member</module>
-        <module>dows-tenant</module>
         <module>uim-application</module>
     </modules>
 
