@@ -18,7 +18,6 @@
         <module>dows-account</module>
         <module>dows-rbac</module>
         <module>dows-tenant</module>
-        <module>dows-company</module>
         <module>dows-user</module>
         <module>dows-member</module>
         <module>uim-application</module>
