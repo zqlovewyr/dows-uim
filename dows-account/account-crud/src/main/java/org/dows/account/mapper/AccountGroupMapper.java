@@ -1,16 +1,17 @@
 package org.dows.account.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.dows.account.entity.AccountGroup;
 import org.dows.framework.crud.mybatis.MybatisCrudMapper;
+import org.dows.account.entity.AccountGroup;
 
 /**
- * 账号-账号组维度信息(AccountGroup)
+ * 账号-组(AccountGroup)表数据库访问层
  *
- * @author VX:PN15855012581
- * @since 2022-07-14 21:33:19
+ * @author lait.zhang
+ * @since 2022-10-22 10:07:24
  */
 @Mapper
 public interface AccountGroupMapper extends MybatisCrudMapper<AccountGroup> {
 
 }
+

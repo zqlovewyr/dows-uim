@@ -1,19 +1,20 @@
 package org.dows.account.service.impl;
 
-
-import org.dows.account.entity.AccountTenant;
-import org.dows.account.mapper.AccountTenantMapper;
 import org.dows.account.service.AccountTenantService;
 import org.dows.framework.crud.mybatis.MybatisCrudServiceImpl;
+import org.dows.account.entity.AccountTenant;
+import org.dows.account.mapper.AccountTenantMapper;
 import org.springframework.stereotype.Service;
 
+
 /**
- * 账号-租户维度信息(AccountTenant)表服务实现类
+ * 账号-租户(AccountTenant)表服务实现类
  *
- * @author VX:PN15855012581
- * @since 2022-07-14 21:33:48
+ * @author lait.zhang
+ * @since 2022-10-22 10:07:29
  */
-@Service
+@Service("accountTenantService")
 public class AccountTenantServiceImpl extends MybatisCrudServiceImpl<AccountTenantMapper, AccountTenant> implements AccountTenantService {
 
 }
+

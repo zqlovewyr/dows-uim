@@ -12,13 +12,11 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.dows.framework.crud.mybatis.CrudEntity;
 
-import java.util.Date;
-
 /**
- * 账号-标识(AccountIdentifier)表实体类
+ * 账号标识(AccountIdentifier)实体类
  *
- * @author VX:PN15855012581
- * @since 2022-07-14 21:33:24
+ * @author lait.zhang
+ * @since 2022-10-22 10:07:25
  */
 @SuppressWarnings("serial")
 @Data
@@ -28,27 +26,28 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "AccountIdentifier对象", description = "账号-标识")
+@ApiModel(value = "AccountIdentifier对象", description = "账号标识")
 public class AccountIdentifier implements CrudEntity {
+    private static final long serialVersionUID = -22064573657198857L;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @ApiModelProperty("数据库自增ID")
+    @ApiModelProperty("自增主键ID")
     private Long id;
-    @ApiModelProperty("账号ID/用户ID/会员ID/商户ID")
+
+    @ApiModelProperty("账号ID")
     private String accountId;
-    @ApiModelProperty("账号唯一标识如：登录账号、邮箱地址、手机号码、QQ号码、微信号、微博号；")
+
+    @ApiModelProperty("识别标识:身份唯一标识，如：登录账号、邮箱地址、手机号码")
     private String identifier;
+
     @ApiModelProperty("应用ID")
     private String appId;
-    @ApiModelProperty("标识类型【IDENTITYTYPE】：0：系统账号、1：邮箱、2：手机")
-    private Integer identifierType;
-    @ApiModelProperty("状态，锁定/异常等 ")
-    private Integer status;
-    @JsonIgnore
-    private Integer ver;
-    @TableField(fill = FieldFill.INSERT)
-    private Date dt;
+
     @JsonIgnore
     @TableLogic
     @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty("是否逻辑删除")
     private Boolean deleted;
+
 }
+

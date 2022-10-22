@@ -1,15 +1,16 @@
 package org.dows.account.service;
 
-
-import org.dows.account.entity.AccountInstance;
 import org.dows.framework.crud.mybatis.MybatisCrudService;
+import org.dows.account.entity.AccountInstance;
+
 
 /**
- * 账号-实例维度信息(AccountInstance)表服务接口
+ * 账号-实例(AccountInstance)表服务接口
  *
- * @author VX:PN15855012581
- * @since 2022-07-14 21:33:25
+ * @author lait.zhang
+ * @since 2022-10-22 10:07:26
  */
 public interface AccountInstanceService extends MybatisCrudService<AccountInstance> {
 
 }
+

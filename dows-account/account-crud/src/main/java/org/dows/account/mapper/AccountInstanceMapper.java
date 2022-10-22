@@ -1,16 +1,17 @@
 package org.dows.account.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.dows.account.entity.AccountInstance;
 import org.dows.framework.crud.mybatis.MybatisCrudMapper;
+import org.dows.account.entity.AccountInstance;
 
 /**
- * 账号-实例维度信息(AccountInstance)
+ * 账号-实例(AccountInstance)表数据库访问层
  *
- * @author VX:PN15855012581
- * @since 2022-07-14 21:33:27
+ * @author lait.zhang
+ * @since 2022-10-22 10:07:26
  */
 @Mapper
 public interface AccountInstanceMapper extends MybatisCrudMapper<AccountInstance> {
 
 }
+

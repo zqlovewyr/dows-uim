@@ -1,41 +1,55 @@
 package org.dows.account.form;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
- * @description: 账号-主体角色维度信息(AccountRole)Form类
- * @author: VX:PN15855012581
- * @create: 2022-07-14 21:33:42
+ * 账号-角色(AccountRole)表单
+ *
+ * @author lait.zhang
+ * @since 2022-10-22 10:07:29
  */
+@SuppressWarnings("serial")
 @Data
 @ToString
 @Builder
-@EqualsAndHashCode
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "AccountRole对象", description = "账号-主体角色维度信息")
+@ApiModel(value = "AccountRoleForm 表单对象", description = "账号-角色")
 public class AccountRoleForm implements Serializable {
-    private static final long serialVersionUID = 906393751037918609L;
+    private static final long serialVersionUID = -76779896293547364L;
+    @JsonIgnore
+    private Long id;
 
-    @ApiModelProperty(value = "角色ID")
-    private Long roleId;
-    @ApiModelProperty(value = "角色名")
+    @ApiModelProperty("角色ID")
+    private String roleId;
+
+    @ApiModelProperty("角色名")
     private String roleName;
-    @ApiModelProperty(value = "角色码")
+
+    @ApiModelProperty("角色码")
     private String roleCode;
-    @ApiModelProperty(value = "主体ID(账号ID/组ID)")
+
+    @ApiModelProperty("主体ID")
     private String principalId;
-    @ApiModelProperty(value = "主体名称")
+
+    @ApiModelProperty("主体名称")
     private String principalName;
-    @ApiModelProperty(value = "主体类型(0：账号，1：组)")
-    private Integer principalTyp;
-    @ApiModelProperty(value = "租户ID")
+
+    @ApiModelProperty("租户ID")
     private String tenantId;
+
+    @JsonIgnore
+    private Boolean deleted;
+
+
 }
 

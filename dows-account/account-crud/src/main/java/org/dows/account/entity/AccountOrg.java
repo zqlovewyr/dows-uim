@@ -13,10 +13,10 @@ import lombok.experimental.Accessors;
 import org.dows.framework.crud.mybatis.CrudEntity;
 
 /**
- * 账号-用户(实名认证后)(AccountUser)实体类
+ * 账号-组织架构(AccountOrg)实体类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:07:30
+ * @since 2022-10-22 10:07:27
  */
 @SuppressWarnings("serial")
 @Data
@@ -26,30 +26,46 @@ import org.dows.framework.crud.mybatis.CrudEntity;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "AccountUser对象", description = "账号-用户(实名认证后)")
-public class AccountUser implements CrudEntity {
-    private static final long serialVersionUID = 387640825042054815L;
+@ApiModel(value = "AccountOrg对象", description = "账号-组织架构")
+public class AccountOrg implements CrudEntity {
+    private static final long serialVersionUID = 868716538767705207L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("自增主键ID")
     private Long id;
 
-    @ApiModelProperty("账号ID")
-    private String accountId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @ApiModelProperty("父ID(pid空时为总店)")
+    private Long pid;
 
-    @ApiModelProperty("用户ID")
-    private String userId;
+    @ApiModelProperty("实体域组织机构ID")
+    private String orgId;
+
+    @ApiModelProperty("组织名称")
+    private String orgName;
+
+    @ApiModelProperty("名称首字母")
+    private String nameLetters;
+
+    @ApiModelProperty("组织code")
+    private String orgCode;
+
+    @ApiModelProperty("头像")
+    private String profile;
+
+    @ApiModelProperty("描述")
+    private String descr;
 
     @ApiModelProperty("应用ID")
     private String appId;
 
     @ApiModelProperty("租户ID")
-    private String tentantId;
+    private String tenantId;
 
     @JsonIgnore
     @TableLogic
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty("是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
+    @ApiModelProperty("是否逻辑删除")
     private Boolean deleted;
 
 }

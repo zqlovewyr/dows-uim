@@ -1,35 +1,49 @@
 package org.dows.account.form;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
- * @description: 账号-租户维度信息(AccountTenant)Form类
- * @author: VX:PN15855012581
- * @create: 2022-07-14 21:33:52
+ * 账号-租户(AccountTenant)表单
+ *
+ * @author lait.zhang
+ * @since 2022-10-22 10:07:30
  */
+@SuppressWarnings("serial")
 @Data
 @ToString
 @Builder
-@EqualsAndHashCode
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "AccountTenant对象", description = "账号-租户维度信息")
+@ApiModel(value = "AccountTenantForm 表单对象", description = "账号-租户")
 public class AccountTenantForm implements Serializable {
-    private static final long serialVersionUID = -12840102471239270L;
+    private static final long serialVersionUID = 651142649791672247L;
+    @JsonIgnore
+    private Long id;
 
-    @ApiModelProperty(value = "账号ID")
+    @ApiModelProperty("账号ID")
     private String accountId;
-    @ApiModelProperty(value = "用户ID")
+
+    @ApiModelProperty("用户ID")
     private String userId;
-    @ApiModelProperty(value = "租户ID")
+
+    @ApiModelProperty("商户号")
+    private String merchantNo;
+
+    @ApiModelProperty("租户ID")
     private String tenantId;
-    @ApiModelProperty(value = "顺序")
-    private Integer sorted;
+
+    @JsonIgnore
+    private Boolean deleted;
+
+
 }
 

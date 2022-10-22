@@ -12,13 +12,11 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.dows.framework.crud.mybatis.CrudEntity;
 
-import java.util.Date;
-
 /**
- * 账号-租户维度信息(AccountTenant)表实体类
+ * 账号-租户(AccountTenant)实体类
  *
- * @author VX:PN15855012581
- * @since 2022-07-14 21:33:50
+ * @author lait.zhang
+ * @since 2022-10-22 10:07:29
  */
 @SuppressWarnings("serial")
 @Data
@@ -28,25 +26,31 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "AccountTenant对象", description = "账号-租户维度信息")
+@ApiModel(value = "AccountTenant对象", description = "账号-租户")
 public class AccountTenant implements CrudEntity {
+    private static final long serialVersionUID = 675997814460988599L;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @ApiModelProperty("数据库自增主键ID")
+    @ApiModelProperty("自增主键ID")
     private Long id;
+
     @ApiModelProperty("账号ID")
     private String accountId;
+
     @ApiModelProperty("用户ID")
     private String userId;
+
+    @ApiModelProperty("商户号")
+    private String merchantNo;
+
     @ApiModelProperty("租户ID")
     private String tenantId;
-    @ApiModelProperty("顺序")
-    private Integer sorted;
-    @JsonIgnore
-    private Integer ver;
-    @TableField(fill = FieldFill.INSERT)
-    private Date dt;
+
     @JsonIgnore
     @TableLogic
     @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty("是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
+
 }
+

@@ -21,7 +21,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>rbac-pojo</artifactId>

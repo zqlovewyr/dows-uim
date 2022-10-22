@@ -12,13 +12,11 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.dows.framework.crud.mybatis.CrudEntity;
 
-import java.util.Date;
-
 /**
- * 账号-账号组维度信息(AccountGroup)表实体类
+ * 账号-组(AccountGroup)实体类
  *
- * @author VX:PN15855012581
- * @since 2022-07-14 21:33:19
+ * @author lait.zhang
+ * @since 2022-10-22 10:07:24
  */
 @SuppressWarnings("serial")
 @Data
@@ -28,45 +26,37 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "AccountGroup对象", description = "账号-账号组维度信息")
+@ApiModel(value = "AccountGroup对象", description = "账号-组")
 public class AccountGroup implements CrudEntity {
+    private static final long serialVersionUID = -52611511793608170L;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @ApiModelProperty("数据库主键自增ID")
+    @ApiModelProperty("自增主键ID")
     private Long id;
-    @ApiModelProperty("分布式ID")
-    private String groupId;
-    @ApiModelProperty("组织架构ID")
+
+    @ApiModelProperty("组织ID")
     private String orgId;
-    @ApiModelProperty("岗位名")
+
+    @ApiModelProperty("组名")
     private String orgName;
-    @ApiModelProperty("岗位code")
-    private String orgCode;
-    @ApiModelProperty("icon")
-    private String orgIcon;
-    @ApiModelProperty("租户ID")
-    private String tenantId;
+
     @ApiModelProperty("账号ID")
     private String accountId;
+
     @ApiModelProperty("账号名")
     private String accountName;
-    @ApiModelProperty("用户ID")
-    private String userId;
-    @ApiModelProperty("用户真实姓名")
-    private String userName;
-    @ApiModelProperty("用户邮箱")
-    private String userEmail;
-    @ApiModelProperty("用户电话")
-    private String userPhone;
-    @ApiModelProperty("组编号|工号")
-    private Integer groupNo;
-    @ApiModelProperty("描述")
-    private String descr;
-    @JsonIgnore
-    private Integer ver;
-    @TableField(fill = FieldFill.INSERT)
-    private Date dt;
+
+    @ApiModelProperty("应用ID")
+    private String appId;
+
+    @ApiModelProperty("租户ID")
+    private String tenantId;
+
     @JsonIgnore
     @TableLogic
     @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty("是否逻辑删除")
     private Boolean deleted;
+
 }
+

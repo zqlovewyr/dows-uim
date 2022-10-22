@@ -11,10 +11,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 账号-组(AccountGroup)表单
+ * 账号-组织架构(AccountOrg)表单
  *
  * @author lait.zhang
- * @since 2022-10-22 10:07:25
+ * @since 2022-10-22 10:07:28
  */
 @SuppressWarnings("serial")
 @Data
@@ -23,23 +23,32 @@ import java.util.Date;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "AccountGroupForm 表单对象", description = "账号-组")
-public class AccountGroupForm implements Serializable {
-    private static final long serialVersionUID = -76210584057500890L;
+@ApiModel(value = "AccountOrgForm 表单对象", description = "账号-组织架构")
+public class AccountOrgForm implements Serializable {
+    private static final long serialVersionUID = -82876957368962100L;
     @JsonIgnore
     private Long id;
 
-    @ApiModelProperty("组织ID")
+    @ApiModelProperty("父ID(pid空时为总店)")
+    private Long pid;
+
+    @ApiModelProperty("实体域组织机构ID")
     private String orgId;
 
-    @ApiModelProperty("组名")
+    @ApiModelProperty("组织名称")
     private String orgName;
 
-    @ApiModelProperty("账号ID")
-    private String accountId;
+    @ApiModelProperty("名称首字母")
+    private String nameLetters;
 
-    @ApiModelProperty("账号名")
-    private String accountName;
+    @ApiModelProperty("组织code")
+    private String orgCode;
+
+    @ApiModelProperty("头像")
+    private String profile;
+
+    @ApiModelProperty("描述")
+    private String descr;
 
     @ApiModelProperty("应用ID")
     private String appId;

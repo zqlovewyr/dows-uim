@@ -1,45 +1,58 @@
 package org.dows.account.form;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
- * @description: 账号-实例维度信息(AccountInstance)Form类
- * @author: VX:PN15855012581
- * @create: 2022-07-14 21:33:29
+ * 账号-实例(AccountInstance)表单
+ *
+ * @author lait.zhang
+ * @since 2022-10-22 10:07:26
  */
+@SuppressWarnings("serial")
 @Data
 @ToString
 @Builder
-@EqualsAndHashCode
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "AccountInstance对象", description = "账号-实例维度信息")
+@ApiModel(value = "AccountInstanceForm 表单对象", description = "账号-实例")
 public class AccountInstanceForm implements Serializable {
-    private static final long serialVersionUID = -11799921866059343L;
+    private static final long serialVersionUID = 752274823268208486L;
+    @JsonIgnore
+    private Long id;
 
-    @ApiModelProperty(value = "分布式ID")
+    @ApiModelProperty("账号ID")
     private String accountId;
-    @ApiModelProperty(value = "账号名")
+
+    @ApiModelProperty("账号名")
     private String accountName;
-    @ApiModelProperty(value = "账号密码")
-    private String accountPwd;
-    @ApiModelProperty(value = "账号类型")
-    private Integer accountType;
-    @ApiModelProperty(value = "昵称")
-    private String nickName;
-    @ApiModelProperty(value = "头像")
+
+    @ApiModelProperty("账号密码")
+    private String password;
+
+    @ApiModelProperty("头像")
     private String avatar;
-    @ApiModelProperty(value = "应用 id")
-    private String tenantId;
-    @ApiModelProperty(value = "状态，锁定/异常等 ")
-    private Integer status;
-    @ApiModelProperty(value = "来源, 推广统计用")
+
+    @ApiModelProperty("注册来源, 推广统计用")
     private String source;
+
+    @ApiModelProperty("账号绑定的唯一手机号(可更换)")
+    private String phone;
+
+    @ApiModelProperty("应用ID")
+    private String appId;
+
+    @JsonIgnore
+    private Boolean deleted;
+
+
 }
 
