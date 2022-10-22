@@ -15,10 +15,10 @@ import org.dows.framework.crud.mybatis.CrudEntity;
 import java.util.Date;
 
 /**
- * 账号-组(AccountGroup)实体类
+ * 用户-联系人(UserContact)实体类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:07:24
+ * @since 2022-10-22 10:31:12
  */
 @SuppressWarnings("serial")
 @Data
@@ -28,36 +28,31 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "AccountGroup对象", description = "账号-组")
-public class AccountGroup implements CrudEntity {
-    private static final long serialVersionUID = -52611511793608170L;
+@ApiModel(value = "UserContact对象", description = "用户-联系人")
+public class UserContact implements CrudEntity {
+    private static final long serialVersionUID = 507574490689877369L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @ApiModelProperty("自增主键ID")
+    @ApiModelProperty("主键")
     private Long id;
 
-    @ApiModelProperty("组织ID")
-    private String orgId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @ApiModelProperty("用户ID")
+    private Long userId;
 
-    @ApiModelProperty("组名")
-    private String orgName;
+    @ApiModelProperty("联系方式名称（手机，电话，邮箱等）")
+    private String contactName;
 
-    @ApiModelProperty("账号ID")
-    private String accountId;
+    @ApiModelProperty("联系号码")
+    private String contactNo;
 
-    @ApiModelProperty("账号名")
-    private String accountName;
-
-    @ApiModelProperty("应用ID")
-    private String appId;
-
-    @ApiModelProperty("租户ID")
-    private String tenantId;
+    @ApiModelProperty("状态")
+    private String state;
 
     @JsonIgnore
     @TableLogic
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty("是否逻辑删除")
+    @ApiModelProperty("逻辑删除")
     private Boolean deleted;
 
 }

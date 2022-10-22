@@ -15,10 +15,10 @@ import org.dows.framework.crud.mybatis.CrudEntity;
 import java.util.Date;
 
 /**
- * 账号-租户(AccountTenant)实体类
+ * 用户-实例(UserInstance)实体类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:07:29
+ * @since 2022-10-22 10:31:12
  */
 @SuppressWarnings("serial")
 @Data
@@ -28,31 +28,34 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "AccountTenant对象", description = "账号-租户")
-public class AccountTenant implements CrudEntity {
-    private static final long serialVersionUID = 675997814460988599L;
+@ApiModel(value = "UserInstance对象", description = "用户-实例")
+public class UserInstance implements CrudEntity {
+    private static final long serialVersionUID = -66390464043847564L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("自增主键ID")
     private Long id;
 
-    @ApiModelProperty("账号ID")
-    private String accountId;
-
     @ApiModelProperty("用户ID")
     private String userId;
 
-    @ApiModelProperty("商户号")
-    private String merchantNo;
+    @ApiModelProperty("姓名")
+    private String name;
 
-    @ApiModelProperty("租户ID")
-    private String tenantId;
+    @ApiModelProperty("身份证号")
+    private String idNo;
 
-    @JsonIgnore
-    @TableLogic
-    @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty("是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
-    private Boolean deleted;
+    @ApiModelProperty("年龄")
+    private String age;
+
+    @ApiModelProperty("名族")
+    private String nation;
+
+    @ApiModelProperty("发证机关")
+    private String signOrg;
+
+    @ApiModelProperty("户籍地址")
+    private String domicile;
 
 }
 

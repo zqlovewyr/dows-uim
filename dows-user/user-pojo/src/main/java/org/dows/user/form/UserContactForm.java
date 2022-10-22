@@ -11,10 +11,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 账号-租户(AccountTenant)表单
+ * 用户-联系人(UserContact)表单
  *
  * @author lait.zhang
- * @since 2022-10-22 10:07:30
+ * @since 2022-10-22 10:31:12
  */
 @SuppressWarnings("serial")
 @Data
@@ -23,23 +23,23 @@ import java.util.Date;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "AccountTenantForm 表单对象", description = "账号-租户")
-public class AccountTenantForm implements Serializable {
-    private static final long serialVersionUID = 651142649791672247L;
+@ApiModel(value = "UserContactForm 表单对象", description = "用户-联系人")
+public class UserContactForm implements Serializable {
+    private static final long serialVersionUID = -72552681460313225L;
     @JsonIgnore
     private Long id;
 
-    @ApiModelProperty("账号ID")
-    private String accountId;
-
     @ApiModelProperty("用户ID")
-    private String userId;
+    private Long userId;
 
-    @ApiModelProperty("商户号")
-    private String merchantNo;
+    @ApiModelProperty("联系方式名称（手机，电话，邮箱等）")
+    private String contactName;
 
-    @ApiModelProperty("租户ID")
-    private String tenantId;
+    @ApiModelProperty("联系号码")
+    private String contactNo;
+
+    @ApiModelProperty("状态")
+    private String state;
 
     @JsonIgnore
     private Boolean deleted;
