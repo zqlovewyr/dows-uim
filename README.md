@@ -6,7 +6,9 @@ User Identifier Module
 
 #### 软件架构
 
-软件架构说明
+account| user | member | tenant |rbac
+:----|:----:|-------:|-------:|----:|
+账号|  用户  |    会员 |     租户 |权限
 
 #### 安装教程
 
