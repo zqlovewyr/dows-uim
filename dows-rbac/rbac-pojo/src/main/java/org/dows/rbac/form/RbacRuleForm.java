@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * rbac-url(RbacUri)表单
+ * rbac-数据规则(RbacRule)表单
  *
  * @author lait.zhang
  * @since 2022-10-22 10:43:19
@@ -23,29 +23,29 @@ import java.util.Date;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "RbacUriForm 表单对象", description = "rbac-url")
-public class RbacUriForm implements Serializable {
-    private static final long serialVersionUID = 627246538996506348L;
+@ApiModel(value = "RbacRuleForm 表单对象", description = "rbac-数据规则")
+public class RbacRuleForm implements Serializable {
+    private static final long serialVersionUID = 211894790844647886L;
     @JsonIgnore
     private Long id;
 
-    @ApiModelProperty("资源路径")
-    private String uriPath;
+    @ApiModelProperty("父ID")
+    private Long pid;
 
-    @ApiModelProperty("资源描述")
-    private String uriDescr;
+    @ApiModelProperty("URI ID")
+    private Long uriId;
 
-    @ApiModelProperty("业务code")
-    private String bizCode;
+    @ApiModelProperty("数据描述")
+    private String ruleDescr;
 
-    @ApiModelProperty("pageID")
-    private String pageId;
+    @ApiModelProperty("数据表名称")
+    private String dataTable;
 
-    @ApiModelProperty("名称首字母")
-    private String nameLetters;
+    @ApiModelProperty("角色ID")
+    private String roleId;
 
-    @ApiModelProperty("应用名称")
-    private String appName;
+    @ApiModelProperty("角色CODE")
+    private String roleCode;
 
     @ApiModelProperty("应用 id")
     private String appId;

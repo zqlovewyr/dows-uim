@@ -1,19 +1,20 @@
 package org.dows.rbac.service.impl;
 
-
 import org.dows.framework.crud.mybatis.MybatisCrudServiceImpl;
-import org.dows.rbac.entity.RbacMenu;
 import org.dows.rbac.mapper.RbacMenuMapper;
+import org.dows.rbac.entity.RbacMenu;
 import org.dows.rbac.service.RbacMenuService;
 import org.springframework.stereotype.Service;
 
+
 /**
- * RBAC-菜单资源(RbacMenu)表服务实现类
+ * rbac-菜单(RbacMenu)表服务实现类
  *
- * @author VX:PN15855012581
- * @since 2022-07-14 23:01:47
+ * @author lait.zhang
+ * @since 2022-10-22 10:43:17
  */
-@Service
+@Service("rbacMenuService")
 public class RbacMenuServiceImpl extends MybatisCrudServiceImpl<RbacMenuMapper, RbacMenu> implements RbacMenuService {
 
 }
+

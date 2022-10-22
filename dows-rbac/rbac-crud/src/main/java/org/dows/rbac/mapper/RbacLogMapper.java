@@ -2,16 +2,16 @@ package org.dows.rbac.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.dows.framework.crud.mybatis.MybatisCrudMapper;
-import org.dows.rbac.entity.RbacUri;
+import org.dows.rbac.entity.RbacLog;
 
 /**
- * rbac-url(RbacUri)表数据库访问层
+ * rbac-日志(RbacLog)表数据库访问层
  *
  * @author lait.zhang
- * @since 2022-10-22 10:43:19
+ * @since 2022-10-22 10:43:16
  */
 @Mapper
-public interface RbacUriMapper extends MybatisCrudMapper<RbacUri> {
+public interface RbacLogMapper extends MybatisCrudMapper<RbacLog> {
 
 }
 

@@ -1,24 +1,20 @@
-package org.dows.rbac.entity;
+package org.dows.rbac.form;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
-import org.dows.framework.crud.mybatis.CrudEntity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
- * rbac-权限(RbacPermission)实体类
+ * rbac-权限(RbacPermission)表单
  *
  * @author lait.zhang
- * @since 2022-10-22 10:43:17
+ * @since 2022-10-22 10:43:18
  */
 @SuppressWarnings("serial")
 @Data
@@ -27,24 +23,18 @@ import java.util.Date;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "RbacPermission对象", description = "rbac-权限")
-public class RbacPermission implements CrudEntity {
-    private static final long serialVersionUID = 317001715855929924L;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @ApiModelProperty("主键ID")
+@ApiModel(value = "RbacPermissionForm 表单对象", description = "rbac-权限")
+public class RbacPermissionForm implements Serializable {
+    private static final long serialVersionUID = -37578315517994842L;
+    @JsonIgnore
     private Long id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("角色ID")
     private Long roleId;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("父角色ID(继承时该字段有值)")
     private Long rolePid;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("资源ID")
     private Long uriId;
 
@@ -73,10 +63,8 @@ public class RbacPermission implements CrudEntity {
     private Boolean visible;
 
     @JsonIgnore
-    @TableLogic
-    @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty("是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
+
 
 }
 

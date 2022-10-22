@@ -15,7 +15,7 @@ import org.dows.framework.crud.mybatis.CrudEntity;
 import java.util.Date;
 
 /**
- * rbac-角色(RbacRole)实体类
+ * rbac-数据约束(RbacRegulate)实体类
  *
  * @author lait.zhang
  * @since 2022-10-22 10:43:18
@@ -28,41 +28,47 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "RbacRole对象", description = "rbac-角色")
-public class RbacRole implements CrudEntity {
-    private static final long serialVersionUID = -44712318110149125L;
+@ApiModel(value = "RbacRegulate对象", description = "rbac-数据约束")
+public class RbacRegulate implements CrudEntity {
+    private static final long serialVersionUID = -46512942320369413L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @ApiModelProperty("自增主键ID")
+    @ApiModelProperty("数据库自增主键ID")
     private Long id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @ApiModelProperty("角色父ID(角色组|继承)")
-    private Long pid;
+    @ApiModelProperty("URI ID")
+    private Long uriId;
 
-    @ApiModelProperty("角色名")
-    private String roleName;
+    @ApiModelProperty("是否允许访问或是否有限制")
+    private Boolean allowed;
 
-    @ApiModelProperty("角色名称首字母,方便查找")
-    private String nameLetters;
+    @ApiModelProperty("接口版本")
+    private String apiVer;
 
-    @ApiModelProperty("角色code")
-    private String roleCode;
+    @ApiModelProperty("secretKEY")
+    private String secretKey;
 
-    @ApiModelProperty("角色icon")
-    private String roleIcon;
+    @ApiModelProperty("ip地址集合")
+    private String ips;
 
-    @ApiModelProperty("描述")
-    private String descr;
+    @ApiModelProperty("IP属地")
+    private String ipRegion;
 
-    @ApiModelProperty("应用ID")
+    @ApiModelProperty("用户ID")
+    private String userId;
+
+    @ApiModelProperty("账号ID")
+    private String acountId;
+
+    @ApiModelProperty("应用 id")
     private String appId;
 
     @ApiModelProperty("租户ID")
     private String tenantId;
 
-    @ApiModelProperty("当前角色是否继承父角色对应的权限")
-    private Boolean inherit;
+    @ApiModelProperty("范围控制,作用在(IP,IP_REGION,APP_ID,TENANT_ID...)")
+    private String scopes;
 
     @JsonIgnore
     @TableLogic

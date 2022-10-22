@@ -15,10 +15,10 @@ import org.dows.framework.crud.mybatis.CrudEntity;
 import java.util.Date;
 
 /**
- * RBAC-菜单资源(RbacMenu)表实体类
+ * rbac-菜单(RbacMenu)实体类
  *
- * @author VX:PN15855012581
- * @since 2022-07-14 22:57:17
+ * @author lait.zhang
+ * @since 2022-10-22 10:43:17
  */
 @SuppressWarnings("serial")
 @Data
@@ -28,38 +28,53 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "RbacMenu对象", description = "RBAC-菜单资源")
+@ApiModel(value = "RbacMenu对象", description = "rbac-菜单")
 public class RbacMenu implements CrudEntity {
+    private static final long serialVersionUID = -75430630093737173L;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("账号-菜单ID")
     private Long id;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("父ID")
-    private Long resourcePid;
-    @ApiModelProperty("权限码")
-    private String resourceCode;
-    @ApiModelProperty("权限名称")
-    private String resourceName;
-    @ApiModelProperty("资源名称首字母")
-    private String resourceLetter;
-    @ApiModelProperty("权限值")
-    private String resourceVal;
-    @ApiModelProperty("uri")
-    private String resourcePath;
-    @ApiModelProperty("权限类型：2:菜单资源（目录/菜单）")
-    private Integer resourceTyp;
-    @ApiModelProperty("子菜单数量")
-    private Integer subCount;
-    @ApiModelProperty("排序")
-    private Integer sorted;
+    private Long pid;
+
+    @ApiModelProperty("菜单名称")
+    private String menuName;
+
+    @ApiModelProperty("菜单CODE")
+    private String menuCode;
+
+    @ApiModelProperty("菜单图标")
+    private String menuIcon;
+
+    @ApiModelProperty("菜单路径URI")
+    private String menuPath;
+
+    @ApiModelProperty("菜单名称首字母")
+    private String nameLetters;
+
+    @ApiModelProperty("是否隐藏")
+    private Boolean visible;
+
+    @ApiModelProperty("是否框架")
+    private Boolean isframe;
+
+    @ApiModelProperty("应用名")
+    private String appName;
+
     @ApiModelProperty("应用 id")
     private String appId;
-    @JsonIgnore
-    private Integer ver;
+
+    @ApiModelProperty("租户ID")
+    private String tenantId;
+
     @JsonIgnore
     @TableLogic
     @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty("是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
-    @TableField(fill = FieldFill.INSERT)
-    private Date dt;
+
 }
+

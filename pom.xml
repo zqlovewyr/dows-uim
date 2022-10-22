@@ -20,7 +20,6 @@
         <module>dows-tenant</module>
         <module>dows-user</module>
         <module>dows-member</module>
-        <module>uim-application</module>
     </modules>
 
 

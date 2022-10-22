@@ -1,15 +1,16 @@
 package org.dows.rbac.service;
 
-
-import org.dows.framework.crud.mybatis.MybatisCrudService;
 import org.dows.rbac.entity.RbacRole;
+import org.dows.framework.crud.mybatis.MybatisCrudService;
+
 
 /**
- * RBAC-角色(RbacRole)表服务接口
+ * rbac-角色(RbacRole)表服务接口
  *
- * @author VX:PN15855012581
- * @since 2022-07-14 22:57:19
+ * @author lait.zhang
+ * @since 2022-10-22 10:43:18
  */
 public interface RbacRoleService extends MybatisCrudService<RbacRole> {
 
 }
+

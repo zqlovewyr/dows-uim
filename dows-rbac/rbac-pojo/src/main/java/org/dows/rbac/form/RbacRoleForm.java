@@ -1,51 +1,64 @@
 package org.dows.rbac.form;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
- * @description: RBAC-角色(RbacRole)Form类
- * @author: VX:PN15855012581
- * @create: 2022-07-14 22:57:23
+ * rbac-角色(RbacRole)表单
+ *
+ * @author lait.zhang
+ * @since 2022-10-22 10:43:19
  */
+@SuppressWarnings("serial")
 @Data
 @ToString
 @Builder
-@EqualsAndHashCode
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "RbacRole对象", description = "RBAC-角色")
+@ApiModel(value = "RbacRoleForm 表单对象", description = "rbac-角色")
 public class RbacRoleForm implements Serializable {
-    private static final long serialVersionUID = 811803774925586264L;
+    private static final long serialVersionUID = 733471903025967637L;
+    @JsonIgnore
+    private Long id;
 
-    @ApiModelProperty(value = "角色父id 角色组")
-    private Long rolePid;
-    @ApiModelProperty(value = "角色名")
+    @ApiModelProperty("角色父ID(角色组|继承)")
+    private Long pid;
+
+    @ApiModelProperty("角色名")
     private String roleName;
-    @ApiModelProperty(value = "角色code")
+
+    @ApiModelProperty("角色名称首字母,方便查找")
+    private String nameLetters;
+
+    @ApiModelProperty("角色code")
     private String roleCode;
-    @ApiModelProperty(value = "名称首字母")
-    private String nameLetter;
-    @ApiModelProperty(value = "角色级别")
-    private Integer roleLevel;
-    @ApiModelProperty(value = "角色icon")
+
+    @ApiModelProperty("角色icon")
     private String roleIcon;
-    @ApiModelProperty(value = "角色组数量")
-    private Integer subCount;
-    @ApiModelProperty(value = "数据权限")
-    private String dataScope;
-    @ApiModelProperty(value = "顺序")
-    private Integer sorted;
-    @ApiModelProperty(value = "描述")
+
+    @ApiModelProperty("描述")
     private String descr;
-    @ApiModelProperty(value = "租户ID")
-    private Long tenantId;
-    @ApiModelProperty(value = "应用ID")
+
+    @ApiModelProperty("应用ID")
     private String appId;
+
+    @ApiModelProperty("租户ID")
+    private String tenantId;
+
+    @ApiModelProperty("当前角色是否继承父角色对应的权限")
+    private Boolean inherit;
+
+    @JsonIgnore
+    private Boolean deleted;
+
+
 }
 

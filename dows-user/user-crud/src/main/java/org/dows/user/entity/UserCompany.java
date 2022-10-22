@@ -12,6 +12,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.dows.framework.crud.mybatis.CrudEntity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**

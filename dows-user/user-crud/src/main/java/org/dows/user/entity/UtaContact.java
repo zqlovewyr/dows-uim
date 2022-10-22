@@ -32,8 +32,9 @@ import java.util.Date;
 public class UtaContact implements CrudEntity {
     private static final long serialVersionUID = 560580084922278801L;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("主键id")
-    private String id;
+    private Long id;
 
     @ApiModelProperty("创建时间")
     private Date createTime;
@@ -46,6 +47,12 @@ public class UtaContact implements CrudEntity {
 
     @ApiModelProperty("需求发布id")
     private String utaId;
+
+    @JsonIgnore
+    @TableLogic
+    @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty("逻辑删除")
+    private Boolean deleted;
 
 }
 

@@ -88,5 +88,11 @@ public class UserAddress implements CrudEntity {
     @ApiModelProperty("业务线")
     private String bizline;
 
+    @JsonIgnore
+    @TableLogic
+    @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty("逻辑删除")
+    private Boolean deleted;
+
 }
 

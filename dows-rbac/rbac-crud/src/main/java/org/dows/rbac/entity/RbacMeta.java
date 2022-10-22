@@ -15,10 +15,10 @@ import org.dows.framework.crud.mybatis.CrudEntity;
 import java.util.Date;
 
 /**
- * rbac-角色(RbacRole)实体类
+ * rbac-元数据(RbacMeta)实体类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:43:18
+ * @since 2022-10-22 10:43:17
  */
 @SuppressWarnings("serial")
 @Data
@@ -28,41 +28,34 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "RbacRole对象", description = "rbac-角色")
-public class RbacRole implements CrudEntity {
-    private static final long serialVersionUID = -44712318110149125L;
+@ApiModel(value = "RbacMeta对象", description = "rbac-元数据")
+public class RbacMeta implements CrudEntity {
+    private static final long serialVersionUID = 545299369053434533L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @ApiModelProperty("自增主键ID")
+    @ApiModelProperty("数据库自增主键ID")
     private Long id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @ApiModelProperty("角色父ID(角色组|继承)")
-    private Long pid;
+    @ApiModelProperty("库表元数据接口")
+    private String metadataApi;
 
-    @ApiModelProperty("角色名")
+    @ApiModelProperty("数据表名称")
+    private String dataTable;
+
+    @ApiModelProperty("数据描述")
+    private String dataDescr;
+
+    @ApiModelProperty("角色ID")
+    private String roleId;
+
+    @ApiModelProperty("角色名称")
     private String roleName;
 
-    @ApiModelProperty("角色名称首字母,方便查找")
-    private String nameLetters;
+    @ApiModelProperty("应用名")
+    private String appName;
 
-    @ApiModelProperty("角色code")
-    private String roleCode;
-
-    @ApiModelProperty("角色icon")
-    private String roleIcon;
-
-    @ApiModelProperty("描述")
-    private String descr;
-
-    @ApiModelProperty("应用ID")
+    @ApiModelProperty("应用 id")
     private String appId;
-
-    @ApiModelProperty("租户ID")
-    private String tenantId;
-
-    @ApiModelProperty("当前角色是否继承父角色对应的权限")
-    private Boolean inherit;
 
     @JsonIgnore
     @TableLogic

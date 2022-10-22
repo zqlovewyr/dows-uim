@@ -5,12 +5,13 @@ import org.dows.framework.crud.mybatis.MybatisCrudMapper;
 import org.dows.rbac.entity.RbacRole;
 
 /**
- * RBAC-角色(RbacRole)
+ * rbac-角色(RbacRole)表数据库访问层
  *
- * @author VX:PN15855012581
- * @since 2022-07-14 22:57:21
+ * @author lait.zhang
+ * @since 2022-10-22 10:43:18
  */
 @Mapper
 public interface RbacRoleMapper extends MybatisCrudMapper<RbacRole> {
 
 }
+

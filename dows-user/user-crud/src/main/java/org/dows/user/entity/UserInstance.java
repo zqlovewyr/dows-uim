@@ -57,5 +57,11 @@ public class UserInstance implements CrudEntity {
     @ApiModelProperty("户籍地址")
     private String domicile;
 
+    @JsonIgnore
+    @TableLogic
+    @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty("逻辑删除")
+    private Boolean deleted;
+
 }
 
