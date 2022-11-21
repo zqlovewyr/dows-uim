@@ -5,14 +5,21 @@
     <parent>
         <artifactId>dows-parent</artifactId>
         <groupId>org.dows.framework</groupId>
-        <version>20220701</version>
+        <version>20220701-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.dows.cloud</groupId>
     <artifactId>dows-uim</artifactId>
-    <version>20220701</version>
+    <version>20220701-SNAPSHOT</version>
     <packaging>pom</packaging>
+
+    <properties>
+        <account.version>${project.version}</account.version>
+        <user.version>${project.version}</user.version>
+        <rbac.version>${project.version}</rbac.version>
+    </properties>
+
 
     <modules>
         <module>dows-account</module>
@@ -20,6 +27,7 @@
         <module>dows-tenant</module>
         <module>dows-user</module>
         <module>dows-member</module>
+        <module>uim-application</module>
     </modules>
 
 

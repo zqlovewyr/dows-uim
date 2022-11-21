@@ -5,7 +5,7 @@
     <parent>
         <artifactId>dows-account</artifactId>
         <groupId>org.dows.cloud</groupId>
-        <version>20220701</version>
+        <version>20220701-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>account-crud</artifactId>
@@ -15,11 +15,12 @@
             <groupId>org.dows.cloud</groupId>
             <artifactId>account-api</artifactId>
         </dependency>
+
+
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>account-pojo</artifactId>
         </dependency>
-
 
         <dependency>
             <groupId>org.dows.cloud</groupId>

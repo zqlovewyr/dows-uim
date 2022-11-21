@@ -5,7 +5,7 @@
     <parent>
         <artifactId>dows-uim</artifactId>
         <groupId>org.dows.cloud</groupId>
-        <version>20220701</version>
+        <version>20220701-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>dows-user</artifactId>
@@ -26,29 +26,10 @@
         <dependencies>
             <dependency>
                 <groupId>org.dows.cloud</groupId>
-                <artifactId>account-api</artifactId>
-                <version>${account.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.dows.cloud</groupId>
-                <artifactId>account-crud</artifactId>
-                <version>${account.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.dows.cloud</groupId>
                 <artifactId>account-biz</artifactId>
                 <version>${account.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.dows.cloud</groupId>
-                <artifactId>account-rest</artifactId>
-                <version>${account.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.dows.cloud</groupId>
-                <artifactId>account-boot</artifactId>
-                <version>${account.version}</version>
-            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
