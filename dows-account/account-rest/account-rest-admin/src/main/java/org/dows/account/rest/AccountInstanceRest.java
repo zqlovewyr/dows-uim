@@ -22,8 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("accountInstance")
 public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm, AccountInstance, AccountInstanceService> {
-
-    //private final AccountInstanceBiz accountInstanceBiz;
-
+//
+//    private final AccountInstanceBiz accountInstanceBiz;
+//    @PostMapping
+//    public void register(@RequestBody AccountInstanceDTO accountInstanceDTO) {
+//        accountInstanceBiz.createAccount(accountInstanceDTO);
+//    }
 }
 

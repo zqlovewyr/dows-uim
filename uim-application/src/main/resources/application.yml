@@ -12,8 +12,8 @@ server:
 
 spring:
   application:
-    name: dows-pay
+    name: uim
   profiles:
     include: mysql,mybatis,mvc,redis,alipay
-    active: sit
+    active: dev
 #debug: true

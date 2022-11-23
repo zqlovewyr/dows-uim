@@ -43,6 +43,10 @@ public class AccountRole implements CrudEntity {
     @ApiModelProperty("角色码")
     private String roleCode;
 
+    @ApiModelProperty("主体类型")
+    /* runsix:0-个人，1-组 */
+    private Integer principalType;
+
     @ApiModelProperty("主体ID")
     private String principalId;
 
