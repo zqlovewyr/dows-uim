@@ -36,20 +36,48 @@ public class SwaggerConfig {
                 .enable(true)
                 .select()
                 //.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-                .apis(RequestHandlerSelectors.basePackage("org.dows.store.rest"))
+                .apis(RequestHandlerSelectors.basePackage("org.dows.uim.admin.rest"))
                 .paths(PathSelectors.any())
                 .build()
-                .groupName("店铺管理");
-        //.pathMapping("/sms");
+                .groupName("管理端");
+        //.pathMapping("/sms"); 1725 0355 3205
+    }
+
+    @Bean
+    public Docket storeTenantApi() {
+        return new Docket(DocumentationType.OAS_30)
+                .apiInfo(apiInfo())
+                .enable(true)
+                .select()
+                //.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
+                .apis(RequestHandlerSelectors.basePackage("org.dows.uim.tenant.rest"))
+                .paths(PathSelectors.any())
+                .build()
+                .groupName("租户端");
+        //.pathMapping("/sms"); 1725 0355 3205
+    }
+
+    @Bean
+    public Docket storeUserApi() {
+        return new Docket(DocumentationType.OAS_30)
+                .apiInfo(apiInfo())
+                .enable(true)
+                .select()
+                //.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
+                .apis(RequestHandlerSelectors.basePackage("org.dows.uim.user.rest"))
+                .paths(PathSelectors.any())
+                .build()
+                .groupName("用户端");
+        //.pathMapping("/sms"); 1725 0355 3205
     }
 
     private ApiInfo apiInfo() {
         Contact contact = new Contact("lait","","lait.zhang@gmail.com");
         return new ApiInfoBuilder()
-                .title("dows saas store")
+                .title("dows saas uim")
                 .contact(contact)
                 .version("3.0")
-                .description("店铺服务")
+                .description("user identifier manager")
                 .version("1.0.0")
                 .build();
     }
