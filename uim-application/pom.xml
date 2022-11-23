@@ -20,5 +20,14 @@
             <artifactId>user-rest</artifactId>
             <version>20220701-SNAPSHOT</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>uim-config</artifactId>
+            <version>20220701-SNAPSHOT</version>
+        </dependency>
+
+
     </dependencies>
 </project>

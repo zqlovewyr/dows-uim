@@ -28,6 +28,7 @@
         <module>dows-user</module>
         <module>dows-member</module>
         <module>uim-application</module>
+        <module>uim-config</module>
     </modules>
 
 
