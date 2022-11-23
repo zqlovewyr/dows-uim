@@ -27,9 +27,116 @@
         <module>dows-tenant</module>
         <module>dows-user</module>
         <module>dows-member</module>
-        <module>uim-application</module>
-        <module>uim-config</module>
     </modules>
+
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>user-api</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>user-biz</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>user-boot</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>user-config</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>user-crud</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>user-feign</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>user-pojo</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>user-rest</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+
+
+
+
+
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>account-api</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>account-biz</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>account-boot</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>account-config</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>account-crud</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>account-feign</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>account-pojo</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>account-rest-admin</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>account-rest-developer</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>account-rest-tenant</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>account-rest-user</artifactId>
+                <version>${user.version}</version>
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
 
 
     <distributionManagement>
