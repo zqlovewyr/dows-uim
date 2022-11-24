@@ -7,5 +7,5 @@ import org.dows.account.biz.dto.AccountInstanceDTO;
  */
 public interface AccountUtil {
     /* runsix:static validate AccountInstanceDTO */
-    static void validateAIDTO(AccountInstanceDTO accountInstanceDTO) {}
+    static void validateAccountInstanceDTO(AccountInstanceDTO accountInstanceDTO) {}
 }

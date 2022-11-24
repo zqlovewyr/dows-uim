@@ -18,7 +18,6 @@
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>rbac-crud</artifactId>
-<!--            <version>20220701</version>-->
         </dependency>
 
         <dependency>

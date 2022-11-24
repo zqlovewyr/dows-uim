@@ -13,8 +13,8 @@ import org.dows.account.biz.util.AccountUtil;
 import org.dows.account.entity.*;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountInstanceVo;
-import org.dows.rbac.biz.EnumRbacStatusCode;
-import org.dows.rbac.biz.RbacException;
+import org.dows.rbac.biz.enums.EnumRbacStatusCode;
+import org.dows.rbac.biz.exception.RbacException;
 import org.dows.rbac.entity.RbacRole;
 import org.dows.rbac.service.RbacRoleService;
 import org.springframework.beans.BeanUtils;
@@ -50,7 +50,7 @@ public class AccountInstanceBiz {
     */
     @Transactional(rollbackFor = Exception.class)
     public AccountInstanceVo createAccountInstance(AccountInstanceDTO accountInstanceDTO) {
-        AccountUtil.validateAIDTO(accountInstanceDTO);
+        AccountUtil.validateAccountInstanceDTO(accountInstanceDTO);
         /* runsix:1 */
         accountIdentifierService.lambdaQuery()
                 .select(AccountIdentifier::getId)

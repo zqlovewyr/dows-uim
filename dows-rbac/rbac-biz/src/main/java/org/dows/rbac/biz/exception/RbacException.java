@@ -1,4 +1,4 @@
-package org.dows.rbac.biz;
+package org.dows.rbac.biz.exception;
 
 import org.dows.framework.api.StatusCode;
 import org.dows.framework.api.exceptions.BaseException;

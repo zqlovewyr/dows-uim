@@ -14,19 +14,7 @@
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>account-biz</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.dows.cloud</groupId>
-                    <artifactId>rbac-biz</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
-        <dependency>
-            <groupId>org.dows.cloud</groupId>
-            <artifactId>rbac-biz</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
     </dependencies>
 
 </project>
