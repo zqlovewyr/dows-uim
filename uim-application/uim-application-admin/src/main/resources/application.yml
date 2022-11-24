@@ -12,7 +12,8 @@ server:
 
 spring:
   application:
-    name: dows-pay
+    name: uim-admin
+  index: /${application.name}/v1/index.html
   profiles:
     include: mysql,mybatis,mvc,redis,alipay
     active: sit
