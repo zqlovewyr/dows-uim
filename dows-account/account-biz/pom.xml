@@ -14,12 +14,10 @@
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>account-crud</artifactId>
-            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>rbac-biz</artifactId>
-            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>

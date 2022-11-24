@@ -1,4 +1,4 @@
-package org.dows.account.biz;
+package org.dows.account.biz.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +18,8 @@ public class AccountInstanceDTO implements Serializable {
     private String identifier;
     /* runsix:field 'rbacRoleId' is field 'id' in class RbacRole */
     private Long rbacRoleId;
+    /* runsix:field 'accountOrgId' is field 'orgId' in class AccountOrg */
+    private String accountOrgOrgId;
     private String accountName;
     private String password;
     private String avatar;

@@ -1,7 +1,5 @@
-package org.dows.account.biz;
+package org.dows.account.biz.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.dows.framework.api.StatusCode;
 import org.dows.framework.api.exceptions.BaseException;
 
@@ -9,6 +7,8 @@ import org.dows.framework.api.exceptions.BaseException;
  * @author runsix
  */
 public class AccountException extends BaseException {
+    private static final long serialVersionUID = -2331222370818608486L;
+
     public AccountException(String msg) {
         super(msg);
     }

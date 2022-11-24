@@ -15,5 +15,5 @@ spring:
     name: uim-admin
   profiles:
     include: mysql,mybatis,mvc,redis,alipay
-    active: sit
+    active: dev
 #debug: true

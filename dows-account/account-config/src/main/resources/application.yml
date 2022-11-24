@@ -1,8 +1,0 @@
-server:
-  port: 9800
-spring:
-  application:
-    name: dows-uim-account
-  profiles:
-    include: mysql
-    active: dev

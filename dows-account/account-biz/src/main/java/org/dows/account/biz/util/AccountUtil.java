@@ -1,4 +1,6 @@
-package org.dows.account.biz;
+package org.dows.account.biz.util;
+
+import org.dows.account.biz.dto.AccountInstanceDTO;
 
 /**
  * @author runsix

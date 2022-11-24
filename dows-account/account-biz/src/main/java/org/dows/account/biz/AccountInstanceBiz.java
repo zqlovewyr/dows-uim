@@ -3,14 +3,16 @@ package org.dows.account.biz;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dows.account.entity.AccountIdentifier;
-import org.dows.account.entity.AccountInstance;
-import org.dows.account.entity.AccountRole;
-import org.dows.account.service.AccountIdentifierService;
-import org.dows.account.service.AccountInstanceService;
-import org.dows.account.service.AccountRoleService;
+import org.apache.commons.lang3.StringUtils;
+import org.dows.account.biz.dto.AccountInstanceDTO;
+import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
+import org.dows.account.biz.enums.EnumAccountStatusCode;
+import org.dows.account.biz.exception.AccountException;
+import org.dows.account.biz.exception.OrgException;
+import org.dows.account.biz.util.AccountUtil;
+import org.dows.account.entity.*;
+import org.dows.account.service.*;
 import org.dows.account.vo.AccountInstanceVo;
-import org.dows.framework.api.exceptions.BaseException;
 import org.dows.rbac.biz.EnumRbacStatusCode;
 import org.dows.rbac.biz.RbacException;
 import org.dows.rbac.entity.RbacRole;
@@ -34,6 +36,8 @@ public class AccountInstanceBiz {
     private final AccountIdentifierService accountIdentifierService;
     private final RbacRoleService rbacRoleService;
     private final AccountRoleService accountRoleService;
+    private final AccountOrgService accountOrgService;
+    private final AccountGroupService accountGroupService;
 
     /**
      * runsix method process
@@ -41,11 +45,12 @@ public class AccountInstanceBiz {
      * 2.save accountIdentifier
      * 3.save accountInstance
      * 4.save accountRole if rbacRoleId exist
-     * 5.convert entity to vo and return
+     * 5.save accountGroup if orgId exist
+     * 6.convert entity to vo and return
     */
     @Transactional(rollbackFor = Exception.class)
     public AccountInstanceVo createAccountInstance(AccountInstanceDTO accountInstanceDTO) {
-                AccountUtil.validateAIDTO(accountInstanceDTO);
+        AccountUtil.validateAIDTO(accountInstanceDTO);
         /* runsix:1 */
         accountIdentifierService.lambdaQuery()
                 .select(AccountIdentifier::getId)
@@ -69,16 +74,15 @@ public class AccountInstanceBiz {
         /* runsix:4 */
         if (Objects.nonNull(accountInstanceDTO.getRbacRoleId())) {
             RbacRole rbacRole = rbacRoleService.lambdaQuery()
-                    .select()
+                    .select(RbacRole::getId, RbacRole::getRoleName, RbacRole::getRoleCode)
                     .eq(RbacRole::getId, accountInstanceDTO.getRbacRoleId())
                     .oneOpt()
                     .orElseThrow(() -> {
                         throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
-//                        throw new BaseException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
                     });
             accountRoleService.save(
-                    /* runsix:TODO tenantId has not been used */
-                    AccountRole.builder()
+                    AccountRole
+                            .builder()
                             .roleId(rbacRole.getId().toString())
                             .roleName(rbacRole.getRoleName())
                             .roleCode(rbacRole.getRoleCode())
@@ -88,6 +92,27 @@ public class AccountInstanceBiz {
                             .build()
             );
         }
+        /* runsix:5 */
+        if (StringUtils.isNotBlank(accountInstanceDTO.getAccountOrgOrgId())) {
+            AccountOrg accountOrg = accountOrgService.lambdaQuery()
+                    .select(AccountOrg::getOrgId, AccountOrg::getOrgName)
+                    .eq(AccountOrg::getOrgId, accountInstanceDTO.getAccountOrgOrgId())
+                    .oneOpt()
+                    .orElseThrow(() -> {
+                        throw new OrgException(EnumAccountStatusCode.ORG_NOT_EXIST_EXCEPTION);
+                    });
+            accountGroupService.save(
+                    AccountGroup
+                            .builder()
+                            .orgId(accountOrg.getOrgId())
+                            .orgName(accountOrg.getOrgName())
+                            .accountId(accountInstance.getAccountId())
+                            .accountName(accountInstance.getAccountName())
+                            .appId(accountInstanceDTO.getAppId())
+                            .build()
+            );
+        }
+        /* runsix:6 */
         AccountInstanceVo accountInstanceVo = new AccountInstanceVo();
         BeanUtils.copyProperties(accountInstance, accountInstanceVo);
         return accountInstanceVo;

@@ -1,4 +1,4 @@
-package org.dows.account.biz;
+package org.dows.account.biz.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
