@@ -10,6 +10,13 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>rbac-rest</artifactId>
 
+    <modules>
+        <module>rbac-rest-admin</module>
+        <module>rbac-rest-developer</module>
+        <module>rbac-rest-tenant</module>
+        <module>rbac-rest-user</module>
+    </modules>
+
     <dependencies>
         <dependency>
             <groupId>org.dows.cloud</groupId>
