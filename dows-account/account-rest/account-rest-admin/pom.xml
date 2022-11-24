@@ -15,7 +15,6 @@
             <groupId>org.dows.cloud</groupId>
             <artifactId>account-biz</artifactId>
         </dependency>
-
     </dependencies>
 
 </project>
