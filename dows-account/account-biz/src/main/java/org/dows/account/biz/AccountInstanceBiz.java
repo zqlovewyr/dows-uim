@@ -1,5 +1,6 @@
 package org.dows.account.biz;
 
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.entity.AccountIdentifier;
@@ -9,6 +10,7 @@ import org.dows.account.service.AccountIdentifierService;
 import org.dows.account.service.AccountInstanceService;
 import org.dows.account.service.AccountRoleService;
 import org.dows.account.vo.AccountInstanceVo;
+import org.dows.framework.api.exceptions.BaseException;
 import org.dows.rbac.biz.EnumRbacStatusCode;
 import org.dows.rbac.biz.RbacException;
 import org.dows.rbac.entity.RbacRole;
@@ -42,7 +44,7 @@ public class AccountInstanceBiz {
      * 5.convert entity to vo and return
     */
     @Transactional(rollbackFor = Exception.class)
-    public AccountInstanceVo createAccount(AccountInstanceDTO accountInstanceDTO) {
+    public AccountInstanceVo createAccountInstance(AccountInstanceDTO accountInstanceDTO) {
                 AccountUtil.validateAIDTO(accountInstanceDTO);
         /* runsix:1 */
         accountIdentifierService.lambdaQuery()
@@ -56,6 +58,7 @@ public class AccountInstanceBiz {
         /* runsix:2 */
         AccountIdentifier accountIdentifier = new AccountIdentifier();
         BeanUtils.copyProperties(accountInstanceDTO, accountIdentifier);
+        accountIdentifier.setAccountId(IdWorker.getIdStr());
         accountIdentifierService.save(accountIdentifier);
         /* runsix:3 */
         AccountInstance accountInstance = new AccountInstance();
@@ -71,6 +74,7 @@ public class AccountInstanceBiz {
                     .oneOpt()
                     .orElseThrow(() -> {
                         throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
+//                        throw new BaseException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
                     });
             accountRoleService.save(
                     /* runsix:TODO tenantId has not been used */
