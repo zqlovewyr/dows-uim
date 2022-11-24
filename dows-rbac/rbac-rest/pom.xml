@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>rbac-rest</artifactId>
+    <packaging>pom</packaging>
 
     <modules>
         <module>rbac-rest-admin</module>

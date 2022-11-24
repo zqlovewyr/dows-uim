@@ -10,10 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>rbac-rest-admin</artifactId>
 
-
-
     <dependencies>
-
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>rbac-biz</artifactId>
+        </dependency>
     </dependencies>
 
 

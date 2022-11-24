@@ -3,10 +3,16 @@ package org.dows.account.rest;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dows.account.biz.AccountInstanceBiz;
+import org.dows.account.biz.dto.AccountInstanceDTO;
 import org.dows.account.entity.AccountInstance;
 import org.dows.account.form.AccountInstanceForm;
 import org.dows.account.service.AccountInstanceService;
+import org.dows.account.vo.AccountInstanceVo;
+import org.dows.framework.api.Response;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,8 +28,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("accountInstance")
 public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm, AccountInstance, AccountInstanceService> {
+    private final AccountInstanceBiz accountInstanceBiz;
 
-    //private final AccountInstanceBiz accountInstanceBiz;
-
+    @PostMapping("/register")
+    public Response<AccountInstanceVo> register(@RequestBody AccountInstanceDTO accountInstanceDTO) {
+        return Response.ok(accountInstanceBiz.createAccountInstance(accountInstanceDTO));
+    }
 }
 
