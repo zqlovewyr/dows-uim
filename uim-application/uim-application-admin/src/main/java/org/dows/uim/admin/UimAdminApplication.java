@@ -14,7 +14,7 @@ public class UimAdminApplication {
         SpringApplication.run(UimAdminApplication.class, args);
     }
 
-    @Value("${spring.application.index}")
+    @Value("${uim.index}")
     private String index ;
 
     @RequestMapping("/")

@@ -13,8 +13,11 @@ server:
 spring:
   application:
     name: uim-admin
-  index: forward:/${application.name}/v1/index.html
   profiles:
     include: mysql,mybatis,mvc,redis,alipay
     active: sit
 #debug: true
+
+
+uim:
+  index: "forward:/${spring.application.name}/v1/index.html"

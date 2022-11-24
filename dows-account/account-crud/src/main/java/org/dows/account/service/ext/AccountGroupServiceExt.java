@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  * @author lait.zhang
  * @since 2022-10-22 10:07:25
  */
-@Service("accountGroupService")
+@Service("accountGroupServiceExt")
 public class AccountGroupServiceExt extends AccountGroupServiceImpl {
 
 }
