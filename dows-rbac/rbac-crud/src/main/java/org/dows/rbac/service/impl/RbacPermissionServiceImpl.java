@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * rbac-权限(RbacPermission)表服务实现类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:43:18
+ * @since 2022-11-24 11:49:47
  */
 @Service("rbacPermissionService")
 public class RbacPermissionServiceImpl extends MybatisCrudServiceImpl<RbacPermissionMapper, RbacPermission> implements RbacPermissionService {

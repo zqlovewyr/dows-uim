@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * rbac-元数据(RbacMeta)表服务实现类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:43:17
+ * @since 2022-11-24 11:49:46
  */
 @Service("rbacMetaService")
 public class RbacMetaServiceImpl extends MybatisCrudServiceImpl<RbacMetaMapper, RbacMeta> implements RbacMetaService {

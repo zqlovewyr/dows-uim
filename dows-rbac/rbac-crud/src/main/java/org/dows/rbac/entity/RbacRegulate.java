@@ -18,7 +18,7 @@ import java.util.Date;
  * rbac-数据约束(RbacRegulate)实体类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:43:18
+ * @since 2022-11-24 11:49:47
  */
 @SuppressWarnings("serial")
 @Data
@@ -30,7 +30,7 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "RbacRegulate对象", description = "rbac-数据约束")
 public class RbacRegulate implements CrudEntity {
-    private static final long serialVersionUID = -46512942320369413L;
+    private static final long serialVersionUID = -51254403158585073L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("数据库自增主键ID")
@@ -75,6 +75,9 @@ public class RbacRegulate implements CrudEntity {
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
+
+    @ApiModelProperty("")
+    private Date dt;
 
 }
 

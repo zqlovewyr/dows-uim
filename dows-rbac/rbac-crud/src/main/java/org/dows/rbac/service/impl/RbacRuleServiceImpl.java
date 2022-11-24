@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * rbac-数据规则(RbacRule)表服务实现类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:43:19
+ * @since 2022-11-24 11:49:48
  */
 @Service("rbacRuleService")
 public class RbacRuleServiceImpl extends MybatisCrudServiceImpl<RbacRuleMapper, RbacRule> implements RbacRuleService {
