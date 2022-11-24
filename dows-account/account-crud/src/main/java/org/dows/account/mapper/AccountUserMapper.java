@@ -8,7 +8,7 @@ import org.dows.account.entity.AccountUser;
  * 账号-用户(实名认证后)(AccountUser)表数据库访问层
  *
  * @author lait.zhang
- * @since 2022-10-22 10:07:30
+ * @since 2022-11-24 14:23:54
  */
 @Mapper
 public interface AccountUserMapper extends MybatisCrudMapper<AccountUser> {

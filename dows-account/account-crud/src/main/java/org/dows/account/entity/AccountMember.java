@@ -13,12 +13,13 @@ import lombok.experimental.Accessors;
 import org.dows.framework.crud.mybatis.CrudEntity;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 账号-会员(AccountMember)实体类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:07:27
+ * @since 2022-11-24 14:23:53
  */
 @SuppressWarnings("serial")
 @Data
@@ -30,7 +31,7 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "AccountMember对象", description = "账号-会员")
 public class AccountMember implements CrudEntity {
-    private static final long serialVersionUID = -69199158221306031L;
+    private static final long serialVersionUID = 248574365952925385L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("主键")
@@ -62,6 +63,15 @@ public class AccountMember implements CrudEntity {
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
+
+    @ApiModelProperty("开始时间")
+    private Date startTime;
+
+    @ApiModelProperty("结束时间")
+    private Date endTime;
+
+    @ApiModelProperty("")
+    private Date dt;
 
 }
 

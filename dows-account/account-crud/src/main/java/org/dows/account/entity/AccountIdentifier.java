@@ -12,11 +12,13 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.dows.framework.crud.mybatis.CrudEntity;
 
+import java.util.Date;
+
 /**
  * 账号标识(AccountIdentifier)实体类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:07:25
+ * @since 2022-11-24 14:23:52
  */
 @SuppressWarnings("serial")
 @Data
@@ -28,7 +30,7 @@ import org.dows.framework.crud.mybatis.CrudEntity;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "AccountIdentifier对象", description = "账号标识")
 public class AccountIdentifier implements CrudEntity {
-    private static final long serialVersionUID = -22064573657198857L;
+    private static final long serialVersionUID = -81984771141872564L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("自增主键ID")
@@ -48,6 +50,9 @@ public class AccountIdentifier implements CrudEntity {
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("是否逻辑删除")
     private Boolean deleted;
+
+    @ApiModelProperty("")
+    private Date dt;
 
 }
 

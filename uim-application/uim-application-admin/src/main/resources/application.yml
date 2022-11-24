@@ -17,3 +17,7 @@ spring:
     include: mysql,mybatis,mvc,redis,alipay
     active: dev
 #debug: true
+
+
+uim:
+  index: "forward:/${spring.application.name}/v1/index.html"
