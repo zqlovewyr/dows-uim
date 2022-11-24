@@ -8,7 +8,7 @@ import org.dows.framework.crud.mybatis.MybatisCrudService;
  * rbac-url(RbacUri)表服务接口
  *
  * @author lait.zhang
- * @since 2022-10-22 10:43:19
+ * @since 2022-11-24 11:49:49
  */
 public interface RbacUriService extends MybatisCrudService<RbacUri> {
 

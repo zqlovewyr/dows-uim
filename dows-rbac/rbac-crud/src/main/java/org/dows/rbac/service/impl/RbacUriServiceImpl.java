@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * rbac-url(RbacUri)表服务实现类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:43:19
+ * @since 2022-11-24 11:49:49
  */
 @Service("rbacUriService")
 public class RbacUriServiceImpl extends MybatisCrudServiceImpl<RbacUriMapper, RbacUri> implements RbacUriService {

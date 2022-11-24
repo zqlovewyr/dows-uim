@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * rbac-日志(RbacLog)表服务实现类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:43:16
+ * @since 2022-11-24 11:49:45
  */
 @Service("rbacLogService")
 public class RbacLogServiceImpl extends MybatisCrudServiceImpl<RbacLogMapper, RbacLog> implements RbacLogService {

@@ -8,7 +8,7 @@ import org.dows.rbac.entity.RbacLog;
  * rbac-日志(RbacLog)表数据库访问层
  *
  * @author lait.zhang
- * @since 2022-10-22 10:43:16
+ * @since 2022-11-24 11:49:44
  */
 @Mapper
 public interface RbacLogMapper extends MybatisCrudMapper<RbacLog> {

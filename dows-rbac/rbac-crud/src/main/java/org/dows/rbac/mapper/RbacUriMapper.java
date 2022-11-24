@@ -8,7 +8,7 @@ import org.dows.rbac.entity.RbacUri;
  * rbac-url(RbacUri)表数据库访问层
  *
  * @author lait.zhang
- * @since 2022-10-22 10:43:19
+ * @since 2022-11-24 11:49:49
  */
 @Mapper
 public interface RbacUriMapper extends MybatisCrudMapper<RbacUri> {

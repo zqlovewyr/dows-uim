@@ -1,7 +1,6 @@
 package org.dows.rbac.biz;
 
 import lombok.RequiredArgsConstructor;
-import org.dows.rbac.service.RbacPrivilegeService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,6 +12,5 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class RbacPrivilegeBiz {
-    private final RbacPrivilegeService service;
 
 }

@@ -18,7 +18,7 @@ import java.util.Date;
  * rbac-url(RbacUri)实体类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:43:19
+ * @since 2022-11-24 11:49:48
  */
 @SuppressWarnings("serial")
 @Data
@@ -30,7 +30,7 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "RbacUri对象", description = "rbac-url")
 public class RbacUri implements CrudEntity {
-    private static final long serialVersionUID = 860922465447587544L;
+    private static final long serialVersionUID = -95815315380355552L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("主键ID")
@@ -62,6 +62,9 @@ public class RbacUri implements CrudEntity {
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
+
+    @ApiModelProperty("")
+    private Date dt;
 
 }
 
