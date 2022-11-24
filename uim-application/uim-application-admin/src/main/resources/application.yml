@@ -13,7 +13,7 @@ server:
 spring:
   application:
     name: uim-admin
-  index: /${application.name}/v1/index.html
+  index: forward:/${application.name}/v1/index.html
   profiles:
     include: mysql,mybatis,mvc,redis,alipay
     active: sit
