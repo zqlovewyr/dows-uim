@@ -15,10 +15,11 @@
             <artifactId>account-rest-admin</artifactId>
         </dependency>
 
-        <!--<dependency>
+        <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>rbac-rest-admin</artifactId>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>user-rest-admin</artifactId>

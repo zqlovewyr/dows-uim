@@ -21,4 +21,29 @@
         <module>rbac-pojo</module>
     </modules>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>rbac-rest-admin</artifactId>
+                <version>${rbac.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>rbac-rest-developer</artifactId>
+                <version>${rbac.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>rbac-rest-tenant</artifactId>
+                <version>${rbac.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>rbac-rest-user</artifactId>
+                <version>${rbac.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 </project>

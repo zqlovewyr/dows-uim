@@ -17,5 +17,34 @@
         <module>uim-application-user</module>
         <module>uim-config</module>
     </modules>
+
+    <properties>
+        <rbac.version>${project.parent.version}</rbac.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>rbac-rest-admin</artifactId>
+                <version>${rbac.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>rbac-rest-developer</artifactId>
+                <version>${rbac.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>rbac-rest-tenant</artifactId>
+                <version>${rbac.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>rbac-rest-user</artifactId>
+                <version>${rbac.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     
 </project>
