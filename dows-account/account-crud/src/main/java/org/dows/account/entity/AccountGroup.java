@@ -12,11 +12,13 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.dows.framework.crud.mybatis.CrudEntity;
 
+import java.util.Date;
+
 /**
  * 账号-组(AccountGroup)实体类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:07:24
+ * @since 2022-11-24 14:23:52
  */
 @SuppressWarnings("serial")
 @Data
@@ -28,7 +30,7 @@ import org.dows.framework.crud.mybatis.CrudEntity;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "AccountGroup对象", description = "账号-组")
 public class AccountGroup implements CrudEntity {
-    private static final long serialVersionUID = -52611511793608170L;
+    private static final long serialVersionUID = -32454698294819181L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("自增主键ID")
@@ -37,7 +39,7 @@ public class AccountGroup implements CrudEntity {
     @ApiModelProperty("组织ID")
     private String orgId;
 
-    @ApiModelProperty("组名")
+    @ApiModelProperty("组织名")
     private String orgName;
 
     @ApiModelProperty("账号ID")
@@ -45,6 +47,9 @@ public class AccountGroup implements CrudEntity {
 
     @ApiModelProperty("账号名")
     private String accountName;
+
+    @ApiModelProperty("用户名")
+    private String userName;
 
     @ApiModelProperty("应用ID")
     private String appId;
@@ -57,6 +62,9 @@ public class AccountGroup implements CrudEntity {
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("是否逻辑删除")
     private Boolean deleted;
+
+    @ApiModelProperty("")
+    private Date dt;
 
 }
 

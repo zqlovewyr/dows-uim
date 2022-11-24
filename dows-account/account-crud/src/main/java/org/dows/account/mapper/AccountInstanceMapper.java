@@ -8,7 +8,7 @@ import org.dows.account.entity.AccountInstance;
  * 账号-实例(AccountInstance)表数据库访问层
  *
  * @author lait.zhang
- * @since 2022-10-22 10:07:26
+ * @since 2022-11-24 14:23:53
  */
 @Mapper
 public interface AccountInstanceMapper extends MybatisCrudMapper<AccountInstance> {
