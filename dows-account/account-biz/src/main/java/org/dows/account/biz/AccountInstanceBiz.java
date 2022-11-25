@@ -22,7 +22,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.stream.Collectors;
 
 
 /**
@@ -116,5 +119,80 @@ public class AccountInstanceBiz {
         AccountInstanceVo accountInstanceVo = new AccountInstanceVo();
         BeanUtils.copyProperties(accountInstance, accountInstanceVo);
         return accountInstanceVo;
+    }
+
+    /**
+     * runsix method process
+     * 1.check whether input appId & identifier duplicated
+     * 2.check whether accountIdentifier queried by appId & identifier exist in database
+     * 3.batch save accountIdentifier
+     * 4.batch save accountInstance
+     * 5.batch save accountRole if rbacRoleId exist
+     * 6.batch save accountGroup if orgId exist
+    */
+    @Transactional(rollbackFor = Exception.class)
+    public void batchCreateAccountInstance(List<AccountInstanceDTO> accountInstanceDTOList) {
+        /* runsix:1 */
+        ConcurrentHashMap<String, Set<String>> kIdentifierVAppIdSet = new ConcurrentHashMap<>();
+        ConcurrentHashMap<String, String> kIdentifierAppIdVAccountId = new ConcurrentHashMap<>();
+        accountInstanceDTOList.parallelStream().forEach(accountInstanceDTO -> {
+            String identifier = accountInstanceDTO.getIdentifier();
+            String appId = accountInstanceDTO.getAppId();
+            Set<String> appIdSet = kIdentifierVAppIdSet.get(identifier);
+            if (Objects.isNull(appIdSet)) {
+                CopyOnWriteArraySet<String> newAppIdSet = new CopyOnWriteArraySet<>();
+                newAppIdSet.add(appId);
+                kIdentifierVAppIdSet.put(identifier, newAppIdSet);
+            } else {
+                boolean appIdIsNotExist = appIdSet.add(appId);
+                if (!appIdIsNotExist) {
+                    throw new AccountException(EnumAccountStatusCode.BATCH_IMPORT_IDENTIFIER_DUPLICATED);
+                } else {
+                    kIdentifierVAppIdSet.put(identifier, appIdSet);
+                }
+            }
+            kIdentifierAppIdVAccountId.put(getKeyOfkIdentifierAppIdVAccountId(identifier,appId), IdWorker.getIdStr());
+        });
+        /* runsix:2 */
+        accountIdentifierService.lambdaQuery()
+                .select(AccountIdentifier::getIdentifier, AccountIdentifier::getAppId)
+                .in(AccountIdentifier::getIdentifier, kIdentifierVAppIdSet.keySet())
+                .list()
+                .parallelStream()
+                .forEach(accountIdentifier -> {
+                    String identifier = accountIdentifier.getIdentifier();
+                    String appId = accountIdentifier.getAppId();
+                    if (kIdentifierVAppIdSet.containsKey(identifier) && kIdentifierVAppIdSet.get(identifier).contains(appId)) {
+                        throw new AccountException(identifier + "," + EnumAccountStatusCode.ACCOUNT_EXIST_EXCEPTION.getDescr());
+                    }
+                });
+        /* runsix:3 */
+        List<AccountIdentifier> accountIdentifierList = accountInstanceDTOList.parallelStream().map(accountInstanceDTO -> {
+            AccountIdentifier accountIdentifier = new AccountIdentifier();
+            BeanUtils.copyProperties(accountInstanceDTO, accountIdentifier);
+            accountIdentifier.setAccountId(kIdentifierAppIdVAccountId.get(getKeyOfkIdentifierAppIdVAccountId(
+                    accountInstanceDTO.getIdentifier(), accountInstanceDTO.getAppId()
+            )));
+            return accountIdentifier;
+        }).collect(Collectors.toList());
+        accountIdentifierService.saveBatch(accountIdentifierList);
+        /* runsix:4 */
+        List<AccountInstance> accountInstanceList = accountInstanceDTOList.parallelStream().map(accountInstanceDTO -> {
+            AccountInstance accountInstance = new AccountInstance();
+            BeanUtils.copyProperties(accountInstanceDTO, accountInstance);
+            accountInstance.setAccountId(kIdentifierAppIdVAccountId.get(getKeyOfkIdentifierAppIdVAccountId(
+                    accountInstanceDTO.getIdentifier(), accountInstanceDTO.getAppId()
+            )));
+            accountInstance.setPassword(new BCryptPasswordEncoder().encode(accountInstanceDTO.getPassword()));
+            return accountInstance;
+        }).collect(Collectors.toList());
+        accountInstanceService.saveBatch(accountInstanceList);
+        /* runsix:5 */
+
+        /* runsix:6 */
+    }
+
+    private String getKeyOfkIdentifierAppIdVAccountId(String identifier, String appId) {
+        return identifier+"#"+appId;
     }
 }
