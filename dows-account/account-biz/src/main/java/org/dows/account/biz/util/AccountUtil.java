@@ -1,6 +1,7 @@
 package org.dows.account.biz.util;
 
 import org.dows.account.biz.dto.AccountInstanceDTO;
+import org.dows.account.biz.dto.TreeAccountOrgDTO;
 
 /**
  * @author runsix
@@ -8,4 +9,6 @@ import org.dows.account.biz.dto.AccountInstanceDTO;
 public interface AccountUtil {
     /* runsix:static validate AccountInstanceDTO */
     static void validateAccountInstanceDTO(AccountInstanceDTO accountInstanceDTO) {}
+
+    static void validateAccountOrgDTO(TreeAccountOrgDTO treeAccountOrgDTO){}
 }
