@@ -7,6 +7,7 @@ import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
 
 import java.util.Objects;
+import org.dows.account.biz.dto.TreeAccountOrgDTO;
 
 /**
  * @author runsix
@@ -71,4 +72,7 @@ public interface AccountUtil {
         return identifier+"#"+appId;
     }
 
+    static void validateAccountInstanceDTO(AccountInstanceDTO accountInstanceDTO) {}
+
+    static void validateAccountOrgDTO(TreeAccountOrgDTO treeAccountOrgDTO){}
 }
