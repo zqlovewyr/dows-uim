@@ -7,6 +7,7 @@ import org.dows.account.entity.AccountGroup;
 import org.dows.account.form.AccountGroupForm;
 import org.dows.account.service.AccountGroupService;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("accountGroup")
 public class AccountGroupRest implements MybatisCrudRest<AccountGroupForm, AccountGroup, AccountGroupService> {
+
+
 
     //private final AccountGroupBiz accountGroupBiz;
 

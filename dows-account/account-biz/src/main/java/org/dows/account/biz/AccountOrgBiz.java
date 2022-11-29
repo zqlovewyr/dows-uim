@@ -2,6 +2,7 @@ package org.dows.account.biz;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.biz.dto.TreeAccountOrgDTO;
@@ -22,6 +23,29 @@ import java.util.List;
 public class AccountOrgBiz {
 
     private final AccountOrgService accountOrgService;
+
+    // todo 导入文件
+    public void importOrg(String file){
+
+    }
+
+    // todo 导入组织对象
+    public void importOrg(TreeAccountOrgDTO file){
+
+
+    }
+
+    // todo 列出所有组织记录
+    public void listOrg(){
+
+    }
+    // todo 根据条件列出所有层级组织(智能层级，所有组织)
+    public void listOrgTree(TreeAccountOrgDTO treeAccountOrgDTO){
+
+
+
+
+    }
 
     /**
      * 创建树形结构 accountOrg 账号-组织

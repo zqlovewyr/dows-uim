@@ -19,7 +19,8 @@ public class TreeAccountOrgDTO implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty(value = "父ID(父级组织ID)")
     private Long pid;
-
+    // 是否递推查询
+    private Boolean recQuery;
     @ApiModelProperty("组织名称")
     private String orgName;
 
