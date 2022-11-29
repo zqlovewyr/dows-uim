@@ -10,8 +10,8 @@ import org.dows.framework.api.StatusCode;
 @Getter
 @AllArgsConstructor
 public enum EnumAccountRolePrincipalType implements StatusCode {
-    PERSONAL(400101, "个人"),
-    GROUP(400102, "组");
+    PERSONAL(0, "个人"),
+    GROUP(1, "组");
     final Integer code;
     final String descr;
 }
