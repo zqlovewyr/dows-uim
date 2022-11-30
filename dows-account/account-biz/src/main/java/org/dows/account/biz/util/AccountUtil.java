@@ -10,6 +10,7 @@ import java.util.Objects;
 import org.dows.account.biz.dto.AccountOrgDTO;
 import org.dows.account.biz.dto.AccountOrgGroupDTO;
 import org.dows.account.biz.dto.TreeAccountOrgDTO;
+import org.dows.account.biz.dto.TreeAccountOrgDTO;
 
 /**
  * @author runsix
@@ -74,8 +75,9 @@ public interface AccountUtil {
         return identifier+"#"+appId;
     }
 
-    static void validateAccountOrgDTO(TreeAccountOrgDTO treeAccountOrgDTO) {
-    }
+    static void validateAccountInstanceDTO(AccountInstanceDTO accountInstanceDTO) {}
+
+    static void validateAccountOrgDTO(TreeAccountOrgDTO treeAccountOrgDTO){}
 
     static void validateAccountOrgDTO(AccountOrgDTO orgDTO) {
     }

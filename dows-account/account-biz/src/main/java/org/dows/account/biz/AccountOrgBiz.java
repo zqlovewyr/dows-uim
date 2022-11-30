@@ -43,6 +43,29 @@ import java.util.stream.Collectors;
 public class AccountOrgBiz {
 
     private final AccountOrgService accountOrgService;
+
+    // todo 导入文件
+    public void importOrg(String file){
+
+    }
+
+    // todo 导入组织对象
+    public void importOrg(TreeAccountOrgDTO file){
+
+
+    }
+
+    // todo 列出所有组织记录
+    public void listOrg(){
+
+    }
+    // todo 根据条件列出所有层级组织(智能层级，所有组织)
+    public void listOrgTree(TreeAccountOrgDTO treeAccountOrgDTO){
+
+
+
+
+    }
     private final AccountGroupBiz accountGroupBiz;
     private final RbacRoleService rbacRoleService;
     private final AccountRoleService accountRoleService;
