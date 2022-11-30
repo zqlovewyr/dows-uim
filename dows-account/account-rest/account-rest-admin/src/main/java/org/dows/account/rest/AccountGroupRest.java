@@ -1,14 +1,22 @@
 package org.dows.account.rest;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dows.account.biz.AccountGroupBiz;
+import org.dows.account.biz.dto.AccountOrgGroupDTO;
 import org.dows.account.entity.AccountGroup;
 import org.dows.account.form.AccountGroupForm;
 import org.dows.account.service.AccountGroupService;
+import org.dows.framework.api.Response;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 账号-组(AccountGroup)表控制层
@@ -23,7 +31,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("accountGroup")
 public class AccountGroupRest implements MybatisCrudRest<AccountGroupForm, AccountGroup, AccountGroupService> {
 
-    //private final AccountGroupBiz accountGroupBiz;
+    private final AccountGroupBiz accountGroupBiz;
+
+    @ApiOperation("保存 账号-组织")
+    @PostMapping("/createAccountGroups")
+    public Response batchCreateAccountGroup(@RequestBody List<AccountOrgGroupDTO> accountOrgGroupDTOS) {
+        accountGroupBiz.batchInsertGroup(accountOrgGroupDTOS);
+        return Response.ok();
+    }
 
 }
 

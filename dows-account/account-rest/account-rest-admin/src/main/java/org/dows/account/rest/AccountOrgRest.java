@@ -1,20 +1,20 @@
 package org.dows.account.rest;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.biz.AccountOrgBiz;
+import org.dows.account.biz.dto.AccountOrgDTO;
 import org.dows.account.biz.dto.TreeAccountOrgDTO;
 import org.dows.account.entity.AccountOrg;
 import org.dows.account.form.AccountOrgForm;
 import org.dows.account.service.AccountOrgService;
+import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 账号-组织架构(AccountOrg)表控制层
@@ -31,11 +31,27 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
 
     private final AccountOrgBiz accountOrgBiz;
 
-    @ApiOperation("批量保存树型账号-组织")
+    @ApiOperation("保存树型 账号-组织")
     @PostMapping({"/createTreeAccountOrg"})
     public Response createTreeAccountOrg(@RequestBody TreeAccountOrgDTO treeAccountOrgDto) {
         accountOrgBiz.createTreeAccountOrg(treeAccountOrgDto);
         return Response.ok();
+    }
+
+    @ApiOperation("保存 账号-组织")
+    @PostMapping({"/createAccountOrg"})
+    public Response<AccountOrgVo> createAccountOrg(@RequestBody AccountOrgDTO accountOrgDTO) {
+        return Response.ok(accountOrgBiz.createAccountOrg(accountOrgDTO));
+    }
+
+    @ApiOperation("查询 账号-组织 列表")
+    @GetMapping({"/pageAccountOrg/{page}/{size}"})
+    public Response<IPage<AccountOrgVo>> pageAccountOrg(@RequestParam("应用ID") String appId
+            , @RequestParam("账号ID") String accountId
+            , @RequestParam("账号名") String accountName
+            , @PathVariable("page") Integer pageNo
+            , @PathVariable("size") Integer pageSize) {
+        return Response.ok(accountOrgBiz.pageAccountOrg(appId, accountId, accountName, pageNo, pageSize));
     }
 
 }

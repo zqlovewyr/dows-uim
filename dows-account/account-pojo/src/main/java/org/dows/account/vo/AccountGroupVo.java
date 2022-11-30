@@ -1,6 +1,7 @@
 package org.dows.account.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -22,25 +23,30 @@ import java.util.List;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "AccountGroup对象", description = "账号-账号组维度信息")
 public class AccountGroupVo implements Serializable {
     private static final long serialVersionUID = 479168695435247827L;
 
     @ApiModelProperty(value = "主键")
     //主键ID
-    //@JsonSerialize(using= ToStringSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
     @ApiModelProperty(value = "组织架构ID")
-    private Long orgId;
-
+    private String orgId;
 
     @ApiModelProperty(value = "岗位名/组名")
     private String orgName;
 
     @ApiModelProperty(value = "岗位code/组code")
     private String orgCode;
+
+    @ApiModelProperty(value = "账号ID")
+    private String accountId;
+
+    @ApiModelProperty(value = "账号名称")
+    private String accountName;
 
     @ApiModelProperty(value = "icon")
     private String orgIcon;
@@ -53,8 +59,8 @@ public class AccountGroupVo implements Serializable {
 
     @ApiModelProperty(value = "时间戳/创建时间")
     private Date dt;
+
     @ApiModelProperty(value = "角色权限")
-//    private List<RoleVo> roleList;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private List<Long> roleIdList;
 

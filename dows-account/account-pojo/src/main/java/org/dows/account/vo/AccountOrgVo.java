@@ -1,6 +1,7 @@
 package org.dows.account.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -8,6 +9,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @description: 账号-组织架构维度信息(AccountOrganization)VO类
@@ -21,18 +23,21 @@ import java.util.Date;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "AccountOrganization对象", description = "账号-组织架构维度信息")
-public class AccountOrganizationVo implements Serializable {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@ApiModel(value = "AccountOrg对象", description = "账号-组织架构维度信息")
+public class AccountOrgVo implements Serializable {
     private static final long serialVersionUID = -99474169347524042L;
 
-    @ApiModelProperty(value = "账号-权限ID")
-    //主键ID
-    //@JsonSerialize(using= ToStringSerializer.class)
+    @ApiModelProperty(value = "账号-组ID")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
-    @ApiModelProperty(value = "父ID")
-    private Long orgPid;
+    @ApiModelProperty("实体域组织机构ID")
+    private String orgId;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @ApiModelProperty("父ID(pid空时为总店)")
+    private Long pid;
 
     @ApiModelProperty(value = "组code")
     private String orgCode;
@@ -40,14 +45,17 @@ public class AccountOrganizationVo implements Serializable {
     @ApiModelProperty(value = "组织架构名")
     private String orgName;
 
-    @ApiModelProperty(value = "组织类型(0:group组,1:element元素)")
-    private Integer orgTyp;
+    @ApiModelProperty("名称首字母")
+    private String nameLetters;
 
-    @ApiModelProperty(value = "组织架构ICON")
-    private String orgIcon;
+    @ApiModelProperty(value = "头像")
+    private String profile;
 
-    @ApiModelProperty(value = "排序")
-    private Integer sorted;
+    @ApiModelProperty("应用ID")
+    private String appId;
+
+    @ApiModelProperty("组织描述")
+    private String descr;
 
     @ApiModelProperty(value = "租户ID")
     private String tenantId;
@@ -60,6 +68,9 @@ public class AccountOrganizationVo implements Serializable {
 
     @ApiModelProperty(value = "是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
+
+    @ApiModelProperty(value = "组织下-账号集合")
+    private List<AccountGroupVo> accountGroupList;
 
 }
 
