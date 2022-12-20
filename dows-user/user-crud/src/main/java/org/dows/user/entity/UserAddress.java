@@ -18,7 +18,7 @@ import java.util.Date;
  * 用户-地址维度(UserAddress)实体类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:31:10
+ * @since 2022-12-20 11:46:14
  */
 @SuppressWarnings("serial")
 @Data
@@ -30,15 +30,14 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "UserAddress对象", description = "用户-地址维度")
 public class UserAddress implements CrudEntity {
-    private static final long serialVersionUID = 651294666683600637L;
+    private static final long serialVersionUID = -37309210172185726L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("主键")
     private Long id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("用户ID")
-    private Long userId;
+    private String userId;
 
     @ApiModelProperty("国家编号")
     private String countryNo;
@@ -88,11 +87,9 @@ public class UserAddress implements CrudEntity {
     @ApiModelProperty("业务线")
     private String bizline;
 
-    @JsonIgnore
-    @TableLogic
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty("逻辑删除")
-    private Boolean deleted;
+    @ApiModelProperty("时间戳")
+    private Date dt;
 
 }
 

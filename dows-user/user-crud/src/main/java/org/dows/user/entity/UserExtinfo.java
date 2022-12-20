@@ -15,10 +15,10 @@ import org.dows.framework.crud.mybatis.CrudEntity;
 import java.util.Date;
 
 /**
- * 用户-实例(UserInstance)实体类
+ * 用户-扩展信息(UserExtinfo)实体类
  *
  * @author lait.zhang
- * @since 2022-12-20 11:46:17
+ * @since 2022-12-20 11:46:16
  */
 @SuppressWarnings("serial")
 @Data
@@ -28,43 +28,28 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "UserInstance对象", description = "用户-实例")
-public class UserInstance implements CrudEntity {
-    private static final long serialVersionUID = 571937250175399112L;
+@ApiModel(value = "UserExtinfo对象", description = "用户-扩展信息")
+public class UserExtinfo implements CrudEntity {
+    private static final long serialVersionUID = -95012892356514628L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @ApiModelProperty("自增主键ID")
+    @ApiModelProperty("主键")
     private Long id;
 
     @ApiModelProperty("用户ID")
     private String userId;
 
-    @ApiModelProperty("姓名")
-    private String name;
+    @ApiModelProperty("性格[多个", "分割]")
+    private String character;
 
-    @ApiModelProperty("身份证号")
-    private String idNo;
+    @ApiModelProperty("特长[多个", "分割]")
+    private String features;
 
-    @ApiModelProperty("年龄")
-    private String age;
+    @ApiModelProperty("简介")
+    private String intro;
 
-    @ApiModelProperty("名族")
-    private String nation;
-
-    @ApiModelProperty("发证机关")
-    private String signOrg;
-
-    @ApiModelProperty("户籍地址")
-    private String domicile;
-
-    @ApiModelProperty("生日")
-    private Date birthday;
-
-    @ApiModelProperty("有效时间（开始时间）")
-    private Date indate;
-
-    @ApiModelProperty("失效时间（失效时间）")
-    private Date expdate;
+    @ApiModelProperty("婚姻状态[0：未婚，1：已婚]")
+    private Boolean married;
 
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("时间戳")

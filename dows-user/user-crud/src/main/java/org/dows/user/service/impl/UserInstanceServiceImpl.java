@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * 用户-实例(UserInstance)表服务实现类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:31:13
+ * @since 2022-12-20 11:46:17
  */
 @Service("userInstanceService")
 public class UserInstanceServiceImpl extends MybatisCrudServiceImpl<UserInstanceMapper, UserInstance> implements UserInstanceService {

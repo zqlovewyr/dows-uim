@@ -8,7 +8,7 @@ import org.dows.user.entity.UserContact;
  * 用户-联系人(UserContact)表数据库访问层
  *
  * @author lait.zhang
- * @since 2022-10-22 10:31:12
+ * @since 2022-12-20 11:46:14
  */
 @Mapper
 public interface UserContactMapper extends MybatisCrudMapper<UserContact> {

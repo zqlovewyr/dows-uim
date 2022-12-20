@@ -8,7 +8,7 @@ import org.dows.user.entity.UserCompany;
  * 用户-公司(UserCompany)表数据库访问层
  *
  * @author lait.zhang
- * @since 2022-10-22 10:31:11
+ * @since 2022-12-20 11:46:14
  */
 @Mapper
 public interface UserCompanyMapper extends MybatisCrudMapper<UserCompany> {

@@ -15,7 +15,7 @@ import org.dows.framework.crud.mybatis.CrudEntity;
 import java.util.Date;
 
 /**
- * 用户-联系人(UserContact)实体类
+ * 用户-住所(UserDwelling)实体类
  *
  * @author lait.zhang
  * @since 2022-12-20 11:46:14
@@ -28,40 +28,37 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "UserContact对象", description = "用户-联系人")
-public class UserContact implements CrudEntity {
-    private static final long serialVersionUID = 960407450586745777L;
+@ApiModel(value = "UserDwelling对象", description = "用户-住所")
+public class UserDwelling implements CrudEntity {
+    private static final long serialVersionUID = -10611924502007111L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("主键")
     private Long id;
 
-    @ApiModelProperty("用户ID")
-    private String userId;
+    @ApiModelProperty("地址")
+    private String address;
 
-    @ApiModelProperty("联系人")
-    private String contact;
+    @ApiModelProperty("家庭电话")
+    private String telephone;
 
-    @ApiModelProperty("联系号码")
-    private String contactNum;
+    @ApiModelProperty("邮政编码")
+    private String zipCode;
 
-    @ApiModelProperty("联系类型（0:手机，1:邮箱，2:电话）")
-    private Integer contactTyp;
+    @ApiModelProperty("居住面积")
+    private String acreage;
 
-    @ApiModelProperty("排序")
-    private Integer sorted;
+    @ApiModelProperty("房屋类型")
+    private String houseType;
 
-    @ApiModelProperty("状态")
-    private Integer state;
+    @ApiModelProperty("燃料")
+    private String fuel;
 
-    @ApiModelProperty("是否是自己")
-    private Boolean self;
+    @ApiModelProperty("饮水")
+    private String water;
 
-    @JsonIgnore
-    @TableLogic
-    @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty("逻辑删除")
-    private Boolean deleted;
+    @ApiModelProperty("厨房使用方式")
+    private String kitchen;
 
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("时间戳")
