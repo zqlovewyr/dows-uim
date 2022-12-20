@@ -70,5 +70,11 @@ public class UserInstance implements CrudEntity {
     @ApiModelProperty("时间戳")
     private Date dt;
 
+    @JsonIgnore
+    @TableLogic
+    @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty("逻辑删除")
+    private Boolean deleted;
+
 }
 

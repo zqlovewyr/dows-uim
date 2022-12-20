@@ -39,10 +39,10 @@ public class UserExtinfo implements CrudEntity {
     @ApiModelProperty("用户ID")
     private String userId;
 
-    @ApiModelProperty("性格[多个", "分割]")
+    @ApiModelProperty("性格[多个,分割]")
     private String character;
 
-    @ApiModelProperty("特长[多个", "分割]")
+    @ApiModelProperty("特长[多个,分割]")
     private String features;
 
     @ApiModelProperty("简介")
@@ -54,6 +54,12 @@ public class UserExtinfo implements CrudEntity {
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("时间戳")
     private Date dt;
+
+    @JsonIgnore
+    @TableLogic
+    @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty("逻辑删除")
+    private Boolean deleted;
 
 }
 

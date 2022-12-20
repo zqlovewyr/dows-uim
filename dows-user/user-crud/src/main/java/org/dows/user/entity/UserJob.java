@@ -48,5 +48,11 @@ public class UserJob implements CrudEntity {
     @ApiModelProperty("单位[日|月|年]")
     private String unit;
 
+    @JsonIgnore
+    @TableLogic
+    @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty("逻辑删除")
+    private Boolean deleted;
+
 }
 
