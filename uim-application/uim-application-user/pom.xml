@@ -18,11 +18,11 @@
         <!--<dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>rbac-rest-user</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.dows.cloud</groupId>
-            <artifactId>user-rest-user</artifactId>
-        </dependency>-->
+            <artifactId>user-rest</artifactId>
+        </dependency>
 
 
         <dependency>
