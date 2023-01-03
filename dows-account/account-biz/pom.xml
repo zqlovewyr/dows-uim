@@ -40,6 +40,5 @@
                     <groupId>org.dows.cloud</groupId>
                     <artifactId>sms-client</artifactId>
                 </dependency>-->
-
     </dependencies>
 </project>
