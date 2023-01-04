@@ -10,7 +10,7 @@
 
 
     <dependencies>
-        <dependency>
+       <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>account-rest-admin</artifactId>
         </dependency>

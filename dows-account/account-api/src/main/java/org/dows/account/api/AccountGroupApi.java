@@ -1,5 +1,7 @@
 package org.dows.account.api;
 
+import java.util.List;
+
 /**
  * 账号-账号组维度信息(AccountGroup)Api接口
  *
@@ -7,6 +9,4 @@ package org.dows.account.api;
  * @since 2021-09-10 15:41:22
  */
 public interface AccountGroupApi {
-
-
 }
