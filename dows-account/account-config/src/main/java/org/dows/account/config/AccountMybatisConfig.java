@@ -36,7 +36,8 @@ public class AccountMybatisConfig {
     @Bean(name = "accountDataSource")
     @Qualifier("accountDataSource")
     public DataSource accountDataSource() {
-        DataSourceProperties properties1 = properties.getInnerMap().get("account");
+ /*       DataSourceProperties properties1 = properties.getInnerMap().get("account");*/
+        DataSourceProperties properties1 = new DataSourceProperties();
         return properties1.initializeDataSourceBuilder().build();
     }
 

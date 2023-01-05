@@ -11,7 +11,6 @@ import java.util.Map;
 
 @Component
 @ComponentScan("org.dows.account.mapper.*")
-@PropertySource(value = {"classpath:application-mysql.yml"})
 @Data
 public class AccountDataSourceProperties {
     @Value("${spring.datasource.account}")
