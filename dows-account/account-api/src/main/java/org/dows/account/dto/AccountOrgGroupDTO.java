@@ -1,4 +1,4 @@
-package org.dows.account.biz.dto;
+package org.dows.account.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

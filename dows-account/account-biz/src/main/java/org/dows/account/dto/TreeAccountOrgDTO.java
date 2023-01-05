@@ -1,4 +1,4 @@
-package org.dows.account.biz.dto;
+package org.dows.account.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -16,14 +17,16 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "AccountOrgDTO对象", description = "账号-组织架构")
-public class AccountOrgDTO {
+@ApiModel(value = "AccountOrg对象", description = "账号-组织架构(树形参数)")
+public class TreeAccountOrgDTO implements Serializable {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty(value = "父ID(父级组织ID)")
     private Long pid;
 
-    @ApiModelProperty(value = "组织名称", required = true)
+    // 是否递推查询
+    private Boolean recQuery;
+    @ApiModelProperty("组织名称")
     private String orgName;
 
     @ApiModelProperty("名称首字母")
@@ -38,16 +41,13 @@ public class AccountOrgDTO {
     @ApiModelProperty("描述")
     private String descr;
 
-    @ApiModelProperty(value = "应用ID", required = true)
+    @ApiModelProperty("应用ID")
     private String appId;
 
-    @ApiModelProperty(value = "租户ID", required = true)
+    @ApiModelProperty("租户ID")
     private String tenantId;
 
-    @ApiModelProperty(value = "角色Id rbac-role", example = "传值表示组织成员全部拥有对应角色权限")
-    private Long rbacRoleId;
-
-    @ApiModelProperty("组织成员集合")
-    private List<AccountOrgGroupDTO> accountOrgGroups;
+    @ApiModelProperty("下层组织对象")
+    private List<TreeAccountOrgDTO> nextAccountOrgDto;
 
 }

@@ -12,4 +12,16 @@
     <artifactId>user-boot</artifactId>
 
 
+    <dependencies>
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>user-biz</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>user-config</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>

@@ -19,6 +19,7 @@
         <module>rbac-boot</module>
         <module>rbac-rest</module>
         <module>rbac-pojo</module>
+        <module>rbac-config</module>
     </modules>
 
     <dependencyManagement>

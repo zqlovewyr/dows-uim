@@ -1,10 +1,9 @@
-package org.dows.account.biz.dto;
+package org.dows.account.dto;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 
 /**

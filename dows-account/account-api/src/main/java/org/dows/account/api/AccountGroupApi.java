@@ -1,5 +1,6 @@
 package org.dows.account.api;
 
+import org.dows.account.dto.AccountOrgGroupDTO;
 import java.util.List;
 
 /**
@@ -9,4 +10,5 @@ import java.util.List;
  * @since 2021-09-10 15:41:22
  */
 public interface AccountGroupApi {
+    void batchInsertGroup(List<AccountOrgGroupDTO> accountOrgGroupDTOS);
 }

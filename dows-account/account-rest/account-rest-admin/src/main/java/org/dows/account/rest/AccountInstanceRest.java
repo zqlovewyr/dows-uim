@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.biz.AccountInstanceBiz;
-import org.dows.account.biz.dto.AccountInstanceDTO;
+import org.dows.account.dto.AccountInstanceDTO;
 import org.dows.account.entity.AccountInstance;
 import org.dows.account.form.AccountInstanceForm;
 import org.dows.account.service.AccountInstanceService;

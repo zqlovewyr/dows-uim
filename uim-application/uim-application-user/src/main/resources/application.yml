@@ -12,7 +12,7 @@ server:
 
 spring:
   application:
-    name: dows-pay
+    name: dows-user
   profiles:
     include: mysql,mybatis,mvc,redis,alipay
     active: sit
