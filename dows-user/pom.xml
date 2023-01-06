@@ -22,18 +22,4 @@
         <module>user-config</module>
     </modules>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.dows.cloud</groupId>
-                <artifactId>account-biz</artifactId>
-                <version>${account.version}</version>
-            </dependency>
-
-
-
-
-        </dependencies>
-    </dependencyManagement>
-
 </project>
