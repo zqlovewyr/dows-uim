@@ -9,7 +9,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>dows-tenant</artifactId>
-    <version>20220701-SNAPSHOT</version>
     <packaging>pom</packaging>
 
 
