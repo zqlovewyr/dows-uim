@@ -15,6 +15,10 @@
             <groupId>org.dows.framework</groupId>
             <artifactId>crud-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>account-pojo</artifactId>
+        </dependency>
 <!--        <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>auth-api</artifactId>

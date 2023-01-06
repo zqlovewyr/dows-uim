@@ -17,6 +17,10 @@
         </dependency>
         <dependency>
             <groupId>org.dows.cloud</groupId>
+            <artifactId>account-pojo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
             <artifactId>rbac-biz</artifactId>
         </dependency>
         <dependency>

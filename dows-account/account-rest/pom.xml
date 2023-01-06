@@ -18,4 +18,14 @@
         <module>account-rest-tenant</module>
         <module>account-rest-user</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>account-biz</artifactId>
+                <version>20220701-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
