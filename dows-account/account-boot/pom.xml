@@ -17,6 +17,11 @@
             <artifactId>account-biz</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>account-config</artifactId>
+        </dependency>
+
 
     </dependencies>
 

@@ -11,6 +11,16 @@
     <artifactId>account-biz</artifactId>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>user-boot</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>user-api</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>account-crud</artifactId>

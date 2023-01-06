@@ -11,11 +11,18 @@
     <artifactId>user-biz</artifactId>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>user-api</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>user-crud</artifactId>
             <version>20220701-SNAPSHOT</version>
         </dependency>
+
 
         <dependency>
             <groupId>org.dows.cloud</groupId>
