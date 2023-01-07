@@ -8,11 +8,13 @@
         <version>20220701-SNAPSHOT</version>
     </parent>
 
-    <modelVersion>4.0.0</modelVersion>
+
     <groupId>org.dows.cloud</groupId>
     <artifactId>dows-uim</artifactId>
     <version>20220701-SNAPSHOT</version>
+
     <packaging>pom</packaging>
+    <modelVersion>4.0.0</modelVersion>
 
     <properties>
         <account.version>${project.version}</account.version>

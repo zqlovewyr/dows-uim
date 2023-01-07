@@ -9,14 +9,11 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>account-rest</artifactId>
-    <packaging>pom</packaging>
 
-
-    <modules>
-        <module>account-rest-admin</module>
-        <module>account-rest-developer</module>
-        <module>account-rest-tenant</module>
-        <module>account-rest-user</module>
-    </modules>
-
+    <dependencies>
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>account-biz</artifactId>
+        </dependency>
+    </dependencies>
 </project>

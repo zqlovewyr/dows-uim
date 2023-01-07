@@ -12,6 +12,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>user-app</module>
         <module>user-api</module>
         <module>user-crud</module>
         <module>user-biz</module>

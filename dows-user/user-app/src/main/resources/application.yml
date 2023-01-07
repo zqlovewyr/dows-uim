@@ -1,0 +1,23 @@
+server:
+  port: 9010
+  undertow:
+    buffer-size: 1024
+    direct-buffers: true
+    threads:
+      io: 4
+      worker: 32
+#  servlet:
+#    context-path: /${spring.application.name}
+
+
+spring:
+  application:
+    name: user-app
+  profiles:
+    include: mysql,mybatis,mvc,redis,alipay
+    active: dev
+#debug: true
+
+
+uim:
+  index: "forward:/${spring.application.name}/v1/index.html"
