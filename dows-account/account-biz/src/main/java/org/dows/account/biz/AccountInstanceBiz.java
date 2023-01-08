@@ -332,4 +332,83 @@ public class AccountInstanceBiz {
                 file, appId, rbacRoleId, accountOrgOrgId, password, avatar, source, phone);
         batchCreateAccountInstance(accountInstanceDTOListByFile);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public AccountInstanceVo saveAccountInstance(AccountInstanceDTO accountInstanceDTO) {
+        accountInstanceDTO = AccountUtil.validateAndTrimAccountInstanceDTO(accountInstanceDTO);
+        /* runsix:1.check whether accountIdentifier queried by appId & identifier exist */
+        accountIdentifierService.lambdaQuery()
+                .select(AccountIdentifier::getId)
+                .eq(AccountIdentifier::getAppId, accountInstanceDTO.getAppId())
+                .eq(AccountIdentifier::getIdentifier, accountInstanceDTO.getIdentifier())
+                .oneOpt()
+                .ifPresent((a) -> {
+                    throw new AccountException(EnumAccountStatusCode.ACCOUNT_EXIST_EXCEPTION);
+                });
+        /* runsix:2.check whether rbacRoleId exist */
+        RbacRole rbacRole = null;
+        if (Objects.nonNull(accountInstanceDTO.getRbacRoleId())) {
+            rbacRole = rbacRoleService.lambdaQuery()
+                    .select(RbacRole::getId, RbacRole::getRoleName, RbacRole::getRoleCode)
+                    .eq(RbacRole::getId, accountInstanceDTO.getRbacRoleId())
+                    .oneOpt()
+                    .orElseThrow(() -> {
+                        throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
+                    });
+        }
+        /* runsix:3.check whether accountOrgOrgId exist */
+        AccountOrg accountOrg = null;
+        if (StringUtils.isNotBlank(accountInstanceDTO.getAccountOrgOrgId())) {
+            accountOrg = accountOrgService.lambdaQuery()
+                    .select(AccountOrg::getOrgId, AccountOrg::getOrgName)
+                    .eq(AccountOrg::getOrgId, accountInstanceDTO.getAccountOrgOrgId())
+                    .oneOpt()
+                    .orElseThrow(() -> {
+                        throw new OrgException(EnumAccountStatusCode.ORG_NOT_EXIST_EXCEPTION);
+                    });
+        }
+        /* runsix:4.save accountIdentifier */
+        AccountIdentifier accountIdentifier = new AccountIdentifier();
+        BeanUtils.copyProperties(accountInstanceDTO, accountIdentifier);
+        accountIdentifier.setAccountId(IdWorker.getIdStr());
+        accountIdentifierService.save(accountIdentifier);
+        /* runsix:5.save accountInstance */
+        AccountInstance accountInstance = new AccountInstance();
+        BeanUtils.copyProperties(accountInstanceDTO, accountInstance);
+        accountInstance.setAccountId(accountIdentifier.getAccountId());
+        accountInstance.setPassword(new BCryptPasswordEncoder().encode(accountInstanceDTO.getPassword()));
+        accountInstanceService.save(accountInstance);
+        /* runsix:6.save accountRole if rbacRoleId exist */
+        if (Objects.nonNull(rbacRole)) {
+            accountRoleService.save(
+                    AccountRole
+                            .builder()
+                            .roleId(accountInstanceDTO.getRbacRoleId().toString())
+                            .roleName(rbacRole.getRoleName())
+                            .roleCode(rbacRole.getRoleCode())
+                            .principalType(EnumAccountRolePrincipalType.PERSONAL.getCode())
+                            .principalId(accountInstance.getAccountId())
+                            .principalName(accountInstanceDTO.getAccountName())
+                            .build()
+            );
+        }
+        /* runsix:7.save accountGroup if orgId exist */
+        if (Objects.nonNull(accountOrg)) {
+            accountGroupService.save(
+                    AccountGroup
+                            .builder()
+                            .orgId(accountInstanceDTO.getAccountOrgOrgId())
+                            .orgName(accountOrg.getOrgName())
+                            .accountId(accountInstance.getAccountId())
+                            .accountName(accountInstance.getAccountName())
+                            .appId(accountInstanceDTO.getAppId())
+                            .build()
+            );
+        }
+        /* runsix:8.convert entity to vo and return */
+        AccountInstanceVo accountInstanceVo = new AccountInstanceVo();
+        BeanUtils.copyProperties(accountInstance, accountInstanceVo);
+        accountInstanceVo.setAccountId(Long.parseLong(accountInstance.getAccountId()));
+        return accountInstanceVo;
+    }
 }
