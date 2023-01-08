@@ -12,13 +12,9 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.dows.framework.crud.mybatis.CrudEntity;
 
-/**
- * 账号-实例(AccountInstance)实体类
- *
- * @author lait.zhang
- * @since 2022-11-24 14:23:53
- */
-@SuppressWarnings("serial")
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Data
 @ToString
 @Builder
@@ -26,9 +22,8 @@ import org.dows.framework.crud.mybatis.CrudEntity;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "AccountInstance对象", description = "账号-实例")
-public class AccountInstance implements CrudEntity {
-    private static final long serialVersionUID = 471265538286310949L;
+@ApiModel(value = "AccountUserInfo对象", description = "账号-用户信息")
+public class AccountUserInfo implements CrudEntity {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("自增主键ID")
@@ -37,32 +32,27 @@ public class AccountInstance implements CrudEntity {
     @ApiModelProperty("账号ID")
     private String accountId;
 
-    @ApiModelProperty("账号名")
-    private String accountName;
+    private Integer sex;
 
-    @ApiModelProperty("账号密码")
-    private String password;
+    private LocalDate birthday;
 
-    @ApiModelProperty("头像")
-    private String avatar;
+    private LocalDateTime createTime;
 
-    @ApiModelProperty("注册来源, 推广统计用")
-    private String source;
+    private String clientNo;
 
-    @ApiModelProperty("账号绑定的唯一手机号(可更换)")
-    private String phone;
+    private String city;
 
-    @ApiModelProperty("应用ID")
-    private String appId;
+    private String job;
+
+    private String education;
+
+    private String maritalStatus;
+
+    private String nation;
 
     @JsonIgnore
     @TableLogic
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
-
-//    @ApiModelProperty("")
-//    private Date dt;
-
 }
-
