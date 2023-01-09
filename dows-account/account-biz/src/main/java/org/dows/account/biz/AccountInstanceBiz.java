@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.dows.account.biz.dto.AccountInstanceDTO;
+import org.dows.account.biz.dto.AccountInstanceResDTO;
 import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
@@ -15,6 +16,7 @@ import org.dows.account.biz.exception.OrgException;
 import org.dows.account.biz.util.AccountUtil;
 import org.dows.account.entity.*;
 import org.dows.account.service.*;
+import org.dows.account.vo.AccountInstanceResVo;
 import org.dows.account.vo.AccountInstanceVo;
 import org.dows.rbac.biz.enums.EnumRbacStatusCode;
 import org.dows.rbac.biz.exception.RbacException;
@@ -35,8 +37,6 @@ import java.util.stream.Collectors;
 
 import static org.dows.account.biz.util.AccountUtil.getKeyOfkIdentifierAppIdV;
 
-import java.util.Objects;
-
 
 /**
  * @author runsix
@@ -51,6 +51,10 @@ public class AccountInstanceBiz {
     private final AccountRoleService accountRoleService;
     private final AccountOrgService accountOrgService;
     private final AccountGroupService accountGroupService;
+
+    private final AccountTenantService accountTenantService;
+    private final AccountUserService accountUserService;
+    private final AccountUserInfoService accountUserInfoService;
 
     /**
      * runsix method process
@@ -334,77 +338,159 @@ public class AccountInstanceBiz {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public AccountInstanceVo saveAccountInstance(AccountInstanceDTO accountInstanceDTO) {
-        accountInstanceDTO = AccountUtil.validateAndTrimAccountInstanceDTO(accountInstanceDTO);
-        /* runsix:1.check whether accountIdentifier queried by appId & identifier exist */
-        accountIdentifierService.lambdaQuery()
-                .select(AccountIdentifier::getId)
-                .eq(AccountIdentifier::getAppId, accountInstanceDTO.getAppId())
-                .eq(AccountIdentifier::getIdentifier, accountInstanceDTO.getIdentifier())
-                .oneOpt()
-                .ifPresent((a) -> {
-                    throw new AccountException(EnumAccountStatusCode.ACCOUNT_EXIST_EXCEPTION);
-                });
-        /* runsix:2.check whether rbacRoleId exist */
-        RbacRole rbacRole = null;
-        if (Objects.nonNull(accountInstanceDTO.getRbacRoleId())) {
-            rbacRole = rbacRoleService.lambdaQuery()
-                    .select(RbacRole::getId, RbacRole::getRoleName, RbacRole::getRoleCode)
-                    .eq(RbacRole::getId, accountInstanceDTO.getRbacRoleId())
-                    .oneOpt()
-                    .orElseThrow(() -> {
-                        throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
-                    });
+    public AccountInstanceVo saveOrUpdateAccountInstance(AccountInstanceResDTO accountInstanceDTO) {
+        if(accountInstanceDTO == null){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_INSTANCE_DTO_CANNOT_BE_NULL);
         }
+        //TODO 如果租户id为空，说明是新增不执行查询操作 租户建立与新增用户建立关系？
+        if(accountInstanceDTO.getTenantId() != null && accountInstanceDTO.getId() != null){
+            Map<String,Object> param = new HashMap<>();
+            param.put("accountName",accountInstanceDTO.getAccountName());
+            param.put("tenantId",accountInstanceDTO.getTenantId());
+            if(accountInstanceService.getAccountInstanceByUserNameAndTenantId(param).size() > 0){
+                throw new AccountException(EnumAccountStatusCode.ACCOUNT_EXIST_EXCEPTION);
+            }
+        }
+
+        /* runsix:2.check whether rbacRoleId exist */
+        // 新增角色
+//        RbacRole rbacRole = null;
+//        if (Objects.nonNull(accountInstanceDTO.getRbacRoleId())) {
+//            rbacRole = rbacRoleService.lambdaQuery()
+//                    .select(RbacRole::getId, RbacRole::getRoleName, RbacRole::getRoleCode)
+//                    .eq(RbacRole::getId, accountInstanceDTO.getRbacRoleId())
+//                    .oneOpt()
+//                    .orElseThrow(() -> {
+//                        throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
+//                    });
+//        }
         /* runsix:3.check whether accountOrgOrgId exist */
+
+         // 建立与组织关系
         AccountOrg accountOrg = null;
-        if (StringUtils.isNotBlank(accountInstanceDTO.getAccountOrgOrgId())) {
+        if (StringUtils.isNoneBlank(accountInstanceDTO.getOrgId())) {
             accountOrg = accountOrgService.lambdaQuery()
                     .select(AccountOrg::getOrgId, AccountOrg::getOrgName)
-                    .eq(AccountOrg::getOrgId, accountInstanceDTO.getAccountOrgOrgId())
+                    .eq(AccountOrg::getOrgId, accountInstanceDTO.getOrgId())
                     .oneOpt()
                     .orElseThrow(() -> {
                         throw new OrgException(EnumAccountStatusCode.ORG_NOT_EXIST_EXCEPTION);
                     });
         }
         /* runsix:4.save accountIdentifier */
-        AccountIdentifier accountIdentifier = new AccountIdentifier();
-        BeanUtils.copyProperties(accountInstanceDTO, accountIdentifier);
-        accountIdentifier.setAccountId(IdWorker.getIdStr());
-        accountIdentifierService.save(accountIdentifier);
-        /* runsix:5.save accountInstance */
-        AccountInstance accountInstance = new AccountInstance();
-        BeanUtils.copyProperties(accountInstanceDTO, accountInstance);
-        accountInstance.setAccountId(accountIdentifier.getAccountId());
-        accountInstance.setPassword(new BCryptPasswordEncoder().encode(accountInstanceDTO.getPassword()));
-        accountInstanceService.save(accountInstance);
+        // id是否为空 如果不为空说明是修改
+        AccountInstance accountInstance = null;
+        if(accountInstanceDTO.getId() != null){
+
+            accountIdentifierService.lambdaUpdate()
+                    .set(AccountIdentifier::getIdentifier,accountInstanceDTO.getIdCard())
+                    .eq(AccountIdentifier::getAccountId,accountInstanceDTO.getAccountId())
+                    .update();
+
+//            AccountIdentifier accountIdentifier = accountIdentifierService.lambdaQuery().eq(AccountIdentifier::getAccountId, accountInstanceDTO.getAccountId())
+//                    .one();
+//            if(accountIdentifier != null){
+//                accountIdentifier.setIdentifier(accountInstanceDTO.getIdCard());
+//                accountIdentifierService.updateById(accountIdentifier);
+//            }
+            accountInstanceService.lambdaUpdate()
+                    .set(AccountInstance::getPassword,new BCryptPasswordEncoder().encode(accountInstanceDTO.getPassword()))
+                    .set(AccountInstance::getPhone,accountInstanceDTO.getPhone())
+                    .set(AccountInstance::getStoreId,accountInstanceDTO.getStoreId())
+                    .eq(AccountInstance::getAccountId,accountInstanceDTO.getAccountId())
+                    .update();
+
+            accountUserInfoService.lambdaUpdate()
+                    .set(AccountUserInfo::getSex,accountInstanceDTO.getGender())
+                    .set(AccountUserInfo::getJob,accountInstanceDTO.getJob())
+                    .eq(AccountUserInfo::getAccountId,accountInstanceDTO.getAccountId())
+                    .update();
+
+            accountGroupService.lambdaUpdate()
+                    .set(AccountGroup::getOrgId,accountInstanceDTO.getOrgId())
+                    .set(AccountGroup::getOrgName,accountOrg.getOrgName())
+                    .eq(AccountGroup::getAccountId,accountInstanceDTO.getAccountId())
+                    .update();
+
+            accountInstance = accountInstanceService.lambdaQuery().eq(AccountInstance::getAccountId, accountInstanceDTO.getAccountId())
+                    .one();
+        }else{
+            AccountIdentifier accountIdentifier = new AccountIdentifier();
+            BeanUtils.copyProperties(accountInstanceDTO, accountIdentifier);
+            accountIdentifier.setIdentifier(accountInstanceDTO.getIdCard());
+            accountIdentifier.setAccountId(IdWorker.getIdStr());
+            accountIdentifierService.save(accountIdentifier);
+            /* runsix:5.save accountInstance */
+            accountInstance = new AccountInstance();
+            BeanUtils.copyProperties(accountInstanceDTO, accountInstance);
+            accountInstance.setAccountId(accountIdentifier.getAccountId());
+            accountInstance.setPassword(new BCryptPasswordEncoder().encode(accountInstanceDTO.getPassword()));
+            /*
+             账号类型区分逻辑
+             用户登录时，存储redis
+             从redis取出当前用户，根据当前账户类型区分 需要新增的用户
+             注意：总部端可以申请子账号，及员工账号，员工账号无法登录后台，可以根据前端上送密码区分，有密码则是子账号，无密码则门店端APP员工账号
+             */
+            //  TODO
+            accountInstance.setAccountType(2);
+            accountInstanceService.save(accountInstance);
+            // 账号与租户关系
+            accountTenantService.save(
+                    AccountTenant
+                            .builder()
+                            .accountId(accountIdentifier.getAccountId())
+                            .tenantId(accountInstanceDTO.getTenantId())
+                            .build()
+            );
+            // 账号与用户关系
+            accountUserService.save(
+                    AccountUser
+                            .builder()
+                            .accountId(accountIdentifier.getAccountId())
+                            .tentantId(accountInstanceDTO.getTenantId())
+                            .build()
+            );
+            // 账号与用户详情关系
+            accountUserInfoService.save(
+                    AccountUserInfo
+                            .builder()
+                            .accountId(accountIdentifier.getAccountId())
+                            .tenantId(accountInstanceDTO.getTenantId())
+                            .sex(accountInstanceDTO.getGender())
+                            .job(accountInstanceDTO.getJob())
+                            .build()
+            );
+            if (Objects.nonNull(accountOrg)) {
+                accountGroupService.save(
+                        AccountGroup
+                                .builder()
+                                .orgId(accountInstanceDTO.getOrgId())
+                                .orgName(accountOrg.getOrgName())
+                                .accountId(accountInstance.getAccountId())
+                                .accountName(accountInstance.getAccountName())
+                                // .appId(accountInstanceDTO.getAppId())
+                                .build()
+                );
+            }
+        }
+
+
         /* runsix:6.save accountRole if rbacRoleId exist */
-        if (Objects.nonNull(rbacRole)) {
-            accountRoleService.save(
-                    AccountRole
-                            .builder()
-                            .roleId(accountInstanceDTO.getRbacRoleId().toString())
-                            .roleName(rbacRole.getRoleName())
-                            .roleCode(rbacRole.getRoleCode())
-                            .principalType(EnumAccountRolePrincipalType.PERSONAL.getCode())
-                            .principalId(accountInstance.getAccountId())
-                            .principalName(accountInstanceDTO.getAccountName())
-                            .build()
-            );
-        }
+//        if (Objects.nonNull(rbacRole)) {
+//            accountRoleService.save(
+//                    AccountRole
+//                            .builder()
+//                            .roleId(accountInstanceDTO.getRbacRoleId().toString())
+//                            .roleName(rbacRole.getRoleName())
+//                            .roleCode(rbacRole.getRoleCode())
+//                            .principalType(EnumAccountRolePrincipalType.PERSONAL.getCode())
+//                            .principalId(accountInstance.getAccountId())
+//                            .principalName(accountInstanceDTO.getAccountName())
+//                            .build()
+//            );
+//        }
         /* runsix:7.save accountGroup if orgId exist */
-        if (Objects.nonNull(accountOrg)) {
-            accountGroupService.save(
-                    AccountGroup
-                            .builder()
-                            .orgId(accountInstanceDTO.getAccountOrgOrgId())
-                            .orgName(accountOrg.getOrgName())
-                            .accountId(accountInstance.getAccountId())
-                            .accountName(accountInstance.getAccountName())
-                            .appId(accountInstanceDTO.getAppId())
-                            .build()
-            );
-        }
+
         /* runsix:8.convert entity to vo and return */
         AccountInstanceVo accountInstanceVo = new AccountInstanceVo();
         BeanUtils.copyProperties(accountInstance, accountInstanceVo);

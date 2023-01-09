@@ -1,32 +1,24 @@
-package org.dows.account.form;
+package org.dows.account.biz.dto;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModel;
+import com.alibaba.excel.annotation.ExcelProperty;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
-import lombok.experimental.Accessors;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 用户表单
- *
- * @author lait.zhang
- * @since 2022-10-22 10:31:13
+ * @author runsix
  */
-@SuppressWarnings("serial")
 @Data
-@ToString
-@Builder
-@Accessors(chain = true)
-@AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "表单对象", description = "用户")
-public class AccountUserResForm implements Serializable {
-    private static final long serialVersionUID = 634662199181072017L;
-    @JsonIgnore
+@AllArgsConstructor
+public class AccountInstanceResDTO implements Serializable {
+    private static final long serialVersionUID = 4496765086642042826L;
+
+    @ApiModelProperty("主键ID")
     private Long id;
 
     @ApiModelProperty("账号ID")
@@ -72,15 +64,4 @@ public class AccountUserResForm implements Serializable {
     @ApiModelProperty("租户ID")
     private String tenantId;
 
-    @ApiModelProperty("角色")
-    private String roleId;
-    @ApiModelProperty("入职开始日期")
-    private Date entryDateStart;
-    @ApiModelProperty("入职结束日期")
-    private Date entryDateEnd;
-
-    private Integer page;
-    private Integer size;
-
 }
-

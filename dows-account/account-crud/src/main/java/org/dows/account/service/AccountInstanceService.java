@@ -1,7 +1,11 @@
 package org.dows.account.service;
 
 import org.dows.account.entity.AccountInstance;
+import org.dows.account.vo.AccountInstanceResVo;
 import org.dows.framework.crud.mybatis.MybatisCrudService;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -12,5 +16,11 @@ import org.dows.framework.crud.mybatis.MybatisCrudService;
  */
 public interface AccountInstanceService extends MybatisCrudService<AccountInstance> {
 
+    /**
+     * 根据userName与TenantId查询账号是否存在
+     * @param param
+     * @return
+     */
+    List<AccountInstanceResVo> getAccountInstanceByUserNameAndTenantId(Map<String,Object> param);
 }
 

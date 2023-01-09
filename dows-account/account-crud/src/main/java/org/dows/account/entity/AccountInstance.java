@@ -55,6 +55,12 @@ public class AccountInstance implements CrudEntity {
     @ApiModelProperty("应用ID")
     private String appId;
 
+    @ApiModelProperty("账号区分：1、总控端2、总部端、3、门店端APP4、小程序流量用户")
+    private Integer accountType;
+
+    @ApiModelProperty("门店ID")
+    private String storeId;
+
     @JsonIgnore
     @TableLogic
     @TableField(fill = FieldFill.INSERT)

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dows.account.mapper.AccountInstanceMapper">
+
+    <select id="getAccountInstanceByUserNameAndTenantId" parameterType="map" resultType="org.dows.account.vo.AccountInstanceResVo">
+        SELECT
+            t1.id,
+            t1.account_name,
+            t1.avatar,
+            t1.phone,
+            t1.account_id,
+            t2.tenant_id
+        FROM
+            account_instance t1 left join account_tenant t2 on t1.id = t2.user_id
+        WHERE 1=1
+
+        <if test="paramQuery.accountName != null">
+            AND t1.account_name = #{paramQuery.accountName}
+        </if>
+        <if test="paramQuery.tenantId != null">
+            AND t2.tenant_id = #{paramQuery.tenantId}
+        </if>
+
+    </select>
+</mapper>
