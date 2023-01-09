@@ -1,4 +1,4 @@
-package org.dows.uim.admin;
+package org.dows.user.app;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
