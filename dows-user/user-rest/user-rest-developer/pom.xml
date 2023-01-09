@@ -3,19 +3,17 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>dows-user</artifactId>
+        <artifactId>user-rest</artifactId>
         <groupId>org.dows.cloud</groupId>
         <version>20220701-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>user-rest</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>user-rest-developer</artifactId>
 
-
-    <modules>
-        <module>user-rest-admin</module>
-        <module>user-rest-developer</module>
-        <module>user-rest-tenant</module>
-        <module>user-rest-user</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>user-biz</artifactId>
+        </dependency>
+    </dependencies>
 </project>
