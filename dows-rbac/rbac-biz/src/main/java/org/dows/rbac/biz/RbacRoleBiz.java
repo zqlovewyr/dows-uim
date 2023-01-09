@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  */
 @RequiredArgsConstructor
 @Service
-public class RbacRoleBiz  {
+public class RbacRoleBiz {
     private final RbacRoleService rbacRoleService;
 
     public RbacRoleVO getById(String id) {
@@ -35,4 +35,13 @@ public class RbacRoleBiz  {
                 .list()
                 .stream().map(RsRbacRoleUtil::rbacRole2VO).collect(Collectors.toList());
     }
+
+    public List<RbacRoleVO> getByIdList(List<String> idList, String appId) {
+        return rbacRoleService.lambdaQuery()
+                .in(RbacRole::getId, idList)
+                .eq(RbacRole::getAppId, appId)
+                .list()
+                .stream().map(RsRbacRoleUtil::rbacRole2VO).collect(Collectors.toList());
+    }
+
 }

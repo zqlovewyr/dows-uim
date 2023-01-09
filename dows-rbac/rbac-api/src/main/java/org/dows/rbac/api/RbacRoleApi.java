@@ -2,6 +2,8 @@ package org.dows.rbac.api;
 
 import org.dows.framework.api.Response;
 import org.dows.rbac.api.vo.RbacRoleVO;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +20,10 @@ public interface RbacRoleApi {
     @GetMapping("/v1/rbac-role/{id}")
     Response<RbacRoleVO> getById(@PathVariable String id);
 
-    @GetMapping("/v1/rbac-role/{id}")
+    @GetMapping("/v1/rbac-roles")
     Response<List<RbacRoleVO>> getByIdList(@RequestBody List<String> rbacRoleIdList);
+
+    @GetMapping("/v1/rbac-roles/{appid}")
+    Response<List<RbacRoleVO>> getByIdListAndAppId(@RequestBody List<String> rbacRoleIdList,@PathVariable String appid);
+
 }

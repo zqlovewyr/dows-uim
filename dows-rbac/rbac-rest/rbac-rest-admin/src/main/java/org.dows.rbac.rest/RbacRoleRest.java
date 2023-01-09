@@ -39,4 +39,11 @@ public class RbacRoleRest implements RbacRoleApi, MybatisCrudRest<RbacRoleForm, 
     public Response<List<RbacRoleVO>> getByIdList( List<String> rbacRoleIdList) {
         return Response.ok(rbacRoleBiz.getByIdList(rbacRoleIdList));
     }
+
+    @Override
+    @GetMapping("/v1/rbac-roles/{appid}")
+    public Response<List<RbacRoleVO>> getByIdListAndAppId(List<String> rbacRoleIdList, String appid) {
+        return Response.ok(rbacRoleBiz.getByIdList(rbacRoleIdList,appid));
+    }
+
 }

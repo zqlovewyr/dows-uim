@@ -7,13 +7,13 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dows.account.dto.AccountOrgDTO;
-import org.dows.account.dto.AccountOrgGroupDTO;
-import org.dows.account.dto.TreeAccountOrgDTO;
 import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.biz.enums.EnumAccountRoleStatusCode;
 import org.dows.account.biz.exception.AccountRoleException;
 import org.dows.account.biz.util.AccountUtil;
+import org.dows.account.dto.AccountOrgDTO;
+import org.dows.account.dto.AccountOrgGroupDTO;
+import org.dows.account.dto.TreeAccountOrgDTO;
 import org.dows.account.entity.AccountGroup;
 import org.dows.account.entity.AccountOrg;
 import org.dows.account.entity.AccountRole;
@@ -22,11 +22,12 @@ import org.dows.account.service.AccountOrgService;
 import org.dows.account.service.AccountRoleService;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.account.vo.AccountOrgVo;
-import org.dows.rbac.biz.enums.EnumRbacRoleCode;
-import org.dows.rbac.biz.enums.EnumRbacStatusCode;
-import org.dows.rbac.biz.exception.RbacException;
-import org.dows.rbac.entity.RbacRole;
-import org.dows.rbac.service.RbacRoleService;
+import org.dows.framework.api.Response;
+import org.dows.rbac.api.RbacRoleApi;
+import org.dows.rbac.api.enums.EnumRbacRoleCode;
+import org.dows.rbac.api.enums.EnumRbacStatusCode;
+import org.dows.rbac.api.exception.RbacException;
+import org.dows.rbac.api.vo.RbacRoleVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,30 +44,31 @@ public class AccountOrgBiz {
 
     private final AccountOrgService accountOrgService;
 
+    private final RbacRoleApi rbacRoleApi;
+
     // todo 导入文件
-    public void importOrg(String file){
+    public void importOrg(String file) {
 
     }
 
     // todo 导入组织对象
-    public void importOrg(TreeAccountOrgDTO file){
+    public void importOrg(TreeAccountOrgDTO file) {
 
 
     }
 
     // todo 列出所有组织记录
-    public void listOrg(){
+    public void listOrg() {
 
     }
+
     // todo 根据条件列出所有层级组织(智能层级，所有组织)
-    public void listOrgTree(TreeAccountOrgDTO treeAccountOrgDTO){
-
-
+    public void listOrgTree(TreeAccountOrgDTO treeAccountOrgDTO) {
 
 
     }
+
     private final AccountGroupBiz accountGroupBiz;
-    private final RbacRoleService rbacRoleService;
     private final AccountRoleService accountRoleService;
     private final AccountGroupService accountGroupService;
 
@@ -144,18 +146,13 @@ public class AccountOrgBiz {
         //step4: create account-role
         Long rbacRoleId = accountOrgDTO.getRbacRoleId();
         if (!Objects.isNull(rbacRoleId) && rbacRoleId == 0) {
-            RbacRole rbacRole = rbacRoleService.lambdaQuery()
-                    .select(RbacRole::getId, RbacRole::getRoleName, RbacRole::getRoleCode)
-                    .eq(RbacRole::getId, rbacRoleId)
-                    .oneOpt()
-                    .orElseThrow(() -> {
-                        throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
-                    });
 
+            Response<RbacRoleVO> rbacRoleResponse = rbacRoleApi.getById(String.valueOf(rbacRoleId));
+            RbacRoleVO rbacRoleVO = rbacRoleResponse.getData();
             AccountRole accountRole = AccountRole.builder()
-                    .roleId(rbacRole.getId().toString())
-                    .roleName(rbacRole.getRoleName())
-                    .roleCode(rbacRole.getRoleCode())
+                    .roleId(rbacRoleVO.getId().toString())
+                    .roleName(rbacRoleVO.getRoleName())
+                    .roleCode(rbacRoleVO.getRoleCode())
                     .principalType(EnumAccountRolePrincipalType.GROUP.getCode())
                     .principalId(accountOrg.getOrgId())
                     .principalName(accountOrg.getOrgName()).build();
@@ -199,14 +196,9 @@ public class AccountOrgBiz {
             throw new AccountRoleException(EnumAccountRoleStatusCode.ACCOUNT_ROLE_NOT_EXIST_EXCEPTION);
         }
         // check Current Application Permissions
-        Set<String> accountRoleRoleIds = new HashSet<>();
-        accountRoles.forEach(item -> accountRoleRoleIds.add(item.getRoleId()));
-        List<RbacRole> rbacRoles = rbacRoleService.lambdaQuery()
-                .select(RbacRole::getRoleCode)
-                .in(RbacRole::getId, accountRoleRoleIds)
-                .eq(RbacRole::getAppId, appId)
-                .eq(RbacRole::getDeleted, false)
-                .list();
+        List<String> accountRoleRoleIds = accountRoles.stream().map(AccountRole::getRoleId).collect(Collectors.toList());
+        Response<List<RbacRoleVO>> rbacRoleVOResponse = rbacRoleApi.getByIdListAndAppId(accountRoleRoleIds, appId);
+        List<RbacRoleVO> rbacRoles = rbacRoleVOResponse.getData();
         if (CollectionUtils.isEmpty(rbacRoles)) {
             throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
         }

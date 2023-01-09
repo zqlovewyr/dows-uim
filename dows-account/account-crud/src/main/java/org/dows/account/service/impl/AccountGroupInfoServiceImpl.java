@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service;
  * @author lait
  * @since 2023-01-09 15:01:25
  */
-@Service("accountGroupInfoService")
+//@Service("accountGroupInfoService")
+@Service
 public class AccountGroupInfoServiceImpl extends MybatisCrudServiceImpl<AccountGroupInfoMapper, AccountGroupInfo> implements AccountGroupInfoService {
 
 }

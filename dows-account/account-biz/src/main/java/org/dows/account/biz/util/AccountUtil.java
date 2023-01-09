@@ -2,19 +2,14 @@ package org.dows.account.biz.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dows.account.biz.constant.AccountInstanceConstant;
-import org.dows.account.biz.dto.AccountInstanceDTO;
 import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
+import org.dows.account.dto.AccountInstanceDTO;
+import org.dows.account.dto.AccountOrgDTO;
+import org.dows.account.dto.AccountOrgGroupDTO;
+import org.dows.account.dto.TreeAccountOrgDTO;
 
 import java.util.Objects;
-import org.dows.account.biz.enums.EnumAccountStatusCode;
-import org.dows.account.biz.exception.AccountException;
-
-import java.util.Objects;
-import org.dows.account.biz.dto.AccountOrgDTO;
-import org.dows.account.biz.dto.AccountOrgGroupDTO;
-import org.dows.account.biz.dto.TreeAccountOrgDTO;
-import org.dows.account.biz.dto.TreeAccountOrgDTO;
 
 /**
  * @author runsix
@@ -76,12 +71,14 @@ public interface AccountUtil {
     }
 
     static String getKeyOfkIdentifierAppIdV(String identifier, String appId) {
-        return identifier+"#"+appId;
+        return identifier + "#" + appId;
     }
 
-    static void validateAccountInstanceDTO(AccountInstanceDTO accountInstanceDTO) {}
+    static void validateAccountInstanceDTO(AccountInstanceDTO accountInstanceDTO) {
+    }
 
-    static void validateAccountOrgDTO(TreeAccountOrgDTO treeAccountOrgDTO){}
+    static void validateAccountOrgDTO(TreeAccountOrgDTO treeAccountOrgDTO) {
+    }
 
     static void validateAccountOrgDTO(AccountOrgDTO orgDTO) {
     }

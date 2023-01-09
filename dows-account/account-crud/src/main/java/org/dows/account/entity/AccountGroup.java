@@ -30,7 +30,7 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "AccountGroup对象", description = "账号-组")
 public class AccountGroup implements CrudEntity {
-    private static final long serialVersionUID = -32454698294819181L;
+   /* private static final long serialVersionUID = -32454698294819181L;*/
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("自增主键ID")
