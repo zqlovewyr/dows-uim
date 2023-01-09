@@ -20,21 +20,11 @@
             <artifactId>rbac-crud</artifactId>
         </dependency>
 
-        <dependency>
+<!--        <dependency>
             <groupId>org.dows.cloud</groupId>
-            <artifactId>tenant-crud</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-<!--            <version>RELEASE</version>-->
-<!--            <scope>compile</scope>-->
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.projectlombok</groupId>-->
-<!--            <artifactId>lombok</artifactId>-->
-<!--            <version>RELEASE</version>-->
-<!--            <scope>compile</scope>-->
-<!--        </dependency>-->
+            <artifactId>tenant-api</artifactId>
+            <version>20220701-SNAPSHOT</version>
+        </dependency>-->
+
     </dependencies>
 </project>

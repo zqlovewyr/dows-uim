@@ -11,10 +11,7 @@
     <artifactId>account-crud</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>org.dows.cloud</groupId>
-            <artifactId>account-api</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>com.alipay.sdk</groupId>
@@ -22,6 +19,10 @@
             <version>4.22.57.ALL</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>account-api</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>account-pojo</artifactId>

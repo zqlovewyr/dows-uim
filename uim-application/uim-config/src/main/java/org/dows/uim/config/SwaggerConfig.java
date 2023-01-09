@@ -33,7 +33,7 @@ public class SwaggerConfig {
     public Docket accountAdminApi() {
         return new Docket(DocumentationType.OAS_30).apiInfo(apiInfo()).enable(true).select()
                 //.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-                .apis(RequestHandlerSelectors.basePackage("org.dows.account.rest")).paths(PathSelectors.any()).build().groupName("账号端");
+                .apis(RequestHandlerSelectors.basePackage("org.dows.user.rest")).paths(PathSelectors.any()).build().groupName("账号端");
         //.pathMapping("/sms"); 1725 0355 3205
     }
 

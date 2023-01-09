@@ -16,6 +16,7 @@ import org.dows.account.dto.AccountInstanceDTO;
 import org.dows.account.entity.*;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountInstanceVo;
+import org.dows.rbac.api.RbacRoleApi;
 import org.dows.rbac.biz.enums.EnumRbacStatusCode;
 import org.dows.rbac.biz.exception.RbacException;
 import org.dows.rbac.entity.RbacRole;
@@ -46,10 +47,11 @@ import java.util.Objects;
 public class AccountInstanceBiz {
     private final AccountInstanceService accountInstanceService;
     private final AccountIdentifierService accountIdentifierService;
-    private final RbacRoleService rbacRoleService;
     private final AccountRoleService accountRoleService;
     private final AccountOrgService accountOrgService;
     private final AccountGroupService accountGroupService;
+
+    private final RbacRoleApi rbacRoleApi;
 
     /**
      * runsix method process
@@ -77,7 +79,7 @@ public class AccountInstanceBiz {
         /* runsix:2.check whether rbacRoleId exist */
         RbacRole rbacRole = null;
         if (Objects.nonNull(accountInstanceDTO.getRbacRoleId())) {
-            rbacRole = rbacRoleService.lambdaQuery()
+            rbacRole = rbacRoleApi.lambdaQuery()
                     .select(RbacRole::getId, RbacRole::getRoleName, RbacRole::getRoleCode)
                     .eq(RbacRole::getId, accountInstanceDTO.getRbacRoleId())
                     .oneOpt()
@@ -241,7 +243,7 @@ public class AccountInstanceBiz {
                 .filter(Objects::nonNull).collect(Collectors.toSet());
         Map<Long, RbacRole> kRbacRoleIdVRbacRole = new ConcurrentHashMap<>();
         if (!rbacRoleIdSet.isEmpty()) {
-            kRbacRoleIdVRbacRole = rbacRoleService.lambdaQuery()
+            kRbacRoleIdVRbacRole = rbacRoleApi.lambdaQuery()
                     .select(RbacRole::getId, RbacRole::getRoleName, RbacRole::getRoleCode)
                     .in(RbacRole::getId, rbacRoleIdSet)
                     .list()

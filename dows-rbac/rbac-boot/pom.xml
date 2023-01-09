@@ -11,9 +11,11 @@
     <artifactId>rbac-boot</artifactId>
 
     <dependencies>
+
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>rbac-biz</artifactId>
+            <version>20220701-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -22,6 +24,4 @@
             <version>20220701-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
-
 </project>

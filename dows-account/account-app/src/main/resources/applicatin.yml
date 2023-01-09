@@ -1,0 +1,13 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: account
+  profiles:
+    include: account/application-mysql.yml,account/application-mybatis.yml,account/application-mvc.yml
+    active: dev
+
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: true
