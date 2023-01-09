@@ -46,7 +46,9 @@ public class AccountDataSourceConfig {
          * classpath*:member/mapper/*Mapper.xml
          */
         mybatisSqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
-                .getResources("classpath*:account/mapper/*Mapper.xml,classpath*:rbac/mapper/*Mapper.xml"));
+                .getResources("classpath*:account/mapper/*Mapper.xml," +
+                        "classpath*:rbac/mapper/*Mapper.xml," +
+                        "classpath*:user/mapper/*Mapper.xml"));
         mybatisSqlSessionFactoryBean.setGlobalConfig(globalConfig);
         SqlSessionFactory sqlSessionFactory = mybatisSqlSessionFactoryBean.getObject();
         sqlSessionFactory.getConfiguration().setMapUnderscoreToCamelCase(true);

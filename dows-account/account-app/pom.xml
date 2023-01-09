@@ -18,7 +18,20 @@
 
         <dependency>
             <groupId>org.dows.cloud</groupId>
-            <artifactId>account-crud</artifactId>
+            <artifactId>rbac-boot</artifactId>
+            <version>20220701-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>user-boot</artifactId>
+            <version>20220701-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>tenant-boot</artifactId>
+            <version>20220701-SNAPSHOT</version>
         </dependency>
 
         <dependency>
