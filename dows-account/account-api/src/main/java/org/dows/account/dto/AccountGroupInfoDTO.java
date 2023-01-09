@@ -1,26 +1,16 @@
-package org.dows.account.entity;
+package org.dows.account.dto;
 
-import java.util.Date;
-
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
-import org.dows.framework.crud.mybatis.CrudEntity;
+import java.util.Date;
 
 /**
- * 账号-组(AccountGroupInfo)实体类
- *
- * @author lait
- * @since 2023-01-09 15:01:25
+ * @author Administrator
+ * @date 2023/1/9 17:44
  */
-@SuppressWarnings("serial")
 @Data
 @ToString
 @Builder
@@ -28,12 +18,8 @@ import org.dows.framework.crud.mybatis.CrudEntity;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "AccountGroupInfo对象", description = "账号-组")
-public class AccountGroupInfo implements CrudEntity {
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @ApiModelProperty("自增主键ID")
-    private Long id;
+@ApiModel(value = "AccountGroupInfo对象", description = "账号-组信息")
+public class AccountGroupInfoDTO {
 
     @ApiModelProperty("组别ID")
     private String groupId;
@@ -62,15 +48,16 @@ public class AccountGroupInfo implements CrudEntity {
     @ApiModelProperty("团队描述")
     private String descr;
 
-    @JsonIgnore
-    @TableLogic
-    @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("是否逻辑删除")
     private Boolean deleted;
 
-    @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("创建时间")
     private Date dt;
 
-}
+    @ApiModelProperty(value = "开始时间")
+    private Date startTime;
 
+    @ApiModelProperty(value = "结束时间")
+    private Date endTime;
+
+}
