@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * 用户-地址维度(UserAddress)表服务实现类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:31:10
+ * @since 2022-12-20 11:46:14
  */
 @Service("userAddressService")
 public class UserAddressServiceImpl extends MybatisCrudServiceImpl<UserAddressMapper, UserAddress> implements UserAddressService {

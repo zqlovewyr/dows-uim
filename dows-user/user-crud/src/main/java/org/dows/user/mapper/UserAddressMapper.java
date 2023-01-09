@@ -8,7 +8,7 @@ import org.dows.user.entity.UserAddress;
  * 用户-地址维度(UserAddress)表数据库访问层
  *
  * @author lait.zhang
- * @since 2022-10-22 10:31:10
+ * @since 2022-12-20 11:46:14
  */
 @Mapper
 public interface UserAddressMapper extends MybatisCrudMapper<UserAddress> {

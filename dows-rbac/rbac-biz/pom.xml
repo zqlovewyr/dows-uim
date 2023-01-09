@@ -20,9 +20,11 @@
             <artifactId>rbac-crud</artifactId>
         </dependency>
 
-        <dependency>
+<!--        <dependency>
             <groupId>org.dows.cloud</groupId>
-            <artifactId>tenant-crud</artifactId>
-        </dependency>
+            <artifactId>tenant-api</artifactId>
+            <version>20220701-SNAPSHOT</version>
+        </dependency>-->
+
     </dependencies>
 </project>

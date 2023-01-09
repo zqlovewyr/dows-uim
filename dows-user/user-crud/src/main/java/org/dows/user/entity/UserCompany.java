@@ -19,7 +19,7 @@ import java.util.Date;
  * 用户-公司(UserCompany)实体类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:31:11
+ * @since 2022-12-20 11:46:14
  */
 @SuppressWarnings("serial")
 @Data
@@ -31,7 +31,7 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "UserCompany对象", description = "用户-公司")
 public class UserCompany implements CrudEntity {
-    private static final long serialVersionUID = 470923179306548231L;
+    private static final long serialVersionUID = 126896658946407053L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("主键")
@@ -80,6 +80,10 @@ public class UserCompany implements CrudEntity {
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("逻辑删除")
     private Boolean deleted;
+
+    @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty("时间戳")
+    private Date dt;
 
 }
 

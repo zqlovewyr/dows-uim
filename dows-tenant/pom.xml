@@ -16,6 +16,9 @@
         <module>tenant-api</module>
         <module>tenant-pojo</module>
         <module>tenant-crud</module>
+        <module>tenant-boot</module>
+        <module>tenant-config</module>
+        <module>tenant-biz</module>
     </modules>
 
 

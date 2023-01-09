@@ -30,78 +30,48 @@ import java.util.List;
 public class SwaggerConfig {
 
     @Bean
-    public Docket storeAdminApi() {
-        return new Docket(DocumentationType.OAS_30)
-                .apiInfo(apiInfo())
-                .enable(true)
-                .select()
+    public Docket accountAdminApi() {
+        return new Docket(DocumentationType.OAS_30).apiInfo(apiInfo()).enable(true).select()
                 //.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-                .apis(RequestHandlerSelectors.basePackage("org.dows.uim.admin.rest"))
-                .paths(PathSelectors.any())
-                .build()
-                .groupName("管理端");
+                .apis(RequestHandlerSelectors.basePackage("org.dows.user.rest")).paths(PathSelectors.any()).build().groupName("账号端");
+        //.pathMapping("/sms"); 1725 0355 3205
+    }
+
+    @Bean
+    public Docket storeAdminApi() {
+        return new Docket(DocumentationType.OAS_30).apiInfo(apiInfo()).enable(true).select()
+                //.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
+                .apis(RequestHandlerSelectors.basePackage("org.dows.uim.admin.rest")).paths(PathSelectors.any()).build().groupName("管理端");
         //.pathMapping("/sms"); 1725 0355 3205
     }
 
     @Bean
     public Docket storeTenantApi() {
-        return new Docket(DocumentationType.OAS_30)
-                .apiInfo(apiInfo())
-                .enable(true)
-                .select()
+        return new Docket(DocumentationType.OAS_30).apiInfo(apiInfo()).enable(true).select()
                 //.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-                .apis(RequestHandlerSelectors.basePackage("org.dows.uim.tenant.rest"))
-                .paths(PathSelectors.any())
-                .build()
-                .groupName("租户端");
+                .apis(RequestHandlerSelectors.basePackage("org.dows.uim.tenant.rest")).paths(PathSelectors.any()).build().groupName("租户端");
         //.pathMapping("/sms"); 1725 0355 3205
     }
 
     @Bean
     public Docket storeUserApi() {
-        return new Docket(DocumentationType.OAS_30)
-                .apiInfo(apiInfo())
-                .enable(true)
-                .select()
+        return new Docket(DocumentationType.OAS_30).apiInfo(apiInfo()).enable(true).select()
                 //.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-                .apis(RequestHandlerSelectors.basePackage("org.dows.uim.user.rest"))
-                .paths(PathSelectors.any())
-                .build()
-                .groupName("用户端");
+                .apis(RequestHandlerSelectors.basePackage("org.dows.uim.user.rest")).paths(PathSelectors.any()).build().groupName("用户端");
         //.pathMapping("/sms"); 1725 0355 3205
     }
 
     private ApiInfo apiInfo() {
-        Contact contact = new Contact("lait","","lait.zhang@gmail.com");
-        return new ApiInfoBuilder()
-                .title("dows saas uim")
-                .contact(contact)
-                .version("3.0")
-                .description("user identifier manager")
-                .version("1.0.0")
-                .build();
+        Contact contact = new Contact("lait", "", "lait.zhang@gmail.com");
+        return new ApiInfoBuilder().title("dows saas uim").contact(contact).version("3.0").description("user identifier manager").version("1.0.0").build();
     }
 
 
     //生成全局通用参数
     private List<RequestParameter> getGlobalRequestParameters() {
         List<RequestParameter> parameters = new ArrayList<>();
-        parameters.add(new RequestParameterBuilder()
-                .name("appid")
-                .description("应用id")
-                .required(true)
-                .in(ParameterType.QUERY)
-                .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
-                .required(false)
-                .build());
-        parameters.add(new RequestParameterBuilder()
-                .name("token")
-                .description("token")
-                .required(true)
-                .in(ParameterType.QUERY)
-                .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
-                .required(false)
-                .build());
+        parameters.add(new RequestParameterBuilder().name("appid").description("应用id").required(true).in(ParameterType.QUERY).query(q -> q.model(m -> m.scalarModel(ScalarType.STRING))).required(false).build());
+        parameters.add(new RequestParameterBuilder().name("token").description("token").required(true).in(ParameterType.QUERY).query(q -> q.model(m -> m.scalarModel(ScalarType.STRING))).required(false).build());
         return parameters;
     }
 
@@ -147,13 +117,7 @@ public class SwaggerConfig {
 
 
     @Bean
-    public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(WebEndpointsSupplier webEndpointsSupplier,
-                                                                         ServletEndpointsSupplier servletEndpointsSupplier,
-                                                                         ControllerEndpointsSupplier controllerEndpointsSupplier,
-                                                                         EndpointMediaTypes endpointMediaTypes,
-                                                                         CorsEndpointProperties corsProperties,
-                                                                         WebEndpointProperties webEndpointProperties,
-                                                                         Environment environment) {
+    public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(WebEndpointsSupplier webEndpointsSupplier, ServletEndpointsSupplier servletEndpointsSupplier, ControllerEndpointsSupplier controllerEndpointsSupplier, EndpointMediaTypes endpointMediaTypes, CorsEndpointProperties corsProperties, WebEndpointProperties webEndpointProperties, Environment environment) {
         List<ExposableEndpoint<?>> allEndpoints = new ArrayList();
         Collection<ExposableWebEndpoint> webEndpoints = webEndpointsSupplier.getEndpoints();
         allEndpoints.addAll(webEndpoints);
@@ -162,11 +126,7 @@ public class SwaggerConfig {
         String basePath = webEndpointProperties.getBasePath();
         EndpointMapping endpointMapping = new EndpointMapping(basePath);
         boolean shouldRegisterLinksMapping = this.shouldRegisterLinksMapping(webEndpointProperties, environment, basePath);
-        return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes,
-                corsProperties.toCorsConfiguration(),
-                new EndpointLinksResolver(allEndpoints, basePath),
-                shouldRegisterLinksMapping,
-                null);
+        return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes, corsProperties.toCorsConfiguration(), new EndpointLinksResolver(allEndpoints, basePath), shouldRegisterLinksMapping, null);
     }
 
     private boolean shouldRegisterLinksMapping(WebEndpointProperties webEndpointProperties, Environment environment, String basePath) {

@@ -18,7 +18,7 @@ import java.util.Date;
  * 用户-实例(UserInstance)实体类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:31:12
+ * @since 2022-12-20 11:46:17
  */
 @SuppressWarnings("serial")
 @Data
@@ -30,7 +30,7 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "UserInstance对象", description = "用户-实例")
 public class UserInstance implements CrudEntity {
-    private static final long serialVersionUID = -66390464043847564L;
+    private static final long serialVersionUID = 571937250175399112L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("自增主键ID")
@@ -56,6 +56,19 @@ public class UserInstance implements CrudEntity {
 
     @ApiModelProperty("户籍地址")
     private String domicile;
+
+    @ApiModelProperty("生日")
+    private Date birthday;
+
+    @ApiModelProperty("有效时间（开始时间）")
+    private Date indate;
+
+    @ApiModelProperty("失效时间（失效时间）")
+    private Date expdate;
+
+    @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty("时间戳")
+    private Date dt;
 
     @JsonIgnore
     @TableLogic

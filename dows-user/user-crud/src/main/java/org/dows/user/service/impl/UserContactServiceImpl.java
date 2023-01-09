@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * 用户-联系人(UserContact)表服务实现类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:31:12
+ * @since 2022-12-20 11:46:14
  */
 @Service("userContactService")
 public class UserContactServiceImpl extends MybatisCrudServiceImpl<UserContactMapper, UserContact> implements UserContactService {

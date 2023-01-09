@@ -18,7 +18,7 @@ import java.util.Date;
  * 用户-联系人(UserContact)实体类
  *
  * @author lait.zhang
- * @since 2022-10-22 10:31:12
+ * @since 2022-12-20 11:46:14
  */
 @SuppressWarnings("serial")
 @Data
@@ -30,30 +30,42 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "UserContact对象", description = "用户-联系人")
 public class UserContact implements CrudEntity {
-    private static final long serialVersionUID = 507574490689877369L;
+    private static final long serialVersionUID = 960407450586745777L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("主键")
     private Long id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("用户ID")
-    private Long userId;
+    private String userId;
 
-    @ApiModelProperty("联系方式名称（手机，电话，邮箱等）")
-    private String contactName;
+    @ApiModelProperty("联系人")
+    private String contact;
 
     @ApiModelProperty("联系号码")
-    private String contactNo;
+    private String contactNum;
+
+    @ApiModelProperty("联系类型（0:手机，1:邮箱，2:电话）")
+    private Integer contactTyp;
+
+    @ApiModelProperty("排序")
+    private Integer sorted;
 
     @ApiModelProperty("状态")
-    private String state;
+    private Integer state;
+
+    @ApiModelProperty("是否是自己")
+    private Boolean self;
 
     @JsonIgnore
     @TableLogic
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("逻辑删除")
     private Boolean deleted;
+
+    @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty("时间戳")
+    private Date dt;
 
 }
 
