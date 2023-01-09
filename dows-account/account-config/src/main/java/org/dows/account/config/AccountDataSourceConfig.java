@@ -10,7 +10,9 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -24,11 +26,15 @@ public class AccountDataSourceConfig {
 
     @Autowired
     private FieldFillHandler fieldFillHandler;
+//    @Autowired
+//    private AccountDataSourceProperties accountDataSourceProperties;
 
     @Bean(name = "accountDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.account")
     public DataSource accountDataSource() {
-        return new HikariDataSource();
+        HikariDataSource hikariDataSource = DataSourceBuilder.create().type(HikariDataSource.class).build();
+        hikariDataSource.setConnectionInitSql("set names utf8mb4");
+        return hikariDataSource;
     }
 
     @Bean(name = "accountSqlSessionFactory")
