@@ -4,6 +4,7 @@
         <artifactId>dows-parent</artifactId>
         <groupId>org.dows.framework</groupId>
         <version>20220701-SNAPSHOT</version>
+        <relativePath/>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.dows.cloud</groupId>

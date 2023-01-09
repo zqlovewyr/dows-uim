@@ -16,10 +16,11 @@ import org.dows.account.biz.util.AccountUtil;
 import org.dows.account.entity.*;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountInstanceVo;
-import org.dows.rbac.biz.enums.EnumRbacStatusCode;
-import org.dows.rbac.biz.exception.RbacException;
-import org.dows.rbac.entity.RbacRole;
-import org.dows.rbac.service.RbacRoleService;
+import org.dows.framework.api.Response;
+import org.dows.rbac.api.RbacRoleApi;
+import org.dows.rbac.api.enums.EnumRbacStatusCode;
+import org.dows.rbac.api.exception.RbacException;
+import org.dows.rbac.api.vo.RbacRoleVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,8 +36,6 @@ import java.util.stream.Collectors;
 
 import static org.dows.account.biz.util.AccountUtil.getKeyOfkIdentifierAppIdV;
 
-import java.util.Objects;
-
 
 /**
  * @author runsix
@@ -47,7 +46,8 @@ import java.util.Objects;
 public class AccountInstanceBiz {
     private final AccountInstanceService accountInstanceService;
     private final AccountIdentifierService accountIdentifierService;
-    private final RbacRoleService rbacRoleService;
+//    private final RbacRoleService rbacRoleService;
+    private final RbacRoleApi rbacRoleApi;
     private final AccountRoleService accountRoleService;
     private final AccountOrgService accountOrgService;
     private final AccountGroupService accountGroupService;
@@ -76,15 +76,13 @@ public class AccountInstanceBiz {
                     throw new AccountException(EnumAccountStatusCode.ACCOUNT_EXIST_EXCEPTION);
                 });
         /* runsix:2.check whether rbacRoleId exist */
-        RbacRole rbacRole = null;
+        RbacRoleVO rbacRoleVO = null;
         if (Objects.nonNull(accountInstanceDTO.getRbacRoleId())) {
-            rbacRole = rbacRoleService.lambdaQuery()
-                    .select(RbacRole::getId, RbacRole::getRoleName, RbacRole::getRoleCode)
-                    .eq(RbacRole::getId, accountInstanceDTO.getRbacRoleId())
-                    .oneOpt()
-                    .orElseThrow(() -> {
-                        throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
-                    });
+            Response<RbacRoleVO> rbacRoleVOResponse = rbacRoleApi.getById(String.valueOf(accountInstanceDTO.getRbacRoleId()));
+            rbacRoleVO = rbacRoleVOResponse.getData();
+            if (Objects.isNull(rbacRoleVO)) {
+                throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
+            }
         }
         /* runsix:3.check whether accountOrgOrgId exist */
         AccountOrg accountOrg = null;
@@ -109,13 +107,13 @@ public class AccountInstanceBiz {
         accountInstance.setPassword(new BCryptPasswordEncoder().encode(accountInstanceDTO.getPassword()));
         accountInstanceService.save(accountInstance);
         /* runsix:6.save accountRole if rbacRoleId exist */
-        if (Objects.nonNull(rbacRole)) {
+        if (Objects.nonNull(rbacRoleVO)) {
             accountRoleService.save(
                     AccountRole
                             .builder()
                             .roleId(accountInstanceDTO.getRbacRoleId().toString())
-                            .roleName(rbacRole.getRoleName())
-                            .roleCode(rbacRole.getRoleCode())
+                            .roleName(rbacRoleVO.getRoleName())
+                            .roleCode(rbacRoleVO.getRoleCode())
                             .principalType(EnumAccountRolePrincipalType.PERSONAL.getCode())
                             .principalId(accountInstance.getAccountId())
                             .principalName(accountInstanceDTO.getAccountName())
@@ -197,7 +195,6 @@ public class AccountInstanceBiz {
     */
     @Transactional(rollbackFor = Exception.class)
     public void batchCreateAccountInstance(List<AccountInstanceDTO> accountInstanceDTOList) {
-        /* runsix:TODO 所有in查询都要判空。注意 */
         accountInstanceDTOList.parallelStream().forEach(AccountUtil::validateAndTrimAccountInstanceDTO);
         /* runsix:1.check whether input appId & identifier duplicated */
         ConcurrentHashMap<String, Set<String>> kIdentifierVAppIdSet = new ConcurrentHashMap<>();
@@ -237,18 +234,17 @@ public class AccountInstanceBiz {
                     }
                 });
         /* runsix:3.check whether rbacRoleId exist */
-        Set<Long> rbacRoleIdSet = accountInstanceDTOList.parallelStream()
-                .map(AccountInstanceDTO::getRbacRoleId)
-                .filter(Objects::nonNull).collect(Collectors.toSet());
-        Map<Long, RbacRole> kRbacRoleIdVRbacRole = new ConcurrentHashMap<>();
-        if (!rbacRoleIdSet.isEmpty()) {
-            kRbacRoleIdVRbacRole = rbacRoleService.lambdaQuery()
-                    .select(RbacRole::getId, RbacRole::getRoleName, RbacRole::getRoleCode)
-                    .in(RbacRole::getId, rbacRoleIdSet)
-                    .list()
+        List<String> rbacRoleIdList = accountInstanceDTOList.parallelStream()
+                .map(accountInstanceDTO -> accountInstanceDTO.getRbacRoleId().toString())
+                .collect(Collectors.toList());
+        Map<Long, RbacRoleVO> kRbacRoleIdVRbacRoleVOMap = new ConcurrentHashMap<>();
+        if (!rbacRoleIdList.isEmpty()) {
+            Response<List<RbacRoleVO>> rbacRoleVOListResponse = rbacRoleApi.getByIdList(rbacRoleIdList);
+            List<RbacRoleVO> rbacRoleVOList = rbacRoleVOListResponse.getData();
+            kRbacRoleIdVRbacRoleVOMap = rbacRoleVOList
                     .parallelStream()
-                    .collect(Collectors.toMap(RbacRole::getId, rbacRole -> rbacRole));
-            if (kRbacRoleIdVRbacRole.size() != rbacRoleIdSet.size()) {
+                    .collect(Collectors.toMap(RbacRoleVO::getId, a -> a));
+            if (kRbacRoleIdVRbacRoleVOMap.size() != rbacRoleIdList.size()) {
                 throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
             }
         }
@@ -291,14 +287,14 @@ public class AccountInstanceBiz {
         }).collect(Collectors.toList());
         accountInstanceService.saveBatch(accountInstanceList);
         /* runsix:7.batch save accountRole if rbacRoleId exist */
-        Map<Long, RbacRole> finalKRbacRoleIdVRbacRole = kRbacRoleIdVRbacRole;
+        Map<Long, RbacRoleVO> finalKRbacRoleIdVRbacRoleVO = kRbacRoleIdVRbacRoleVOMap;
         List<AccountRole> accountRoleList = accountInstanceDTOList.parallelStream()
                 .filter(accountInstanceDTO ->  Objects.nonNull(accountInstanceDTO.getRbacRoleId()))
                 .map(accountInstanceDTO -> AccountRole
                         .builder()
                         .roleId(accountInstanceDTO.getRbacRoleId().toString())
-                        .roleName(finalKRbacRoleIdVRbacRole.get(accountInstanceDTO.getRbacRoleId()).getRoleName())
-                        .roleCode(finalKRbacRoleIdVRbacRole.get(accountInstanceDTO.getRbacRoleId()).getRoleCode())
+                        .roleName(finalKRbacRoleIdVRbacRoleVO.get(accountInstanceDTO.getRbacRoleId()).getRoleName())
+                        .roleCode(finalKRbacRoleIdVRbacRoleVO.get(accountInstanceDTO.getRbacRoleId()).getRoleCode())
                         .principalType(EnumAccountRolePrincipalType.PERSONAL.getCode())
                         .principalId(kIdentifierAppIdVAccountId.get(getKeyOfkIdentifierAppIdV(
                                 accountInstanceDTO.getIdentifier(), accountInstanceDTO.getAppId()
