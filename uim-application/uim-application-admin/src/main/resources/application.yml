@@ -1,5 +1,5 @@
 server:
-  port: 9000
+  port: 9010
   undertow:
     buffer-size: 1024
     direct-buffers: true
@@ -12,7 +12,7 @@ server:
 
 spring:
   application:
-    name: uim-admin
+    name: dows-uim-admin
   profiles:
     include: mysql,mybatis,mvc,redis,alipay
     active: dev
