@@ -11,11 +11,6 @@
     <artifactId>account-biz</artifactId>
 
     <dependencies>
-
-        <dependency>
-            <groupId>org.dows.cloud</groupId>
-            <artifactId>user-api</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>rbac-api</artifactId>
@@ -29,8 +24,11 @@
             <artifactId>user-api</artifactId>
         </dependency>
 
-
         <!---->
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>account-pojo</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>account-crud</artifactId>
@@ -43,6 +41,5 @@
             <groupId>com.alibaba</groupId>
             <artifactId>easyexcel</artifactId>
         </dependency>
-
     </dependencies>
 </project>

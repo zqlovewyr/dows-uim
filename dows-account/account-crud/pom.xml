@@ -9,25 +9,16 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>account-crud</artifactId>
-
     <dependencies>
-
-
         <dependency>
             <groupId>com.alipay.sdk</groupId>
             <artifactId>alipay-sdk-java</artifactId>
             <version>4.22.57.ALL</version>
         </dependency>
-
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>account-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.dows.cloud</groupId>
-            <artifactId>account-pojo</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>rbac-pojo</artifactId>
@@ -36,8 +27,6 @@
             <groupId>org.dows.cloud</groupId>
             <artifactId>tenant-pojo</artifactId>
         </dependency>
-
-
         <dependency>
             <groupId>org.dows.framework</groupId>
             <artifactId>crud-mybatis</artifactId>

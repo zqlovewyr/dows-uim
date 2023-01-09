@@ -42,10 +42,9 @@ import static org.dows.account.biz.util.AccountUtil.getKeyOfkIdentifierAppIdV;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AccountInstanceBiz {
+public class AccountInstanceBiz{
     private final AccountInstanceService accountInstanceService;
     private final AccountIdentifierService accountIdentifierService;
-//    private final RbacRoleService rbacRoleService;
     private final RbacRoleApi rbacRoleApi;
     private final AccountRoleService accountRoleService;
     private final AccountOrgService accountOrgService;
