@@ -1,5 +1,5 @@
 server:
-  port: 9000
+  port: 9011
   undertow:
     buffer-size: 1024
     direct-buffers: true
@@ -12,7 +12,7 @@ server:
 
 spring:
   application:
-    name: dows-pay
+    name: dows-uim-user
   profiles:
     include: mysql,mybatis,mvc,redis,alipay
     active: sit
