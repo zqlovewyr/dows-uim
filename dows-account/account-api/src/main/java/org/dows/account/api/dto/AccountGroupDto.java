@@ -60,6 +60,10 @@ public class AccountGroupDto implements Serializable {
     private Integer ver;
     @ApiModelProperty(value = "时间戳/创建时间")
     private Date dt;
+    @ApiModelProperty(value = "开始时间")
+    private Date startTime;
+    @ApiModelProperty(value = "结束时间")
+    private Date endTime;
     @ApiModelProperty(value = "是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
 
