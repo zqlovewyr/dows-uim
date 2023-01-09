@@ -21,8 +21,6 @@
             <groupId>org.dows.cloud</groupId>
             <artifactId>account-config</artifactId>
         </dependency>
-
-
     </dependencies>
 
 </project>
