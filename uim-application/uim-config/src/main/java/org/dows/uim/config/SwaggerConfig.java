@@ -57,7 +57,7 @@ public class SwaggerConfig {
     public Docket storeUserApi() {
         return new Docket(DocumentationType.OAS_30).apiInfo(apiInfo()).enable(true).select()
                 //.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-                .apis(RequestHandlerSelectors.basePackage("org.dows.uim.user.rest")).paths(PathSelectors.any()).build().groupName("用户端");
+                .apis(RequestHandlerSelectors.basePackage("org.dows.user.rest")).paths(PathSelectors.any()).build().groupName("用户端");
         //.pathMapping("/sms"); 1725 0355 3205
     }
 

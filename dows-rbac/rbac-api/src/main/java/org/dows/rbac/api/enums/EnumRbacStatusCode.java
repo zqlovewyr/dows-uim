@@ -1,4 +1,4 @@
-package org.dows.rbac.biz.enums;
+package org.dows.rbac.api.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

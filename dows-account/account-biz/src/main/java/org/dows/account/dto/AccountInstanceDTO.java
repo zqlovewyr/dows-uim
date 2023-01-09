@@ -2,6 +2,7 @@ package org.dows.account.dto;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class AccountInstanceDTO implements Serializable {
     private static final long serialVersionUID = 4496765086642042824L;
     private String appId;
