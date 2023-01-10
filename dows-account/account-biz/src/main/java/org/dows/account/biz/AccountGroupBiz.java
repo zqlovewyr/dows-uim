@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.formula.functions.T;
 import org.dows.account.api.AccountGroupApi;
 import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.dto.AccountGroupInfoDTO;
@@ -104,14 +103,13 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     /**
-     * 查询 账号-组及负责人 列表
+     * 查询 账号-组联合负责人 列表
      *
      * @param accountGroupDTO
      * @param accountGroupInfoDTO
-     * @param pageNo
-     * @param pageSize
+     * @return Response<IPage<AccountGroupVo>>
      */
-    public Response<IPage<AccountGroupVo>> accountGroupUnionList(@RequestBody AccountGroupDTO accountGroupDTO, @RequestBody AccountGroupInfoDTO accountGroupInfoDTO, Integer pageNo, Integer pageSize) {
+    public Response<IPage<AccountGroupVo>> accountGroupUnionList(@RequestBody AccountGroupDTO accountGroupDTO, @RequestBody AccountGroupInfoDTO accountGroupInfoDTO) {
         //筛选对应对应团队负责人相关信息
         List<AccountGroupInfo> accountGroupInfoList = new ArrayList<>();
         if (accountGroupInfoDTO != null) {
@@ -154,7 +152,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                 .gt(accountGroupDTO.getStartTime() != null, AccountGroup::getDt, accountGroupDTO.getStartTime())
                 .lt(accountGroupDTO.getEndTime() != null, AccountGroup::getDt, accountGroupDTO.getEndTime())
                 .orderByDesc(AccountGroup::getDt);
-        Page<AccountGroup> page = new Page<>(pageNo, pageSize);
+        Page<AccountGroup> page = new Page<>(accountGroupDTO.getPageNo(), accountGroupDTO.getPageSize());
         IPage<AccountGroup> groupList = accountGroupService.page(page, queryWrapper);
         IPage<AccountGroupVo> pageVo = new Page<>();
         BeanUtils.copyProperties(groupList, pageVo);
@@ -166,12 +164,10 @@ public class AccountGroupBiz implements AccountGroupApi {
      * 自定义账号-组 列表
      *
      * @param accountGroupDTO
-     * @param pageNo
-     * @param pageSize
-     * @return
+     * @return Response<IPage<AccountGroupVo>>
      */
     @Override
-    public Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDTO, Integer pageNo, Integer pageSize) {
+    public Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDTO) {
         LambdaQueryWrapper<AccountGroup> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AccountGroup::getAppId, accountGroupDTO.getAppId())
                 .eq(AccountGroup::getAccountId, accountGroupDTO.getAccountId())
@@ -185,7 +181,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                 .gt(accountGroupDTO.getStartTime() != null, AccountGroup::getDt, accountGroupDTO.getStartTime())
                 .lt(accountGroupDTO.getEndTime() != null, AccountGroup::getDt, accountGroupDTO.getEndTime())
                 .orderByDesc(AccountGroup::getDt);
-        Page<AccountGroup> page = new Page<>(pageNo, pageSize);
+        Page<AccountGroup> page = new Page<>(accountGroupDTO.getPageNo(), accountGroupDTO.getPageSize());
         IPage<AccountGroup> groupList = accountGroupService.page(page, queryWrapper);
         //复制属性
         IPage<AccountGroupVo> pageVo = new Page<>();
@@ -193,8 +189,14 @@ public class AccountGroupBiz implements AccountGroupApi {
         return Response.ok(pageVo);
     }
 
+    /**
+     * 自定义账号-组负责人 列表
+     *
+     * @param accountGroupInfoDTO
+     * @return Response<IPage<AccountGroupInfoVo>>
+     */
     @Override
-    public Response<IPage<AccountGroupInfoVo>> customAccountGroupInfoList(AccountGroupInfoDTO accountGroupInfoDTO, Integer pageNo, Integer pageSize) {
+    public Response<IPage<AccountGroupInfoVo>> customAccountGroupInfoList(AccountGroupInfoDTO accountGroupInfoDTO) {
         LambdaQueryWrapper<AccountGroupInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getGroupId()), AccountGroupInfo::getGroupId, accountGroupInfoDTO.getGroupId())
                 .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getGroupName()), AccountGroupInfo::getGroupName, accountGroupInfoDTO.getGroupName())
@@ -210,7 +212,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                 .lt(accountGroupInfoDTO.getEndTime() != null, AccountGroupInfo::getDt, accountGroupInfoDTO.getEndTime())
                 .eq(AccountGroupInfo::getDeleted, false)
                 .orderByDesc(AccountGroupInfo::getDt);
-        Page<AccountGroupInfo> page = new Page<>(pageNo, pageSize);
+        Page<AccountGroupInfo> page = new Page<>(accountGroupInfoDTO.getPageNo(), accountGroupInfoDTO.getPageSize());
         IPage<AccountGroupInfo> groupInfoList = accountGroupInfoService.page(page, queryWrapper);
         //复制属性
         IPage<AccountGroupInfoVo> pageVo = new Page<>();

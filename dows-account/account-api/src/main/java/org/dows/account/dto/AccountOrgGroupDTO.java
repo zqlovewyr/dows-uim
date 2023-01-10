@@ -15,7 +15,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "AccountOrgGroup对象", description = "账号-组织架构(树形参数)")
+@ApiModel(value = "AccountOrgGroupDTO对象", description = "账号-组织架构(树形参数)")
 public class AccountOrgGroupDTO {
 
     @ApiModelProperty("组织ID")

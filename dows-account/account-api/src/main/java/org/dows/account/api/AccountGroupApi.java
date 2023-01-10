@@ -30,27 +30,21 @@ public interface AccountGroupApi {
      *
      * @param accountGroupDto
      * @param accountGroupInfoDto
-     * @param pageNo
-     * @param pageSize
      */
-    Response<IPage<AccountGroupVo>> accountGroupUnionList(AccountGroupDTO accountGroupDto, AccountGroupInfoDTO accountGroupInfoDto, Integer pageNo, Integer pageSize);
+    Response<IPage<AccountGroupVo>> accountGroupUnionList(AccountGroupDTO accountGroupDto, AccountGroupInfoDTO accountGroupInfoDto);
 
     /**
      * 自定义查询 账号-组 列表
      *
      * @param accountGroupDto
-     * @param pageNo
-     * @param pageSize
      */
-    Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDto, Integer pageNo, Integer pageSize);
+    Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDto);
 
     /**
      *
      * 自定义查询 账号-组负责人 列表
      *
      * @param accountGroupInfoDTO
-     * @param pageNo
-     * @param pageSize
      */
-    Response<IPage<AccountGroupInfoVo>> customAccountGroupInfoList(AccountGroupInfoDTO accountGroupInfoDTO, Integer pageNo, Integer pageSize);
+    Response<IPage<AccountGroupInfoVo>> customAccountGroupInfoList(AccountGroupInfoDTO accountGroupInfoDTO);
 }
