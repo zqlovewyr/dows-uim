@@ -47,4 +47,5 @@ public interface AccountGroupApi {
      * @param accountGroupInfoDTO
      */
     Response<IPage<AccountGroupInfoVo>> customAccountGroupInfoList(AccountGroupInfoDTO accountGroupInfoDTO);
+
 }
