@@ -1,6 +1,9 @@
 package org.dows.user.rest;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.biz.AccountInstanceBiz;
@@ -28,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm, AccountInstance, AccountInstanceService> {
     private final AccountInstanceBiz accountInstanceBiz;
 
+    @ApiOperation("实例注册")
     @PostMapping("/register")
     public Response<AccountInstanceVo> register(@RequestBody AccountInstanceDTO accountInstanceDTO) {
         return Response.ok(accountInstanceBiz.createAccountInstance(accountInstanceDTO));
