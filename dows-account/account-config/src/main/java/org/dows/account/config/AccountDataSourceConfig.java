@@ -21,7 +21,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import javax.sql.DataSource;
 
 @Configuration("accountDataSourceConfig")
-@MapperScan(basePackages = "org.dows.account.mapper", sqlSessionTemplateRef = "accountSqlSessionTemplate")
+@MapperScan(basePackages = "org.dows.*.mapper", sqlSessionTemplateRef = "accountSqlSessionTemplate")
 public class AccountDataSourceConfig {
 
     @Autowired

@@ -51,6 +51,23 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dows.framework</groupId>
+            <artifactId>framework-api</artifactId>
+        </dependency>
+        <!--api 接口文档-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -61,5 +78,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

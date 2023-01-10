@@ -11,3 +11,6 @@ spring:
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: true
+
+uim:
+  index: "forward:/${spring.application.name}/v1/index.html"
