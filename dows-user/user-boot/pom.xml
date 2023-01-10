@@ -12,11 +12,11 @@
     <dependencies>
         <dependency>
             <groupId>org.dows.cloud</groupId>
-            <artifactId>user-config</artifactId>
+            <artifactId>user-biz</artifactId>
         </dependency>
         <dependency>
             <groupId>org.dows.cloud</groupId>
-            <artifactId>user-biz</artifactId>
+            <artifactId>user-config</artifactId>
         </dependency>
     </dependencies>
 </project>

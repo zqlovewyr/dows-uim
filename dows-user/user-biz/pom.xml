@@ -11,23 +11,28 @@
     <artifactId>user-biz</artifactId>
 
     <dependencies>
-
+        <!--其他模块包-->
         <dependency>
             <groupId>org.dows.cloud</groupId>
-            <artifactId>user-api</artifactId>
+            <artifactId>account-api</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.dows.cloud</groupId>
-            <artifactId>user-crud</artifactId>
-            <version>20220701-SNAPSHOT</version>
+            <artifactId>rbac-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>tenant-api</artifactId>
         </dependency>
 
-
+        <!--模块包-->
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>user-pojo</artifactId>
-            <version>20220701-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>user-crud</artifactId>
         </dependency>
     </dependencies>
 </project>
