@@ -18,7 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "AccountGroupInfo对象", description = "账号-组信息")
+@ApiModel(value = "AccountGroupInfoDTO对象", description = "账号-组负责人信息")
 public class AccountGroupInfoDTO {
 
     @ApiModelProperty("组别ID")
@@ -60,4 +60,9 @@ public class AccountGroupInfoDTO {
     @ApiModelProperty(value = "结束时间")
     private Date endTime;
 
+    @ApiModelProperty(value = "页数")
+    private Integer pageNo;
+
+    @ApiModelProperty(value = "分页大小")
+    private Integer pageSize;
 }

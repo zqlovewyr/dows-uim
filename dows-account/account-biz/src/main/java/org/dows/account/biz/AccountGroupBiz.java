@@ -19,7 +19,9 @@ import org.dows.account.entity.AccountRole;
 import org.dows.account.service.AccountGroupInfoService;
 import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountRoleService;
+import org.dows.account.vo.AccountGroupInfoVo;
 import org.dows.account.vo.AccountGroupVo;
+import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,19 +103,19 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     /**
-     * 查询 账号-组及负责人 列表
+     * 查询 账号-组联合负责人 列表
      *
      * @param accountGroupDTO
      * @param accountGroupInfoDTO
-     * @param pageNo
-     * @param pageSize
+     * @return Response<IPage<AccountGroupVo>>
      */
-    public IPage<AccountGroupVo> accountGroupUnionList(@RequestBody AccountGroupDTO accountGroupDTO, @RequestBody AccountGroupInfoDTO accountGroupInfoDTO, Integer pageNo, Integer pageSize) {
+    @Transactional(rollbackFor = Exception.class)
+    public Response<IPage<AccountGroupVo>> accountGroupUnionList(@RequestBody AccountGroupDTO accountGroupDTO, @RequestBody AccountGroupInfoDTO accountGroupInfoDTO) {
         //筛选对应对应团队负责人相关信息
         List<AccountGroupInfo> accountGroupInfoList = new ArrayList<>();
         if (accountGroupInfoDTO != null) {
             accountGroupInfoList = accountGroupInfoService.lambdaQuery()
-                    .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getGroupId()), AccountGroupInfo::getGroupId, accountGroupInfoDTO.getGroupId())
+                    .eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getGroupId()), AccountGroupInfo::getGroupId, accountGroupInfoDTO.getGroupId())
                     .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getGroupName()), AccountGroupInfo::getGroupName, accountGroupInfoDTO.getGroupName())
                     .eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getAccountId()), AccountGroupInfo::getAccountId, accountGroupInfoDTO.getAccountId())
                     .eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getUserId()), AccountGroupInfo::getUserId, accountGroupInfoDTO.getUserId())
@@ -131,10 +133,10 @@ public class AccountGroupBiz implements AccountGroupApi {
         }
         //groupId合并
         Set<String> groupIds = new HashSet<>();
-        if(accountGroupInfoList.size() > 0 ){
+        if (accountGroupInfoList.size() > 0) {
             accountGroupInfoList.forEach(item -> groupIds.add(item.getGroupId()));
         }
-        if(accountGroupDTO.getId() != null){
+        if (accountGroupDTO.getId() != null) {
             groupIds.add(String.valueOf(accountGroupDTO.getId()));
         }
         //获取组列表
@@ -142,7 +144,7 @@ public class AccountGroupBiz implements AccountGroupApi {
         queryWrapper.eq(AccountGroup::getAppId, accountGroupDTO.getAppId())
                 .eq(AccountGroup::getAccountId, accountGroupDTO.getAccountId())
                 .eq(AccountGroup::getDeleted, false)
-                .in(groupIds != null && groupIds.size() > 0,AccountGroup::getId,groupIds)
+                .in(groupIds != null && groupIds.size() > 0, AccountGroup::getId, groupIds)
                 .eq(StringUtils.isNotEmpty(accountGroupDTO.getOrgId()), AccountGroup::getOrgId, accountGroupDTO.getOrgId())
                 .like(StringUtils.isNotEmpty(accountGroupDTO.getOrgName()), AccountGroup::getOrgName, accountGroupDTO.getOrgName())
                 .like(StringUtils.isNotEmpty(accountGroupDTO.getAccountName()), AccountGroup::getAccountName, accountGroupDTO.getAccountName())
@@ -151,28 +153,28 @@ public class AccountGroupBiz implements AccountGroupApi {
                 .gt(accountGroupDTO.getStartTime() != null, AccountGroup::getDt, accountGroupDTO.getStartTime())
                 .lt(accountGroupDTO.getEndTime() != null, AccountGroup::getDt, accountGroupDTO.getEndTime())
                 .orderByDesc(AccountGroup::getDt);
-        Page<AccountGroup> page = new Page<>(pageNo, pageSize);
+        Page<AccountGroup> page = new Page<>(accountGroupDTO.getPageNo(), accountGroupDTO.getPageSize());
         IPage<AccountGroup> groupList = accountGroupService.page(page, queryWrapper);
         IPage<AccountGroupVo> pageVo = new Page<>();
         BeanUtils.copyProperties(groupList, pageVo);
-        return pageVo;
+        return Response.ok(pageVo);
 
     }
 
     /**
      * 自定义账号-组 列表
+     *
      * @param accountGroupDTO
-     * @param pageNo
-     * @param pageSize
-     * @return
+     * @return Response<IPage<AccountGroupVo>>
      */
     @Override
-    public IPage<AccountGroupVo> customAccountGroupList(AccountGroupDTO accountGroupDTO, Integer pageNo, Integer pageSize) {
+    @Transactional(rollbackFor = Exception.class)
+    public Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDTO) {
         LambdaQueryWrapper<AccountGroup> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AccountGroup::getAppId, accountGroupDTO.getAppId())
                 .eq(AccountGroup::getAccountId, accountGroupDTO.getAccountId())
                 .eq(AccountGroup::getDeleted, false)
-                .eq(AccountGroup::getId,accountGroupDTO.getId())
+                .eq(AccountGroup::getId, accountGroupDTO.getId())
                 .eq(StringUtils.isNotEmpty(accountGroupDTO.getOrgId()), AccountGroup::getOrgId, accountGroupDTO.getOrgId())
                 .like(StringUtils.isNotEmpty(accountGroupDTO.getOrgName()), AccountGroup::getOrgName, accountGroupDTO.getOrgName())
                 .like(StringUtils.isNotEmpty(accountGroupDTO.getAccountName()), AccountGroup::getAccountName, accountGroupDTO.getAccountName())
@@ -181,11 +183,43 @@ public class AccountGroupBiz implements AccountGroupApi {
                 .gt(accountGroupDTO.getStartTime() != null, AccountGroup::getDt, accountGroupDTO.getStartTime())
                 .lt(accountGroupDTO.getEndTime() != null, AccountGroup::getDt, accountGroupDTO.getEndTime())
                 .orderByDesc(AccountGroup::getDt);
-        Page<AccountGroup> page = new Page<>(pageNo, pageSize);
+        Page<AccountGroup> page = new Page<>(accountGroupDTO.getPageNo(), accountGroupDTO.getPageSize());
         IPage<AccountGroup> groupList = accountGroupService.page(page, queryWrapper);
         //复制属性
         IPage<AccountGroupVo> pageVo = new Page<>();
         BeanUtils.copyProperties(groupList, pageVo);
-        return pageVo;
+        return Response.ok(pageVo);
+    }
+
+    /**
+     * 自定义账号-组负责人 列表
+     *
+     * @param accountGroupInfoDTO
+     * @return Response<IPage<AccountGroupInfoVo>>
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Response<IPage<AccountGroupInfoVo>> customAccountGroupInfoList(AccountGroupInfoDTO accountGroupInfoDTO) {
+        LambdaQueryWrapper<AccountGroupInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getGroupId()), AccountGroupInfo::getGroupId, accountGroupInfoDTO.getGroupId())
+                .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getGroupName()), AccountGroupInfo::getGroupName, accountGroupInfoDTO.getGroupName())
+                .eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getAccountId()), AccountGroupInfo::getAccountId, accountGroupInfoDTO.getAccountId())
+                .eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getUserId()), AccountGroupInfo::getUserId, accountGroupInfoDTO.getUserId())
+                .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getOwner()), AccountGroupInfo::getOwner, accountGroupInfoDTO.getOwner())
+                .like(accountGroupInfoDTO.getOwnerPhone() != null, AccountGroupInfo::getOwnerPhone, accountGroupInfoDTO.getOwnerPhone())
+                .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getDistrict()), AccountGroupInfo::getDistrict, accountGroupInfoDTO.getDistrict())
+                .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getAddress()), AccountGroupInfo::getAddress, accountGroupInfoDTO.getAddress())
+                .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getDescr()), AccountGroupInfo::getDescr, accountGroupInfoDTO.getDescr())
+                .eq(accountGroupInfoDTO.getDt() != null, AccountGroupInfo::getDt, accountGroupInfoDTO.getDt())
+                .gt(accountGroupInfoDTO.getStartTime() != null, AccountGroupInfo::getDt, accountGroupInfoDTO.getStartTime())
+                .lt(accountGroupInfoDTO.getEndTime() != null, AccountGroupInfo::getDt, accountGroupInfoDTO.getEndTime())
+                .eq(AccountGroupInfo::getDeleted, false)
+                .orderByDesc(AccountGroupInfo::getDt);
+        Page<AccountGroupInfo> page = new Page<>(accountGroupInfoDTO.getPageNo(), accountGroupInfoDTO.getPageSize());
+        IPage<AccountGroupInfo> groupInfoList = accountGroupInfoService.page(page, queryWrapper);
+        //复制属性
+        IPage<AccountGroupInfoVo> pageVo = new Page<>();
+        BeanUtils.copyProperties(groupInfoList, pageVo);
+        return Response.ok(pageVo);
     }
 }

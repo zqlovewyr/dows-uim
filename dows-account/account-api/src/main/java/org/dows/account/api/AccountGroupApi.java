@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.dto.AccountGroupInfoDTO;
 import org.dows.account.dto.AccountOrgGroupDTO;
+import org.dows.account.vo.AccountGroupInfoVo;
 import org.dows.account.vo.AccountGroupVo;
+import org.dows.framework.api.Response;
 import java.util.List;
 
 /**
@@ -19,26 +21,31 @@ public interface AccountGroupApi {
      * batch insert account-group
      * 批量创建 账号-组
      *
-     * @param accountOrgGroupDTOS account-groups
+     * @param accountOrgGroupDTOS
      */
     void batchInsertGroup(List<AccountOrgGroupDTO> accountOrgGroupDTOS);
 
     /**
-     * 查询 账号-组及负责人 列表
+     * 自定义查询 账号-组联合负责人 列表
      *
      * @param accountGroupDto
      * @param accountGroupInfoDto
-     * @param pageNo
-     * @param pageSize
      */
-    IPage<AccountGroupVo> accountGroupUnionList(AccountGroupDTO accountGroupDto, AccountGroupInfoDTO accountGroupInfoDto, Integer pageNo, Integer pageSize);
+    Response<IPage<AccountGroupVo>> accountGroupUnionList(AccountGroupDTO accountGroupDto, AccountGroupInfoDTO accountGroupInfoDto);
 
     /**
-     * 自定义账号-组 列表
+     * 自定义查询 账号-组 列表
      *
      * @param accountGroupDto
-     * @param pageNo
-     * @param pageSize
      */
-    IPage<AccountGroupVo> customAccountGroupList(AccountGroupDTO accountGroupDto, Integer pageNo, Integer pageSize);
+    Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDto);
+
+    /**
+     *
+     * 自定义查询 账号-组负责人 列表
+     *
+     * @param accountGroupInfoDTO
+     */
+    Response<IPage<AccountGroupInfoVo>> customAccountGroupInfoList(AccountGroupInfoDTO accountGroupInfoDTO);
+
 }
