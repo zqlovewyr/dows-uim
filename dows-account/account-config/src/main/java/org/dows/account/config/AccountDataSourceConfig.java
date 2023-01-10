@@ -89,12 +89,8 @@ public class AccountDataSourceConfig {
          *                         "classpath*:user/mapper/*Mapper.xml"));
          */
         mybatisSqlSessionFactoryBean.setMapperLocations(mybatisPlusProperties.resolveMapperLocations());
-
         SqlSessionFactory sqlSessionFactory = mybatisSqlSessionFactoryBean.getObject();
         sqlSessionFactory.getConfiguration().setMapUnderscoreToCamelCase(true);
-
-        // 添加插件
-        //mybatisSqlSessionFactoryBean.setPlugins();
         return mybatisSqlSessionFactoryBean.getObject();
     }
 

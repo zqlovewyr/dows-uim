@@ -20,6 +20,7 @@
         <module>user-feign</module>
         <module>user-pojo</module>
         <module>user-config</module>
+        <module>user-app</module>
     </modules>
 
     <dependencyManagement>

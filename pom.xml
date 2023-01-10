@@ -27,7 +27,7 @@
         <module>dows-tenant</module>
         <module>dows-user</module>
         <module>dows-member</module>
-<!--        <module>dows-account/account-app</module>-->
+        <!--        <module>dows-account/account-app</module>-->
 <!--        <module>dows-rbac/rbac-config</module>-->
     </modules>
 

@@ -40,8 +40,8 @@ public class AccountGroupVo {
     @ApiModelProperty("账号名")
     private String accountName;
 
-    @ApiModelProperty("用户名")
-    private String userName;
+    @ApiModelProperty("用户ID")
+    private String userId;
 
     @ApiModelProperty("应用ID")
     private String appId;

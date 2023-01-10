@@ -36,8 +36,8 @@ public class AccountGroupDTO implements Serializable {
     @ApiModelProperty("账号名")
     private String accountName;
 
-    @ApiModelProperty("用户名")
-    private String userName;
+    @ApiModelProperty("用户ID")
+    private String userId;
 
     @ApiModelProperty("应用ID")
     private String appId;
@@ -47,6 +47,9 @@ public class AccountGroupDTO implements Serializable {
 
     @ApiModelProperty("创建时间")
     private Date dt;
+
+    @ApiModelProperty("是否逻辑删除")
+    private Boolean deleted;
 
     @ApiModelProperty(value = "开始时间")
     private Date startTime;
