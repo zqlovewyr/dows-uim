@@ -1,9 +1,9 @@
 package org.dows.user.service.impl;
 
 import org.dows.framework.crud.mybatis.MybatisCrudServiceImpl;
+import org.dows.user.service.UserAddressService;
 import org.dows.user.mapper.UserAddressMapper;
 import org.dows.user.entity.UserAddress;
-import org.dows.user.service.UserAddressService;
 import org.springframework.stereotype.Service;
 
 

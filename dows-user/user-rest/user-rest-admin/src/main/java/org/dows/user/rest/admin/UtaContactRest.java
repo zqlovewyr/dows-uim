@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
 import org.dows.user.entity.UtaContact;
-import org.dows.user.form.UtaContactForm;
 import org.dows.user.service.UtaContactService;
+import org.dows.user.form.UtaContactForm;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

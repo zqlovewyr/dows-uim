@@ -1,8 +1,8 @@
 package org.dows.user.service.impl;
 
 import org.dows.framework.crud.mybatis.MybatisCrudServiceImpl;
-import org.dows.user.mapper.UserEducationMapper;
 import org.dows.user.entity.UserEducation;
+import org.dows.user.mapper.UserEducationMapper;
 import org.dows.user.service.UserEducationService;
 import org.springframework.stereotype.Service;
 

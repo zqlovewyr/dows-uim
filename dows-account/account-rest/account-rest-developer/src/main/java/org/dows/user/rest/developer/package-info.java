@@ -1,1 +1,1 @@
-package com.dows.app.rest;
+package org.dows.user.rest.developer;

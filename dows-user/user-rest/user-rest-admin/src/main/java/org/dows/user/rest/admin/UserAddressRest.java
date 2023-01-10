@@ -5,9 +5,9 @@ import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
+import org.dows.user.service.UserAddressService;
 import org.dows.user.entity.UserAddress;
 import org.dows.user.form.UserAddressForm;
-import org.dows.user.service.UserAddressService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

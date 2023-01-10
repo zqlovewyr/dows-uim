@@ -16,10 +16,11 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import javax.sql.DataSource;
 
-@Configuration
+@Configuration("userDataSourceConfig")
 @MapperScan(basePackages = "org.dows.user.mapper", sqlSessionTemplateRef = "userSqlSessionTemplate")
 public class UserDataSourceConfig {
 
@@ -31,22 +32,22 @@ public class UserDataSourceConfig {
 
     @Bean(name = "userHikariConfig")
     @ConfigurationProperties(prefix = "spring.datasource.hikari")
-    public HikariConfig hikariConfig() {
+    public HikariConfig userHikariConfig() {
         return new HikariConfig();
     }
 
     @Bean(name = "userDataSourceProperties")
     @ConfigurationProperties(prefix = "spring.datasource.user")
-    public DataSourceProperties dataSourceProperties() {
+    public DataSourceProperties userDataSourceProperties() {
         return new DataSourceProperties();
     }
 
     @Bean(name = "userDataSource")
     public DataSource userDataSource() {
         // 获取本应用对于的数据源
-        DataSourceProperties dataSourceProperties = dataSourceProperties();
+        DataSourceProperties dataSourceProperties = userDataSourceProperties();
         // 设置连接池
-        HikariConfig hikariConfig = hikariConfig();
+        HikariConfig hikariConfig = userHikariConfig();
         /**
          * 转换
          * 或者hikariConfig.setDataSourceProperties();
@@ -59,6 +60,7 @@ public class UserDataSourceConfig {
     }
 
     @Bean(name = "userSqlSessionFactory")
+    @Primary
     public SqlSessionFactory userSqlSessionFactory(@Qualifier("userDataSource") DataSource dataSource) throws Exception {
         MybatisSqlSessionFactoryBean mybatisSqlSessionFactoryBean = new MybatisSqlSessionFactoryBean();
         /**
