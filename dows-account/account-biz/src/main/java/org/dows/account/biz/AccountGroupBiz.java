@@ -109,6 +109,7 @@ public class AccountGroupBiz implements AccountGroupApi {
      * @param accountGroupInfoDTO
      * @return Response<IPage<AccountGroupVo>>
      */
+    @Transactional(rollbackFor = Exception.class)
     public Response<IPage<AccountGroupVo>> accountGroupUnionList(@RequestBody AccountGroupDTO accountGroupDTO, @RequestBody AccountGroupInfoDTO accountGroupInfoDTO) {
         //筛选对应对应团队负责人相关信息
         List<AccountGroupInfo> accountGroupInfoList = new ArrayList<>();
@@ -167,6 +168,7 @@ public class AccountGroupBiz implements AccountGroupApi {
      * @return Response<IPage<AccountGroupVo>>
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDTO) {
         LambdaQueryWrapper<AccountGroup> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AccountGroup::getAppId, accountGroupDTO.getAppId())
@@ -196,6 +198,7 @@ public class AccountGroupBiz implements AccountGroupApi {
      * @return Response<IPage<AccountGroupInfoVo>>
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Response<IPage<AccountGroupInfoVo>> customAccountGroupInfoList(AccountGroupInfoDTO accountGroupInfoDTO) {
         LambdaQueryWrapper<AccountGroupInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getGroupId()), AccountGroupInfo::getGroupId, accountGroupInfoDTO.getGroupId())
