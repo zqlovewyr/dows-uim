@@ -1,4 +1,4 @@
-package org.dows.user.rest;
+package org.dows.account.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;

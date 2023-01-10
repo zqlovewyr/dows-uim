@@ -1,4 +1,4 @@
-package org.dows.user.rest;
+package org.dows.account.rest;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
