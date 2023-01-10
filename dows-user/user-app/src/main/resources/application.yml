@@ -1,0 +1,13 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: user
+  profiles:
+    include: user-mysql,user-mybatis
+    active: dev
+
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: true
