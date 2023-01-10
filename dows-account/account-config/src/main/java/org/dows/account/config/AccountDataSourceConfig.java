@@ -98,17 +98,6 @@ public class AccountDataSourceConfig {
         return mybatisSqlSessionFactoryBean.getObject();
     }
 
-
-    // 配置 mapper 扫描路径
-//    @Bean(name = "accountMapperScannerConfigurer")
-//    public MapperScannerConfigurer accountMapperScannerConfigurer() {
-//        MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
-//        mapperScannerConfigurer.setBasePackage("org.dows.account.mapper.*");
-//        mapperScannerConfigurer.setSqlSessionFactoryBeanName("accountSqlSessionTemplate");
-//        return mapperScannerConfigurer;
-//    }
-
-
     @Bean(name = "accountTransactionManager")
     public DataSourceTransactionManager accountTransactionManager(@Qualifier("accountDataSource") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
