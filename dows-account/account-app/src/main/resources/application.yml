@@ -5,7 +5,7 @@ spring:
   application:
     name: account
   profiles:
-    include: classpath*:/account/application-mysql.yml,classpath*:/account/application-mybatis.yml,classpath*:/account/application-mvc.yml
+    include: account-mysql,account-mybatis
     active: dev
 
   jackson:

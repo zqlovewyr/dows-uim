@@ -5,6 +5,7 @@ mybatis-plus:
       id-type: AUTO
       insert-strategy: not_empty
       update-strategy: not_empty
+
       # 表统一加前缀
     #      table-prefix:
     banner: false
@@ -14,6 +15,7 @@ mybatis-plus:
     multiple-result-sets-enabled: true
     jdbc-type-for-null: null
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 #    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
 
 #虽然两种都可以运行成功，但下面这种写法才是2.4版本的最好的写法，原因是2.4版本中官方将配置文件的加载进行了更新，
