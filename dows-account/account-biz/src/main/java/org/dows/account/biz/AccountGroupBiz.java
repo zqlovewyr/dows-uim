@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.formula.functions.T;
 import org.dows.account.api.AccountGroupApi;
 import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.dto.AccountGroupInfoDTO;
@@ -20,6 +21,8 @@ import org.dows.account.service.AccountGroupInfoService;
 import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountRoleService;
 import org.dows.account.vo.AccountGroupVo;
+import org.dows.framework.api.Response;
+import org.dows.rbac.api.vo.RbacRoleVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,7 +111,7 @@ public class AccountGroupBiz implements AccountGroupApi {
      * @param pageNo
      * @param pageSize
      */
-    public IPage<AccountGroupVo> accountGroupUnionList(@RequestBody AccountGroupDTO accountGroupDTO, @RequestBody AccountGroupInfoDTO accountGroupInfoDTO, Integer pageNo, Integer pageSize) {
+    public Response<IPage<AccountGroupVo>> accountGroupUnionList(@RequestBody AccountGroupDTO accountGroupDTO, @RequestBody AccountGroupInfoDTO accountGroupInfoDTO, Integer pageNo, Integer pageSize) {
         //筛选对应对应团队负责人相关信息
         List<AccountGroupInfo> accountGroupInfoList = new ArrayList<>();
         if (accountGroupInfoDTO != null) {
@@ -154,8 +157,8 @@ public class AccountGroupBiz implements AccountGroupApi {
         Page<AccountGroup> page = new Page<>(pageNo, pageSize);
         IPage<AccountGroup> groupList = accountGroupService.page(page, queryWrapper);
         IPage<AccountGroupVo> pageVo = new Page<>();
-        BeanUtils.copyProperties(groupList, pageVo);
-        return pageVo;
+        BeanUtils.copyProperties(groupList, pageVo);;
+        return Response.ok(pageVo);
 
     }
 
@@ -167,7 +170,7 @@ public class AccountGroupBiz implements AccountGroupApi {
      * @return
      */
     @Override
-    public IPage<AccountGroupVo> customAccountGroupList(AccountGroupDTO accountGroupDTO, Integer pageNo, Integer pageSize) {
+    public Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDTO, Integer pageNo, Integer pageSize) {
         LambdaQueryWrapper<AccountGroup> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AccountGroup::getAppId, accountGroupDTO.getAppId())
                 .eq(AccountGroup::getAccountId, accountGroupDTO.getAccountId())
@@ -186,6 +189,6 @@ public class AccountGroupBiz implements AccountGroupApi {
         //复制属性
         IPage<AccountGroupVo> pageVo = new Page<>();
         BeanUtils.copyProperties(groupList, pageVo);
-        return pageVo;
+        return Response.ok(pageVo);
     }
 }
