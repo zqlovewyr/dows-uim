@@ -43,7 +43,7 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
     }
 
     @PostMapping(value = "/saveOrUpdate")
-    @ApiOperation("保存及修改用户，（有id及修改）")
+    @ApiOperation("保存及修改用户，（有id为修改）")
     public Response saveOrUpdate(@RequestBody AccountUserResForm usersForm){
         try {
             AccountInstanceResDTO accountInstanceResDTO = new AccountInstanceResDTO();
