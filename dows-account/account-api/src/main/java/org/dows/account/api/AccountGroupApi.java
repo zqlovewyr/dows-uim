@@ -6,7 +6,6 @@ import org.dows.account.dto.AccountGroupInfoDTO;
 import org.dows.account.dto.AccountOrgGroupDTO;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
-
 import java.util.List;
 
 /**
