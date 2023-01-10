@@ -111,40 +111,11 @@ public class AccountGroupBiz implements AccountGroupApi {
      */
     @Transactional(rollbackFor = Exception.class)
     public Response<IPage<AccountGroupVo>> accountGroupUnionList(@RequestBody AccountGroupDTO accountGroupDTO, @RequestBody AccountGroupInfoDTO accountGroupInfoDTO) {
-        //筛选对应对应团队负责人相关信息
-        List<AccountGroupInfo> accountGroupInfoList = new ArrayList<>();
-        if (accountGroupInfoDTO != null) {
-            accountGroupInfoList = accountGroupInfoService.lambdaQuery()
-                    .eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getGroupId()), AccountGroupInfo::getGroupId, accountGroupInfoDTO.getGroupId())
-                    .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getGroupName()), AccountGroupInfo::getGroupName, accountGroupInfoDTO.getGroupName())
-                    .eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getAccountId()), AccountGroupInfo::getAccountId, accountGroupInfoDTO.getAccountId())
-                    .eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getUserId()), AccountGroupInfo::getUserId, accountGroupInfoDTO.getUserId())
-                    .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getOwner()), AccountGroupInfo::getOwner, accountGroupInfoDTO.getOwner())
-                    .like(accountGroupInfoDTO.getOwnerPhone() != null, AccountGroupInfo::getOwnerPhone, accountGroupInfoDTO.getOwnerPhone())
-                    .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getDistrict()), AccountGroupInfo::getDistrict, accountGroupInfoDTO.getDistrict())
-                    .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getAddress()), AccountGroupInfo::getAddress, accountGroupInfoDTO.getAddress())
-                    .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getDescr()), AccountGroupInfo::getDescr, accountGroupInfoDTO.getDescr())
-                    .eq(accountGroupInfoDTO.getDt() != null, AccountGroupInfo::getDt, accountGroupInfoDTO.getDt())
-                    .gt(accountGroupInfoDTO.getStartTime() != null, AccountGroupInfo::getDt, accountGroupInfoDTO.getStartTime())
-                    .lt(accountGroupInfoDTO.getEndTime() != null, AccountGroupInfo::getDt, accountGroupInfoDTO.getEndTime())
-                    .eq(AccountGroupInfo::getDeleted, false)
-                    .orderByDesc(AccountGroupInfo::getDt)
-                    .list();
-        }
-        //groupId合并
-        Set<String> groupIds = new HashSet<>();
-        if (accountGroupInfoList.size() > 0) {
-            accountGroupInfoList.forEach(item -> groupIds.add(item.getGroupId()));
-        }
-        if (accountGroupDTO.getId() != null) {
-            groupIds.add(String.valueOf(accountGroupDTO.getId()));
-        }
         //获取组列表
         LambdaQueryWrapper<AccountGroup> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AccountGroup::getAppId, accountGroupDTO.getAppId())
-                .eq(AccountGroup::getAccountId, accountGroupDTO.getAccountId())
-                .eq(AccountGroup::getDeleted, false)
-                .in(groupIds != null && groupIds.size() > 0, AccountGroup::getId, groupIds)
+        queryWrapper.eq(StringUtils.isNotEmpty(accountGroupDTO.getAppId()),AccountGroup::getAppId, accountGroupDTO.getAppId())
+                .eq(StringUtils.isNotEmpty(accountGroupDTO.getAccountId()),AccountGroup::getAccountId, accountGroupDTO.getAccountId())
+                .in(accountGroupDTO.getIds() != null && accountGroupDTO.getIds().size() > 0, AccountGroup::getId, accountGroupDTO.getIds())
                 .eq(StringUtils.isNotEmpty(accountGroupDTO.getOrgId()), AccountGroup::getOrgId, accountGroupDTO.getOrgId())
                 .like(StringUtils.isNotEmpty(accountGroupDTO.getOrgName()), AccountGroup::getOrgName, accountGroupDTO.getOrgName())
                 .like(StringUtils.isNotEmpty(accountGroupDTO.getAccountName()), AccountGroup::getAccountName, accountGroupDTO.getAccountName())
@@ -152,6 +123,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                 .eq(accountGroupDTO.getDt() != null, AccountGroup::getDt, accountGroupDTO.getDt())
                 .gt(accountGroupDTO.getStartTime() != null, AccountGroup::getDt, accountGroupDTO.getStartTime())
                 .lt(accountGroupDTO.getEndTime() != null, AccountGroup::getDt, accountGroupDTO.getEndTime())
+                .eq(AccountGroup::getDeleted, false)
                 .orderByDesc(AccountGroup::getDt);
         Page<AccountGroup> page = new Page<>(accountGroupDTO.getPageNo(), accountGroupDTO.getPageSize());
         IPage<AccountGroup> groupList = accountGroupService.page(page, queryWrapper);
@@ -171,10 +143,9 @@ public class AccountGroupBiz implements AccountGroupApi {
     @Transactional(rollbackFor = Exception.class)
     public Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDTO) {
         LambdaQueryWrapper<AccountGroup> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AccountGroup::getAppId, accountGroupDTO.getAppId())
-                .eq(AccountGroup::getAccountId, accountGroupDTO.getAccountId())
-                .eq(AccountGroup::getDeleted, false)
-                .eq(AccountGroup::getId, accountGroupDTO.getId())
+        queryWrapper.eq(StringUtils.isNotEmpty(accountGroupDTO.getAppId()),AccountGroup::getAppId, accountGroupDTO.getAppId())
+                .eq(StringUtils.isNotEmpty(accountGroupDTO.getAccountId()),AccountGroup::getAccountId, accountGroupDTO.getAccountId())
+                .eq(accountGroupDTO.getId() != null,AccountGroup::getId, accountGroupDTO.getId())
                 .eq(StringUtils.isNotEmpty(accountGroupDTO.getOrgId()), AccountGroup::getOrgId, accountGroupDTO.getOrgId())
                 .like(StringUtils.isNotEmpty(accountGroupDTO.getOrgName()), AccountGroup::getOrgName, accountGroupDTO.getOrgName())
                 .like(StringUtils.isNotEmpty(accountGroupDTO.getAccountName()), AccountGroup::getAccountName, accountGroupDTO.getAccountName())
@@ -182,6 +153,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                 .eq(accountGroupDTO.getDt() != null, AccountGroup::getDt, accountGroupDTO.getDt())
                 .gt(accountGroupDTO.getStartTime() != null, AccountGroup::getDt, accountGroupDTO.getStartTime())
                 .lt(accountGroupDTO.getEndTime() != null, AccountGroup::getDt, accountGroupDTO.getEndTime())
+                .eq(AccountGroup::getDeleted, false)
                 .orderByDesc(AccountGroup::getDt);
         Page<AccountGroup> page = new Page<>(accountGroupDTO.getPageNo(), accountGroupDTO.getPageSize());
         IPage<AccountGroup> groupList = accountGroupService.page(page, queryWrapper);

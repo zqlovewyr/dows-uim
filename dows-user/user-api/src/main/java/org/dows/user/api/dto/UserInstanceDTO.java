@@ -35,6 +35,9 @@ public class UserInstanceDTO {
     @ApiModelProperty("用户ID")
     private String userId;
 
+    @ApiModelProperty("用户ID集合")
+    private Set<String> userIds;
+
     @ApiModelProperty("姓名")
     private String name;
 
@@ -55,6 +58,15 @@ public class UserInstanceDTO {
 
     @ApiModelProperty("生日")
     private Date birthday;
+
+    @ApiModelProperty(value = "生日开始时间")
+    private Date birthdayStartTime;
+
+    @ApiModelProperty(value = "生日结束时间")
+    private Date birthdayEndTime;
+
+    @ApiModelProperty("用户时间")
+    private Date userDate;
 
     @ApiModelProperty("有效时间（开始时间）")
     private Date indate;

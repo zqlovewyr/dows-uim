@@ -18,6 +18,5 @@ public interface UserInstanceApi {
      *
      * @param userInstanceDTO
      */
-/*    Response<IPage<UserInstanceVo>> userInstanceUnionList(UserInstanceDTO userInstanceDTO);*/
-
+    Response<IPage<UserInstanceVo>> userInstanceUnionList(UserInstanceDTO userInstanceDTO);
 }

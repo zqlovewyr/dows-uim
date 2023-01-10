@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @description: 账号-账号组维度信息(AccountGroup)DTO类
@@ -23,6 +24,9 @@ import java.util.Date;
 public class AccountGroupDTO implements Serializable {
     @ApiModelProperty("自增主键ID")
     private Long id;
+
+    @ApiModelProperty("主键id集合")
+    private Set<String> ids;
 
     @ApiModelProperty("组织ID")
     private String orgId;
