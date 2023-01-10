@@ -20,6 +20,7 @@ import java.util.Date;
 @Data
 @ToString
 @Builder
+@EqualsAndHashCode
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -72,15 +73,6 @@ public class AccountUserResForm implements Serializable {
     @ApiModelProperty("租户ID")
     private String tenantId;
 
-    @ApiModelProperty("角色")
-    private String roleId;
-    @ApiModelProperty("入职开始日期")
-    private Date entryDateStart;
-    @ApiModelProperty("入职结束日期")
-    private Date entryDateEnd;
-
-    private Integer page;
-    private Integer size;
 
 }
 

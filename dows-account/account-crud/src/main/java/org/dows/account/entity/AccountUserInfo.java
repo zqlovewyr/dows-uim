@@ -34,6 +34,8 @@ public class AccountUserInfo implements CrudEntity {
 
     @ApiModelProperty("租户ID")
     private String tenantId;
+    @ApiModelProperty("名字")
+    private String name;
 
     private Integer sex;
 

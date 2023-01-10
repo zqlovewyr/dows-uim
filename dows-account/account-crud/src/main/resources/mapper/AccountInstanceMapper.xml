@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.dows.account.mapper.AccountInstanceMapper">
 
-    <select id="getAccountInstanceByUserNameAndTenantId" parameterType="map" resultType="org.dows.account.vo.AccountInstanceResVo">
+    <select id="getAccountInstanceByUserNameAndTenantId" parameterType="map" resultType="org.dows.account.vo.AccountInstanceVo">
         SELECT
             t1.id,
             t1.account_name,
@@ -23,4 +23,68 @@
         </if>
 
     </select>
+
+    <!--分页查询用户基础信息-->
+    <select id="selectAccountInstancePage" parameterType="org.dows.account.query.AccountInstanceQuery" resultType="org.dows.account.vo.AccountInstanceResVo">
+        SELECT
+        t1.id,
+        t1.account_id,
+        t1.account_name,
+        t1.phone,
+        t1.store_id,
+        t6.name as store_name,
+        t2.name,
+        t2.sex,
+        t5.identifier,
+        t2.birthday,
+        t2.job,
+        t3.org_name,
+        t4.role_name,
+        t2.entry_time
+        <!-- t3.identifier,-->
+        FROM account_instance t1
+        left join account_user_info t2 on t1.account_id = t2.account_id
+        left join account_group t3 on t1.account_id = t3.account_id
+        left join account_role t4 on t1.account_id = t4.principal_id
+        left join account_identifier t5 on t1.account_id = t5.account_id
+
+        left join store_instance t6 on t1.store_id = t6.store_id
+
+        <!-- left join account_identifier t3 on t1.account_id = t3.account_id -->
+        WHERE 1=1
+        <if test="accountInstanceQuery.id != null">
+            AND t1.id = #{accountInstanceQuery.id}
+        </if>
+
+        <if test="accountInstanceQuery.name != null and accountInstanceQuery.name != ''">
+            AND t2.name = #{accountInstanceQuery.name}
+        </if>
+        <if test="accountInstanceQuery.gender != null">
+            AND t2.sex = #{accountInstanceQuery.gender}
+        </if>
+
+        <if test="accountInstanceQuery.orgId != null">
+            AND t3.org_id = #{accountInstanceQuery.orgId}
+        </if>
+
+        <if test="accountInstanceQuery.job != null">
+            AND t2.job = #{accountInstanceQuery.job}
+        </if>
+
+        <if test="accountInstanceQuery.storeId != null">
+            AND t1.store_id = #{accountInstanceQuery.storeId}
+        </if>
+        <if test="accountInstanceQuery.roleId != null">
+            AND t4.role_id = #{accountInstanceQuery.roleId}
+        </if>
+
+        <if test="accountInstanceQuery.entryDateStart != null">
+            AND DATE(t2.entry_time) &gt;= #{accountInstanceQuery.entryDateStart}
+        </if>
+        <if test="accountInstanceQuery.entryDateEnd != null">
+            AND DATE(t2.entry_time) &lt;= #{accountInstanceQuery.entryDateEnd}
+        </if>
+
+    </select>
+
 </mapper>

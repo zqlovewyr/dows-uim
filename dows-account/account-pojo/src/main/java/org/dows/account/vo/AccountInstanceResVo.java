@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @description: 账号-实例维度信息(AccountInstance)VO类
@@ -30,30 +31,47 @@ public class AccountInstanceResVo implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
-    @ApiModelProperty(value = "账号ID/用户ID/会员ID/商户ID")
+    @ApiModelProperty(value = "账号ID")
     private Long accountId;
 
     @ApiModelProperty(value = "账号名")
     private String accountName;
 
-    @ApiModelProperty(value = "账号密码")
-    private String accountPwd;
+    @ApiModelProperty(value = "姓名")
+    private String name;
 
-    @ApiModelProperty(value = "头像")
-    private String avatar;
+    @ApiModelProperty(value = "性别")
+    private Integer sex;
 
-    @ApiModelProperty(value = "应用 id")
-    private String tenantId;
+    @ApiModelProperty(value = "性别Str")
+    private String sexStr;
 
-    @ApiModelProperty(value = "状态，锁定/异常等 ")
-    private Integer status;
+    @ApiModelProperty(value = "手机号")
+    private String phone;
 
-    @ApiModelProperty(value = "来源, 推广统计用")
-    private String source;
+    @ApiModelProperty(value = "年龄")
+    private Integer age;
 
-    @ApiModelProperty(value = "乐观锁, 默认: 0")
-    private Integer ver;
+    @ApiModelProperty(value = "身份证号")
+    private String identifier;
 
+    @ApiModelProperty(value = "职业")
+    private String job;
+
+    @ApiModelProperty(value = "门店ID")
+    private String storeId;
+
+    @ApiModelProperty(value = "门店名称")
+    private String storeName;
+    @ApiModelProperty(value = "部门名称")
+    private String orgName;
+    @ApiModelProperty(value = "角色名称")
+    private String roleName;
+    @ApiModelProperty(value = "入职时间")
+    private Date entryTime;
+
+    @ApiModelProperty(value = "工作时长")
+    private String jobHours;
 
 }
 

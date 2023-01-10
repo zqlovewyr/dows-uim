@@ -1,8 +1,13 @@
 package org.dows.account.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.dows.account.query.AccountInstanceQuery;
+import org.dows.account.query.AccountQuery;
 import org.dows.account.vo.AccountInstanceResVo;
+import org.dows.account.vo.AccountInstanceVo;
+import org.dows.account.vo.AccountVo;
 import org.dows.framework.crud.mybatis.MybatisCrudMapper;
 import org.dows.account.entity.AccountInstance;
 
@@ -18,6 +23,8 @@ import java.util.Map;
 @Mapper
 public interface AccountInstanceMapper extends MybatisCrudMapper<AccountInstance> {
 
-    List<AccountInstanceResVo> getAccountInstanceByUserNameAndTenantId(@Param("paramQuery")Map<String,Object> param);
+    List<AccountInstanceVo> getAccountInstanceByUserNameAndTenantId(@Param("paramQuery")Map<String,Object> param);
+
+    IPage<AccountInstanceResVo> selectAccountInstancePage(IPage<AccountInstanceResVo> page, @Param("accountInstanceQuery") AccountInstanceQuery accountInstanceQuery);
 }
 

@@ -3,7 +3,9 @@ package org.dows.account.biz;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.listener.ReadListener;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -15,9 +17,11 @@ import org.dows.account.biz.exception.AccountException;
 import org.dows.account.biz.exception.OrgException;
 import org.dows.account.biz.util.AccountUtil;
 import org.dows.account.entity.*;
+import org.dows.account.query.AccountInstanceQuery;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountInstanceResVo;
 import org.dows.account.vo.AccountInstanceVo;
+import org.dows.framework.api.Response;
 import org.dows.rbac.biz.enums.EnumRbacStatusCode;
 import org.dows.rbac.biz.exception.RbacException;
 import org.dows.rbac.entity.RbacRole;
@@ -56,6 +60,19 @@ public class AccountInstanceBiz {
     private final AccountUserService accountUserService;
     private final AccountUserInfoService accountUserInfoService;
 
+    public Response getAccountInstanceListPage(AccountInstanceQuery query){
+
+        Page<AccountInstanceResVo> page = new Page<>(query.getOffset(), query.getSize());
+        IPage<AccountInstanceResVo> listByPage = accountInstanceService.getListByPage(page,query);
+        return Response.ok(listByPage);
+    }
+    public Response getAccountInstanceInfo(Long id){
+        AccountInstanceQuery query = new AccountInstanceQuery();
+        Page<AccountInstanceResVo> page = new Page<>(query.getOffset(), query.getSize());
+        query.setId(id);
+        IPage<AccountInstanceResVo> listByPage = accountInstanceService.getListByPage(page,query);
+        return Response.ok(listByPage.getRecords().get(0));
+    }
     /**
      * runsix method process
      * 1.check whether accountIdentifier queried by appId & identifier exist
@@ -402,6 +419,7 @@ public class AccountInstanceBiz {
 
             accountUserInfoService.lambdaUpdate()
                     .set(AccountUserInfo::getSex,accountInstanceDTO.getGender())
+                    .set(AccountUserInfo::getName,accountInstanceDTO.getName())
                     .set(AccountUserInfo::getJob,accountInstanceDTO.getJob())
                     .eq(AccountUserInfo::getAccountId,accountInstanceDTO.getAccountId())
                     .update();

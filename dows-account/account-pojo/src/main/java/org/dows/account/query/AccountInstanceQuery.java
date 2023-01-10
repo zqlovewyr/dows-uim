@@ -35,25 +35,42 @@ public class AccountInstanceQuery implements Serializable {
     //@JsonSerialize(using= ToStringSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
-    @ApiModelProperty(value = "账号ID/用户ID/会员ID/商户ID")
-    private Long accountId;
-    @ApiModelProperty(value = "账号名")
+
+    @ApiModelProperty("账号ID")
+    private String accountId;
+
+    @ApiModelProperty("姓名")
+    private String name;
+    @ApiModelProperty("用户名")
     private String accountName;
-    @ApiModelProperty(value = "账号密码")
-    private String accountPwd;
-    @ApiModelProperty(value = "头像")
-    private String avatar;
-    @ApiModelProperty(value = "应用 id")
+
+    @ApiModelProperty("手机号")
+    private String phone;
+
+
+    @ApiModelProperty("性别 1、男2、女3、未知")
+    private Integer gender;
+
+    @ApiModelProperty("所属门店ID")
+    private String storeId;
+
+    @ApiModelProperty("所属部门ID")
+    private String orgId;
+
+    @ApiModelProperty("职位")
+    private String job;
+
+
+    @ApiModelProperty("租户ID")
     private String tenantId;
-    @ApiModelProperty(value = "状态，锁定/异常等 ")
-    private Integer status;
-    @ApiModelProperty(value = "来源, 推广统计用")
-    private String source;
-    @ApiModelProperty(value = "乐观锁, 默认: 0")
-    private Integer ver;
-    @ApiModelProperty(value = "时间戳/创建时间")
-    private Date dt;
-    @ApiModelProperty(value = "是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
-    private Boolean deleted;
+
+    @ApiModelProperty("角色")
+    private String roleId;
+    @ApiModelProperty("入职开始日期")
+    private Date entryDateStart;
+    @ApiModelProperty("入职结束日期")
+    private Date entryDateEnd;
+
+
 }
 
