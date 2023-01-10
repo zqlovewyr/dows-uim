@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.dto.AccountGroupInfoDTO;
 import org.dows.account.dto.AccountOrgGroupDTO;
+import org.dows.account.vo.AccountGroupInfoVo;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
 import java.util.List;
@@ -20,7 +21,7 @@ public interface AccountGroupApi {
      * batch insert account-group
      * 批量创建 账号-组
      *
-     * @param accountOrgGroupDTOS account-groups
+     * @param accountOrgGroupDTOS
      */
     void batchInsertGroup(List<AccountOrgGroupDTO> accountOrgGroupDTOS);
 
@@ -42,4 +43,14 @@ public interface AccountGroupApi {
      * @param pageSize
      */
     Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDto, Integer pageNo, Integer pageSize);
+
+    /**
+     *
+     * 自定义查询 账号-组负责人 列表
+     *
+     * @param accountGroupInfoDTO
+     * @param pageNo
+     * @param pageSize
+     */
+    Response<IPage<AccountGroupInfoVo>> customAccountGroupInfoList(AccountGroupInfoDTO accountGroupInfoDTO, Integer pageNo, Integer pageSize);
 }
