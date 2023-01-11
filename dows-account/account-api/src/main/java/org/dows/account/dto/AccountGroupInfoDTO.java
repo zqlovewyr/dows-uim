@@ -39,6 +39,12 @@ public class AccountGroupInfoDTO {
     @ApiModelProperty("负责人电话")
     private String ownerPhone;
 
+    @ApiModelProperty("组织架构ID")
+    private String orgId;
+
+    @ApiModelProperty("应用ID")
+    private String appId;
+
     @ApiModelProperty("所在区域")
     private String district;
 
