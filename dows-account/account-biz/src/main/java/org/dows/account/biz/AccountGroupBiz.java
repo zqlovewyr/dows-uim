@@ -1,9 +1,11 @@
 package org.dows.account.biz;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -169,6 +171,7 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Response<Boolean> updateAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO) {
         boolean flag = true;
         //1、插入组织架构表
@@ -189,6 +192,29 @@ public class AccountGroupBiz implements AccountGroupApi {
         BeanUtils.copyProperties(accountOrgGroupDTO, accountGroupInfo);
         boolean flagInfo = accountGroupInfoService.saveOrUpdate(accountGroupInfo);
         if (flagInfo == false) {
+            flag = false;
+        }
+        return Response.ok(flag);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Response<Boolean> deleteAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO) {
+        boolean flag = true;
+        //1、删除组织架构
+        LambdaUpdateWrapper<AccountOrg> orgWrapper = Wrappers.lambdaUpdate(AccountOrg.class);
+        orgWrapper.set(AccountOrg::getDeleted, true)
+                .eq(AccountOrg::getOrgId, accountOrgGroupDTO.getOrgId());
+        boolean orgFlag = accountOrgService.update(orgWrapper);
+        if(orgFlag == false){
+            flag = false;
+        }
+        //2、删除组-实例
+        LambdaUpdateWrapper<AccountGroupInfo> groupWrapper = Wrappers.lambdaUpdate(AccountGroupInfo.class);
+        groupWrapper.set(AccountGroupInfo::getDeleted, true)
+                .eq(AccountGroupInfo::getOrgId, accountOrgGroupDTO.getOrgId());
+        boolean groupFlag = accountGroupInfoService.update(groupWrapper);
+        if(groupFlag == false){
             flag = false;
         }
         return Response.ok(flag);

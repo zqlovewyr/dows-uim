@@ -41,4 +41,9 @@ public interface AccountGroupApi {
      * @param accountOrgGroupDTO
      */
     Response<Boolean> updateAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
+
+    /**
+     * 删除 账号-组
+     */
+    Response<Boolean> deleteAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
 }
