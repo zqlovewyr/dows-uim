@@ -31,12 +31,14 @@ public interface AccountGroupApi {
 
     /**
      * 插入 账号-组
+     *
      * @param accountOrgGroupDTO
      */
     Response<Boolean> insertAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
 
     /**
      * 插入 组-成员
+     *
      * @param accountGroupDTO
      */
     Response<Boolean> insertAccountGroupMember(AccountGroupDTO accountGroupDTO);
