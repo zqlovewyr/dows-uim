@@ -27,7 +27,6 @@ import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -163,6 +162,32 @@ public class AccountGroupBiz implements AccountGroupApi {
         //2.1、设置组实例属性
         BeanUtils.copyProperties(accountOrgGroupDTO, accountGroupInfo);
         boolean flagInfo = accountGroupInfoService.save(accountGroupInfo);
+        if (flagInfo == false) {
+            flag = false;
+        }
+        return Response.ok(flag);
+    }
+
+    @Override
+    public Response<Boolean> updateAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO) {
+        boolean flag = true;
+        //1、插入组织架构表
+        AccountOrg accountOrg = new AccountOrg();
+        //1.1、设置组织架构属性
+        BeanUtils.copyProperties(accountOrgGroupDTO, accountOrg);
+        accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
+        accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted().toString());
+        accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus().toString());
+        accountOrg.setDt(accountOrgGroupDTO.getOrgDt());
+        boolean flagOrg = accountOrgService.saveOrUpdate(accountOrg);
+        if (flagOrg == false) {
+            flag = false;
+        }
+        //2、插入组-实例表
+        AccountGroupInfo accountGroupInfo = new AccountGroupInfo();
+        //2.1、设置组实例属性
+        BeanUtils.copyProperties(accountOrgGroupDTO, accountGroupInfo);
+        boolean flagInfo = accountGroupInfoService.saveOrUpdate(accountGroupInfo);
         if (flagInfo == false) {
             flag = false;
         }
