@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +17,13 @@ import org.dows.account.biz.util.AccountUtil;
 import org.dows.account.entity.AccountGroup;
 import org.dows.account.entity.AccountOrg;
 import org.dows.account.entity.AccountRole;
+import org.dows.account.query.AccountOrgQuery;
 import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountOrgService;
 import org.dows.account.service.AccountRoleService;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.account.vo.AccountOrgVo;
+import org.dows.framework.api.Response;
 import org.dows.rbac.biz.enums.EnumRbacRoleCode;
 import org.dows.rbac.biz.enums.EnumRbacStatusCode;
 import org.dows.rbac.biz.exception.RbacException;
@@ -71,6 +72,19 @@ public class AccountOrgBiz {
     private final AccountRoleService accountRoleService;
     private final AccountGroupService accountGroupService;
 
+    public Response getAccountOrgListPage(AccountOrgQuery query){
+
+        Page<AccountOrgVo> page = new Page<>(query.getOffset(), query.getSize());
+        IPage<AccountOrgVo> listByPage = accountOrgService.getListByPage(page,query);
+        return Response.ok(listByPage);
+    }
+    public Response getAccountOrgById(Long id){
+        return Response.ok(accountOrgService.getById(id));
+    }
+    public Response deleteById(Long id){
+        accountOrgService.removeById(id);
+        return Response.ok();
+    }
     /**
      * 创建树形结构 accountOrg 账号-组织
      *
@@ -127,41 +141,66 @@ public class AccountOrgBiz {
         //step2: createOrg
         AccountOrg accountOrg = new AccountOrg();
         BeanUtils.copyProperties(accountOrgDTO, accountOrg);
-        accountOrg.setOrgId(IdWorker.getIdStr());
-        this.accountOrgService.save(accountOrg);
-        //step3: exist orgGroups with batchInsert
-        List<AccountOrgGroupDTO> accountOrgGroups = accountOrgDTO.getAccountOrgGroups();
-        if (!CollectionUtils.isEmpty(accountOrgGroups)) {
-            // transitional ordId,OrgName,appId,tenantId
-            accountOrgGroups.forEach(item -> {
-                item.setOrgId(accountOrg.getOrgId());
-                item.setOrgName(accountOrg.getOrgName());
-                item.setAppId(accountOrg.getAppId());
-                item.setTenantId(accountOrg.getTenantId());
-            });
-            // create OrgGroup
-            this.accountGroupBiz.batchInsertGroup(accountOrgGroups);
-        }
-        //step4: create account-role
-        Long rbacRoleId = accountOrgDTO.getRbacRoleId();
-        if (!Objects.isNull(rbacRoleId) && rbacRoleId == 0) {
-            RbacRole rbacRole = rbacRoleService.lambdaQuery()
-                    .select(RbacRole::getId, RbacRole::getRoleName, RbacRole::getRoleCode)
-                    .eq(RbacRole::getId, rbacRoleId)
-                    .oneOpt()
-                    .orElseThrow(() -> {
-                        throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
-                    });
+        if(accountOrgDTO.getId() == null){
+            accountOrg.setOrgId(IdWorker.getIdStr());
+            this.accountOrgService.save(accountOrg);
+            //step3: exist orgGroups with batchInsert
+            List<AccountOrgGroupDTO> accountOrgGroups = accountOrgDTO.getAccountOrgGroups();
+            if (!CollectionUtils.isEmpty(accountOrgGroups)) {
+                // transitional ordId,OrgName,appId,tenantId
+                accountOrgGroups.forEach(item -> {
+                    item.setOrgId(accountOrg.getOrgId());
+                    item.setOrgName(accountOrg.getOrgName());
+                    item.setAppId(accountOrg.getAppId());
+                    item.setTenantId(accountOrg.getTenantId());
+                });
+                // create OrgGroup
+                this.accountGroupBiz.batchInsertGroup(accountOrgGroups);
+            }
+            //step4: create account-role
+            Long rbacRoleId = accountOrgDTO.getRbacRoleId();
+            if (!Objects.isNull(rbacRoleId) && rbacRoleId == 0) {
+                RbacRole rbacRole = rbacRoleService.lambdaQuery()
+                        .select(RbacRole::getId, RbacRole::getRoleName, RbacRole::getRoleCode)
+                        .eq(RbacRole::getId, rbacRoleId)
+                        .oneOpt()
+                        .orElseThrow(() -> {
+                            throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
+                        });
 
-            AccountRole accountRole = AccountRole.builder()
-                    .roleId(rbacRole.getId().toString())
-                    .roleName(rbacRole.getRoleName())
-                    .roleCode(rbacRole.getRoleCode())
-                    .principalType(EnumAccountRolePrincipalType.GROUP.getCode())
-                    .principalId(accountOrg.getOrgId())
-                    .principalName(accountOrg.getOrgName()).build();
-            accountRoleService.save(accountRole);
+                AccountRole accountRole = AccountRole.builder()
+                        .roleId(rbacRole.getId().toString())
+                        .roleName(rbacRole.getRoleName())
+                        .roleCode(rbacRole.getRoleCode())
+                        .principalType(EnumAccountRolePrincipalType.GROUP.getCode())
+                        .principalId(accountOrg.getOrgId())
+                        .principalName(accountOrg.getOrgName()).build();
+                accountRoleService.save(accountRole);
+            }
+        }else{
+            this.accountOrgService.lambdaUpdate()
+                    .set(AccountOrg::getOrgName,accountOrg.getOrgName())
+                    .set(AccountOrg::getProfile,accountOrg.getProfile())
+                    .set(AccountOrg::getDescr,accountOrg.getDescr())
+                    .eq(AccountOrg::getId,accountOrg.getId())
+                    .update();
+
+            Long rbacRoleId = accountOrgDTO.getRbacRoleId();
+            if (!Objects.isNull(rbacRoleId) && rbacRoleId == 0) {
+                RbacRole rbacRole = rbacRoleService.lambdaQuery()
+                        .select(RbacRole::getId, RbacRole::getRoleName, RbacRole::getRoleCode)
+                        .eq(RbacRole::getId, rbacRoleId)
+                        .oneOpt()
+                        .orElseThrow(() -> {
+                            throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
+                        });
+                accountRoleService.lambdaUpdate()
+                        .set(AccountRole::getPrincipalName,accountOrg.getOrgName())
+                        .eq(AccountRole::getRoleId,rbacRole.getId())
+                        .update();
+            }
         }
+
         //step5: return VO
         AccountOrgVo accountOrgVo = new AccountOrgVo();
         BeanUtils.copyProperties(accountOrgVo, accountOrg);

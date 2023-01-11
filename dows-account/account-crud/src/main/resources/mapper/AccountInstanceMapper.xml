@@ -51,7 +51,7 @@
         left join store_instance t6 on t1.store_id = t6.store_id
 
         <!-- left join account_identifier t3 on t1.account_id = t3.account_id -->
-        WHERE 1=1
+        WHERE 1=1 and t1.deleted = 0
         <if test="accountInstanceQuery.id != null">
             AND t1.id = #{accountInstanceQuery.id}
         </if>
@@ -84,7 +84,6 @@
         <if test="accountInstanceQuery.entryDateEnd != null">
             AND DATE(t2.entry_time) &lt;= #{accountInstanceQuery.entryDateEnd}
         </if>
-
     </select>
 
 </mapper>

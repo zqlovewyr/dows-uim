@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.dows.account.util.MyConstant;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -66,9 +68,12 @@ public class AccountInstanceQuery implements Serializable {
 
     @ApiModelProperty("角色")
     private String roleId;
+
     @ApiModelProperty("入职开始日期")
+    @DateTimeFormat(pattern = MyConstant.DEFAULT_DATE_FORMAT)
     private Date entryDateStart;
     @ApiModelProperty("入职结束日期")
+    @DateTimeFormat(pattern = MyConstant.DEFAULT_DATE_FORMAT)
     private Date entryDateEnd;
 
 

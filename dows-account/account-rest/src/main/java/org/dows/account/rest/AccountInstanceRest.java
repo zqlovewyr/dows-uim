@@ -31,14 +31,14 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("accountInstanceInfo")
-public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm, AccountInstance, AccountInstanceService> {
+public class AccountInstanceRest {
 
     private final AccountInstanceBiz accountInstanceBiz;
 
 
-    @GetMapping(value = "/pageList")
+    @GetMapping(value = "/page")
     @ApiOperation(value = "分页获取用户基础信息")
-    public Response<IPage<AccountInstanceResVo>> pageList(@RequestBody AccountInstanceQuery accountInstanceQuery){
+    public Response<IPage<AccountInstanceResVo>> pageList(AccountInstanceQuery accountInstanceQuery){
         return accountInstanceBiz.getAccountInstanceListPage(accountInstanceQuery);
     }
 
@@ -62,6 +62,13 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
             @ApiParam(required = true, value = "id") @PathVariable("id") Long id){
         return accountInstanceBiz.getAccountInstanceInfo(id);
     }
-
+    @DeleteMapping(
+            path = {"/{id}"}
+    )
+    @ApiOperation(value = "删除用户数据")
+    public Response<AccountInstanceResVo> deleteById(
+            @ApiParam(required = true, value = "id") @PathVariable("id") Long id){
+        return accountInstanceBiz.deleteById(id);
+    }
 }
 

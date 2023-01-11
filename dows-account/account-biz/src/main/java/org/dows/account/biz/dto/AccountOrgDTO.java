@@ -20,6 +20,10 @@ import java.util.List;
 public class AccountOrgDTO {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @ApiModelProperty(value = "id")
+    private Long id;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty(value = "父ID(父级组织ID)")
     private Long pid;
 

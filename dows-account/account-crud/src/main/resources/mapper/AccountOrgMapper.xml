@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dows.account.mapper.AccountOrgMapper">
+
+  <!--  <select id="getAccountInstanceByUserNameAndTenantId" parameterType="map" resultType="org.dows.account.vo.AccountInstanceVo">
+        SELECT
+            t1.id,
+            t1.account_name,
+            t1.avatar,
+            t1.phone,
+            t1.account_id,
+            t2.tenant_id
+        FROM
+            account_instance t1 left join account_tenant t2 on t1.id = t2.user_id
+        WHERE 1=1
+
+        <if test="paramQuery.accountName != null">
+            AND t1.account_name = #{paramQuery.accountName}
+        </if>
+        <if test="paramQuery.tenantId != null">
+            AND t2.tenant_id = #{paramQuery.tenantId}
+        </if>
+
+    </select>-->
+
+    <!--分页查询组织架构-->
+    <select id="selectAccountOrgPage" parameterType="org.dows.account.query.AccountOrgQuery" resultType="org.dows.account.vo.AccountOrgVo">
+        SELECT
+        t1.id,
+        t1.pid,
+        t1.org_id,
+        t1.org_name,
+        t1.name_letters,
+        t1.org_code,
+        t1.profile,
+        t1.descr,
+        t1.app_id,
+        t1.tenant_id
+        FROM account_org t1
+        WHERE 1=1
+        <if test="accountOrgQuery.id != null">
+            AND t1.id = #{accountOrgQuery.id}
+        </if>
+
+        <if test="accountOrgQuery.orgCode != null and accountOrgQuery.orgCode != ''">
+            AND t1.org_code = #{accountOrgQuery.orgCode}
+        </if>
+        <if test="accountOrgQuery.orgName != null and accountOrgQuery.orgName != ''">
+            AND t1.org_name = #{accountOrgQuery.orgName}
+        </if>
+
+    </select>
+
+</mapper>

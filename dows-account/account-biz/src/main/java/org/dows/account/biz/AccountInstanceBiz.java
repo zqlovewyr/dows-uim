@@ -73,6 +73,28 @@ public class AccountInstanceBiz {
         IPage<AccountInstanceResVo> listByPage = accountInstanceService.getListByPage(page,query);
         return Response.ok(listByPage.getRecords().get(0));
     }
+    public Response deleteById(Long id){
+
+        AccountInstance accountInstance = accountInstanceService.lambdaQuery().select(AccountInstance::getAccountId).eq(AccountInstance::getId,id).oneOpt().orElseThrow(() -> {
+            throw new OrgException("删除失败，数据不存在");
+        });
+        String accountId = accountInstance.getAccountId();
+        AccountIdentifier accountIdentifier = new AccountIdentifier();
+        Map<String, Object> columnMap = new HashMap<>();
+        columnMap.put("account_id",accountId);
+        accountIdentifierService.removeByMap(columnMap);
+        Map<String, Object> columnMapRole = new HashMap<>();
+        columnMapRole.put("principal_id",accountId);
+        accountRoleService.removeByMap(columnMapRole);
+
+        accountGroupService.removeByMap(columnMap);
+        accountUserInfoService.removeByMap(columnMap);
+        accountUserService.removeByMap(columnMap);
+        accountTenantService.removeByMap(columnMap);
+
+        accountInstanceService.removeById(id);
+        return Response.ok();
+    }
     /**
      * runsix method process
      * 1.check whether accountIdentifier queried by appId & identifier exist
@@ -421,6 +443,7 @@ public class AccountInstanceBiz {
                     .set(AccountUserInfo::getSex,accountInstanceDTO.getGender())
                     .set(AccountUserInfo::getName,accountInstanceDTO.getName())
                     .set(AccountUserInfo::getJob,accountInstanceDTO.getJob())
+                    .set(AccountUserInfo::getEntryTime,accountInstanceDTO.getEntryTime())
                     .eq(AccountUserInfo::getAccountId,accountInstanceDTO.getAccountId())
                     .update();
 
@@ -476,6 +499,8 @@ public class AccountInstanceBiz {
                             .tenantId(accountInstanceDTO.getTenantId())
                             .sex(accountInstanceDTO.getGender())
                             .job(accountInstanceDTO.getJob())
+                            .name(accountInstanceDTO.getName())
+                            .entryTime(accountInstanceDTO.getEntryTime())
                             .build()
             );
             if (Objects.nonNull(accountOrg)) {

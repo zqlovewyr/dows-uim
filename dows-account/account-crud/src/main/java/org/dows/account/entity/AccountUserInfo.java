@@ -14,6 +14,7 @@ import org.dows.framework.crud.mybatis.CrudEntity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @ToString
@@ -54,6 +55,8 @@ public class AccountUserInfo implements CrudEntity {
     private String maritalStatus;
 
     private String nation;
+
+    private Date entryTime;
 
     @JsonIgnore
     @TableLogic

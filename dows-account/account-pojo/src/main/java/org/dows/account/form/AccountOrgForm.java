@@ -26,7 +26,7 @@ import java.util.Date;
 @ApiModel(value = "AccountOrgForm 表单对象", description = "账号-组织架构")
 public class AccountOrgForm implements Serializable {
     private static final long serialVersionUID = -82876957368962100L;
-    @JsonIgnore
+    @ApiModelProperty("id")
     private Long id;
 
     @ApiModelProperty("父ID(pid空时为总店)")

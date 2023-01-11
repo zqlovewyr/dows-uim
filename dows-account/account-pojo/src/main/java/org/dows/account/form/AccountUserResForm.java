@@ -27,7 +27,6 @@ import java.util.Date;
 @ApiModel(value = "表单对象", description = "用户")
 public class AccountUserResForm implements Serializable {
     private static final long serialVersionUID = 634662199181072017L;
-    @JsonIgnore
     private Long id;
 
     @ApiModelProperty("账号ID")
