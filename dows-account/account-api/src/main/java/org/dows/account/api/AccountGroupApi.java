@@ -16,7 +16,6 @@ import java.util.List;
 public interface AccountGroupApi {
 
     /**
-     * batch insert account-group
      * 批量创建 账号-组
      *
      * @param accountOrgGroupDTOS
