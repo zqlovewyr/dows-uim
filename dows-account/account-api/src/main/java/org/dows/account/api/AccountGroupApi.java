@@ -26,7 +26,7 @@ public interface AccountGroupApi {
     void batchInsertGroup(List<AccountOrgGroupDTO> accountOrgGroupDTOS);
 
     /**
-     * 自定义查询 账号-组 列表(带团队负责人、组织名称查询)
+     * 自定义查询 账号-组 列表(带团队负责人、组织名称、组织架构查询)
      *
      * @param accountGroupInfoDTO
      */
@@ -41,10 +41,12 @@ public interface AccountGroupApi {
 
     /**
      *
-     * 自定义查询 账号-组负责人 列表
-     *
+     */
+
+    /**
+     * 插入 账号-组及相关信息
      * @param accountGroupInfoDTO
      */
-    Response<IPage<AccountGroupInfoVo>> customAccountGroupInfoList(AccountGroupInfoDTO accountGroupInfoDTO);
+    void insert(AccountGroupInfoDTO accountGroupInfoDTO);
 
 }
