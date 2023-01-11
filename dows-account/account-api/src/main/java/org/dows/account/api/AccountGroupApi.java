@@ -16,37 +16,16 @@ import java.util.List;
 public interface AccountGroupApi {
 
     /**
-     * 批量创建 账号-组
+     * 批量创建 账号-组-成员
      *
      * @param accountOrgGroupDTOS
      */
     Response<Boolean> batchInsertGroup(List<AccountOrgGroupDTO> accountOrgGroupDTOS);
 
     /**
-     * 自定义查询 账号-组 列表
+     * 自定义查询 账号-组-成员 列表
      *
      * @param accountGroupDto
      */
     Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDto);
-
-    /**
-     * 插入 账号-组
-     *
-     * @param accountOrgGroupDTO
-     */
-    Response<Boolean> insertAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
-
-    /**
-     * 编辑 账号-组
-     *
-     * @param accountOrgGroupDTO
-     */
-    Response<Boolean> updateAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
-
-    /**
-     * 删除 账号-组
-     *
-     * @param accountOrgGroupDTO
-     */
-    Response<Boolean> deleteAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
 }

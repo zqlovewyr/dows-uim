@@ -1,28 +1,20 @@
 package org.dows.account.biz;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountGroupApi;
-import org.dows.account.biz.constant.BaseConstant;
-import org.dows.account.biz.util.IDUtil;
 import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.dto.AccountOrgGroupDTO;
 import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.biz.util.AccountUtil;
 import org.dows.account.entity.AccountGroup;
-import org.dows.account.entity.AccountGroupInfo;
-import org.dows.account.entity.AccountOrg;
 import org.dows.account.entity.AccountRole;
-import org.dows.account.service.AccountGroupInfoService;
 import org.dows.account.service.AccountGroupService;
-import org.dows.account.service.AccountOrgService;
 import org.dows.account.service.AccountRoleService;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
@@ -42,10 +34,6 @@ import java.util.stream.Collectors;
 public class AccountGroupBiz implements AccountGroupApi {
 
     private final AccountGroupService accountGroupService;
-
-    private final AccountGroupInfoService accountGroupInfoService;
-
-    private final AccountOrgService accountOrgService;
 
     private final AccountRoleService accountRoleService;
 
@@ -113,7 +101,7 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     /**
-     * 自定义账号-组 列表
+     * 自定义账号-组-成员 列表
      *
      * @param accountGroupDTO
      * @return Response<IPage < AccountGroupVo>>
@@ -140,98 +128,5 @@ public class AccountGroupBiz implements AccountGroupApi {
         IPage<AccountGroupVo> pageVo = new Page<>();
         BeanUtils.copyProperties(groupList, pageVo);
         return Response.ok(pageVo);
-    }
-
-    /**
-     * 插入 账号-组
-     *
-     * @param accountOrgGroupDTO
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> insertAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO) {
-        boolean flag = true;
-        //1、插入组织架构表
-        AccountOrg accountOrg = new AccountOrg();
-        //1.1、设置组织架构属性
-        BeanUtils.copyProperties(accountOrgGroupDTO, accountOrg);
-        accountOrg.setOrgId(String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID)));
-        accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
-        accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted().toString());
-        accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus().toString());
-        accountOrg.setDt(accountOrgGroupDTO.getOrgDt());
-        boolean flagOrg = accountOrgService.save(accountOrg);
-        if (flagOrg == false) {
-            flag = false;
-        }
-        //2、插入组-实例表
-        AccountGroupInfo accountGroupInfo = new AccountGroupInfo();
-        //2.1、设置组实例属性
-        BeanUtils.copyProperties(accountOrgGroupDTO, accountGroupInfo);
-        boolean flagInfo = accountGroupInfoService.save(accountGroupInfo);
-        if (flagInfo == false) {
-            flag = false;
-        }
-        return Response.ok(flag);
-    }
-
-    /**
-     * 编辑 账号-组
-     *
-     * @param accountOrgGroupDTO
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> updateAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO) {
-        boolean flag = true;
-        //1、插入组织架构表
-        AccountOrg accountOrg = new AccountOrg();
-        //1.1、设置组织架构属性
-        BeanUtils.copyProperties(accountOrgGroupDTO, accountOrg);
-        accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
-        accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted().toString());
-        accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus().toString());
-        accountOrg.setDt(accountOrgGroupDTO.getOrgDt());
-        boolean flagOrg = accountOrgService.saveOrUpdate(accountOrg);
-        if (flagOrg == false) {
-            flag = false;
-        }
-        //2、插入组-实例表
-        AccountGroupInfo accountGroupInfo = new AccountGroupInfo();
-        //2.1、设置组实例属性
-        BeanUtils.copyProperties(accountOrgGroupDTO, accountGroupInfo);
-        boolean flagInfo = accountGroupInfoService.saveOrUpdate(accountGroupInfo);
-        if (flagInfo == false) {
-            flag = false;
-        }
-        return Response.ok(flag);
-    }
-
-    /**
-     * 删除 账号-组
-     *
-     * @param accountOrgGroupDTO
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> deleteAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO) {
-        boolean flag = true;
-        //1、删除组织架构
-        LambdaUpdateWrapper<AccountOrg> orgWrapper = Wrappers.lambdaUpdate(AccountOrg.class);
-        orgWrapper.set(AccountOrg::getDeleted, true)
-                .eq(AccountOrg::getOrgId, accountOrgGroupDTO.getOrgId());
-        boolean orgFlag = accountOrgService.update(orgWrapper);
-        if(orgFlag == false){
-            flag = false;
-        }
-        //2、删除组-实例
-        LambdaUpdateWrapper<AccountGroupInfo> groupWrapper = Wrappers.lambdaUpdate(AccountGroupInfo.class);
-        groupWrapper.set(AccountGroupInfo::getDeleted, true)
-                .eq(AccountGroupInfo::getOrgId, accountOrgGroupDTO.getOrgId());
-        boolean groupFlag = accountGroupInfoService.update(groupWrapper);
-        if(groupFlag == false){
-            flag = false;
-        }
-        return Response.ok(flag);
     }
 }

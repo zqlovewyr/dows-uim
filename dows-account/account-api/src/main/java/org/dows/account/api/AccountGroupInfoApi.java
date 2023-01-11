@@ -1,14 +1,10 @@
 package org.dows.account.api;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.dto.AccountGroupInfoDTO;
 import org.dows.account.dto.AccountOrgGroupDTO;
 import org.dows.account.vo.AccountGroupInfoVo;
-import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
-
-import java.util.List;
 
 /**
  * 账号-账号组信息维度信息(AccountGroupInfo)Api接口
@@ -25,4 +21,25 @@ public interface AccountGroupInfoApi {
      * @param accountGroupInfoDTO
      */
     Response<IPage<AccountGroupInfoVo>> customAccountGroupInfoList(AccountGroupInfoDTO accountGroupInfoDTO);
+
+    /**
+     * 插入 账号-组-实例
+     *
+     * @param accountOrgGroupDTO
+     */
+    Response<Boolean> insertAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
+
+    /**
+     * 编辑 账号-组-实例
+     *
+     * @param accountOrgGroupDTO
+     */
+    Response<Boolean> updateAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
+
+    /**
+     * 删除 账号-组-实例
+     *
+     * @param accountOrgGroupDTO
+     */
+    Response<Boolean> deleteAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
 }
