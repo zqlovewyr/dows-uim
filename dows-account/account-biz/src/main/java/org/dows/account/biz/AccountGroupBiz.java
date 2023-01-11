@@ -142,6 +142,11 @@ public class AccountGroupBiz implements AccountGroupApi {
         return Response.ok(pageVo);
     }
 
+    /**
+     * 插入 账号-组
+     *
+     * @param accountOrgGroupDTO
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Response<Boolean> insertAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO) {
@@ -170,6 +175,11 @@ public class AccountGroupBiz implements AccountGroupApi {
         return Response.ok(flag);
     }
 
+    /**
+     * 编辑 账号-组
+     *
+     * @param accountOrgGroupDTO
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Response<Boolean> updateAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO) {
@@ -197,6 +207,11 @@ public class AccountGroupBiz implements AccountGroupApi {
         return Response.ok(flag);
     }
 
+    /**
+     * 删除 账号-组
+     *
+     * @param accountOrgGroupDTO
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Response<Boolean> deleteAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO) {

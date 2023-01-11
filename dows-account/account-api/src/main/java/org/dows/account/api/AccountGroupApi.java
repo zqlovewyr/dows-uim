@@ -38,12 +38,15 @@ public interface AccountGroupApi {
 
     /**
      * 编辑 账号-组
+     *
      * @param accountOrgGroupDTO
      */
     Response<Boolean> updateAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
 
     /**
      * 删除 账号-组
+     *
+     * @param accountOrgGroupDTO
      */
     Response<Boolean> deleteAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
 }
