@@ -2,33 +2,19 @@ package org.dows.account.biz;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dows.account.api.AccountGroupApi;
 import org.dows.account.api.AccountGroupInfoApi;
-import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
-import org.dows.account.biz.util.AccountUtil;
-import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.dto.AccountGroupInfoDTO;
-import org.dows.account.dto.AccountOrgGroupDTO;
-import org.dows.account.entity.AccountGroup;
 import org.dows.account.entity.AccountGroupInfo;
-import org.dows.account.entity.AccountRole;
 import org.dows.account.service.AccountGroupInfoService;
-import org.dows.account.service.AccountGroupService;
-import org.dows.account.service.AccountRoleService;
 import org.dows.account.vo.AccountGroupInfoVo;
-import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @Author：wHuan
@@ -51,7 +37,9 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
     @Transactional(rollbackFor = Exception.class)
     public Response<IPage<AccountGroupInfoVo>> customAccountGroupInfoList(AccountGroupInfoDTO accountGroupInfoDTO) {
         LambdaQueryWrapper<AccountGroupInfo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getGroupId()), AccountGroupInfo::getGroupId, accountGroupInfoDTO.getGroupId())
+        queryWrapper.eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getOrgId()),AccountGroupInfo::getOrgId,accountGroupInfoDTO.getOrgId())
+                .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getOrgName()),AccountGroupInfo::getOrgName,accountGroupInfoDTO.getOrgName())
+                .eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getGroupId()), AccountGroupInfo::getGroupId, accountGroupInfoDTO.getGroupId())
                 .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getGroupName()), AccountGroupInfo::getGroupName, accountGroupInfoDTO.getGroupName())
                 .eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getAccountId()), AccountGroupInfo::getAccountId, accountGroupInfoDTO.getAccountId())
                 .eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getUserId()), AccountGroupInfo::getUserId, accountGroupInfoDTO.getUserId())

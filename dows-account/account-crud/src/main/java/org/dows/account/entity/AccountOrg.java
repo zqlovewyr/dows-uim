@@ -64,6 +64,15 @@ public class AccountOrg implements CrudEntity {
     @ApiModelProperty("组织描述")
     private String descr;
 
+    @ApiModelProperty("组织类型")
+    private String orgTyp;
+
+    @ApiModelProperty("排序")
+    private String sorted;
+
+    @ApiModelProperty("状态")
+    private String status;
+
     @JsonIgnore
     @TableLogic
     @TableField(fill = FieldFill.INSERT)

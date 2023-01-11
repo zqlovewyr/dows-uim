@@ -33,11 +33,20 @@ public class AccountGroupInfoDto {
     @ApiModelProperty("组织架构ID")
     private String orgId;
 
+    @ApiModelProperty("组织架构名称")
+    private String orgName;
+
     @ApiModelProperty("组别ID")
-    private String groupId;
+    private String groupInfoId;
 
     @ApiModelProperty("组名/团队名称")
-    private String groupName;
+    private String groupInfoName;
+
+    @ApiModelProperty("负责人账户ID")
+    private String accountId;
+
+    @ApiModelProperty("负责人用户ID")
+    private String userId;
 
     @ApiModelProperty("负责人名称")
     private String owner;

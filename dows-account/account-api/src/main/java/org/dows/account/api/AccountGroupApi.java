@@ -30,4 +30,10 @@ public interface AccountGroupApi {
      */
     Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDto);
 
+    /**
+     * 插入 账号-组
+     * @param accountOrgGroupDTO
+     */
+    void insertAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
+
 }

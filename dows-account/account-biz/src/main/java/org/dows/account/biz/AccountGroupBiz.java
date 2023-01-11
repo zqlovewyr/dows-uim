@@ -13,9 +13,12 @@ import org.dows.account.dto.AccountOrgGroupDTO;
 import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.biz.util.AccountUtil;
 import org.dows.account.entity.AccountGroup;
+import org.dows.account.entity.AccountGroupInfo;
+import org.dows.account.entity.AccountOrg;
 import org.dows.account.entity.AccountRole;
 import org.dows.account.service.AccountGroupInfoService;
 import org.dows.account.service.AccountGroupService;
+import org.dows.account.service.AccountOrgService;
 import org.dows.account.service.AccountRoleService;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
@@ -37,6 +40,8 @@ public class AccountGroupBiz implements AccountGroupApi {
     private final AccountGroupService accountGroupService;
 
     private final AccountGroupInfoService accountGroupInfoService;
+
+    private final AccountOrgService accountOrgService;
 
     private final AccountRoleService accountRoleService;
 
@@ -126,5 +131,24 @@ public class AccountGroupBiz implements AccountGroupApi {
         IPage<AccountGroupVo> pageVo = new Page<>();
         BeanUtils.copyProperties(groupList, pageVo);
         return Response.ok(pageVo);
+    }
+
+    @Override
+    public void insertAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO) {
+        //1、插入组织架构表
+        AccountOrg accountOrg = new AccountOrg();
+        //1.1、设置组织架构属性
+        BeanUtils.copyProperties(accountOrgGroupDTO, accountOrg);
+        /*accountOrg.setOrgId(String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID)));*/
+        accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
+        accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted().toString());
+        accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus().toString());
+        accountOrg.setDt(accountOrgGroupDTO.getOrgDt());
+        accountOrgService.save(accountOrg);
+        //2、插入组-实例表
+        AccountGroupInfo accountGroupInfo = new AccountGroupInfo();
+        //2.1、设置组实例属性
+        BeanUtils.copyProperties(accountOrgGroupDTO, accountGroupInfo);
+        accountGroupInfoService.save(accountGroupInfo);
     }
 }

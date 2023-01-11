@@ -56,6 +56,15 @@ public class AccountOrgForm implements Serializable {
     @ApiModelProperty("租户ID")
     private String tenantId;
 
+    @ApiModelProperty("组织类型")
+    private String orgTyp;
+
+    @ApiModelProperty("排序")
+    private String sorted;
+
+    @ApiModelProperty("状态")
+    private String status;
+
     @JsonIgnore
     private Boolean deleted;
 
