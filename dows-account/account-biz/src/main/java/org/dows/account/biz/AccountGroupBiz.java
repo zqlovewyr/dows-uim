@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountGroupApi;
+import org.dows.account.biz.constant.BaseConstant;
+import org.dows.account.biz.util.IDUtil;
 import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.dto.AccountOrgGroupDTO;
 import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
@@ -147,7 +149,7 @@ public class AccountGroupBiz implements AccountGroupApi {
         AccountOrg accountOrg = new AccountOrg();
         //1.1、设置组织架构属性
         BeanUtils.copyProperties(accountOrgGroupDTO, accountOrg);
-        /*accountOrg.setOrgId(String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID)));*/
+        accountOrg.setOrgId(String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID)));
         accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
         accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted().toString());
         accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus().toString());
