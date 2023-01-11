@@ -36,11 +36,4 @@ public interface AccountGroupApi {
      */
     Response<Boolean> insertAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
 
-    /**
-     * 插入 组-成员
-     *
-     * @param accountGroupDTO
-     */
-    Response<Boolean> insertAccountGroupMember(AccountGroupDTO accountGroupDTO);
-
 }
