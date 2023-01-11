@@ -25,7 +25,6 @@ import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -157,6 +156,18 @@ public class AccountGroupBiz implements AccountGroupApi {
         BeanUtils.copyProperties(accountOrgGroupDTO, accountGroupInfo);
         boolean flagInfo = accountGroupInfoService.save(accountGroupInfo);
         if (flagInfo == false) {
+            flag = false;
+        }
+        return Response.ok(flag);
+    }
+
+    @Override
+    public Response<Boolean> insertAccountGroupMember(AccountGroupDTO accountGroupDTO) {
+        boolean flag = true;
+        AccountGroup group = new AccountGroup();
+        BeanUtils.copyProperties(accountGroupDTO, group);
+        boolean flagGroup = accountGroupService.save(group);
+        if (flagGroup == false) {
             flag = false;
         }
         return Response.ok(flag);
