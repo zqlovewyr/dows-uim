@@ -20,7 +20,7 @@ public interface AccountGroupApi {
      *
      * @param accountOrgGroupDTOS
      */
-    void batchInsertGroup(List<AccountOrgGroupDTO> accountOrgGroupDTOS);
+    Response<Boolean> batchInsertGroup(List<AccountOrgGroupDTO> accountOrgGroupDTOS);
 
     /**
      * 自定义查询 账号-组 列表

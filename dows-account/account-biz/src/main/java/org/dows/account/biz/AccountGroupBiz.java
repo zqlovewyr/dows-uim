@@ -25,6 +25,7 @@ import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -89,9 +90,10 @@ public class AccountGroupBiz implements AccountGroupApi {
      * @param accountOrgGroups account-groups
      */
     @Transactional(rollbackFor = Exception.class)
-    public void batchInsertGroup(List<AccountOrgGroupDTO> accountOrgGroups) {
+    public Response<Boolean> batchInsertGroup(List<AccountOrgGroupDTO> accountOrgGroups) {
+        boolean flag = true;
         if (CollectionUtils.isEmpty(accountOrgGroups)) {
-            return;
+            return Response.ok(false);
         }
         List<AccountGroup> accountGroups = new ArrayList<>();
         accountOrgGroups.forEach(item -> {
@@ -100,7 +102,11 @@ public class AccountGroupBiz implements AccountGroupApi {
             BeanUtils.copyProperties(item, accountGroup);
             accountGroups.add(accountGroup);
         });
-        accountGroupService.saveBatch(accountGroups, accountGroups.size());
+        boolean batchFlag = accountGroupService.saveBatch(accountGroups, accountGroups.size());
+        if (batchFlag == false) {
+            flag = false;
+        }
+        return Response.ok(flag);
     }
 
     /**
