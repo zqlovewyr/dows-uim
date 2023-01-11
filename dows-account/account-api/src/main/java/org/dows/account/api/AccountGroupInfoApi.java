@@ -20,7 +20,7 @@ public interface AccountGroupInfoApi {
 
     /**
      *
-     * 自定义查询 账号-组负责人 列表
+     * 自定义查询 账号-组负责人 分页列表
      *
      * @param accountGroupInfoDTO
      */

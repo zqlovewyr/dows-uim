@@ -110,21 +110,8 @@ public class AccountGroupBiz implements AccountGroupApi {
     @Transactional(rollbackFor = Exception.class)
     public Response<IPage<AccountGroupInfoVo>> accountGroupUnionList(AccountGroupInfoDTO accountGroupInfoDTO) {
         //1、获取组列表
-        List<AccountGroup> accountGroupList = accountGroupService.lambdaQuery()
-                .eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getAppId()), AccountGroup::getAppId, accountGroupInfoDTO.getAppId())
-                .eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getOrgId()), AccountGroup::getOrgId, accountGroupInfoDTO.getOrgId())
-                .eq(AccountGroup::getDeleted, false)
-                .list();
-        Set<String> ids = new HashSet<>();
-        //2、获取ids
-        if(accountGroupList != null && accountGroupList.size() > 0){
-            accountGroupList.forEach(group->{
-                ids.add(String.valueOf(group.getId()));
-            });
-        }
-        //2、获取组列表
         LambdaQueryWrapper<AccountGroupInfo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.in(ids != null && ids.size() > 0, AccountGroupInfo::getGroupId, ids)
+        queryWrapper.eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getOrgId()), AccountGroupInfo::getOrgId, accountGroupInfoDTO.getOrgId())
                 .eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getGroupId()), AccountGroupInfo::getGroupId, accountGroupInfoDTO.getGroupId())
                 .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getGroupName()), AccountGroupInfo::getGroupName, accountGroupInfoDTO.getGroupName())
                 .eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getAccountId()), AccountGroupInfo::getAccountId, accountGroupInfoDTO.getAccountId())
@@ -176,14 +163,5 @@ public class AccountGroupBiz implements AccountGroupApi {
         IPage<AccountGroupVo> pageVo = new Page<>();
         BeanUtils.copyProperties(groupList, pageVo);
         return Response.ok(pageVo);
-    }
-
-    /**
-     * 插入 账号-组及相关信息
-     */
-    @Override
-    public void insert(AccountGroupInfoDTO accountGroupInfoDTO) {
-        //1、创建组账号
-
     }
 }

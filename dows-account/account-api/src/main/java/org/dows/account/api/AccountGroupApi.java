@@ -39,14 +39,4 @@ public interface AccountGroupApi {
      */
     Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDto);
 
-    /**
-     *
-     */
-
-    /**
-     * 插入 账号-组及相关信息
-     * @param accountGroupInfoDTO
-     */
-    void insert(AccountGroupInfoDTO accountGroupInfoDTO);
-
 }

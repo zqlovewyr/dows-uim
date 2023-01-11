@@ -34,6 +34,8 @@ public class AccountGroupInfoForm {
     @ApiModelProperty("自增主键ID")
     private Long id;
 
+    @ApiModelProperty("组织架构ID")
+    private String orgId;
 
     @ApiModelProperty("组别ID")
     private String groupId;
