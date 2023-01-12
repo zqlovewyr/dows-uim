@@ -5,6 +5,8 @@ import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.dto.AccountOrgGroupDTO;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
+import org.springframework.web.multipart.MultipartFile;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -35,4 +37,19 @@ public interface AccountGroupApi {
      * @param accountGroupDTO
      */
     Response<Boolean> insertOrUpdateAccountGroup(AccountGroupDTO accountGroupDTO);
+
+    /**
+     * 获取 下载模板
+     *
+     * @param response
+     */
+    public Response<Object> downloadExcelTemplate(HttpServletResponse response);
+
+    /**
+     *
+     * 导入成员
+     *
+     * @param file
+     */
+    public Response<Object> uploadUnitUsers(MultipartFile file);
 }

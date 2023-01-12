@@ -16,11 +16,14 @@ import org.dows.account.entity.*;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
+import org.dows.framework.oss.api.S3OssClient;
 import org.dows.user.entity.UserInstance;
 import org.dows.user.service.UserInstanceService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -233,5 +236,17 @@ public class AccountGroupBiz implements AccountGroupApi {
             flag = false;
         }
         return Response.ok(flag);
+    }
+
+    @Override
+    // TODO 2023/01/12
+    public Response<Object> downloadExcelTemplate(HttpServletResponse response) {
+        return null;
+    }
+
+    @Override
+    // TODO 2023/01/12
+    public Response<Object> uploadUnitUsers(MultipartFile file) {
+        return null;
     }
 }
