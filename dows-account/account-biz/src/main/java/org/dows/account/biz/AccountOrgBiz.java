@@ -79,7 +79,16 @@ public class AccountOrgBiz {
         return Response.ok(listByPage);
     }
     public Response getAccountOrgById(Long id){
-        return Response.ok(accountOrgService.getById(id));
+
+        AccountOrg accountOrg = accountOrgService.lambdaQuery()
+                .select(AccountOrg::getId, AccountOrg::getOrgId, AccountOrg::getOrgCode,AccountOrg::getOrgName,AccountOrg::getDescr)
+                .eq(AccountOrg::getId, id)
+                .oneOpt()
+                .orElseThrow(() -> {
+                    throw new RbacException("根据id查询组织结构不存在");
+                });
+
+        return Response.ok(accountOrg);
     }
     public Response deleteById(Long id){
         accountOrgService.removeById(id);

@@ -7,7 +7,6 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @description: RBAC-角色(RbacRole)DTO类
@@ -30,23 +29,17 @@ public class RbacRoleDto implements Serializable {
     private Long id;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty(value = "角色父id 角色组")
-    private Long rolePid;
+    private Long pid;
     @ApiModelProperty(value = "角色名")
     private String roleName;
     @ApiModelProperty(value = "角色code")
     private String roleCode;
     @ApiModelProperty(value = "名称首字母")
     private String nameLetter;
-    @ApiModelProperty(value = "角色级别")
-    private Integer roleLevel;
+
     @ApiModelProperty(value = "角色icon")
     private String roleIcon;
-    @ApiModelProperty(value = "角色组数量")
-    private Integer subCount;
-    @ApiModelProperty(value = "数据权限")
-    private String dataScope;
-    @ApiModelProperty(value = "顺序")
-    private Integer sorted;
+
     @ApiModelProperty(value = "描述")
     private String descr;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
@@ -58,8 +51,8 @@ public class RbacRoleDto implements Serializable {
     private Integer ver;
     @ApiModelProperty(value = "是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
-    @ApiModelProperty(value = "时间戳/创建时间")
-    private Date dt;
+    @ApiModelProperty(value = "当前角色是否继承父角色对应的权限")
+    private Integer inherit;
 
 
 }
