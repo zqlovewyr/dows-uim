@@ -1,9 +1,11 @@
 package org.dows.account.biz;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -245,7 +247,21 @@ public class AccountGroupBiz implements AccountGroupApi {
 
     @Override
     // TODO 2023/01/12
-    public Response<Object> uploadUnitUsers(MultipartFile file) {
+    public Response<Object> uploadAccountGroup(MultipartFile file) {
         return null;
+    }
+
+    @Override
+    public Response<Object> batchDeleteGroupMembers(List<AccountGroupDTO> accountGroupDTOs) {
+        if (CollectionUtils.isEmpty(accountGroupDTOs)) {
+            return Response.ok(false);
+        }
+        accountGroupDTOs.forEach(item->{
+            LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
+            groupWrapper.set(AccountGroup::getDeleted, true)
+                    .eq(AccountGroup::getOrgId, item.getOrgId());
+            accountGroupService.update(groupWrapper);
+        });
+        return Response.ok(true);
     }
 }

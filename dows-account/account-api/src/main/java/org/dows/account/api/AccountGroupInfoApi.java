@@ -51,6 +51,6 @@ public interface AccountGroupInfoApi {
      *
      * @param accountOrgGroupDTOs
      */
-    Response<Boolean> deleteAccountGroups(List<AccountOrgGroupDTO> accountOrgGroupDTOs);
+    Response<Boolean> batchDeleteGroups(List<AccountOrgGroupDTO> accountOrgGroupDTOs);
 
 }

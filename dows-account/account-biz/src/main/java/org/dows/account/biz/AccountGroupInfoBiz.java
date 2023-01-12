@@ -175,7 +175,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> deleteAccountGroups(List<AccountOrgGroupDTO> accountOrgGroupDTOs) {
+    public Response<Boolean> batchDeleteGroups(List<AccountOrgGroupDTO> accountOrgGroupDTOs) {
         if (CollectionUtils.isEmpty(accountOrgGroupDTOs)) {
             return Response.ok(false);
         }

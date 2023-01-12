@@ -51,5 +51,12 @@ public interface AccountGroupApi {
      *
      * @param file
      */
-    Response<Object> uploadUnitUsers(MultipartFile file);
+    Response<Object> uploadAccountGroup(MultipartFile file);
+
+    /**
+     * 批量删除 组-成员
+     *
+     * @param accountGroupDTOs
+     */
+    Response<Object> batchDeleteGroupMembers(List<AccountGroupDTO> accountGroupDTOs);
 }
