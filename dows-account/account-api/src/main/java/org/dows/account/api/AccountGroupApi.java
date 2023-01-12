@@ -43,7 +43,7 @@ public interface AccountGroupApi {
      *
      * @param response
      */
-    public Response<Object> downloadExcelTemplate(HttpServletResponse response);
+    Response<Object> downloadExcelTemplate(HttpServletResponse response);
 
     /**
      *
@@ -51,5 +51,5 @@ public interface AccountGroupApi {
      *
      * @param file
      */
-    public Response<Object> uploadUnitUsers(MultipartFile file);
+    Response<Object> uploadUnitUsers(MultipartFile file);
 }

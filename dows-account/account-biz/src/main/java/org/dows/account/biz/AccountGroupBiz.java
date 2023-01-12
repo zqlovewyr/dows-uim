@@ -16,7 +16,6 @@ import org.dows.account.entity.*;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
-import org.dows.framework.oss.api.S3OssClient;
 import org.dows.user.entity.UserInstance;
 import org.dows.user.service.UserInstanceService;
 import org.springframework.beans.BeanUtils;
