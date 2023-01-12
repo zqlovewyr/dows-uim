@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 /**
