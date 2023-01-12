@@ -42,6 +42,9 @@ public class UserInstance implements CrudEntity {
     @ApiModelProperty("姓名")
     private String name;
 
+    @ApiModelProperty("性别")
+    private String gender;
+
     @ApiModelProperty("身份证号")
     private String idNo;
 

@@ -50,6 +50,7 @@ public class UserInstanceForm implements Serializable {
     @ApiModelProperty("户籍地址")
     private String domicile;
 
-
+    @ApiModelProperty("性别")
+    private String gender;
 }
 

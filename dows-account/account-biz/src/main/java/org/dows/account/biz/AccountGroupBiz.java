@@ -15,16 +15,15 @@ import org.dows.account.biz.util.AccountUtil;
 import org.dows.account.entity.AccountGroup;
 import org.dows.account.entity.AccountGroupInfo;
 import org.dows.account.entity.AccountRole;
-import org.dows.account.service.AccountGroupInfoService;
-import org.dows.account.service.AccountGroupService;
-import org.dows.account.service.AccountRoleService;
+import org.dows.account.entity.AccountUser;
+import org.dows.account.service.*;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
+import org.dows.user.entity.UserInstance;
+import org.dows.user.service.UserInstanceService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,7 +40,11 @@ public class AccountGroupBiz implements AccountGroupApi {
 
     private final AccountRoleService accountRoleService;
 
+    private final AccountUserService accountUserService;
+
     private final AccountGroupInfoService accountGroupInfoService;
+
+    private final UserInstanceService userInstanceService;
 
     /**
      * 根据组织ids 查询对应角色
@@ -174,6 +177,14 @@ public class AccountGroupBiz implements AccountGroupApi {
                     .eq(AccountRole::getDeleted, false)
                     .eq(AccountRole::getPrincipalType, EnumAccountRolePrincipalType.PERSONAL.getCode()));
             vo.setRoleName(role.getRoleName());
+            //4.2、设置成员性别
+            LambdaQueryWrapper<AccountUser> userWrapper = new LambdaQueryWrapper<>();
+            AccountUser user = accountUserService.getOne(userWrapper.eq(AccountUser::getAccountId, vo.getAccountId())
+                    .eq(AccountUser::getDeleted, false));
+            LambdaQueryWrapper<UserInstance> instanceWrapper = new LambdaQueryWrapper<>();
+            UserInstance instance = userInstanceService.getOne(instanceWrapper.eq(UserInstance::getUserId, user.getUserId())
+                    .eq(UserInstance::getDeleted, false));
+            vo.setGender(instance.getGender());
             //4.2、设置组织架构负责人
             LambdaQueryWrapper<AccountGroupInfo> ownerWrapper = new LambdaQueryWrapper<>();
             AccountGroupInfo groupInfo = accountGroupInfoService.getOne(ownerWrapper.eq(AccountGroupInfo::getOrgId, vo.getOrgId())

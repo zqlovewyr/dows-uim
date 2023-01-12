@@ -45,6 +45,27 @@ public class AccountGroupVo implements Serializable {
     @ApiModelProperty(value = "账号名称")
     private String accountName;
 
+    @ApiModelProperty(value = "身份证号")
+    private String idNo;
+
+    @ApiModelProperty(value = "年龄")
+    private String age;
+
+    @ApiModelProperty(value = "民族")
+    private String nation;
+
+    @ApiModelProperty(value = "发证机关")
+    private String signOrg;
+
+    @ApiModelProperty(value = "户籍地址")
+    private String domicile;
+
+    @ApiModelProperty(value = "生日")
+    private Date birthday;
+
+    @ApiModelProperty(value = "性别")
+    private String gender;
+
     @ApiModelProperty(value = "账户角色名称")
     private String roleName;
 
