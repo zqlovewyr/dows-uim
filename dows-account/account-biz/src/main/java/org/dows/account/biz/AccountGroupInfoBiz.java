@@ -3,6 +3,7 @@ package org.dows.account.biz;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -22,6 +23,9 @@ import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @Author：wHuan
@@ -161,5 +165,32 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
             flag = false;
         }
         return Response.ok(flag);
+    }
+
+
+    /**
+     * 批量删除 账号-组-实例
+     *
+     * @param accountOrgGroupDTOs
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Response<Boolean> deleteAccountGroups(List<AccountOrgGroupDTO> accountOrgGroupDTOs) {
+        if (CollectionUtils.isEmpty(accountOrgGroupDTOs)) {
+            return Response.ok(false);
+        }
+        accountOrgGroupDTOs.forEach(item->{
+            //1、删除组织架构
+            LambdaUpdateWrapper<AccountOrg> orgWrapper = Wrappers.lambdaUpdate(AccountOrg.class);
+            orgWrapper.set(AccountOrg::getDeleted, true)
+                    .eq(AccountOrg::getOrgId, item.getOrgId());
+            accountOrgService.update(orgWrapper);
+            //2、删除组-实例
+            LambdaUpdateWrapper<AccountGroupInfo> groupWrapper = Wrappers.lambdaUpdate(AccountGroupInfo.class);
+            groupWrapper.set(AccountGroupInfo::getDeleted, true)
+                    .eq(AccountGroupInfo::getOrgId, item.getOrgId());
+            accountGroupInfoService.update(groupWrapper);
+        });
+        return Response.ok(true);
     }
 }

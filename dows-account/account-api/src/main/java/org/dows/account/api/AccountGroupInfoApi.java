@@ -6,6 +6,8 @@ import org.dows.account.dto.AccountOrgGroupDTO;
 import org.dows.account.vo.AccountGroupInfoVo;
 import org.dows.framework.api.Response;
 
+import java.util.List;
+
 /**
  * 账号-账号组信息维度信息(AccountGroupInfo)Api接口
  *
@@ -37,9 +39,18 @@ public interface AccountGroupInfoApi {
     Response<Boolean> updateAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
 
     /**
-     * 删除 账号-组-实例
+     * 删除单个 账号-组-实例
      *
      * @param accountOrgGroupDTO
      */
     Response<Boolean> deleteAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
+
+
+    /**
+     * 批量删除 账号-组-实例
+     *
+     * @param accountOrgGroupDTOs
+     */
+    Response<Boolean> deleteAccountGroups(List<AccountOrgGroupDTO> accountOrgGroupDTOs);
+
 }
