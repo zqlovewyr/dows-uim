@@ -1,4 +1,4 @@
-package org.dows.account.rest;
+package org.dows.account.rest.user;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
@@ -20,7 +20,7 @@ import java.time.LocalDate;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("account")
+@RequestMapping("user/account")
 public class AccountRest {
 
     private final AccountBiz accountBiz;

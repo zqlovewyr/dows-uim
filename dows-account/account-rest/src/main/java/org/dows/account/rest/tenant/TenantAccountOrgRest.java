@@ -1,4 +1,4 @@
-package org.dows.account.rest;
+package org.dows.account.rest.tenant;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -27,8 +27,8 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("accountOrg")
-public class AccountOrgRest {
+@RequestMapping("tenant/accountOrg")
+public class TenantAccountOrgRest {
 
     private final AccountOrgBiz accountOrgBiz;
 

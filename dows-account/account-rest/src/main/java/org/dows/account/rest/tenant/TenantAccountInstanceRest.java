@@ -1,4 +1,4 @@
-package org.dows.account.rest;
+package org.dows.account.rest.tenant;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -9,14 +9,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.biz.AccountInstanceBiz;
 import org.dows.account.biz.dto.AccountInstanceResDTO;
-import org.dows.account.entity.AccountInstance;
-import org.dows.account.form.AccountInstanceForm;
 import org.dows.account.form.AccountUserResForm;
 import org.dows.account.query.AccountInstanceQuery;
-import org.dows.account.service.AccountInstanceService;
 import org.dows.account.vo.AccountInstanceResVo;
 import org.dows.framework.api.Response;
-import org.dows.framework.crud.mybatis.MybatisCrudRest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +26,8 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("accountInstanceInfo")
-public class AccountInstanceRest {
+@RequestMapping("tenant/account")
+public class TenantAccountInstanceRest {
 
     private final AccountInstanceBiz accountInstanceBiz;
 
