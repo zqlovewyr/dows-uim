@@ -11,7 +11,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.dows.framework.crud.mybatis.CrudEntity;
-
 import java.util.Date;
 
 /**
@@ -41,6 +40,9 @@ public class UserInstance implements CrudEntity {
 
     @ApiModelProperty("姓名")
     private String name;
+
+    @ApiModelProperty("性别")
+    private String gender;
 
     @ApiModelProperty("身份证号")
     private String idNo;

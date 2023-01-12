@@ -6,9 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
-
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 用户-实例(UserInstance)表单
@@ -50,6 +48,7 @@ public class UserInstanceForm implements Serializable {
     @ApiModelProperty("户籍地址")
     private String domicile;
 
-
+    @ApiModelProperty("性别")
+    private String gender;
 }
 

@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -34,6 +33,9 @@ public class UserInstanceDTO {
 
     @ApiModelProperty("用户ID")
     private String userId;
+
+    @ApiModelProperty("性别")
+    private String gender;
 
     @ApiModelProperty("用户ID集合")
     private Set<String> userIds;
