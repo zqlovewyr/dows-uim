@@ -1,6 +1,8 @@
 package org.dows.account.biz;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -13,14 +15,18 @@ import org.dows.account.dto.AccountOrgGroupDTO;
 import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.biz.util.AccountUtil;
 import org.dows.account.entity.AccountGroup;
+import org.dows.account.entity.AccountGroupInfo;
 import org.dows.account.entity.AccountRole;
+import org.dows.account.service.AccountGroupInfoService;
 import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountRoleService;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,6 +42,8 @@ public class AccountGroupBiz implements AccountGroupApi {
     private final AccountGroupService accountGroupService;
 
     private final AccountRoleService accountRoleService;
+
+    private final AccountGroupInfoService accountGroupInfoService;
 
     /**
      * 根据组织ids 查询对应角色
@@ -109,11 +117,43 @@ public class AccountGroupBiz implements AccountGroupApi {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDTO) {
+        //1、获取角色对应账号Id
+        Set<String> accountIds = new HashSet<>();
+        if (accountGroupDTO.getRoleId() != null) {
+            List<AccountRole> accountRoleList = accountRoleService.lambdaQuery()
+                    .select(AccountRole::getPrincipalId)
+                    .eq(AccountRole::getRoleId, accountGroupDTO.getRoleId())
+                    .eq(AccountRole::getPrincipalType, EnumAccountRolePrincipalType.PERSONAL.getCode())
+                    .eq(AccountRole::getDeleted, false)
+                    .list();
+            if (accountRoleList != null && accountRoleList.size() > 0) {
+                accountRoleList.forEach(accountRole -> {
+                    accountIds.add(accountRole.getPrincipalId());
+                });
+            }
+        }
+        //2、根据团队负责人获取对应组织信息
+        Set<String> orgIds = new HashSet<>();
+        if (StringUtils.isNotEmpty(accountGroupDTO.getOwnerId())) {
+            List<AccountGroupInfo> groupInfoList = accountGroupInfoService.lambdaQuery()
+                    .select(AccountGroupInfo::getOrgId)
+                    .eq(AccountGroupInfo::getAccountId, accountGroupDTO.getOwnerId())
+                    .eq(AccountGroupInfo::getDeleted, false)
+                    .list();
+            if (groupInfoList != null && groupInfoList.size() > 0) {
+                groupInfoList.forEach(accountGroupInfo -> {
+                    orgIds.add(accountGroupInfo.getOrgId());
+                });
+            }
+        }
+        //3、查询
         LambdaQueryWrapper<AccountGroup> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(accountGroupDTO.getAppId()), AccountGroup::getAppId, accountGroupDTO.getAppId())
                 .eq(StringUtils.isNotEmpty(accountGroupDTO.getAccountId()), AccountGroup::getAccountId, accountGroupDTO.getAccountId())
+                .in(accountIds != null && accountIds.size() > 0, AccountGroup::getAccountId, accountIds)
                 .eq(accountGroupDTO.getId() != null, AccountGroup::getId, accountGroupDTO.getId())
                 .eq(StringUtils.isNotEmpty(accountGroupDTO.getOrgId()), AccountGroup::getOrgId, accountGroupDTO.getOrgId())
+                .in(orgIds != null && orgIds.size() > 0, AccountGroup::getOrgId, orgIds)
                 .like(StringUtils.isNotEmpty(accountGroupDTO.getOrgName()), AccountGroup::getOrgName, accountGroupDTO.getOrgName())
                 .like(StringUtils.isNotEmpty(accountGroupDTO.getAccountName()), AccountGroup::getAccountName, accountGroupDTO.getAccountName())
                 .eq(StringUtils.isNotEmpty(accountGroupDTO.getTenantId()), AccountGroup::getTenantId, accountGroupDTO.getTenantId())
@@ -123,10 +163,35 @@ public class AccountGroupBiz implements AccountGroupApi {
                 .eq(AccountGroup::getDeleted, false)
                 .orderByDesc(AccountGroup::getDt);
         Page<AccountGroup> page = new Page<>(accountGroupDTO.getPageNo(), accountGroupDTO.getPageSize());
-        IPage<AccountGroup> groupList = accountGroupService.page(page, queryWrapper);
+        IPage<AccountGroup> groupPage = accountGroupService.page(page, queryWrapper);
+        //4、获取成员名称
+        List<AccountGroup> recordList = groupPage.getRecords();
+        List<AccountGroupVo> voList = new ArrayList<>();
+        recordList.forEach(record -> {
+            AccountGroupVo vo = new AccountGroupVo();
+            BeanUtils.copyProperties(record, vo);
+            //4.1、设置成员名称和角色
+            LambdaQueryWrapper<AccountRole> roleWrapper = new LambdaQueryWrapper<>();
+            AccountRole role = accountRoleService.getOne(roleWrapper.eq(AccountRole::getPrincipalId, vo.getAccountId())
+                    .eq(AccountRole::getDeleted, false)
+                    .eq(AccountRole::getPrincipalType, EnumAccountRolePrincipalType.PERSONAL.getCode()));
+            vo.setRoleName(role.getRoleName());
+            //4.2、设置组织架构负责人
+            LambdaQueryWrapper<AccountGroupInfo> ownerWrapper = new LambdaQueryWrapper<>();
+            AccountGroupInfo groupInfo = accountGroupInfoService.getOne(ownerWrapper.eq(AccountGroupInfo::getOrgId, vo.getOrgId())
+                    .eq(AccountGroupInfo::getDeleted, false));
+            vo.setOwnerId(groupInfo.getAccountId());
+            vo.setOwnerName(groupInfo.getOwner());
+        });
         //复制属性
         IPage<AccountGroupVo> pageVo = new Page<>();
-        BeanUtils.copyProperties(groupList, pageVo);
+        BeanUtils.copyProperties(groupPage, pageVo);
+        pageVo.setRecords(voList);
         return Response.ok(pageVo);
+    }
+
+    @Override
+    public Response<Boolean> insertGroup(AccountOrgGroupDTO accountOrgGroupDTO) {
+        return Response.ok(false);
     }
 }

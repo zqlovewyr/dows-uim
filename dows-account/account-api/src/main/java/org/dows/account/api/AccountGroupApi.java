@@ -16,7 +16,7 @@ import java.util.List;
 public interface AccountGroupApi {
 
     /**
-     * 批量创建 账号-组-成员
+     * 批量加入 账号-组-成员
      *
      * @param accountOrgGroupDTOS
      */
@@ -28,4 +28,9 @@ public interface AccountGroupApi {
      * @param accountGroupDto
      */
     Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDto);
+
+    /**
+     * 加入组-成员
+     */
+    Response<Boolean> insertGroup(AccountOrgGroupDTO accountOrgGroupDTO);
 }

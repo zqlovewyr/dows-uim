@@ -28,14 +28,26 @@ public class AccountGroupDTO implements Serializable {
     @ApiModelProperty("主键id集合")
     private Set<String> ids;
 
+    @ApiModelProperty("成员角色ID")
+    private Long roleId;
+
+    @ApiModelProperty("团队负责人ID")
+    private String ownerId;
+
     @ApiModelProperty("组织ID")
     private String orgId;
+
+    @ApiModelProperty("组织ID集合")
+    private Set<String> orgIds;
 
     @ApiModelProperty("组织名")
     private String orgName;
 
     @ApiModelProperty("账号ID")
     private String accountId;
+
+    @ApiModelProperty("账号ID集合")
+    private Set<String> accountIds;
 
     @ApiModelProperty("账号名")
     private String accountName;
