@@ -1,8 +1,6 @@
 package org.dows.account.biz;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -188,10 +186,5 @@ public class AccountGroupBiz implements AccountGroupApi {
         BeanUtils.copyProperties(groupPage, pageVo);
         pageVo.setRecords(voList);
         return Response.ok(pageVo);
-    }
-
-    @Override
-    public Response<Boolean> insertGroup(AccountOrgGroupDTO accountOrgGroupDTO) {
-        return Response.ok(false);
     }
 }

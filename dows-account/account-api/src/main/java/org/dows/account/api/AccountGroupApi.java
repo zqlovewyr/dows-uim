@@ -29,8 +29,4 @@ public interface AccountGroupApi {
      */
     Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDto);
 
-    /**
-     * 加入组-成员
-     */
-    Response<Boolean> insertGroup(AccountOrgGroupDTO accountOrgGroupDTO);
 }
