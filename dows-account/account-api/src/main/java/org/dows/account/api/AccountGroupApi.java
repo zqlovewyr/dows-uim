@@ -30,9 +30,9 @@ public interface AccountGroupApi {
     Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDTO);
 
     /**
-     * 添加 账号-组-成员
+     * 添加/编辑 账号-组-成员
      *
      * @param accountGroupDTO
      */
-    Response<Boolean> insertGroup(AccountGroupDTO accountGroupDTO);
+    Response<Boolean> insertOrUpdateAccountGroup(AccountGroupDTO accountGroupDTO);
 }

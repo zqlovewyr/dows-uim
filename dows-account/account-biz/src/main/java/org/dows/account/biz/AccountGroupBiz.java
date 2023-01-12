@@ -21,7 +21,6 @@ import org.dows.user.service.UserInstanceService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -201,7 +200,7 @@ public class AccountGroupBiz implements AccountGroupApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> insertGroup(AccountGroupDTO accountGroupDTO) {
+    public Response<Boolean> insertOrUpdateAccountGroup(AccountGroupDTO accountGroupDTO) {
         boolean flag = true;
         //1、创建账号实例
         AccountInstance accountInstance = new AccountInstance();
