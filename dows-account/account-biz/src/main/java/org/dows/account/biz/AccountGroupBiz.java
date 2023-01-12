@@ -12,10 +12,7 @@ import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.dto.AccountOrgGroupDTO;
 import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.biz.util.AccountUtil;
-import org.dows.account.entity.AccountGroup;
-import org.dows.account.entity.AccountGroupInfo;
-import org.dows.account.entity.AccountRole;
-import org.dows.account.entity.AccountUser;
+import org.dows.account.entity.*;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
@@ -24,6 +21,7 @@ import org.dows.user.service.UserInstanceService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,6 +43,8 @@ public class AccountGroupBiz implements AccountGroupApi {
     private final AccountGroupInfoService accountGroupInfoService;
 
     private final UserInstanceService userInstanceService;
+
+    private final AccountInstanceService accountInstanceService;
 
     /**
      * 根据组织ids 查询对应角色
@@ -197,5 +197,42 @@ public class AccountGroupBiz implements AccountGroupApi {
         BeanUtils.copyProperties(groupPage, pageVo);
         pageVo.setRecords(voList);
         return Response.ok(pageVo);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Response<Boolean> insertGroup(AccountGroupDTO accountGroupDTO) {
+        boolean flag = true;
+        //1、创建账号实例
+        AccountInstance accountInstance = new AccountInstance();
+        BeanUtils.copyProperties(accountGroupDTO, accountInstance);
+        boolean accountFlag = accountInstanceService.save(accountInstance);
+        if (accountFlag == false) {
+            flag = false;
+        }
+        //2、创建用户实例
+        UserInstance userInstance = new UserInstance();
+        BeanUtils.copyProperties(accountGroupDTO, userInstance);
+        boolean userFlag = userInstanceService.save(userInstance);
+        if (userFlag == false) {
+            flag = false;
+        }
+        //3、设置关联关系
+        AccountUser accountUser = new AccountUser();
+        BeanUtils.copyProperties(accountGroupDTO, accountUser);
+        accountUser.setUserId(userInstance.getUserId());
+        boolean unionFlag = accountUserService.save(accountUser);
+        if (unionFlag == false) {
+            flag = false;
+        }
+        //4、创建组员实例
+        AccountGroup accountGroup = new AccountGroup();
+        BeanUtils.copyProperties(accountGroupDTO, accountGroup);
+        accountGroup.setUserId(userInstance.getId().toString());
+        boolean groupFlag = accountGroupService.save(accountGroup);
+        if (groupFlag == false) {
+            flag = false;
+        }
+        return Response.ok(flag);
     }
 }
