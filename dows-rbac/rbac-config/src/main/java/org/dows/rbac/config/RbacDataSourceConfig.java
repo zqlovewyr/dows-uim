@@ -2,6 +2,7 @@
 //
 //import com.baomidou.mybatisplus.core.config.GlobalConfig;
 //import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
+//import com.zaxxer.hikari.HikariConfig;
 //import com.zaxxer.hikari.HikariDataSource;
 //import org.apache.ibatis.session.SqlSessionFactory;
 //import org.dows.framework.crud.mybatis.utils.FieldFillHandler;
@@ -9,6 +10,7 @@
 //import org.mybatis.spring.annotation.MapperScan;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.beans.factory.annotation.Qualifier;
+//import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 //import org.springframework.boot.context.properties.ConfigurationProperties;
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;
@@ -24,12 +26,29 @@
 //    @Autowired
 //    private FieldFillHandler fieldFillHandler;
 //
-//    @Bean(name = "rbacDataSource")
+//
+//    @Bean(name = "rbacDataSourceProperties")
 //    @ConfigurationProperties(prefix = "spring.datasource.rbac")
-//    public DataSource accountDataSource() {
-//        return new HikariDataSource();
+//    public DataSourceProperties dataSourceProperties() {
+//        return new DataSourceProperties();
 //    }
 //
+//    @Bean(name = "rbacDataSource")
+//    public DataSource accountDataSource() {
+//        // 获取本应用对于的数据源
+//        DataSourceProperties dataSourceProperties = dataSourceProperties();
+//        // 设置连接池
+//        HikariConfig hikariConfig = hikariConfig();
+//        /**
+//         * 转换
+//         * 或者hikariConfig.setDataSourceProperties();
+//         */
+//        hikariConfig.setJdbcUrl(dataSourceProperties.getUrl());
+//        hikariConfig.setUsername(dataSourceProperties.getUsername());
+//        hikariConfig.setPassword(dataSourceProperties.getPassword());
+//        HikariDataSource hikariDataSource = new HikariDataSource(hikariConfig);
+//        return hikariDataSource;
+//    }
 //    @Bean(name = "rbacSqlSessionFactory")
 //    public SqlSessionFactory accountSqlSessionFactory(@Qualifier("rbacDataSource") DataSource dataSource) throws Exception {
 //        MybatisSqlSessionFactoryBean mybatisSqlSessionFactoryBean = new MybatisSqlSessionFactoryBean();

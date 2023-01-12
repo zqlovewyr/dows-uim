@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = {"org.dows.account.*","org.dows.rbac.*","org.dows.user.*","org.dows.framework.crud.*"})
-@MapperScan(basePackages = {"org.dows.*.mapper"})
+//@MapperScan(basePackages = {"org.dows.*.mapper"})
 public class UserApplication {
 
     public static void main(String[] args) {

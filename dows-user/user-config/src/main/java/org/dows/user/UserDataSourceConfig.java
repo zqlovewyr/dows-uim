@@ -10,6 +10,7 @@
 //import org.dows.framework.crud.mybatis.utils.FieldFillHandler;
 //import org.mybatis.spring.SqlSessionTemplate;
 //import org.mybatis.spring.annotation.MapperScan;
+//import org.mybatis.spring.mapper.MapperScannerConfigurer;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.beans.factory.annotation.Qualifier;
 //import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -21,7 +22,7 @@
 //import javax.sql.DataSource;
 //
 //@Configuration("userDataSourceConfig")
-//@MapperScan(basePackages = "org.dows.user.mapper", sqlSessionTemplateRef = "userSqlSessionTemplate")
+////@MapperScan(basePackages = "org.dows.user.mapper", sqlSessionTemplateRef = "userSqlSessionTemplate")
 //public class UserDataSourceConfig {
 //
 //    @Autowired
@@ -58,6 +59,7 @@
 //        HikariDataSource hikariDataSource = new HikariDataSource(hikariConfig);
 //        return hikariDataSource;
 //    }
+//
 //
 //    @Bean(name = "userSqlSessionFactory")
 //    @Primary
@@ -101,7 +103,18 @@
 //    }
 //
 //    @Bean(name = "userSqlSessionTemplate")
-//    public SqlSessionTemplate odsSqlSessionTemplate(@Qualifier("userSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+//    public SqlSessionTemplate userSqlSessionTemplate(@Qualifier("userSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
 //        return new SqlSessionTemplate(sqlSessionFactory);
 //    }
+//
+//
+//    @Bean(name = "userMapperScannerConfigurer")
+//    public MapperScannerConfigurer accountMapperScannerConfigurer() {
+//        MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
+//        //mapperScannerConfigurer.setProcessPropertyPlaceHolders(true);
+//        mapperScannerConfigurer.setBasePackage("org.dows.user.mapper");
+//        mapperScannerConfigurer.setSqlSessionTemplateBeanName("userSqlSessionTemplate");
+//        return mapperScannerConfigurer;
+//    }
+//
 //}

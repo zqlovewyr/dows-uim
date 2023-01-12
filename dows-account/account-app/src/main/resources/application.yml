@@ -5,7 +5,7 @@ spring:
   application:
     name: account
   profiles:
-    include: account-mysql,account-mybatis
+    include: account-mysql,account-mybatis,user-mysql,user-mybatis
     active: dev
 
   jackson:
