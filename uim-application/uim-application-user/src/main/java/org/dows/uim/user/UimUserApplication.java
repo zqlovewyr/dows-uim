@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class,scanBasePackages={"org.dows.account"})
-@MapperScan(basePackages = {"org.dows.*.mapper"})
 public class UimUserApplication {
     public static void main(String[] args) {
         SpringApplication.run(UimUserApplication.class, args);
