@@ -193,16 +193,16 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
     /**
      * 删除 账号-组-实例
      *
-     * @param accountOrgGroupDTO
+     * @param orgId
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> deleteAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO) {
+    public Response<Boolean> deleteAccountGroup(String orgId) {
         boolean flag = true;
         //1、删除组织架构
         LambdaUpdateWrapper<AccountOrg> orgWrapper = Wrappers.lambdaUpdate(AccountOrg.class);
         orgWrapper.set(AccountOrg::getDeleted, true)
-                .eq(AccountOrg::getOrgId, accountOrgGroupDTO.getOrgId());
+                .eq(AccountOrg::getId, orgId);
         boolean orgFlag = accountOrgService.update(orgWrapper);
         if(orgFlag == false){
             flag = false;
@@ -210,7 +210,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         //2、删除组-实例
         LambdaUpdateWrapper<AccountGroupInfo> groupWrapper = Wrappers.lambdaUpdate(AccountGroupInfo.class);
         groupWrapper.set(AccountGroupInfo::getDeleted, true)
-                .eq(AccountGroupInfo::getOrgId, accountOrgGroupDTO.getOrgId());
+                .eq(AccountGroupInfo::getOrgId, orgId);
         boolean groupFlag = accountGroupInfoService.update(groupWrapper);
         if(groupFlag == false){
             flag = false;
@@ -222,24 +222,24 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
     /**
      * 批量删除 账号-组-实例
      *
-     * @param accountOrgGroupDTOs
+     * @param ids
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> batchDeleteGroups(List<AccountOrgGroupDTO> accountOrgGroupDTOs) {
-        if (CollectionUtils.isEmpty(accountOrgGroupDTOs)) {
+    public Response<Boolean> batchDeleteGroups(List<String> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
             return Response.ok(false);
         }
-        accountOrgGroupDTOs.forEach(item->{
+        ids.forEach(item->{
             //1、删除组织架构
             LambdaUpdateWrapper<AccountOrg> orgWrapper = Wrappers.lambdaUpdate(AccountOrg.class);
             orgWrapper.set(AccountOrg::getDeleted, true)
-                    .eq(AccountOrg::getOrgId, item.getOrgId());
+                    .eq(AccountOrg::getId, item);
             accountOrgService.update(orgWrapper);
             //2、删除组-实例
             LambdaUpdateWrapper<AccountGroupInfo> groupWrapper = Wrappers.lambdaUpdate(AccountGroupInfo.class);
             groupWrapper.set(AccountGroupInfo::getDeleted, true)
-                    .eq(AccountGroupInfo::getOrgId, item.getOrgId());
+                    .eq(AccountGroupInfo::getOrgId, item);
             accountGroupInfoService.update(groupWrapper);
         });
         return Response.ok(true);

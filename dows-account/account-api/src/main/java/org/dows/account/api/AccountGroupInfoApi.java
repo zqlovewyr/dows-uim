@@ -47,16 +47,16 @@ public interface AccountGroupInfoApi {
     /**
      * 删除单个 账号-组-实例
      *
-     * @param accountOrgGroupDTO
+     * @param orgId
      */
-    Response<Boolean> deleteAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
+    Response<Boolean> deleteAccountGroup(String orgId);
 
 
     /**
      * 批量删除 账号-组-实例
      *
-     * @param accountOrgGroupDTOs
+     * @param ids
      */
-    Response<Boolean> batchDeleteGroups(List<AccountOrgGroupDTO> accountOrgGroupDTOs);
+    Response<Boolean> batchDeleteGroups(List<String> ids);
 
 }
