@@ -99,7 +99,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
         corsConfiguration.setMaxAge(3600L);
         return corsConfiguration;
     }
-
-
 }
 
