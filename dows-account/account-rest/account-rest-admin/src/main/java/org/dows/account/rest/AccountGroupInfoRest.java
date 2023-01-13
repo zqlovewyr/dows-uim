@@ -5,17 +5,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dows.account.api.AccountGroupApi;
 import org.dows.account.api.AccountGroupInfoApi;
-import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.dto.AccountGroupInfoDTO;
 import org.dows.account.dto.AccountOrgGroupDTO;
-import org.dows.account.entity.AccountGroup;
 import org.dows.account.entity.AccountGroupInfo;
-import org.dows.account.form.AccountGroupForm;
 import org.dows.account.form.AccountGroupInfoForm;
 import org.dows.account.service.AccountGroupInfoService;
-import org.dows.account.service.AccountGroupService;
 import org.dows.account.vo.AccountGroupInfoVo;
 import org.dows.framework.api.Response;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
@@ -46,6 +41,13 @@ public class AccountGroupInfoRest implements MybatisCrudRest<AccountGroupInfoFor
     public Response customAccountGroupInfoList(@RequestBody AccountGroupInfoDTO accountGroupInfoDTO) {
         Response<IPage<AccountGroupInfoVo>> voList = accountGroupInfoApi.customAccountGroupInfoList(accountGroupInfoDTO);
         return Response.ok(voList);
+    }
+
+    @ApiOperation("插入 账号-组-实例")
+    @PostMapping("/insertAccountGroup")
+    public Response insertAccountGroup(@RequestBody AccountOrgGroupDTO accountOrgGroupDTO) {
+        Response<Boolean> flag = accountGroupInfoApi.insertAccountGroup(accountOrgGroupDTO);
+        return Response.ok(flag);
     }
 }
 
