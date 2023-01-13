@@ -4,11 +4,9 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@SpringBootApplication(scanBasePackages = {"org.dows.account.*", "org.dows.rbac.*", "org.dows.user.*", "org.dows.framework.crud.*"}
-/*, exclude = {DataSourceAutoConfiguration.class}*/)
+@SpringBootApplication(scanBasePackages = {"org.dows.account.*", "org.dows.rbac.*", "org.dows.user.*", "org.dows.framework.crud.*"})
 @MapperScan(basePackages = {"org.dows.*.mapper"})
 public class AccountApplication {
 

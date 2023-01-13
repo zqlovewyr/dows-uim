@@ -38,6 +38,5 @@ public class AccountGroupRest implements MybatisCrudRest<AccountGroupForm, Accou
         accountGroupApi.batchInsertGroup(accountOrgGroupDTOS);
         return Response.ok();
     }
-
 }
 
