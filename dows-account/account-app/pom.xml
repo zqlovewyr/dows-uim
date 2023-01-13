@@ -15,7 +15,6 @@
             <groupId>org.dows.cloud</groupId>
             <artifactId>account-boot</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>rbac-boot</artifactId>
@@ -26,13 +25,11 @@
             <artifactId>rbac-rest-admin</artifactId>
             <version>20220701-SNAPSHOT</version>
         </dependency>
-
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>user-boot</artifactId>
             <version>20220701-SNAPSHOT</version>
         </dependency>
-
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>tenant-boot</artifactId>

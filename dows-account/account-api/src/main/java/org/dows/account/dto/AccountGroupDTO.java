@@ -52,6 +52,9 @@ public class AccountGroupDTO implements Serializable {
     @ApiModelProperty("账号名")
     private String accountName;
 
+    @ApiModelProperty("密码")
+    private String password;
+
     @ApiModelProperty("用户ID")
     private String userId;
 

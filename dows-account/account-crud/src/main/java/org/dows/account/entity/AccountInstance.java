@@ -32,7 +32,7 @@ import java.util.Date;
 public class AccountInstance implements CrudEntity {
     private static final long serialVersionUID = 471265538286310949L;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+/*    @JsonFormat(shape = JsonFormat.Shape.STRING)*/
     @ApiModelProperty("自增主键ID")
     private Long id;
 

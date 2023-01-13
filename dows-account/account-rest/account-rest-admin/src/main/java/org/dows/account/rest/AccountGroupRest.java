@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountGroupApi;
+import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.dto.AccountOrgGroupDTO;
 import org.dows.account.entity.AccountGroup;
 import org.dows.account.form.AccountGroupForm;
@@ -32,10 +33,18 @@ public class AccountGroupRest implements MybatisCrudRest<AccountGroupForm, Accou
 
     private final AccountGroupApi accountGroupApi;
 
-    @ApiOperation("保存 账号-组织")
-    @PostMapping("/createAccountGroups")
+    @ApiOperation("批量保存 账号-组织")
+    @PostMapping("/batchCreateAccountGroups")
     public Response batchCreateAccountGroup(@RequestBody List<AccountOrgGroupDTO> accountOrgGroupDTOS) {
         accountGroupApi.batchInsertGroup(accountOrgGroupDTOS);
+        return Response.ok();
+    }
+
+
+    @ApiOperation("保存 账号-组织")
+    @PostMapping("/createAccountGroups")
+    public Response createAccountGroup(@RequestBody AccountGroupDTO accountGroupDTO) {
+        accountGroupApi.insertOrUpdateAccountGroup(accountGroupDTO);
         return Response.ok();
     }
 }

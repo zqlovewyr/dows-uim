@@ -31,7 +31,7 @@ public class SwaggerConfig {
     @Bean
     public Docket accountAdminApi() {
         return new Docket(DocumentationType.OAS_30).apiInfo(apiInfo()).enable(true).select()
-                .apis(RequestHandlerSelectors.basePackage("org.dows.accout.rest")).paths(PathSelectors.any()).build().groupName("账号端");
+                .apis(RequestHandlerSelectors.basePackage("org.dows.account.rest")).paths(PathSelectors.any()).build().groupName("账号端");
     }
 
     @Bean
