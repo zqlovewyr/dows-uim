@@ -31,6 +31,13 @@ public interface AccountGroupInfoApi {
     Response<Boolean> insertAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
 
     /**
+     * 批量插入 账号-组-实例
+     *
+     * @param accountOrgGroupDTOs
+     */
+    Response<Boolean> batchInsertAccountGroup(List<AccountOrgGroupDTO> accountOrgGroupDTOs);
+
+    /**
      * 编辑 账号-组-实例
      *
      * @param accountOrgGroupDTO

@@ -46,6 +46,20 @@ public class AccountGroupInfoRest implements MybatisCrudRest<AccountGroupInfoFor
         return Response.ok(flag);
     }
 
+    @ApiOperation("更新 账号-组-实例")
+    @PostMapping("/updateAccountGroup")
+    public Response updateAccountGroup(@RequestBody AccountOrgGroupDTO accountOrgGroupDTO) {
+        Response<Boolean> flag = accountGroupInfoApi.updateAccountGroup(accountOrgGroupDTO);
+        return Response.ok(flag);
+    }
+
+    @ApiOperation("删除单个 账号-组-实例")
+    @PostMapping("/deleteAccountGroup")
+    public Response deleteAccountGroup(@RequestBody AccountOrgGroupDTO accountOrgGroupDTO) {
+        Response<Boolean> flag = accountGroupInfoApi.deleteAccountGroup(accountOrgGroupDTO);
+        return Response.ok(flag);
+    }
+
     @ApiOperation("批量删除 账号-组-实例")
     @DeleteMapping("/batchDeleteGroups")
     public Response batchDeleteGroups(@RequestBody List<AccountOrgGroupDTO> accountOrgGroupDTOs) {

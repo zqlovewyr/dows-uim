@@ -20,10 +20,12 @@ import org.dows.account.service.AccountGroupInfoService;
 import org.dows.account.service.AccountOrgService;
 import org.dows.account.vo.AccountGroupInfoVo;
 import org.dows.framework.api.Response;
+import org.dows.framework.api.StatusCode;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @Author：wHuan
@@ -103,6 +105,43 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
             flag = false;
         }
         return Response.ok(flag);
+    }
+
+    /**
+     * 批量插入 账号-组-实例
+     *
+     * @param accountOrgGroupDTOs
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Response<Boolean> batchInsertAccountGroup(List<AccountOrgGroupDTO> accountOrgGroupDTOs) {
+        AtomicBoolean flag = new AtomicBoolean(true);
+        //1、插入组织架构表
+        AccountOrg accountOrg = new AccountOrg();
+        if(accountOrgGroupDTOs != null && accountOrgGroupDTOs.size() > 0) {
+            accountOrgGroupDTOs.forEach(accountOrgGroupDTO->{
+                //1.1、设置组织架构属性
+                BeanUtils.copyProperties(accountOrgGroupDTO, accountOrg);
+                accountOrg.setOrgId(String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID)));
+                accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
+                accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted().toString());
+                accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus().toString());
+                accountOrg.setDt(accountOrgGroupDTO.getOrgDt());
+                boolean flagOrg = accountOrgService.save(accountOrg);
+                if (flagOrg == false) {
+                    flag.set(false);
+                }
+                //2、插入组-实例表
+                AccountGroupInfo accountGroupInfo = new AccountGroupInfo();
+                //2.1、设置组实例属性
+                BeanUtils.copyProperties(accountOrgGroupDTO, accountGroupInfo);
+                boolean flagInfo = accountGroupInfoService.save(accountGroupInfo);
+                if (flagInfo == false) {
+                    flag.set(false);
+                }
+            });
+        }
+        return Response.ok((StatusCode) flag);
     }
 
     /**
