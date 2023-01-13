@@ -47,5 +47,12 @@ public class AccountGroupRest implements MybatisCrudRest<AccountGroupForm, Accou
         accountGroupApi.insertOrUpdateAccountGroup(accountGroupDTO);
         return Response.ok();
     }
+
+    @ApiOperation("自定义查询 账号-组-成员 列表")
+    @PostMapping("/customAccountGroupList")
+    public Response customAccountGroupList(@RequestBody AccountGroupDTO accountGroupDTO) {
+        accountGroupApi.customAccountGroupList(accountGroupDTO);
+        return Response.ok();
+    }
 }
 
