@@ -122,6 +122,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
             accountOrgGroupDTOs.forEach(accountOrgGroupDTO->{
                 //1.1、设置组织架构属性
                 BeanUtils.copyProperties(accountOrgGroupDTO, accountOrg);
+                accountOrg.setId(null);
                 accountOrg.setOrgId(String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID)));
                 accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
                 accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted().toString());
@@ -135,13 +136,14 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
                 AccountGroupInfo accountGroupInfo = new AccountGroupInfo();
                 //2.1、设置组实例属性
                 BeanUtils.copyProperties(accountOrgGroupDTO, accountGroupInfo);
+                accountGroupInfo.setId(null);
                 boolean flagInfo = accountGroupInfoService.save(accountGroupInfo);
                 if (flagInfo == false) {
                     flag.set(false);
                 }
             });
         }
-        return Response.ok((StatusCode) flag);
+        return Response.ok(flag.get());
     }
 
     /**
