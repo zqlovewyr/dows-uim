@@ -7,7 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@SpringBootApplication(scanBasePackages = {"org.dows.account.*", "org.dows.rbac.*", "org.dows.user.*", "org.dows.framework.crud.*"}/*, exclude = {DataSourceAutoConfiguration.class}*/)
+@SpringBootApplication(scanBasePackages = {"org.dows.account.*", "org.dows.rbac.*", "org.dows.user.*", "org.dows.framework.crud.*"}
+/*, exclude = {DataSourceAutoConfiguration.class}*/)
 @MapperScan(basePackages = {"org.dows.*.mapper"})
 public class AccountApplication {
 
