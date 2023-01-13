@@ -223,7 +223,8 @@ public class AccountGroupBiz implements AccountGroupApi {
         //3、设置关联关系
         AccountUser accountUser = new AccountUser();
         BeanUtils.copyProperties(accountGroupDTO, accountUser);
-        accountUser.setUserId(userInstance.getUserId());
+        accountUser.setUserId(userInstance.getId().toString());
+        accountUser.setAccountId(accountInstance.getId().toString());
         boolean unionFlag = accountUserService.save(accountUser);
         if (unionFlag == false) {
             flag = false;
