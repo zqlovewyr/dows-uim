@@ -13,6 +13,7 @@ public enum EnumAccountStatusCode implements StatusCode {
     ACCOUNT_EXIST_EXCEPTION(400001, "账号已存在"),
     BATCH_IMPORT_IDENTIFIER_DUPLICATED(400002, "批量导入数据账户有重复"),
     ACCOUNT_INSTANCE_DTO_CANNOT_BE_NULL(400003, "账户实例不能为空"),
+    ACCOUNT_ORG_IS_NOT_EXIST(400003, "组织架构不存在"),
     APPID_CANNOT_BE_BLANK(400004, "应用ID不能为空"),
     IDENTIFIER_CANNOT_BE_BLANK(400004, "账号不能为空"),
     ACCOUNT_NAME_CANNOT_BE_BLANK(400004, "账号昵称不能为空"),

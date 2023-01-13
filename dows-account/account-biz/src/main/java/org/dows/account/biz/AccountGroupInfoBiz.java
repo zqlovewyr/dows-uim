@@ -11,11 +11,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountGroupInfoApi;
 import org.dows.account.biz.constant.BaseConstant;
+import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
+import org.dows.account.biz.enums.EnumAccountStatusCode;
+import org.dows.account.biz.exception.AccountException;
 import org.dows.account.biz.util.IDUtil;
 import org.dows.account.dto.AccountGroupInfoDTO;
 import org.dows.account.dto.AccountOrgGroupDTO;
 import org.dows.account.entity.AccountGroupInfo;
 import org.dows.account.entity.AccountOrg;
+import org.dows.account.entity.AccountRole;
 import org.dows.account.service.AccountGroupInfoService;
 import org.dows.account.service.AccountOrgService;
 import org.dows.account.vo.AccountGroupInfoVo;
@@ -100,6 +104,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         AccountGroupInfo accountGroupInfo = new AccountGroupInfo();
         //2.1、设置组实例属性
         BeanUtils.copyProperties(accountOrgGroupDTO, accountGroupInfo);
+        accountGroupInfo.setOrgId(accountOrg.getId().toString());
         boolean flagInfo = accountGroupInfoService.save(accountGroupInfo);
         if (flagInfo == false) {
             flag = false;
@@ -137,6 +142,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
                 //2.1、设置组实例属性
                 BeanUtils.copyProperties(accountOrgGroupDTO, accountGroupInfo);
                 accountGroupInfo.setId(null);
+                accountGroupInfo.setOrgId(accountOrg.getId().toString());
                 boolean flagInfo = accountGroupInfoService.save(accountGroupInfo);
                 if (flagInfo == false) {
                     flag.set(false);
@@ -163,15 +169,21 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted().toString());
         accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus().toString());
         accountOrg.setDt(accountOrgGroupDTO.getOrgDt());
-        boolean flagOrg = accountOrgService.saveOrUpdate(accountOrg);
+        boolean flagOrg = accountOrgService.updateById(accountOrg);
         if (flagOrg == false) {
             flag = false;
         }
         //2、插入组-实例表
-        AccountGroupInfo accountGroupInfo = new AccountGroupInfo();
+        LambdaQueryWrapper<AccountGroupInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AccountGroupInfo::getOrgId, accountOrg.getId().toString());
+        AccountGroupInfo groupInfo = accountGroupInfoService.getOne(queryWrapper);
+        if(groupInfo == null){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_IS_NOT_EXIST);
+        }
         //2.1、设置组实例属性
-        BeanUtils.copyProperties(accountOrgGroupDTO, accountGroupInfo);
-        boolean flagInfo = accountGroupInfoService.saveOrUpdate(accountGroupInfo);
+        BeanUtils.copyProperties(accountOrgGroupDTO, groupInfo,new String[]{"id"});
+        groupInfo.setOrgId(accountOrg.getId().toString());
+        boolean flagInfo = accountGroupInfoService.updateById(groupInfo);
         if (flagInfo == false) {
             flag = false;
         }

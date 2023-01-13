@@ -1,5 +1,6 @@
 package org.dows.account.dto;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,9 @@ public class AccountOrgGroupDTO {
     /**
      * 组织架构-实例
      */
+    @ApiModelProperty("主键ID")
+    private Long id;
+
     @ApiModelProperty("组织架构父ID")
     private Integer pId;
 
@@ -60,6 +64,9 @@ public class AccountOrgGroupDTO {
     /**
      * 组-实例
      */
+
+    @ApiModelProperty("主键ID")
+    private Long groupPrimaryId;
 
     @ApiModelProperty("负责人账号ID")
     private String accountId;
