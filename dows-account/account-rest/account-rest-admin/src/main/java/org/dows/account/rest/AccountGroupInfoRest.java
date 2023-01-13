@@ -14,10 +14,9 @@ import org.dows.account.service.AccountGroupInfoService;
 import org.dows.account.vo.AccountGroupInfoVo;
 import org.dows.framework.api.Response;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 账号-组(AccountGroupInfo)表控制层
@@ -45,6 +44,13 @@ public class AccountGroupInfoRest implements MybatisCrudRest<AccountGroupInfoFor
     @PostMapping("/insertAccountGroup")
     public Response insertAccountGroup(@RequestBody AccountOrgGroupDTO accountOrgGroupDTO) {
         Response<Boolean> flag = accountGroupInfoApi.insertAccountGroup(accountOrgGroupDTO);
+        return Response.ok(flag);
+    }
+
+    @ApiOperation("批量删除 账号-组-实例")
+    @DeleteMapping("/batchDeleteGroups")
+    public Response batchDeleteGroups(@RequestBody List<AccountOrgGroupDTO> accountOrgGroupDTOs) {
+        Response<Boolean> flag = accountGroupInfoApi.batchDeleteGroups(accountOrgGroupDTOs);
         return Response.ok(flag);
     }
 }
