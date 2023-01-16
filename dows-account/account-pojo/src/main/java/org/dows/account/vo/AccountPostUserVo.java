@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @description: 账号-租户维度信息(AccountTenant)VO类
+ * @description: 账号-职业用户关联表(AccountPostUser)VO类
  * @author: VX:PN15855012581
  * @create: 2021-08-25 14:28:39
  */
@@ -21,11 +21,11 @@ import java.util.Date;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "AccountTenant对象", description = "账号-租户维度信息")
-public class AccountTenantVo implements Serializable {
-    private static final long serialVersionUID = -38555249818885589L;
+@ApiModel(value = "AccountPostUser对象", description = "账号-职业用户关联表")
+public class AccountPostUserVo implements Serializable {
+    private static final long serialVersionUID = -43366571366151809L;
 
-    @ApiModelProperty(value = "账号角色ID")
+    @ApiModelProperty(value = "账号-标识 ID")
     //主键ID
     //@JsonSerialize(using= ToStringSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
@@ -34,28 +34,23 @@ public class AccountTenantVo implements Serializable {
     @ApiModelProperty(value = "账号ID")
     private String accountId;
 
-    @ApiModelProperty(value = "账号名")
-    private String accountName;
+    @ApiModelProperty(value = "职位ID")
+    private Long postId;
 
-    @ApiModelProperty(value = "用户ID")
-    private String userId;
+    @ApiModelProperty(value = "职位名称")
+    private String postName;
 
-    @ApiModelProperty(value = "商户号")
-    private String merchantNo;
+    @ApiModelProperty(value = "创建时间")
+    private Date createTime;
 
-    @ApiModelProperty(value = "租户ID")
-    private String tenantId;
-
-    @ApiModelProperty(value = "顺序")
-    private Integer sorted;
-
+    @ApiModelProperty(value = "创建人")
+    private String creator;
 
     @ApiModelProperty(value = "时间戳/创建时间")
     private Date dt;
 
-    private Long roleId;
-    private String roleName;
-
+    @ApiModelProperty(value = "是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
+    private Boolean deleted;
 
 }
 

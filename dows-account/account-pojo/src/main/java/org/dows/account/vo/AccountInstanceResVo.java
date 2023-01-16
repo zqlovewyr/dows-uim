@@ -32,7 +32,7 @@ public class AccountInstanceResVo implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "账号ID")
-    private Long accountId;
+    private String accountId;
 
     @ApiModelProperty(value = "账号名")
     private String accountName;

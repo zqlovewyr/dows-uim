@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dows.account.mapper.AccountPostMapper">
+
+
+
+    <!--分页查询职位-->
+    <select id="selectAccountPostPage" parameterType="org.dows.account.query.AccountPostQuery" resultType="org.dows.account.vo.AccountPostVo">
+        SELECT
+        t1.*
+        FROM account_post t1
+        WHERE 1=1
+        <if test="accountPostQuery.id != null">
+            AND t1.id = #{accountOrgQuery.id}
+        </if>
+
+        <if test="accountPostQuery.postDes != null and accountOrgQuery.postDes != ''">
+            AND t1.post_des = #{accountOrgQuery.postDes}
+        </if>
+        <if test="accountOrgQuery.postCode != null and accountOrgQuery.postCode != ''">
+            AND t1.post_code = #{accountOrgQuery.postCode}
+        </if>
+        <if test="accountOrgQuery.postName != null and accountOrgQuery.postName != ''">
+            AND t1.post_name = #{accountOrgQuery.postName}
+        </if>
+    </select>
+
+</mapper>

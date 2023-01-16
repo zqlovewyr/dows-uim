@@ -32,10 +32,10 @@ public class AccountUserVo implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "账号id")
-    private Long accountId;
+    private String accountId;
 
     @ApiModelProperty(value = "用户ID")
-    private Long userId;
+    private String userId;
 
     @ApiModelProperty(value = "租户ID")
     private String tenantId;
