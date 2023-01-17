@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dows.rbac.mapper.RbacMenuMapper">
+
+    <!--查询账号所配置菜单-->
+    <select id="selectMenuList" parameterType="org.dows.rbac.query.RbacMenuQuery" resultType="org.dows.rbac.vo.RbacMenuVo">
+        select distinct m.id, m.pid, m.menu_name, m.menu_code, m.menu_icon, m.menu_path, m.visible, m.name_letters,  m.isframe, m.app_name, m.app_id, m.tenant_id
+        from rbac_menu m
+        <if test="visible != null and visible != ''">
+            AND m.visible = #{visible}
+        </if>
+
+        order by m.pid
+
+    </select>
+
+    <!--查询账号所配置菜单-->
+    <select id="selectMenuListByAccountId" parameterType="org.dows.rbac.query.RbacMenuQuery" resultType="org.dows.rbac.vo.RbacMenuVo">
+        select distinct m.id, m.pid, m.menu_name, m.menu_code, m.menu_icon, m.menu_path, m.visible, m.name_letters,  m.isframe, m.app_name, m.app_id, m.tenant_id
+        from rbac_menu m
+        left join role_menus rm on m.menu_id = rm.menu_id
+        left join account_role ar on rm.role_id = ar.role_id
+        left join rbac_role rr on ar.role_id = rr.id
+        where ar.principalId = #{params.account}
+
+        <if test="visible != null and visible != ''">
+            AND m.visible = #{visible}
+        </if>
+
+        order by m.pid
+
+    </select>
+
+</mapper>

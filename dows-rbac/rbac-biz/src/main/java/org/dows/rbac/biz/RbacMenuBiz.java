@@ -1,8 +1,13 @@
 package org.dows.rbac.biz;
 
 import lombok.RequiredArgsConstructor;
+import org.dows.framework.api.Response;
+import org.dows.rbac.query.RbacMenuQuery;
 import org.dows.rbac.service.RbacMenuService;
+import org.dows.rbac.vo.RbacMenuVo;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * RBAC-菜单资源(RbacMenu)业务实现类
@@ -13,6 +18,17 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class RbacMenuBiz {
-    private final RbacMenuService service;
+    private final RbacMenuService rbacMenuService;
+
+    public Response buildMenuTreeSelect(RbacMenuQuery query, String accountId){
+
+        List<RbacMenuVo> menuList = null;
+        if("1".equals(accountId)){ // admin 用户查询全部
+            menuList = rbacMenuService.selectMenuList(query);
+        }else {
+            menuList = rbacMenuService.selectMenuListByAccount(query,accountId);
+        }
+        return Response.ok( rbacMenuService.buildMenuTreeSelect(menuList));
+    }
 
 }

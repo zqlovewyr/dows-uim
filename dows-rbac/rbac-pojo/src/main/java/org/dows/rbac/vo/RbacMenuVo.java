@@ -7,7 +7,9 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @description: RBAC-菜单资源(RbacMenu)VO类
@@ -31,32 +33,42 @@ public class RbacMenuVo implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
-    @ApiModelProperty(value = "父ID")
-    private Long resourcePid;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @ApiModelProperty("父ID")
+    private Long pid;
 
-    @ApiModelProperty(value = "权限码")
-    private String resourceCode;
+    @ApiModelProperty("菜单名称")
+    private String menuName;
 
-    @ApiModelProperty(value = "权限名称")
-    private String resourceName;
+    @ApiModelProperty("菜单CODE")
+    private String menuCode;
 
-    @ApiModelProperty(value = "权限值")
-    private String resourceVal;
+    @ApiModelProperty("菜单图标")
+    private String menuIcon;
 
-    @ApiModelProperty(value = "uri")
-    private String resourcePath;
+    @ApiModelProperty("菜单路径URI")
+    private String menuPath;
 
-    @ApiModelProperty(value = "权限类型：0->目录；1->菜单；2->按钮（接口绑定权限）, 4->链接")
-    private Integer resourceTyp;
+    @ApiModelProperty("菜单名称首字母")
+    private String nameLetters;
 
-    @ApiModelProperty(value = "排序")
-    private Integer sorted;
+    @ApiModelProperty("是否隐藏")
+    private Boolean visible;
 
-    @ApiModelProperty(value = "应用 id")
+    @ApiModelProperty("是否框架")
+    private Boolean isframe;
+
+    @ApiModelProperty("应用名")
+    private String appName;
+
+    @ApiModelProperty("应用 id")
     private String appId;
 
-    @ApiModelProperty(value = "乐观锁, 默认: 0")
-    private Integer ver;
+    @ApiModelProperty("租户ID")
+    private String tenantId;
+
+    /** 子菜单 */
+    private List<RbacMenuVo> children = new ArrayList<RbacMenuVo>();
 
     @ApiModelProperty(value = "是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;

@@ -57,5 +57,8 @@ public class RbacMenuQuery implements Serializable {
     private Boolean deleted;
     @ApiModelProperty(value = "时间戳/创建时间")
     private Date dt;
+
+    @ApiModelProperty(value = "账号 id")
+    private String accountId;
 }
 

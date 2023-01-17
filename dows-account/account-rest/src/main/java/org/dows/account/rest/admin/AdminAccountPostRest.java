@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author lait.zhang
  * @since 2022-12-23 22:05:09
  */
-@Api(tags = "职位表")
+@Api(tags = "职位")
 @Slf4j
 @RequiredArgsConstructor
 @RestController

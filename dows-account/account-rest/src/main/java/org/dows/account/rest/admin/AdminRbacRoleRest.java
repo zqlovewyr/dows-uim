@@ -9,8 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
 import org.dows.rbac.api.dto.RbacRoleDto;
+import org.dows.rbac.biz.RbacMenuBiz;
 import org.dows.rbac.biz.RbacRoleBiz;
 import org.dows.rbac.form.RbacRoleForm;
+import org.dows.rbac.query.RbacMenuQuery;
 import org.dows.rbac.query.RbacRoleQuery;
 import org.dows.rbac.vo.RbacRoleVo;
 import org.springframework.beans.BeanUtils;
@@ -28,6 +30,7 @@ public class AdminRbacRoleRest {
 
     private final RbacRoleBiz rbacRoleBiz;
 
+    private final RbacMenuBiz rbacMenuBiz;
     @GetMapping(value = "/page")
     @ApiOperation(value = "分页获取角色列表")
     public Response<IPage<RbacRoleVo>> pageList(RbacRoleQuery rbacRoleQuery){
@@ -60,5 +63,12 @@ public class AdminRbacRoleRest {
     public Response<AccountOrgVo> deleteById(
             @ApiParam(required = true, value = "id") @PathVariable("id") Long id){
         return rbacRoleBiz.deleteById(id);
+    }
+
+    @GetMapping(value = "/treeSelect")
+    @ApiOperation(value = "获取菜单下拉树列表")
+    public Response treeSelect(RbacMenuQuery rbacMenuQuery){
+        String accountId = "";
+        return rbacMenuBiz.buildMenuTreeSelect(rbacMenuQuery,accountId);
     }
 }
