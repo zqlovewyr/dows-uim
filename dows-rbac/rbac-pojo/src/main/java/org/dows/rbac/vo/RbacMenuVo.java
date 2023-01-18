@@ -53,10 +53,10 @@ public class RbacMenuVo implements Serializable {
     private String nameLetters;
 
     @ApiModelProperty("是否隐藏")
-    private Boolean visible;
+    private Integer visible;
 
     @ApiModelProperty("是否框架")
-    private Boolean isframe;
+    private Integer isframe;
 
     @ApiModelProperty("应用名")
     private String appName;
