@@ -140,7 +140,7 @@ public class AccountOrgBiz {
                 item.setTenantId(accountOrg.getTenantId());
             });
             // create OrgGroup
-            this.accountGroupBiz.batchInsertGroup(accountOrgGroups);
+/*            this.accountGroupBiz.batchInsertGroup(accountOrgGroups);*/
         }
         //step4: create account-role
         Long rbacRoleId = accountOrgDTO.getRbacRoleId();

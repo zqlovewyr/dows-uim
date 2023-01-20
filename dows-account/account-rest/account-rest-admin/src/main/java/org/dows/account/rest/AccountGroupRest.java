@@ -42,8 +42,8 @@ public class AccountGroupRest implements MybatisCrudRest<AccountGroupForm, Accou
 
     @ApiOperation("批量保存 账号-组织")
     @PostMapping("/batchCreateAccountGroups")
-    public Response batchCreateAccountGroup(@RequestBody List<AccountOrgGroupDTO> accountOrgGroupDTOS) {
-        accountGroupApi.batchInsertGroup(accountOrgGroupDTOS);
+    public Response batchCreateAccountGroup(@RequestBody List<AccountGroupDTO> accountGroupDTOs) {
+        accountGroupApi.batchInsertGroup(accountGroupDTOs);
         return Response.ok();
     }
 

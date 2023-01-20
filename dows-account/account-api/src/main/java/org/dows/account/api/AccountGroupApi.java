@@ -20,9 +20,9 @@ public interface AccountGroupApi {
     /**
      * 批量添加 账号-组-成员
      *
-     * @param accountOrgGroupDTOS
+     * @param accountGroupDTOs
      */
-    Response<Boolean> batchInsertGroup(List<AccountOrgGroupDTO> accountOrgGroupDTOS);
+    Response<Boolean> batchInsertGroup(List<AccountGroupDTO> accountGroupDTOs);
 
     /**
      * 自定义查询 账号-组-成员 列表

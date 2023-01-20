@@ -18,14 +18,17 @@ import org.dows.account.entity.*;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
+import org.dows.framework.api.StatusCode;
 import org.dows.user.entity.UserInstance;
 import org.dows.user.service.UserInstanceService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
@@ -90,26 +93,48 @@ public class AccountGroupBiz implements AccountGroupApi {
      * batch insert account-group
      * 批量创建 账号-组
      *
-     * @param accountOrgGroups account-groups
+     * @param accountGroupDTOs account-groups
      */
     @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> batchInsertGroup(List<AccountOrgGroupDTO> accountOrgGroups) {
-        boolean flag = true;
-        if (CollectionUtils.isEmpty(accountOrgGroups)) {
+    public Response<Boolean> batchInsertGroup(List<AccountGroupDTO> accountGroupDTOs) {
+        AtomicBoolean flag = new AtomicBoolean(true);
+        if (CollectionUtils.isEmpty(accountGroupDTOs)) {
             return Response.ok(false);
         }
-        List<AccountGroup> accountGroups = new ArrayList<>();
-        accountOrgGroups.forEach(item -> {
+        accountGroupDTOs.forEach(account -> {
+            //1、创建账号实例
+            AccountInstance accountInstance = new AccountInstance();
+            BeanUtils.copyProperties(account, accountInstance);
+            boolean accountFlag = accountInstanceService.save(accountInstance);
+            if (accountFlag == false) {
+                flag.set(false);
+            }
+            //2、创建用户实例
+            UserInstance userInstance = new UserInstance();
+            BeanUtils.copyProperties(account, userInstance);
+            boolean userFlag = userInstanceService.save(userInstance);
+            if (userFlag == false) {
+                flag.set(false);
+            }
+            //3、设置关联关系
+            AccountUser accountUser = new AccountUser();
+            BeanUtils.copyProperties(account, accountUser);
+            accountUser.setUserId(userInstance.getId().toString());
+            accountUser.setAccountId(accountInstance.getId().toString());
+            boolean unionFlag = accountUserService.save(accountUser);
+            if (unionFlag == false) {
+                flag.set(false);
+            }
+            //4、创建组员实例
             AccountGroup accountGroup = new AccountGroup();
-            AccountUtil.validateAccountGroupDTO(item);
-            BeanUtils.copyProperties(item, accountGroup);
-            accountGroups.add(accountGroup);
+            BeanUtils.copyProperties(account, accountGroup);
+            accountGroup.setUserId(userInstance.getId().toString());
+            boolean groupFlag = accountGroupService.save(accountGroup);
+            if (groupFlag == false) {
+                flag.set(false);
+            }
         });
-        boolean batchFlag = accountGroupService.saveBatch(accountGroups, accountGroups.size());
-        if (batchFlag == false) {
-            flag = false;
-        }
-        return Response.ok(flag);
+        return Response.ok(flag.get());
     }
 
     /**
@@ -257,7 +282,7 @@ public class AccountGroupBiz implements AccountGroupApi {
         if (CollectionUtils.isEmpty(accountGroupDTOs)) {
             return Response.ok(false);
         }
-        accountGroupDTOs.forEach(item->{
+        accountGroupDTOs.forEach(item -> {
             LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
             groupWrapper.set(AccountGroup::getDeleted, true)
                     .eq(AccountGroup::getOrgId, item.getOrgId());
