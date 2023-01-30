@@ -10,7 +10,8 @@ import org.dows.framework.api.StatusCode;
 @Getter
 @AllArgsConstructor
 public enum EnumUserStatusCode implements StatusCode {
-    USER_CREATE_FAIL_EXCEPTION(500001, "创建用户失败");
+    USER_CREATE_FAIL_EXCEPTION(500001, "创建用户失败"),
+    USER_IS_NOT_EXIST_EXCEPTION(500002, "该用户不存在");
     final Integer code;
     final String descr;
 }
