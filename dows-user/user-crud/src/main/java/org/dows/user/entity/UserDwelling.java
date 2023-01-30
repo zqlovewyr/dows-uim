@@ -48,6 +48,9 @@ public class UserDwelling implements CrudEntity {
     @ApiModelProperty("居住面积")
     private String acreage;
 
+    @ApiModelProperty("人均面积")
+    private String perarea;
+
     @ApiModelProperty("房屋类型")
     private String houseType;
 
@@ -56,6 +59,12 @@ public class UserDwelling implements CrudEntity {
 
     @ApiModelProperty("饮水")
     private String water;
+
+    @ApiModelProperty("厨房排风设施")
+    private String exhaustFacility;
+
+    @ApiModelProperty("畜牧栏种类")
+    private String rearPoultry;
 
     @ApiModelProperty("厨房使用方式")
     private String kitchen;
