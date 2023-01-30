@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.dows.account.api.AccountGroupApi;
+import org.dows.account.api.AccountInstanceApi;
 import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
@@ -42,7 +44,7 @@ import static org.dows.account.biz.util.AccountUtil.getKeyOfkIdentifierAppIdV;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AccountInstanceBiz{
+public class AccountInstanceBiz implements AccountInstanceApi {
     private final AccountInstanceService accountInstanceService;
     private final AccountIdentifierService accountIdentifierService;
     private final RbacRoleApi rbacRoleApi;
@@ -62,7 +64,7 @@ public class AccountInstanceBiz{
      * 8.convert entity to vo and return
     */
     @Transactional(rollbackFor = Exception.class)
-    public AccountInstanceVo createAccountInstance(AccountInstanceDTO accountInstanceDTO) {
+    public Response<AccountInstanceVo> createAccountInstance(AccountInstanceDTO accountInstanceDTO) {
         accountInstanceDTO = AccountUtil.validateAndTrimAccountInstanceDTO(accountInstanceDTO);
         /* runsix:1.check whether accountIdentifier queried by appId & identifier exist */
         accountIdentifierService.lambdaQuery()
@@ -135,10 +137,10 @@ public class AccountInstanceBiz{
         AccountInstanceVo accountInstanceVo = new AccountInstanceVo();
         BeanUtils.copyProperties(accountInstance, accountInstanceVo);
         accountInstanceVo.setAccountId(Long.parseLong(accountInstance.getAccountId()));
-        return accountInstanceVo;
+        return Response.ok(accountInstanceVo);
     }
 
-    public List<AccountInstanceDTO> getAccountInstanceDTOListByFile(MultipartFile file, String appId, Long rbacRoleId, String accountOrgOrgId, String password, String avatar, String source, String phone) {
+    public Response<List<AccountInstanceDTO>> getAccountInstanceDTOListByFile(MultipartFile file, String appId, Long rbacRoleId, String accountOrgOrgId, String password, String avatar, String source, String phone) {
         InputStream inputStream;
         try {
             inputStream = file.getInputStream();
@@ -177,7 +179,7 @@ public class AccountInstanceBiz{
             public void doAfterAllAnalysed(AnalysisContext analysisContext) {
             }
         }).sheet().doRead();
-        return accountInstanceDTOList;
+        return Response.ok(accountInstanceDTOList);
     }
 
     /**
@@ -322,8 +324,8 @@ public class AccountInstanceBiz{
     }
 
     public void batchRegister(MultipartFile file, String appId, Long rbacRoleId, String accountOrgOrgId, String password, String avatar, String source, String phone) {
-        List<AccountInstanceDTO> accountInstanceDTOListByFile = getAccountInstanceDTOListByFile(
+        Response<List<AccountInstanceDTO>> accountInstanceDTOListByFile = getAccountInstanceDTOListByFile(
                 file, appId, rbacRoleId, accountOrgOrgId, password, avatar, source, phone);
-        batchCreateAccountInstance(accountInstanceDTOListByFile);
+        batchCreateAccountInstance(accountInstanceDTOListByFile.getData());
     }
 }

@@ -34,7 +34,7 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
     @ApiOperation("实例注册")
     @PostMapping("/register")
     public Response<AccountInstanceVo> register(@RequestBody AccountInstanceDTO accountInstanceDTO) {
-        return Response.ok(accountInstanceBiz.createAccountInstance(accountInstanceDTO));
+        return Response.ok(accountInstanceBiz.createAccountInstance(accountInstanceDTO).getData());
     }
 
     @PostMapping("/batchRegister")
