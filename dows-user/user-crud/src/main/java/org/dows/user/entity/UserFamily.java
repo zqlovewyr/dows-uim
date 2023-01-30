@@ -36,6 +36,9 @@ public class UserFamily implements CrudEntity {
     @ApiModelProperty("主键")
     private Long id;
 
+    @ApiModelProperty("父ID")
+    private String parentId;
+
     @ApiModelProperty("家庭ID")
     private String familyId;
 
