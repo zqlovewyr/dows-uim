@@ -3,12 +3,17 @@ package org.dows.account.biz;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.listener.ReadListener;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.findsoft.support.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.dows.account.api.AccountGroupApi;
+import org.apache.poi.ss.formula.functions.Now;
 import org.dows.account.api.AccountInstanceApi;
+import org.dows.account.biz.constant.AccountConstant;
+import org.dows.account.biz.constant.BaseConstant;
 import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
@@ -24,12 +29,15 @@ import org.dows.rbac.api.enums.EnumRbacStatusCode;
 import org.dows.rbac.api.exception.RbacException;
 import org.dows.rbac.api.vo.RbacRoleVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -62,7 +70,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
      * 6.save accountRole if rbacRoleId exist
      * 7.save accountGroup if orgId exist
      * 8.convert entity to vo and return
-    */
+     */
     @Transactional(rollbackFor = Exception.class)
     public Response<AccountInstanceVo> createAccountInstance(AccountInstanceDTO accountInstanceDTO) {
         accountInstanceDTO = AccountUtil.validateAndTrimAccountInstanceDTO(accountInstanceDTO);
@@ -192,7 +200,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
      * 6.batch save accountInstance
      * 7.batch save accountRole if rbacRoleId exist
      * 8.batch save accountGroup if orgId exist
-    */
+     */
     @Transactional(rollbackFor = Exception.class)
     public void batchCreateAccountInstance(List<AccountInstanceDTO> accountInstanceDTOList) {
         accountInstanceDTOList.parallelStream().forEach(AccountUtil::validateAndTrimAccountInstanceDTO);
@@ -215,7 +223,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     kIdentifierVAppIdSet.put(identifier, appIdSet);
                 }
             }
-            kIdentifierAppIdVAccountId.put(getKeyOfkIdentifierAppIdV(identifier,appId), IdWorker.getIdStr());
+            kIdentifierAppIdVAccountId.put(getKeyOfkIdentifierAppIdV(identifier, appId), IdWorker.getIdStr());
         });
         if (kIdentifierVAppIdSet.isEmpty()) {
             return;
@@ -289,7 +297,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         /* runsix:7.batch save accountRole if rbacRoleId exist */
         Map<Long, RbacRoleVO> finalKRbacRoleIdVRbacRoleVO = kRbacRoleIdVRbacRoleVOMap;
         List<AccountRole> accountRoleList = accountInstanceDTOList.parallelStream()
-                .filter(accountInstanceDTO ->  Objects.nonNull(accountInstanceDTO.getRbacRoleId()))
+                .filter(accountInstanceDTO -> Objects.nonNull(accountInstanceDTO.getRbacRoleId()))
                 .map(accountInstanceDTO -> AccountRole
                         .builder()
                         .roleId(accountInstanceDTO.getRbacRoleId().toString())
@@ -327,5 +335,44 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         Response<List<AccountInstanceDTO>> accountInstanceDTOListByFile = getAccountInstanceDTOListByFile(
                 file, appId, rbacRoleId, accountOrgOrgId, password, avatar, source, phone);
         batchCreateAccountInstance(accountInstanceDTOListByFile.getData());
+    }
+
+    @Override
+    public Response<Map<String, Object>> login(AccountInstanceDTO accountInstanceDTO) {
+        //1、获取账户是否存在
+        LambdaQueryWrapper<AccountInstance> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.isNotEmpty(accountInstanceDTO.getAccountName()), AccountInstance::getAccountName, accountInstanceDTO.getAccountName())
+                .eq(StringUtils.isNotEmpty(accountInstanceDTO.getPassword()), AccountInstance::getPassword, accountInstanceDTO.getPassword())
+                .eq(AccountInstance::getDeleted, false);
+        AccountInstance accountInstance = accountInstanceService.getOne(queryWrapper);
+        if (accountInstance == null) {
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);
+        }
+        //2、判断账户状态
+        if (accountInstance.getStatus() == AccountConstant.STATUS_N) {
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_STATUS_INVALID_EXCEPTION);
+        }
+        //3、判断账户是否在有效期内
+        if (accountInstance.getIndate() != null && accountInstance.getExpdate() != null) {
+            //判断当前登录时间是否有效期内
+            Date now = new Date();
+            if (accountInstance.getIndate().getTime() >= now.getTime() || accountInstance.getExpdate().getTime() <= now.getTime()) {
+                throw new AccountException(EnumAccountStatusCode.ACCOUNT_NOT_IN_VALIDITY_EXCEPTION);
+            }
+        }
+        //4、使用RSA解密
+        if (!accountInstance.getPassword().equals(accountInstanceDTO.getPassword())) {
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_PASSWORD_NOT_MATCH_EXCEPTION);
+        }
+        //5、编辑jwt加密
+        Map<String, Object> claim = new HashMap<>();
+        claim.put("accountId", accountInstance.getAccountId());
+        Date expireDate = new Date(System.currentTimeMillis() + 100 * 60 * 60 * 1000);
+        String token = JwtUtil.createJWT(claim, expireDate, BaseConstant.PROPERTIES_JWT_KEY);
+        Map<String, Object> map = new HashMap<>();
+        map.put("token", token);
+        map.put("accountId", accountInstance.getAccountId());
+        map.put("name", accountInstance.getAccountName());
+        return Response.ok(map);
     }
 }

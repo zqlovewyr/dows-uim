@@ -57,6 +57,15 @@ public class AccountInstance implements CrudEntity {
     @ApiModelProperty("应用ID")
     private String appId;
 
+    @ApiModelProperty("状态")
+    private Integer status;
+
+    @ApiModelProperty("有效时间")
+    private Date indate;
+
+    @ApiModelProperty("失效时间")
+    private Date expdate;
+
     @JsonIgnore
     @TableLogic
     @TableField(fill = FieldFill.INSERT)

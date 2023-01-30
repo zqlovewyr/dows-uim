@@ -3,8 +3,9 @@ package org.dows.account.api;
 import org.dows.account.dto.AccountInstanceDTO;
 import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.List;
+import java.util.*;
 
 /**
  * 账号-实例维度信息(AccountInstance)Api接口
@@ -35,4 +36,9 @@ public interface AccountInstanceApi {
 
     void batchRegister(MultipartFile file, String appId, Long rbacRoleId, String accountOrgOrgId, String password, String avatar, String source, String phone);
 
+    /**
+     * 登录 账号-实例
+     *
+     */
+    Response<Map<String, Object>> login(AccountInstanceDTO accountInstanceDTO);
 }
