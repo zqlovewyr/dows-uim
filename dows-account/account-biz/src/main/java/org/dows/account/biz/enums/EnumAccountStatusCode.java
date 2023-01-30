@@ -21,7 +21,8 @@ public enum EnumAccountStatusCode implements StatusCode {
     ACCOUNT_NOT_EXIST_EXCEPTION(400009, "账号不存在"),
     ACCOUNT_STATUS_INVALID_EXCEPTION(400010, "账号已失效"),
     ACCOUNT_NOT_IN_VALIDITY_EXCEPTION(400011, "账号不在有效期"),
-    ACCOUNT_PASSWORD_NOT_MATCH_EXCEPTION(400012, "账号与密码不匹配");
+    ACCOUNT_PASSWORD_NOT_MATCH_EXCEPTION(400012, "账号与密码不匹配"),
+    JWT_CLAIMS_NOT_NULL_EXCEPTION(400013, "jwt不能为空");
     final Integer code;
     final String descr;
 }

@@ -5,7 +5,6 @@ import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.listener.ReadListener;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
-import com.findsoft.support.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +16,7 @@ import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
 import org.dows.account.biz.exception.OrgException;
 import org.dows.account.biz.util.AccountUtil;
+import org.dows.account.biz.util.JwtUtil;
 import org.dows.account.dto.AccountInstanceDTO;
 import org.dows.account.entity.*;
 import org.dows.account.service.*;
@@ -332,7 +332,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     }
 
     @Override
-    public Response<Map<String, Object>> login(AccountInstanceDTO accountInstanceDTO) {
+    public Response<Map<String, Object>> login(AccountInstanceDTO accountInstanceDTO){
         //1、获取账户是否存在
         LambdaQueryWrapper<AccountInstance> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(accountInstanceDTO.getAccountName()), AccountInstance::getAccountName, accountInstanceDTO.getAccountName())
