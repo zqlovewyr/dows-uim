@@ -10,12 +10,16 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountGroupApi;
+import org.dows.account.biz.enums.EnumAccountStatusCode;
+import org.dows.account.biz.exception.AccountException;
 import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.entity.*;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
+import org.dows.user.api.api.UserInstanceApi;
+import org.dows.user.api.dto.UserInstanceDTO;
 import org.dows.user.entity.UserContact;
 import org.dows.user.entity.UserInstance;
 import org.dows.user.service.UserContactService;
@@ -46,6 +50,8 @@ public class AccountGroupBiz implements AccountGroupApi {
     private final AccountUserService accountUserService;
 
     private final AccountGroupInfoService accountGroupInfoService;
+
+    private final UserInstanceApi userInstanceApi;
 
     private final UserInstanceService userInstanceService;
 
@@ -284,40 +290,45 @@ public class AccountGroupBiz implements AccountGroupApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> insertOrUpdateAccountGroup(AccountGroupDTO accountGroupDTO) {
-        boolean flag = true;
+    public Response<Map<String,Object>> insertOrUpdateAccountGroup(AccountGroupDTO accountGroupDTO) {
+        Map<String,Object> map = new HashMap<>();
         //1、创建账号实例
         AccountInstance accountInstance = new AccountInstance();
         BeanUtils.copyProperties(accountGroupDTO, accountInstance);
         boolean accountFlag = accountInstanceService.save(accountInstance);
-        if (accountFlag == false) {
-            flag = false;
+        if(accountFlag == false){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_CREATE_FAIL_EXCEPTION);
         }
+        map.put("accountId",accountInstance.getId());
+
         //2、创建用户实例
-        UserInstance userInstance = new UserInstance();
-        BeanUtils.copyProperties(accountGroupDTO, userInstance);
-        boolean userFlag = userInstanceService.save(userInstance);
-        if (userFlag == false) {
-            flag = false;
-        }
+        UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
+        BeanUtils.copyProperties(accountGroupDTO, userInstanceDTO);
+        Long userId = userInstanceApi.insertOrUpdateUserInstance(userInstanceDTO).getData();
+        map.put("userId",userId);
+
         //3、设置关联关系
         AccountUser accountUser = new AccountUser();
         BeanUtils.copyProperties(accountGroupDTO, accountUser);
-        accountUser.setUserId(userInstance.getId().toString());
+        accountUser.setUserId(userId.toString());
         accountUser.setAccountId(accountInstance.getId().toString());
         boolean unionFlag = accountUserService.save(accountUser);
-        if (unionFlag == false) {
-            flag = false;
+        if(unionFlag == false){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_USER_UNION_FAIL_EXCEPTION);
         }
+        map.put("unionId",accountUser.getId());
+
         //4、创建组员实例
         AccountGroup accountGroup = new AccountGroup();
         BeanUtils.copyProperties(accountGroupDTO, accountGroup);
-        accountGroup.setUserId(userInstance.getId().toString());
+        accountGroup.setUserId(userId.toString());
         boolean groupFlag = accountGroupService.save(accountGroup);
-        if (groupFlag == false) {
-            flag = false;
+        if(groupFlag == false){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_GROUP_MEMBER_FAIL_EXCEPTION);
         }
-        return Response.ok(flag);
+        map.put("groupId",accountGroup.getId());
+
+        return Response.ok(map);
     }
 
     @Override

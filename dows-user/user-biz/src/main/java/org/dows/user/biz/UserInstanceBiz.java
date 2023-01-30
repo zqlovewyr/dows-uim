@@ -11,6 +11,8 @@ import org.dows.user.api.api.UserInstanceApi;
 import org.dows.user.api.dto.UserInstanceDTO;
 import org.dows.user.api.vo.UserInstanceVo;
 import org.dows.user.entity.UserInstance;
+import org.dows.user.enums.EnumUserStatusCode;
+import org.dows.user.exception.UserException;
 import org.dows.user.service.UserInstanceService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -61,5 +63,16 @@ public class UserInstanceBiz implements UserInstanceApi {
         IPage<UserInstanceVo> pageVo = new Page<>();
         BeanUtils.copyProperties(userList, pageVo);
         return Response.ok(pageVo);
+    }
+
+    @Override
+    public Response<Long> insertOrUpdateUserInstance(UserInstanceDTO userInstanceDTO) {
+        UserInstance userInstance = new UserInstance();
+        BeanUtils.copyProperties(userInstanceDTO, userInstance);
+        boolean userFlag = userInstanceService.save(userInstance);
+        if(userFlag == false){
+            throw new UserException(EnumUserStatusCode.USER_CREATE_FAIL_EXCEPTION);
+        }
+        return Response.ok(userInstance.getId());
     }
 }

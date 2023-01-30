@@ -7,6 +7,7 @@ import org.dows.framework.api.Response;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 账号-账号组维度信息(AccountGroup)Api接口
@@ -35,7 +36,7 @@ public interface AccountGroupApi {
      *
      * @param accountGroupDTO
      */
-    Response<Boolean> insertOrUpdateAccountGroup(AccountGroupDTO accountGroupDTO);
+    Response<Map<String,Object>> insertOrUpdateAccountGroup(AccountGroupDTO accountGroupDTO);
 
     /**
      * 获取 下载模板

@@ -22,7 +22,10 @@ public enum EnumAccountStatusCode implements StatusCode {
     ACCOUNT_STATUS_INVALID_EXCEPTION(400010, "账号已失效"),
     ACCOUNT_NOT_IN_VALIDITY_EXCEPTION(400011, "账号不在有效期"),
     ACCOUNT_PASSWORD_NOT_MATCH_EXCEPTION(400012, "账号与密码不匹配"),
-    JWT_CLAIMS_NOT_NULL_EXCEPTION(400013, "jwt不能为空");
+    JWT_CLAIMS_NOT_NULL_EXCEPTION(400013, "jwt不能为空"),
+    ACCOUNT_CREATE_FAIL_EXCEPTION(400014, "创建账号失败"),
+    ACCOUNT_USER_UNION_FAIL_EXCEPTION(400015, "创建账号用户关联关系失败"),
+    ACCOUNT_GROUP_MEMBER_FAIL_EXCEPTION(400016, "创建组成员失败");
     final Integer code;
     final String descr;
 }

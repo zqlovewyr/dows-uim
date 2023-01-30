@@ -20,4 +20,11 @@ public interface UserInstanceApi {
      */
     Response<IPage<UserInstanceVo>> userInstanceUnionList(UserInstanceDTO userInstanceDTO);
 
+    /**
+     * 添加/编辑 用户-实例
+     *
+     * @param userInstanceDTO
+     */
+    Response<Long> insertOrUpdateUserInstance(UserInstanceDTO userInstanceDTO);
+
 }
