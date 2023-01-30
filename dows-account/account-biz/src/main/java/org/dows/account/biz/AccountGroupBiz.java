@@ -16,12 +16,15 @@ import org.dows.account.entity.*;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
+import org.dows.user.entity.UserContact;
 import org.dows.user.entity.UserInstance;
+import org.dows.user.service.UserContactService;
 import org.dows.user.service.UserInstanceService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -47,6 +50,8 @@ public class AccountGroupBiz implements AccountGroupApi {
     private final UserInstanceService userInstanceService;
 
     private final AccountInstanceService accountInstanceService;
+
+    private final UserContactService userContactService;
 
     /**
      * 根据组织ids 查询对应角色
@@ -171,7 +176,53 @@ public class AccountGroupBiz implements AccountGroupApi {
                 });
             }
         }
-        //3、查询
+        //3、根据用户信息获取用户Id
+        //3.1、根据用户电话获取对应用户Id
+        Set<String> userIds = new HashSet<>();
+        if (accountGroupDTO.getUserIds() != null && accountGroupDTO.getUserIds().size() > 0) {
+            userIds.addAll(accountGroupDTO.getUserIds());
+        }
+        if (StringUtils.isNotEmpty(accountGroupDTO.getContactNum())) {
+            List<UserContact> userContactList = userContactService.lambdaQuery()
+                    .select(UserContact::getId)
+                    .eq(UserContact::getContactNum, accountGroupDTO.getContactNum())
+                    .eq(UserContact::getDeleted, false)
+                    .list();
+            if (userContactList != null && userContactList.size() > 0) {
+                userContactList.forEach(userContact -> {
+                    userIds.add(userContact.getId().toString());
+                });
+            }
+        }
+        //3.2、根据用户身份证号获取对应用户Id
+        if (StringUtils.isNotEmpty(accountGroupDTO.getIdNo())) {
+            List<UserInstance> userInstanceList = userInstanceService.lambdaQuery()
+                    .select(UserInstance::getId)
+                    .eq(UserInstance::getIdNo, accountGroupDTO.getIdNo())
+                    .eq(UserInstance::getDeleted, false)
+                    .list();
+            if (userInstanceList != null && userInstanceList.size() > 0) {
+                userInstanceList.forEach(userContact -> {
+                    userIds.add(userContact.getId().toString());
+                });
+            }
+        }
+
+        //3.3、根据用户姓名获取对应用户id
+        if (StringUtils.isNotEmpty(accountGroupDTO.getName())) {
+            List<UserInstance> userInstanceList = userInstanceService.lambdaQuery()
+                    .select(UserInstance::getId)
+                    .eq(UserInstance::getName, accountGroupDTO.getName())
+                    .eq(UserInstance::getDeleted, false)
+                    .list();
+            if (userInstanceList != null && userInstanceList.size() > 0) {
+                userInstanceList.forEach(userContact -> {
+                    userIds.add(userContact.getId().toString());
+                });
+            }
+        }
+
+        //4、查询
         LambdaQueryWrapper<AccountGroup> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(accountGroupDTO.getAppId()), AccountGroup::getAppId, accountGroupDTO.getAppId())
                 .eq(StringUtils.isNotEmpty(accountGroupDTO.getAccountId()), AccountGroup::getAccountId, accountGroupDTO.getAccountId())
@@ -189,19 +240,19 @@ public class AccountGroupBiz implements AccountGroupApi {
                 .orderByDesc(AccountGroup::getDt);
         Page<AccountGroup> page = new Page<>(accountGroupDTO.getPageNo(), accountGroupDTO.getPageSize());
         IPage<AccountGroup> groupPage = accountGroupService.page(page, queryWrapper);
-        //4、获取成员名称
+        //5、获取成员名称
         List<AccountGroup> recordList = groupPage.getRecords();
         List<AccountGroupVo> voList = new ArrayList<>();
         recordList.forEach(record -> {
             AccountGroupVo vo = new AccountGroupVo();
             BeanUtils.copyProperties(record, vo);
-            //4.1、设置成员名称和角色
+            //5.1、设置成员名称和角色
             LambdaQueryWrapper<AccountRole> roleWrapper = new LambdaQueryWrapper<>();
             AccountRole role = accountRoleService.getOne(roleWrapper.eq(AccountRole::getPrincipalId, vo.getAccountId())
                     .eq(AccountRole::getDeleted, false)
                     .eq(AccountRole::getPrincipalType, EnumAccountRolePrincipalType.PERSONAL.getCode()));
             vo.setRoleName(role.getRoleName());
-            //4.2、设置成员性别
+            //5.2、设置成员性别
             LambdaQueryWrapper<AccountUser> userWrapper = new LambdaQueryWrapper<>();
             AccountUser user = accountUserService.getOne(userWrapper.eq(AccountUser::getAccountId, vo.getAccountId())
                     .eq(AccountUser::getDeleted, false));
@@ -209,7 +260,7 @@ public class AccountGroupBiz implements AccountGroupApi {
             UserInstance instance = userInstanceService.getOne(instanceWrapper.eq(UserInstance::getUserId, user.getUserId())
                     .eq(UserInstance::getDeleted, false));
             vo.setGender(instance.getGender());
-            //4.2、设置组织架构负责人
+            //5.3、设置组织架构负责人
             LambdaQueryWrapper<AccountGroupInfo> ownerWrapper = new LambdaQueryWrapper<>();
             AccountGroupInfo groupInfo = accountGroupInfoService.getOne(ownerWrapper.eq(AccountGroupInfo::getOrgId, vo.getOrgId())
                     .eq(AccountGroupInfo::getDeleted, false));

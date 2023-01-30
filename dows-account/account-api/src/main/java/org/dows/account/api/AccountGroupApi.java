@@ -2,7 +2,6 @@ package org.dows.account.api;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dows.account.dto.AccountGroupDTO;
-import org.dows.account.dto.AccountOrgGroupDTO;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
 import org.springframework.web.multipart.MultipartFile;

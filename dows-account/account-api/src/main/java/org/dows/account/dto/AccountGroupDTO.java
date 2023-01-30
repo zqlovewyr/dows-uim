@@ -58,6 +58,9 @@ public class AccountGroupDTO implements Serializable {
     @ApiModelProperty("用户ID")
     private String userId;
 
+    @ApiModelProperty("用户姓名")
+    private String name;
+
     @ApiModelProperty("用户性别")
     private String gender;
 
@@ -96,6 +99,12 @@ public class AccountGroupDTO implements Serializable {
 
     @ApiModelProperty(value = "结束时间")
     private Date endTime;
+
+    @ApiModelProperty(value = "用户联系方式")
+    private String contactNum;
+
+    @ApiModelProperty("用户id集合")
+    private Set<String> userIds;
 
     @ApiModelProperty(value = "页数")
     private Integer pageNo;
