@@ -252,14 +252,22 @@ public class AccountGroupBiz implements AccountGroupApi {
                     .eq(AccountRole::getDeleted, false)
                     .eq(AccountRole::getPrincipalType, EnumAccountRolePrincipalType.PERSONAL.getCode()));
             vo.setRoleName(role.getRoleName());
-            //5.2、设置成员性别
+            //5.2、设置成员相关信息
             LambdaQueryWrapper<AccountUser> userWrapper = new LambdaQueryWrapper<>();
             AccountUser user = accountUserService.getOne(userWrapper.eq(AccountUser::getAccountId, vo.getAccountId())
                     .eq(AccountUser::getDeleted, false));
             LambdaQueryWrapper<UserInstance> instanceWrapper = new LambdaQueryWrapper<>();
-            UserInstance instance = userInstanceService.getOne(instanceWrapper.eq(UserInstance::getUserId, user.getUserId())
+            UserInstance instance = userInstanceService.getOne(instanceWrapper.eq(UserInstance::getId, user.getUserId())
                     .eq(UserInstance::getDeleted, false));
+            LambdaQueryWrapper<UserContact> contactWrapper = new LambdaQueryWrapper<>();
+            UserContact contact = userContactService.getOne(contactWrapper.eq(UserContact::getUserId, user.getUserId())
+                    .eq(UserContact::getDeleted, false));
             vo.setGender(instance.getGender());
+            vo.setUserName(instance.getName());
+            vo.setIdNo(instance.getIdNo());
+            vo.setContactNum(contact.getContactNum());
+            vo.setExamineTime(accountGroupDTO.getExamineTime());
+            vo.setRecordTime(accountGroupDTO.getRecordTime());
             //5.3、设置组织架构负责人
             LambdaQueryWrapper<AccountGroupInfo> ownerWrapper = new LambdaQueryWrapper<>();
             AccountGroupInfo groupInfo = accountGroupInfoService.getOne(ownerWrapper.eq(AccountGroupInfo::getOrgId, vo.getOrgId())

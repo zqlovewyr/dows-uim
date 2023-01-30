@@ -106,6 +106,12 @@ public class AccountGroupDTO implements Serializable {
     @ApiModelProperty("用户id集合")
     private Set<String> userIds;
 
+    @ApiModelProperty("上次就诊时间")
+    private Date examineTime;
+
+    @ApiModelProperty("建档时间")
+    private Date recordTime;
+
     @ApiModelProperty(value = "页数")
     private Integer pageNo;
 

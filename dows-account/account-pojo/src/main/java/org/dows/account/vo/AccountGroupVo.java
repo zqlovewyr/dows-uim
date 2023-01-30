@@ -71,6 +71,12 @@ public class AccountGroupVo implements Serializable {
     @ApiModelProperty(value = "用户ID")
     private String userId;
 
+    @ApiModelProperty(value = "用户姓名")
+    private String userName;
+
+    @ApiModelProperty(value = "联系号码")
+    private String contactNum;
+
     @ApiModelProperty(value = "应用ID")
     private String appId;
 
@@ -91,6 +97,12 @@ public class AccountGroupVo implements Serializable {
 
     @ApiModelProperty(value = "时间戳/创建时间")
     private Date dt;
+
+    @ApiModelProperty("上次就诊时间")
+    private Date examineTime;
+
+    @ApiModelProperty("建档时间")
+    private Date recordTime;
 
     @ApiModelProperty(value = "角色权限")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
