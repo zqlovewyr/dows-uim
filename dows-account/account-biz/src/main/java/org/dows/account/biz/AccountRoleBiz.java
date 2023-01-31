@@ -38,10 +38,10 @@ public class AccountRoleBiz implements AccountRoleApi {
         LambdaQueryWrapper<AccountRole> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StringUtils.isNotEmpty(accountRoleDTO.getRoleId()), AccountRole::getRoleId, accountRoleDTO.getRoleId())
                 .like(StringUtils.isNotEmpty(accountRoleDTO.getRoleName()), AccountRole::getRoleName, accountRoleDTO.getRoleName())
-                .like(StringUtils.isNotEmpty(accountRoleDTO.getRoleCode()),AccountRole::getRoleCode,accountRoleDTO.getRoleCode())
-                .eq(accountRoleDTO.getPrincipalType() != null,AccountRole::getPrincipalType,accountRoleDTO.getPrincipalType())
-                .like(StringUtils.isNotEmpty(accountRoleDTO.getPrincipalId()),AccountRole::getPrincipalId,accountRoleDTO.getPrincipalId())
-                .like(StringUtils.isNotEmpty(accountRoleDTO.getPrincipalName()),AccountRole::getPrincipalName,accountRoleDTO.getPrincipalName())
+                .like(StringUtils.isNotEmpty(accountRoleDTO.getRoleCode()), AccountRole::getRoleCode, accountRoleDTO.getRoleCode())
+                .eq(accountRoleDTO.getPrincipalType() != null, AccountRole::getPrincipalType, accountRoleDTO.getPrincipalType())
+                .like(StringUtils.isNotEmpty(accountRoleDTO.getPrincipalId()), AccountRole::getPrincipalId, accountRoleDTO.getPrincipalId())
+                .like(StringUtils.isNotEmpty(accountRoleDTO.getPrincipalName()), AccountRole::getPrincipalName, accountRoleDTO.getPrincipalName())
                 .eq(accountRoleDTO.getDt() != null, AccountRole::getDt, accountRoleDTO.getDt())
                 .gt(accountRoleDTO.getStartTime() != null, AccountRole::getDt, accountRoleDTO.getStartTime())
                 .lt(accountRoleDTO.getEndTime() != null, AccountRole::getDt, accountRoleDTO.getEndTime())
@@ -59,7 +59,14 @@ public class AccountRoleBiz implements AccountRoleApi {
         AccountRole accountRole = accountRoleService.getById(id);
         //复制属性
         AccountRoleVo vo = new AccountRoleVo();
-        BeanUtils.copyProperties(accountRole,vo);
+        BeanUtils.copyProperties(accountRole, vo);
         return Response.ok(vo);
+    }
+
+    @Override
+    public Response<Boolean> updateAccountRoleById(AccountRoleDTO accountRoleDTO) {
+        AccountRole role = new AccountRole();
+        BeanUtils.copyProperties(accountRoleDTO, role);
+        return Response.ok(accountRoleService.updateById(role));
     }
 }

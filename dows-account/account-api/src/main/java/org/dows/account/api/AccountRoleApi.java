@@ -26,4 +26,9 @@ public interface AccountRoleApi {
      * @param id
      */
     Response<AccountRoleVo> getAccountRoleById(Long id);
+
+    /**
+     * 编辑 角色-信息
+     */
+    Response<Boolean> updateAccountRoleById(AccountRoleDTO accountRoleDTO);
 }
