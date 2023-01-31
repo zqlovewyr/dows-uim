@@ -31,20 +31,17 @@ import org.dows.rbac.api.vo.RbacRoleVO;
 import org.dows.user.api.api.UserInstanceApi;
 import org.dows.user.api.dto.UserInstanceDTO;
 import org.dows.user.api.vo.UserInstanceVo;
-import org.dows.user.entity.UserInstance;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
-
 import static org.dows.account.biz.util.AccountUtil.getKeyOfkIdentifierAppIdV;
 
 
@@ -343,6 +340,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Response<Map<String, Object>> login(AccountInstanceDTO accountInstanceDTO) {
         //1、获取账户是否存在
         LambdaQueryWrapper<AccountInstance> queryWrapper = new LambdaQueryWrapper<>();
@@ -382,6 +380,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Response<IPage<AccountInstanceVo>> customAccountInstanceList(AccountInstanceDTO accountInstanceDTO) {
         //1、获取角色对应账号Id
         Set<String> accountIds = new HashSet<>();
@@ -510,5 +509,30 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         });
         voPage.setRecords(voList);
         return Response.ok(voPage);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateAccountInstanceById(AccountInstanceDTO accountInstanceDTO) {
+        //1、修改账号-实例
+        AccountInstance account = new AccountInstance();
+        account.setPhone(accountInstanceDTO.getPhone());
+        account.setPassword(accountInstanceDTO.getPassword());
+        account.setId(accountInstanceDTO.getId());
+        boolean flag1 = accountInstanceService.updateById(account);
+        if(flag1 == false){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_UPDATE_FAIL_EXCEPTION);
+        }
+        //2、通过账号ID找到用户ID
+        AccountUser accountUser = accountUserService.lambdaQuery()
+                .eq(AccountUser::getAccountId, account.getId())
+                .eq(AccountUser::getDeleted, false)
+                .one();
+        //2、修改用户-实例
+        UserInstanceDTO user = new UserInstanceDTO();
+        user.setName(accountInstanceDTO.getUserName());
+        user.setGender(accountInstanceDTO.getGender());
+        user.setId(Long.valueOf(accountUser.getUserId()));
+        userInstanceApi.insertOrUpdateUserInstance(user).getData();
     }
 }

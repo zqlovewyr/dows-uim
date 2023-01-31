@@ -18,6 +18,7 @@ import java.util.Date;
 @Builder
 public class AccountInstanceDTO implements Serializable {
     private static final long serialVersionUID = 4496765086642042824L;
+    private Long id;
     private String appId;
     /* runsix:field 'identifier' is in class AccountIdentifier. */
     @ExcelProperty(value = "用户账号(code)")

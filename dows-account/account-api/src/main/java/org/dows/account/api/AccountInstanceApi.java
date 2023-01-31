@@ -42,12 +42,22 @@ public interface AccountInstanceApi {
     /**
      * 登录 账号-实例
      *
+     * @param accountInstanceDTO
      */
     Response<Map<String, Object>> login(AccountInstanceDTO accountInstanceDTO);
 
     /**
-     * 查看 账号-实例-列表
+     * 查询 账号-实例-列表
+     *
+     * @param accountInstanceDTO
      */
     Response<IPage<AccountInstanceVo>> customAccountInstanceList(AccountInstanceDTO accountInstanceDTO);
+
+    /**
+     * 编辑 账号-实例
+     *
+     * @param accountInstanceDTO
+     */
+    void updateAccountInstanceById(AccountInstanceDTO accountInstanceDTO);
 
 }

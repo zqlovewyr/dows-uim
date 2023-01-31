@@ -25,7 +25,8 @@ public enum EnumAccountStatusCode implements StatusCode {
     JWT_CLAIMS_NOT_NULL_EXCEPTION(400013, "jwt不能为空"),
     ACCOUNT_CREATE_FAIL_EXCEPTION(400014, "创建账号失败"),
     ACCOUNT_USER_UNION_FAIL_EXCEPTION(400015, "创建账号用户关联关系失败"),
-    ACCOUNT_GROUP_MEMBER_FAIL_EXCEPTION(400016, "创建组成员失败");
+    ACCOUNT_GROUP_MEMBER_FAIL_EXCEPTION(400016, "创建组成员失败"),
+    ACCOUNT_UPDATE_FAIL_EXCEPTION(400017, "更新账号失败");
     final Integer code;
     final String descr;
 }

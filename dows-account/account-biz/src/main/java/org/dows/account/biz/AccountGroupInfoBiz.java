@@ -209,6 +209,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      * @param id
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Response<AccountGroupInfoVo> getAccountGroupInfoById(Long id) {
         AccountGroupInfo groupInfo = accountGroupInfoService.getById(id);
         //复制属性

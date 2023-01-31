@@ -344,6 +344,7 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Response<Object> batchDeleteGroupMembers(List<AccountGroupDTO> accountGroupDTOs) {
         if (CollectionUtils.isEmpty(accountGroupDTOs)) {
             return Response.ok(false);

@@ -55,6 +55,7 @@ public class AccountRoleBiz implements AccountRoleApi {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Response<AccountRoleVo> getAccountRoleById(Long id) {
         AccountRole accountRole = accountRoleService.getById(id);
         //复制属性
@@ -64,6 +65,7 @@ public class AccountRoleBiz implements AccountRoleApi {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Response<Boolean> updateAccountRoleById(AccountRoleDTO accountRoleDTO) {
         AccountRole role = new AccountRole();
         BeanUtils.copyProperties(accountRoleDTO, role);
