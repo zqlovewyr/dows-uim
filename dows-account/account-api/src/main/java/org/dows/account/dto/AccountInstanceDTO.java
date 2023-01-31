@@ -36,6 +36,18 @@ public class AccountInstanceDTO implements Serializable {
     private String phone;
     private Integer status;
 
+    @ApiModelProperty("组别Id")
+    private String groupInfoId;
+
+    @ApiModelProperty("机构名称")
+    private String orgName;
+
+    @ApiModelProperty("用户姓名")
+    private String userName;
+
+    @ApiModelProperty("用户性别")
+    private String gender;
+
     @ApiModelProperty("创建时间")
     private Date dt;
 

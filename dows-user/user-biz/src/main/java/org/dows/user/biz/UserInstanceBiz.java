@@ -15,8 +15,12 @@ import org.dows.user.enums.EnumUserStatusCode;
 import org.dows.user.exception.UserException;
 import org.dows.user.service.UserInstanceService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author：jiangxia
@@ -83,5 +87,22 @@ public class UserInstanceBiz implements UserInstanceApi {
         UserInstanceVo vo = new UserInstanceVo();
         BeanUtils.copyProperties(userInstance,vo);
         return Response.ok(vo);
+    }
+
+    @Override
+    public Response<List<UserInstanceVo>> getUserInstanceList(UserInstanceDTO userInstanceDTO) {
+        List<UserInstance> userInstanceList = userInstanceService.lambdaQuery()
+                .like(StringUtils.isNotEmpty(userInstanceDTO.getName()),UserInstance::getName, userInstanceDTO.getName())
+                .eq(StringUtils.isNotEmpty(userInstanceDTO.getGender()),UserInstance::getGender, userInstanceDTO.getGender())
+                .eq(UserInstance::getDeleted, false)
+                .list();
+        //复制属性
+        List<UserInstanceVo> voList = new ArrayList<>();
+        userInstanceList.forEach(user->{
+            UserInstanceVo vo = new UserInstanceVo();
+            BeanUtils.copyProperties(user,vo);
+            voList.add(vo);
+        });
+        return Response.ok(voList);
     }
 }
