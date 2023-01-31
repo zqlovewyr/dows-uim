@@ -37,6 +37,9 @@ public class AccountOrgGroupDTO {
     @ApiModelProperty("组织架构code")
     private String orgCode;
 
+    @ApiModelProperty("组织架构允许最大成员数")
+    private Integer maxNumber;
+
     @ApiModelProperty("组织架构头像")
     private String profile;
 
@@ -44,7 +47,7 @@ public class AccountOrgGroupDTO {
     private String orgDescr;
 
     @ApiModelProperty("组织架构类型")
-    private Integer orgTyp;
+    private Integer orgType;
 
     @ApiModelProperty("组织架构排序")
     private Integer orgSorted;
@@ -60,6 +63,13 @@ public class AccountOrgGroupDTO {
 
     @ApiModelProperty("租户ID")
     private String tenantId;
+
+    @ApiModelProperty("有效时间")
+    private Date indate;
+
+    @ApiModelProperty("失效时间")
+    private Date expdate;
+
 
     /**
      * 组-实例
@@ -95,7 +105,19 @@ public class AccountOrgGroupDTO {
     @ApiModelProperty("团队描述")
     private String groupDescr;
 
+    @ApiModelProperty("负责人职位")
+    private String ownerPosition;
+
     @ApiModelProperty("")
     private Date groupDt;
+
+    @ApiModelProperty("邮编")
+    private String postal;
+
+    @ApiModelProperty("邮箱")
+    private String email;
+
+    @ApiModelProperty("机构网址")
+    private String website;
 
 }
