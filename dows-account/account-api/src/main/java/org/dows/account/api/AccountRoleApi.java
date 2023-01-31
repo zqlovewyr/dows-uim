@@ -19,4 +19,11 @@ public interface AccountRoleApi {
      * @param accountRoleDTO
      */
     Response<IPage<AccountRoleVo>> customAccountRoleList(AccountRoleDTO accountRoleDTO);
+
+    /**
+     * 查看 角色-信息
+     *
+     * @param id
+     */
+    Response<AccountRoleVo> getAccountRoleById(Long id);
 }

@@ -53,4 +53,13 @@ public class AccountRoleBiz implements AccountRoleApi {
         BeanUtils.copyProperties(rolePage, pageVo);
         return Response.ok(pageVo);
     }
+
+    @Override
+    public Response<AccountRoleVo> getAccountRoleById(Long id) {
+        AccountRole accountRole = accountRoleService.getById(id);
+        //复制属性
+        AccountRoleVo vo = new AccountRoleVo();
+        BeanUtils.copyProperties(accountRole,vo);
+        return Response.ok(vo);
+    }
 }
