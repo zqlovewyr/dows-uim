@@ -30,6 +30,15 @@ public class AccountGroupInfoDTO {
     @ApiModelProperty("组别状态")
     private Integer status;
 
+    @ApiModelProperty("邮编")
+    private String postal;
+
+    @ApiModelProperty("邮箱")
+    private String email;
+
+    @ApiModelProperty("机构网址")
+    private String website;
+
     @ApiModelProperty("负责人账户ID")
     private String accountId;
 
@@ -38,6 +47,9 @@ public class AccountGroupInfoDTO {
 
     @ApiModelProperty("负责人名称")
     private String owner;
+
+    @ApiModelProperty("负责人职位")
+    private String ownerPosition;
 
     @ApiModelProperty("负责人电话")
     private String ownerPhone;

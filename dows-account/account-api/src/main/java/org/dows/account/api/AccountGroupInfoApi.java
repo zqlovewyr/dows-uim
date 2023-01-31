@@ -28,28 +28,35 @@ public interface AccountGroupInfoApi {
      *
      * @param accountOrgGroupDTO
      */
-    Response<Boolean> insertAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
+    Response<Boolean> insertAccountGroupInfo(AccountOrgGroupDTO accountOrgGroupDTO);
 
     /**
      * 批量插入 账号-组-实例
      *
      * @param accountOrgGroupDTOs
      */
-    Response<Boolean> batchInsertAccountGroup(List<AccountOrgGroupDTO> accountOrgGroupDTOs);
+    Response<Boolean> batchInsertAccountGroupInfo(List<AccountOrgGroupDTO> accountOrgGroupDTOs);
 
     /**
      * 编辑 账号-组-实例
      *
      * @param accountOrgGroupDTO
      */
-    Response<Boolean> updateAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO);
+    Response<Boolean> updateAccountGroupInfo(AccountOrgGroupDTO accountOrgGroupDTO);
+
+    /**
+     * 查看 账号-组-实例
+     *
+     * @param id
+     */
+    Response<AccountGroupInfoVo> getAccountGroupInfoById(Long id);
 
     /**
      * 删除单个 账号-组-实例
      *
      * @param orgId
      */
-    Response<Boolean> deleteAccountGroup(String orgId);
+    Response<Boolean> deleteAccountGroupInfoById(String orgId);
 
 
     /**
@@ -57,6 +64,6 @@ public interface AccountGroupInfoApi {
      *
      * @param ids
      */
-    Response<Boolean> batchDeleteGroups(List<String> ids);
+    Response<Boolean> batchDeleteGroupInfos(List<String> ids);
 
 }

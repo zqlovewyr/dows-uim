@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,6 +56,12 @@ public class AccountOrgDTO {
 
     @ApiModelProperty("状态")
     private String status;
+
+    @ApiModelProperty("有效时间")
+    private Date indate;
+
+    @ApiModelProperty("失效时间")
+    private Date expdate;
 
     @ApiModelProperty("组织成员集合")
     private List<AccountOrgGroupDTO> accountOrgGroups;

@@ -98,7 +98,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> insertAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO) {
+    public Response<Boolean> insertAccountGroupInfo(AccountOrgGroupDTO accountOrgGroupDTO) {
         boolean flag = true;
         //1、插入组织架构表
         AccountOrg accountOrg = new AccountOrg();
@@ -132,7 +132,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> batchInsertAccountGroup(List<AccountOrgGroupDTO> accountOrgGroupDTOs) {
+    public Response<Boolean> batchInsertAccountGroupInfo(List<AccountOrgGroupDTO> accountOrgGroupDTOs) {
         AtomicBoolean flag = new AtomicBoolean(true);
         //1、插入组织架构表
         AccountOrg accountOrg = new AccountOrg();
@@ -172,7 +172,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> updateAccountGroup(AccountOrgGroupDTO accountOrgGroupDTO) {
+    public Response<Boolean> updateAccountGroupInfo(AccountOrgGroupDTO accountOrgGroupDTO) {
         boolean flag = true;
         //1、插入组织架构表
         AccountOrg accountOrg = new AccountOrg();
@@ -204,13 +204,33 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
     }
 
     /**
+     * 查看 账号-组-实例
+     *
+     * @param id
+     */
+    @Override
+    public Response<AccountGroupInfoVo> getAccountGroupInfoById(Long id) {
+        AccountGroupInfo groupInfo = accountGroupInfoService.getById(id);
+        //复制属性
+        AccountGroupInfoVo vo = new AccountGroupInfoVo();
+        BeanUtils.copyProperties(groupInfo,vo);
+        //获取允许最大成员数、头像、描述、有效时间、组织类型、状态等
+        AccountOrg accountOrg = accountOrgService.lambdaQuery()
+                .eq(AccountOrg::getOrgId, vo.getOrgId())
+                .eq(AccountOrg::getDeleted, false)
+                .one();
+        BeanUtils.copyProperties(accountOrg,vo);
+        return Response.ok(vo);
+    }
+
+    /**
      * 删除 账号-组-实例
      *
      * @param orgId
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> deleteAccountGroup(String orgId) {
+    public Response<Boolean> deleteAccountGroupInfoById(String orgId) {
         boolean flag = true;
         //1、删除组织架构
         LambdaUpdateWrapper<AccountOrg> orgWrapper = Wrappers.lambdaUpdate(AccountOrg.class);
@@ -239,7 +259,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> batchDeleteGroups(List<String> ids) {
+    public Response<Boolean> batchDeleteGroupInfos(List<String> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return Response.ok(false);
         }

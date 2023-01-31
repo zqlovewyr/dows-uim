@@ -32,8 +32,20 @@ public class AccountGroupInfoVo {
     @ApiModelProperty("组织架构Code")
     private String orgCode;
 
-    @ApiModelProperty("组织架构人数")
+    @ApiModelProperty("组织架构当前人数")
     private Integer num;
+
+    @ApiModelProperty("组织架构允许最大人数")
+    private Integer maxNumber;
+
+    @ApiModelProperty("邮编")
+    private String postal;
+
+    @ApiModelProperty("邮箱")
+    private String email;
+
+    @ApiModelProperty("机构网址")
+    private String website;
 
     @ApiModelProperty("组别ID")
     private String groupInfoId;
@@ -53,6 +65,9 @@ public class AccountGroupInfoVo {
     @ApiModelProperty("负责人名称")
     private String owner;
 
+    @ApiModelProperty("负责人职位")
+    private String ownerPosition;
+
     @ApiModelProperty("负责人电话")
     private String ownerPhone;
 
@@ -64,6 +79,18 @@ public class AccountGroupInfoVo {
 
     @ApiModelProperty("团队描述")
     private String descr;
+
+    @ApiModelProperty("头像")
+    private String profile;
+
+    @ApiModelProperty("有效时间")
+    private Date indate;
+
+    @ApiModelProperty("失效时间")
+    private Date expdate;
+
+    @ApiModelProperty("组织类型")
+    private Integer orgType;
 
     @ApiModelProperty("是否逻辑删除")
     private Boolean deleted;

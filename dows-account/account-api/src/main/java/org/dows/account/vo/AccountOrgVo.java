@@ -39,7 +39,7 @@ public class AccountOrgVo {
     @ApiModelProperty(value = "组织架构名")
     private String orgName;
 
-    @ApiModelProperty("允许成员数")
+    @ApiModelProperty("允许最大成员数")
     private Integer maxNumber;
 
     @ApiModelProperty("名称首字母")
@@ -71,6 +71,12 @@ public class AccountOrgVo {
 
     @ApiModelProperty("状态")
     private String status;
+
+    @ApiModelProperty("有效时间")
+    private Date indate;
+
+    @ApiModelProperty("失效时间")
+    private Date expdate;
 
     @ApiModelProperty(value = "是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;

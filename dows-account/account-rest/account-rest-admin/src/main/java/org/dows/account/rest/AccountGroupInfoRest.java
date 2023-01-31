@@ -42,35 +42,35 @@ public class AccountGroupInfoRest implements MybatisCrudRest<AccountGroupInfoFor
     @ApiOperation("保存 账号-组-实例")
     @PostMapping("/insertAccountGroup")
     public Response insertAccountGroup(@RequestBody AccountOrgGroupDTO accountOrgGroupDTO) {
-        Response<Boolean> flag = accountGroupInfoApi.insertAccountGroup(accountOrgGroupDTO);
+        Response<Boolean> flag = accountGroupInfoApi.insertAccountGroupInfo(accountOrgGroupDTO);
         return Response.ok(flag);
     }
 
     @ApiOperation("批量保存 账号-组-实例")
-    @PostMapping("/batchInsertAccountGroup")
+    @PostMapping("/batchInsertAccountGroupInfo")
     public Response batchInsertAccountGroup(@RequestBody List<AccountOrgGroupDTO> accountOrgGroupDTOs) {
-        Response<Boolean> flag = accountGroupInfoApi.batchInsertAccountGroup(accountOrgGroupDTOs);
+        Response<Boolean> flag = accountGroupInfoApi.batchInsertAccountGroupInfo(accountOrgGroupDTOs);
         return Response.ok(flag);
     }
 
     @ApiOperation("更新 账号-组-实例")
-    @PutMapping("/updateAccountGroup")
+    @PutMapping("/updateAccountGroupInfo")
     public Response updateAccountGroup(@RequestBody AccountOrgGroupDTO accountOrgGroupDTO) {
-        Response<Boolean> flag = accountGroupInfoApi.updateAccountGroup(accountOrgGroupDTO);
+        Response<Boolean> flag = accountGroupInfoApi.updateAccountGroupInfo(accountOrgGroupDTO);
         return Response.ok(flag);
     }
 
     @ApiOperation("删除单个 账号-组-实例")
-    @DeleteMapping("/deleteAccountGroup")
+    @DeleteMapping("/deleteAccountGroupInfoById")
     public Response deleteAccountGroup(@RequestParam("orgId") String orgId) {
-        Response<Boolean> flag = accountGroupInfoApi.deleteAccountGroup(orgId);
+        Response<Boolean> flag = accountGroupInfoApi.deleteAccountGroupInfoById(orgId);
         return Response.ok(flag);
     }
 
     @ApiOperation("批量删除 账号-组-实例")
-    @DeleteMapping("/batchDeleteGroups")
+    @DeleteMapping("/batchDeleteGroupInfos")
     public Response batchDeleteGroups(@RequestParam("ids") List<String> ids) {
-        Response<Boolean> flag = accountGroupInfoApi.batchDeleteGroups(ids);
+        Response<Boolean> flag = accountGroupInfoApi.batchDeleteGroupInfos(ids);
         return Response.ok(flag);
     }
 }
