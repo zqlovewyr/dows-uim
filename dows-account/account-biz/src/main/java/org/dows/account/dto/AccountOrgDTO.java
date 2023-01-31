@@ -47,6 +47,15 @@ public class AccountOrgDTO {
     @ApiModelProperty(value = "角色Id rbac-role", example = "传值表示组织成员全部拥有对应角色权限")
     private Long rbacRoleId;
 
+    @ApiModelProperty("组织类型")
+    private String orgType;
+
+    @ApiModelProperty("排序")
+    private String sorted;
+
+    @ApiModelProperty("状态")
+    private String status;
+
     @ApiModelProperty("组织成员集合")
     private List<AccountOrgGroupDTO> accountOrgGroups;
 

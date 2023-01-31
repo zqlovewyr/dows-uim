@@ -46,6 +46,9 @@ public class AccountOrg implements CrudEntity {
     @ApiModelProperty("组织名称")
     private String orgName;
 
+    @ApiModelProperty("允许成员数")
+    private Integer maxNumber;
+
     @ApiModelProperty("名称首字母")
     private String nameLetters;
 
@@ -65,7 +68,7 @@ public class AccountOrg implements CrudEntity {
     private String descr;
 
     @ApiModelProperty("组织类型")
-    private String orgTyp;
+    private String orgType;
 
     @ApiModelProperty("排序")
     private String sorted;
