@@ -54,9 +54,9 @@ public interface AccountGroupInfoApi {
     /**
      * 删除单个 账号-组-实例
      *
-     * @param orgId
+     * @param id
      */
-    Response<Boolean> deleteAccountGroupInfoById(String orgId);
+    Response<Boolean> deleteAccountGroupInfoById(String id);
 
 
     /**

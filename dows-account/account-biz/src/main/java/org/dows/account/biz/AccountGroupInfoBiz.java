@@ -226,16 +226,21 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
     /**
      * 删除 账号-组-实例
      *
-     * @param orgId
+     * @param id
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> deleteAccountGroupInfoById(String orgId) {
+    public Response<Boolean> deleteAccountGroupInfoById(String id) {
+        //1、获取对应数据
+        AccountGroupInfo groupInfo = accountGroupInfoService.getById(id);
+        if(groupInfo == null){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_IS_NOT_EXIST);
+        }
         boolean flag = true;
         //1、删除组织架构
         LambdaUpdateWrapper<AccountOrg> orgWrapper = Wrappers.lambdaUpdate(AccountOrg.class);
         orgWrapper.set(AccountOrg::getDeleted, true)
-                .eq(AccountOrg::getId, orgId);
+                .eq(AccountOrg::getId, groupInfo.getOrgId());
         boolean orgFlag = accountOrgService.update(orgWrapper);
         if(orgFlag == false){
             flag = false;
@@ -243,7 +248,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         //2、删除组-实例
         LambdaUpdateWrapper<AccountGroupInfo> groupWrapper = Wrappers.lambdaUpdate(AccountGroupInfo.class);
         groupWrapper.set(AccountGroupInfo::getDeleted, true)
-                .eq(AccountGroupInfo::getOrgId, orgId);
+                .eq(AccountGroupInfo::getId, id);
         boolean groupFlag = accountGroupInfoService.update(groupWrapper);
         if(groupFlag == false){
             flag = false;

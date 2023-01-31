@@ -53,6 +53,14 @@ public class AccountGroupInfoRest implements MybatisCrudRest<AccountGroupInfoFor
         return Response.ok(flag);
     }
 
+
+    @ApiOperation("查看 账号-组-实例")
+    @GetMapping("/getAccountGroupInfoById/{id}")
+    public Response<AccountGroupInfoVo> getAccountGroupInfoById(@PathVariable("id") Long id) {
+        Response<AccountGroupInfoVo> vo = accountGroupInfoApi.getAccountGroupInfoById(id);
+        return vo;
+    }
+
     @ApiOperation("更新 账号-组-实例")
     @PutMapping("/updateAccountGroupInfo")
     public Response updateAccountGroup(@RequestBody AccountOrgGroupDTO accountOrgGroupDTO) {
@@ -61,9 +69,9 @@ public class AccountGroupInfoRest implements MybatisCrudRest<AccountGroupInfoFor
     }
 
     @ApiOperation("删除单个 账号-组-实例")
-    @DeleteMapping("/deleteAccountGroupInfoById")
-    public Response deleteAccountGroup(@RequestParam("orgId") String orgId) {
-        Response<Boolean> flag = accountGroupInfoApi.deleteAccountGroupInfoById(orgId);
+    @DeleteMapping("/deleteAccountGroupInfoById/{id}")
+    public Response deleteAccountGroup(@PathVariable("id") Long id) {
+        Response<Boolean> flag = accountGroupInfoApi.deleteAccountGroupInfoById(id.toString());
         return Response.ok(flag);
     }
 
