@@ -23,7 +23,7 @@ import org.dows.account.service.AccountRoleService;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
-import org.dows.rbac.api.RbacRoleApi;
+/*import org.dows.rbac.api.RbacRoleApi;*/
 import org.dows.rbac.api.enums.EnumRbacRoleCode;
 import org.dows.rbac.api.enums.EnumRbacStatusCode;
 import org.dows.rbac.api.exception.RbacException;
@@ -43,7 +43,7 @@ public class AccountOrgBiz {
 
     private final AccountOrgService accountOrgService;
 
-    private final RbacRoleApi rbacRoleApi;
+/*    private final RbacRoleApi rbacRoleApi;*/
 
     // todo 导入文件
     public void importOrg(String file) {
@@ -146,7 +146,8 @@ public class AccountOrgBiz {
         Long rbacRoleId = accountOrgDTO.getRbacRoleId();
         if (!Objects.isNull(rbacRoleId) && rbacRoleId == 0) {
 
-            Response<RbacRoleVO> rbacRoleResponse = rbacRoleApi.getById(String.valueOf(rbacRoleId));
+    /*        Response<RbacRoleVO> rbacRoleResponse = rbacRoleApi.getById(String.valueOf(rbacRoleId));*/
+            Response<RbacRoleVO> rbacRoleResponse = new Response<>();
             RbacRoleVO rbacRoleVO = rbacRoleResponse.getData();
             AccountRole accountRole = AccountRole.builder()
                     .roleId(rbacRoleVO.getId().toString())
@@ -196,7 +197,8 @@ public class AccountOrgBiz {
         }
         // check Current Application Permissions
         List<String> accountRoleRoleIds = accountRoles.stream().map(AccountRole::getRoleId).collect(Collectors.toList());
-        Response<List<RbacRoleVO>> rbacRoleVOResponse = rbacRoleApi.getByIdListAndAppId(accountRoleRoleIds, appId);
+/*        Response<List<RbacRoleVO>> rbacRoleVOResponse = rbacRoleApi.getByIdListAndAppId(accountRoleRoleIds, appId);*/
+        Response<List<RbacRoleVO>> rbacRoleVOResponse = new Response<>();
         List<RbacRoleVO> rbacRoles = rbacRoleVOResponse.getData();
         if (CollectionUtils.isEmpty(rbacRoles)) {
             throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);

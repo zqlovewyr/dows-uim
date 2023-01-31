@@ -24,7 +24,6 @@ import org.dows.account.entity.*;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
-import org.dows.rbac.api.RbacRoleApi;
 import org.dows.rbac.api.enums.EnumRbacStatusCode;
 import org.dows.rbac.api.exception.RbacException;
 import org.dows.rbac.api.vo.RbacRoleVO;
@@ -55,7 +54,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     private final AccountInstanceService accountInstanceService;
     private final AccountUserService accountUserService;
     private final AccountIdentifierService accountIdentifierService;
-    private final RbacRoleApi rbacRoleApi;
+/*    private final RbacRoleApi rbacRoleApi;*/
     private final AccountRoleService accountRoleService;
     private final AccountOrgService accountOrgService;
     private final AccountGroupService accountGroupService;
@@ -88,7 +87,8 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         /* runsix:2.check whether rbacRoleId exist */
         RbacRoleVO rbacRoleVO = null;
         if (Objects.nonNull(accountInstanceDTO.getRbacRoleId())) {
-            Response<RbacRoleVO> rbacRoleVOResponse = rbacRoleApi.getById(String.valueOf(accountInstanceDTO.getRbacRoleId()));
+/*            Response<RbacRoleVO> rbacRoleVOResponse = rbacRoleApi.getById(String.valueOf(accountInstanceDTO.getRbacRoleId()));*/
+            Response<RbacRoleVO> rbacRoleVOResponse = new Response<RbacRoleVO>();
             rbacRoleVO = rbacRoleVOResponse.getData();
             if (Objects.isNull(rbacRoleVO)) {
                 throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
@@ -249,7 +249,8 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 .collect(Collectors.toList());
         Map<Long, RbacRoleVO> kRbacRoleIdVRbacRoleVOMap = new ConcurrentHashMap<>();
         if (!rbacRoleIdList.isEmpty()) {
-            Response<List<RbacRoleVO>> rbacRoleVOListResponse = rbacRoleApi.getByIdList(rbacRoleIdList);
+ /*           Response<List<RbacRoleVO>> rbacRoleVOListResponse = rbacRoleApi.getByIdList(rbacRoleIdList);*/
+            Response<List<RbacRoleVO>> rbacRoleVOListResponse = new Response<List<RbacRoleVO>>();
             List<RbacRoleVO> rbacRoleVOList = rbacRoleVOListResponse.getData();
             kRbacRoleIdVRbacRoleVOMap = rbacRoleVOList
                     .parallelStream()
