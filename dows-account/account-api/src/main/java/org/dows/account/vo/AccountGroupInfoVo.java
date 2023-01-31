@@ -32,8 +32,8 @@ public class AccountGroupInfoVo {
     @ApiModelProperty("组织架构Code")
     private String orgCode;
 
-    @ApiModelProperty("组织架构人数")
-    private Integer num;
+    @ApiModelProperty("允许成员数")
+    private Integer number;
 
     @ApiModelProperty("组别ID")
     private String groupInfoId;
