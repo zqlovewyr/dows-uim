@@ -4,7 +4,9 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.listener.ReadListener;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +28,8 @@ import org.dows.rbac.api.RbacRoleApi;
 import org.dows.rbac.api.enums.EnumRbacStatusCode;
 import org.dows.rbac.api.exception.RbacException;
 import org.dows.rbac.api.vo.RbacRoleVO;
+import org.dows.user.api.api.UserInstanceApi;
+import org.dows.user.api.vo.UserInstanceVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -48,11 +52,14 @@ import static org.dows.account.biz.util.AccountUtil.getKeyOfkIdentifierAppIdV;
 @Slf4j
 public class AccountInstanceBiz implements AccountInstanceApi {
     private final AccountInstanceService accountInstanceService;
+    private final AccountUserService accountUserService;
     private final AccountIdentifierService accountIdentifierService;
     private final RbacRoleApi rbacRoleApi;
     private final AccountRoleService accountRoleService;
     private final AccountOrgService accountOrgService;
     private final AccountGroupService accountGroupService;
+    private final UserInstanceApi userInstanceApi;
+    private final AccountGroupInfoService accountGroupInfoService;
 
     /**
      * runsix method process
@@ -368,5 +375,78 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         map.put("accountId", accountInstance.getAccountId());
         map.put("name", accountInstance.getAccountName());
         return Response.ok(map);
+    }
+
+    @Override
+    public Response<IPage<AccountInstanceVo>> customAccountInstanceList(AccountInstanceDTO accountInstanceDTO) {
+        //1、获取角色对应账号Id
+        Set<String> accountIds = new HashSet<>();
+        if (accountInstanceDTO.getRoleId() != null) {
+            List<AccountRole> accountRoleList = accountRoleService.lambdaQuery()
+                    .select(AccountRole::getPrincipalId)
+                    .eq(AccountRole::getRoleId, accountInstanceDTO.getRoleId())
+                    .eq(AccountRole::getPrincipalType, EnumAccountRolePrincipalType.PERSONAL.getCode())
+                    .eq(AccountRole::getDeleted, false)
+                    .list();
+            if (accountRoleList != null && accountRoleList.size() > 0) {
+                accountRoleList.forEach(accountRole -> {
+                    accountIds.add(accountRole.getPrincipalId());
+                });
+            }
+        }
+        //2、查询列表
+        LambdaQueryWrapper<AccountInstance> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StringUtils.isNotEmpty(accountInstanceDTO.getAccountId()), AccountInstance::getAccountId, accountInstanceDTO.getAccountId())
+                .like(StringUtils.isNotEmpty(accountInstanceDTO.getAccountName()), AccountInstance::getAccountName, accountInstanceDTO.getAccountName())
+                .eq(StringUtils.isNotEmpty(accountInstanceDTO.getSource()),AccountInstance::getSource,accountInstanceDTO.getSource())
+                .like(StringUtils.isNotEmpty(accountInstanceDTO.getPhone()), AccountInstance::getPhone, accountInstanceDTO.getPhone())
+                .eq(StringUtils.isNotEmpty(accountInstanceDTO.getAppId()),AccountInstance::getAppId,accountInstanceDTO.getAppId())
+                .eq(accountInstanceDTO.getStatus() != null,AccountInstance::getStatus,accountInstanceDTO.getStatus())
+                .eq(accountInstanceDTO.getDt() != null, AccountInstance::getDt, accountInstanceDTO.getDt())
+                .gt(accountInstanceDTO.getStartTime() != null, AccountInstance::getDt, accountInstanceDTO.getStartTime())
+                .lt(accountInstanceDTO.getEndTime() != null, AccountInstance::getDt, accountInstanceDTO.getEndTime())
+                .eq(AccountInstance::getDeleted, false)
+                .orderByDesc(AccountInstance::getDt);
+        Page<AccountInstance> page = new Page<>(accountInstanceDTO.getPageNo(), accountInstanceDTO.getPageSize());
+        IPage<AccountInstance> instancePage = accountInstanceService.page(page, queryWrapper);
+        //3、复制
+        IPage<AccountInstanceVo> voPage = new Page<>();
+        BeanUtils.copyProperties(instancePage, voPage);
+        //4、设置属性
+        List<AccountInstanceVo> voList = voPage.getRecords();
+        voList.forEach(vo->{
+            //4.1、设置姓名、性别
+            //4.1、1 根据accountId获取userId
+            AccountUser user = accountUserService.lambdaQuery()
+                    .eq(AccountUser::getAccountId, vo.getId())
+                    .eq(AccountUser::getDeleted, false)
+                    .one();
+            UserInstanceVo instance = userInstanceApi.getUserInstanceById(Long.valueOf(user.getUserId())).getData();
+            vo.setName(instance.getName());
+            vo.setGender(instance.getGender());
+            //4.1.2、设置机构信息
+            AccountGroup group = accountGroupService.lambdaQuery()
+                    .eq(AccountGroup::getAccountId, vo.getId())
+                    .eq(AccountGroup::getDeleted, false)
+                    .one();
+            if(group != null){
+                AccountGroupInfo groupInfo = accountGroupInfoService.lambdaQuery()
+                        .eq(AccountGroupInfo::getAccountId, group.getOrgId())
+                        .eq(AccountGroupInfo::getDeleted, false)
+                        .one();
+                vo.setOrgName(group.getOrgName());
+                vo.setGroupInfoId(groupInfo.getGroupInfoId());
+            }
+            //4.1.3 设置角色信息
+            AccountRole accountRole = accountRoleService.lambdaQuery()
+                    .eq(AccountRole::getPrincipalId, vo.getId())
+                    .eq(AccountRole::getDeleted, false)
+                    .one();
+            if(accountRole != null) {
+               vo.setRoleName(accountRole.getRoleName());
+            }
+        });
+        voPage.setRecords(voList);
+        return Response.ok(voPage);
     }
 }

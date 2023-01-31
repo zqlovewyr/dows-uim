@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dows.account.api.AccountInstanceApi;
 import org.dows.account.biz.AccountInstanceBiz;
 import org.dows.account.dto.AccountInstanceDTO;
 import org.dows.account.entity.AccountInstance;
@@ -29,9 +30,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("accountInstance")
 public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm, AccountInstance, AccountInstanceService> {
-    private final AccountInstanceBiz accountInstanceBiz;
+    private final AccountInstanceApi accountInstanceApi;
 
-    @ApiOperation("实例注册")
+/*    @ApiOperation("实例注册")
     @PostMapping("/register")
     public Response<AccountInstanceVo> register(@RequestBody AccountInstanceDTO accountInstanceDTO) {
         return Response.ok(accountInstanceBiz.createAccountInstance(accountInstanceDTO).getData());
@@ -47,6 +48,12 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
                               @RequestParam(required = false) String source,
                               @RequestParam(required = false) String phone) {
         accountInstanceBiz.batchRegister(file, appId, rbacRoleId, accountOrgOrgId, password, avatar, source, phone);
+    }*/
+
+    @ApiOperation("查看 账号-实例-列表")
+    @PostMapping("/customAccountInstanceList")
+    public void customAccountInstanceList(@RequestBody AccountInstanceDTO accountInstanceDTO) {
+        accountInstanceApi.customAccountInstanceList(accountInstanceDTO);
     }
 }
 

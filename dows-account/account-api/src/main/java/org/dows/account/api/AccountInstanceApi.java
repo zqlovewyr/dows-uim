@@ -1,6 +1,9 @@
 package org.dows.account.api;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.dto.AccountInstanceDTO;
+import org.dows.account.vo.AccountGroupVo;
 import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
 import org.springframework.http.ResponseEntity;
@@ -41,4 +44,10 @@ public interface AccountInstanceApi {
      *
      */
     Response<Map<String, Object>> login(AccountInstanceDTO accountInstanceDTO);
+
+    /**
+     * 查看 账号-实例-列表
+     */
+    Response<IPage<AccountInstanceVo>> customAccountInstanceList(AccountInstanceDTO accountInstanceDTO);
+
 }

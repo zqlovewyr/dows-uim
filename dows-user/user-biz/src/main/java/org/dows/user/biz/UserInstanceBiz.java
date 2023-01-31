@@ -75,4 +75,13 @@ public class UserInstanceBiz implements UserInstanceApi {
         }
         return Response.ok(userInstance.getId());
     }
+
+    @Override
+    public Response<UserInstanceVo> getUserInstanceById(Long id) {
+        UserInstance userInstance = userInstanceService.getById(id);
+        //复制属性
+        UserInstanceVo vo = new UserInstanceVo();
+        BeanUtils.copyProperties(userInstance,vo);
+        return Response.ok(vo);
+    }
 }

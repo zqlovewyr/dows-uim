@@ -27,4 +27,11 @@ public interface UserInstanceApi {
      */
     Response<Long> insertOrUpdateUserInstance(UserInstanceDTO userInstanceDTO);
 
+    /**
+     * 查看 用户-实例
+     *
+     * @param id
+     */
+    Response<UserInstanceVo> getUserInstanceById(Long id);
+
 }

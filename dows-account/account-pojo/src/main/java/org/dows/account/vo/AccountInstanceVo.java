@@ -39,6 +39,21 @@ public class AccountInstanceVo implements Serializable {
     @ApiModelProperty(value = "账号密码")
     private String accountPwd;
 
+    @ApiModelProperty("姓名")
+    private String name;
+
+    @ApiModelProperty("性别")
+    private String gender;
+
+    @ApiModelProperty("所属机构名称")
+    private String orgName;
+
+    @ApiModelProperty("组别ID")
+    private String groupInfoId;
+
+    @ApiModelProperty("角色名称")
+    private String roleName;
+
     @ApiModelProperty(value = "头像")
     private String avatar;
 
