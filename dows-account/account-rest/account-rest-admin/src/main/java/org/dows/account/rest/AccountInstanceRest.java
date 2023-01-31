@@ -55,5 +55,11 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
     public void customAccountInstanceList(@RequestBody AccountInstanceDTO accountInstanceDTO) {
         accountInstanceApi.customAccountInstanceList(accountInstanceDTO);
     }
+
+    @ApiOperation("登录")
+    @PostMapping("/login")
+    public void login(@RequestBody AccountInstanceDTO accountInstanceDTO) {
+        accountInstanceApi.login(accountInstanceDTO);
+    }
 }
 
