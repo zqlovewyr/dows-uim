@@ -1,38 +1,25 @@
-package org.dows.account.entity;
+package org.dows.account.vo;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
-import org.dows.framework.crud.mybatis.CrudEntity;
 
 import java.util.Date;
 
 /**
- * 账号-角色(AccountRole)实体类
- *
- * @author lait.zhang
- * @since 2022-11-24 14:23:54
+ * @author Administrator
+ * @date 2023/1/31 9:26
  */
-@SuppressWarnings("serial")
 @Data
 @ToString
 @Builder
+@EqualsAndHashCode
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "AccountRole对象", description = "账号-角色")
-public class AccountRole implements CrudEntity {
-    private static final long serialVersionUID = -93912814870706021L;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+@ApiModel(value = "AccountRoleVo对象", description = "账号-角色信息")
+public class AccountRoleVo {
     @ApiModelProperty("自增主键ID")
     private Long id;
 
@@ -64,14 +51,9 @@ public class AccountRole implements CrudEntity {
     @ApiModelProperty("租户ID")
     private String tenantId;
 
-    @JsonIgnore
-    @TableLogic
-    @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
 
     @ApiModelProperty("")
     private Date dt;
-
 }
-

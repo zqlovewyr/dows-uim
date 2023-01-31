@@ -17,7 +17,7 @@ import java.util.Date;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "AccountUserVo对象", description = "账号-用户实例信息")
+@ApiModel(value = "AccountUserVo对象", description = "账号-角色实例信息")
 public class AccountUserVo {
 
     @ApiModelProperty(value = "主键")
