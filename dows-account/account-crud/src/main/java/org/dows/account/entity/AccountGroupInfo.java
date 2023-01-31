@@ -41,11 +41,17 @@ public class AccountGroupInfo implements CrudEntity {
     @ApiModelProperty("组织架构名称")
     private String orgName;
 
+    @ApiModelProperty("组织架构Code")
+    private String orgCode;
+
     @ApiModelProperty("组别ID")
     private String groupInfoId;
 
     @ApiModelProperty("组名/团队名称 别名")
     private String groupInfoName;
+
+    @ApiModelProperty("组别状态")
+    private Integer status;
 
     @ApiModelProperty("负责人账户ID")
     private String accountId;

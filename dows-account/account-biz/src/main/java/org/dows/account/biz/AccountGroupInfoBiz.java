@@ -11,20 +11,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountGroupInfoApi;
 import org.dows.account.biz.constant.BaseConstant;
-import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
 import org.dows.account.biz.util.IDUtil;
 import org.dows.account.dto.AccountGroupInfoDTO;
 import org.dows.account.dto.AccountOrgGroupDTO;
+import org.dows.account.entity.AccountGroup;
 import org.dows.account.entity.AccountGroupInfo;
 import org.dows.account.entity.AccountOrg;
-import org.dows.account.entity.AccountRole;
 import org.dows.account.service.AccountGroupInfoService;
+import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountOrgService;
 import org.dows.account.vo.AccountGroupInfoVo;
 import org.dows.framework.api.Response;
-import org.dows.framework.api.StatusCode;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +42,8 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
     private final AccountGroupInfoService accountGroupInfoService;
 
     private final AccountOrgService accountOrgService;
+
+    private final AccountGroupService accountGroupService;
 
     /**
      * 自定义账号-组负责人 列表
@@ -75,6 +76,18 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         //复制属性
         IPage<AccountGroupInfoVo> pageVo = new Page<>();
         BeanUtils.copyProperties(groupInfoList, pageVo);
+        List<AccountGroupInfoVo> voList = pageVo.getRecords();
+        if(voList != null && voList.size() > 0) {
+            voList.forEach(vo -> {
+                //获取机构人数
+                Integer num = accountGroupService.lambdaQuery()
+                        .eq(AccountGroup::getOrgId, vo.getOrgId())
+                        .eq(AccountGroup::getDeleted, false)
+                        .list().size();
+                vo.setNum(num);
+            });
+        }
+        pageVo.setRecords(voList);
         return Response.ok(pageVo);
     }
 
