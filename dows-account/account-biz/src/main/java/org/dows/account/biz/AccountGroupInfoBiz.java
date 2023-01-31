@@ -76,6 +76,18 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         //复制属性
         IPage<AccountGroupInfoVo> pageVo = new Page<>();
         BeanUtils.copyProperties(groupInfoList, pageVo);
+        List<AccountGroupInfoVo> voList = pageVo.getRecords();
+        if(voList != null && voList.size() > 0) {
+            voList.forEach(vo -> {
+                //获取机构人数
+                Integer num = accountGroupService.lambdaQuery()
+                        .eq(AccountGroup::getOrgId, vo.getOrgId())
+                        .eq(AccountGroup::getDeleted, false)
+                        .list().size();
+                vo.setNum(num);
+            });
+        }
+        pageVo.setRecords(voList);
         return Response.ok(pageVo);
     }
 

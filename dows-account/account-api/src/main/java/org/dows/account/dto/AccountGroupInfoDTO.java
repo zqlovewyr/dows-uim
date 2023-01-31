@@ -51,9 +51,6 @@ public class AccountGroupInfoDTO {
     @ApiModelProperty("组织架构Code")
     private String orgCode;
 
-    @ApiModelProperty("允许成员数")
-    private Integer number;
-
     @ApiModelProperty("应用ID")
     private String appId;
 
