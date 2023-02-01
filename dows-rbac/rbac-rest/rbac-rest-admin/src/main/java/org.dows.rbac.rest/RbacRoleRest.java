@@ -1,19 +1,19 @@
 package org.dows.rbac.rest;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.framework.api.Response;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
 import org.dows.rbac.api.RbacRoleApi;
-import org.dows.rbac.vo.RbacRoleVO;
+import org.dows.rbac.dto.RbacRoleDTO;
+import org.dows.rbac.vo.RbacRoleVo;
 import org.dows.rbac.entity.RbacRole;
 import org.dows.rbac.form.RbacRoleForm;
 import org.dows.rbac.service.RbacRoleService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,19 +29,29 @@ public class RbacRoleRest implements MybatisCrudRest<RbacRoleForm, RbacRole, Rba
     private final RbacRoleApi rbacRoleApi;
 
     @GetMapping("/v1/rbac-role/{id}")
-    public Response<RbacRoleVO> getById(@PathVariable String id) {
+    public Response<RbacRoleVo> getById(@PathVariable String id) {
         return rbacRoleApi.getById(id);
     }
 
 
     @GetMapping("/v1/rbac-role")
-    public Response<List<RbacRoleVO>> getByIdList( List<String> rbacRoleIdList) {
+    public Response<List<RbacRoleVo>> getByIdList(List<String> rbacRoleIdList) {
         return rbacRoleApi.getByIdList(rbacRoleIdList);
     }
 
     @GetMapping("/v1/rbac-roles/{appid}")
-    public Response<List<RbacRoleVO>> getByIdListAndAppId(List<String> rbacRoleIdList, String appid) {
+    public Response<List<RbacRoleVo>> getByIdListAndAppId(List<String> rbacRoleIdList, String appid) {
         return rbacRoleApi.getByIdList(rbacRoleIdList,appid);
     }
 
+    /**
+     * 自定义查询 角色-实例 列表
+     *
+     * @param rbacRoleDTO
+     */
+    @ApiOperation("自定义查询 角色-实例 列表")
+    @PostMapping("/customRbacRoleList")
+    public Response<IPage<RbacRoleVo>> customRbacRoleList(RbacRoleDTO rbacRoleDTO) {
+        return rbacRoleApi.customRbacRoleList(rbacRoleDTO);
+    }
 }

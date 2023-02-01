@@ -1,6 +1,6 @@
 package org.dows.rbac.biz.util;
 
-import org.dows.rbac.vo.RbacRoleVO;
+import org.dows.rbac.vo.RbacRoleVo;
 import org.dows.rbac.entity.RbacRole;
 
 import java.util.Objects;
@@ -9,11 +9,11 @@ import java.util.Objects;
  * @author runsix
  */
 public class RsRbacRoleUtil {
-    public static RbacRoleVO rbacRole2VO(RbacRole rbacRole) {
+    public static RbacRoleVo rbacRole2VO(RbacRole rbacRole) {
         if (Objects.isNull(rbacRole)) {
             return null;
         } else {
-            return RbacRoleVO
+            return RbacRoleVo
                     .builder()
                     .id(rbacRole.getId())
                     .pid(rbacRole.getPid())
@@ -31,7 +31,7 @@ public class RsRbacRoleUtil {
         }
     }
 
-    public static RbacRole vo2RbacRole(RbacRoleVO rbacRoleVO) {
+    public static RbacRole vo2RbacRole(RbacRoleVo rbacRoleVO) {
         if (Objects.isNull(rbacRoleVO)) {
             return null;
         } else {

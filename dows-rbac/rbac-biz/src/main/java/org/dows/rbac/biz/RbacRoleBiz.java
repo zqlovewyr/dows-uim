@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.dows.framework.api.Response;
 import org.dows.rbac.api.RbacRoleApi;
 import org.dows.rbac.dto.RbacRoleDTO;
-import org.dows.rbac.vo.RbacRoleVO;
+import org.dows.rbac.vo.RbacRoleVo;
 import org.dows.rbac.biz.util.RsRbacRoleUtil;
 import org.dows.rbac.entity.RbacRole;
 import org.dows.rbac.service.RbacRoleService;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class RbacRoleBiz implements RbacRoleApi {
     private final RbacRoleService rbacRoleService;
 
-    public Response<RbacRoleVO> getById(String id) {
+    public Response<RbacRoleVo> getById(String id) {
         return Response.ok(RsRbacRoleUtil.rbacRole2VO(
                 rbacRoleService.lambdaQuery()
                         .eq(RbacRole::getId, id)
@@ -37,7 +37,7 @@ public class RbacRoleBiz implements RbacRoleApi {
         );
     }
 
-    public Response<List<RbacRoleVO>> getByIdList(List<String> idList) {
+    public Response<List<RbacRoleVo>> getByIdList(List<String> idList) {
         return Response.ok(rbacRoleService.lambdaQuery()
                 .in(RbacRole::getId, idList)
                 .list()
@@ -45,11 +45,11 @@ public class RbacRoleBiz implements RbacRoleApi {
     }
 
     @Override
-    public Response<List<RbacRoleVO>> getByIdListAndAppId(List<String> rbacRoleIdList, String appid) {
+    public Response<List<RbacRoleVo>> getByIdListAndAppId(List<String> rbacRoleIdList, String appid) {
         return null;
     }
 
-    public Response<List<RbacRoleVO>> getByIdList(List<String> idList, String appId) {
+    public Response<List<RbacRoleVo>> getByIdList(List<String> idList, String appId) {
         return Response.ok(rbacRoleService.lambdaQuery()
                 .in(RbacRole::getId, idList)
                 .eq(RbacRole::getAppId, appId)
@@ -58,7 +58,7 @@ public class RbacRoleBiz implements RbacRoleApi {
     }
 
     @Override
-    public Response<IPage<RbacRoleVO>> customRbacRoleList(RbacRoleDTO rbacRoleDTO) {
+    public Response<IPage<RbacRoleVo>> customRbacRoleList(RbacRoleDTO rbacRoleDTO) {
         LambdaQueryWrapper<RbacRole> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(rbacRoleDTO.getRolePid() != null, RbacRole::getPid, rbacRoleDTO.getRolePid())
                 .like(StringUtils.isNotEmpty(rbacRoleDTO.getRoleName()), RbacRole::getRoleName, rbacRoleDTO.getRoleName())
@@ -75,7 +75,7 @@ public class RbacRoleBiz implements RbacRoleApi {
                 .orderByDesc(RbacRole::getDt);
         Page<RbacRole> page = new Page<>(rbacRoleDTO.getPageNo(), rbacRoleDTO.getPageSize());
         IPage<RbacRole> rolePage = rbacRoleService.page(page, queryWrapper);
-        IPage<RbacRoleVO> pageVo = new Page<>();
+        IPage<RbacRoleVo> pageVo = new Page<>();
         BeanUtils.copyProperties(rolePage, pageVo);
         return Response.ok(pageVo);
     }

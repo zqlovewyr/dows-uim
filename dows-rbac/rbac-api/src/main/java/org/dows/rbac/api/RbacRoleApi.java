@@ -3,7 +3,7 @@ package org.dows.rbac.api;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dows.framework.api.Response;
 import org.dows.rbac.dto.RbacRoleDTO;
-import org.dows.rbac.vo.RbacRoleVO;
+import org.dows.rbac.vo.RbacRoleVo;
 import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 
@@ -15,19 +15,19 @@ import java.util.List;
  */
 public interface RbacRoleApi {
 
-    Response<RbacRoleVO> getById(String id);
+    Response<RbacRoleVo> getById(String id);
 
-    Response<List<RbacRoleVO>> getByIdList(List<String> rbacRoleIdList);
+    Response<List<RbacRoleVo>> getByIdList(List<String> rbacRoleIdList);
 
-    Response<List<RbacRoleVO>> getByIdListAndAppId(List<String> rbacRoleIdList,@PathVariable String appid);
+    Response<List<RbacRoleVo>> getByIdListAndAppId(List<String> rbacRoleIdList, @PathVariable String appid);
 
-    Response<List<RbacRoleVO>> getByIdList(List<String> idList, String appId);
+    Response<List<RbacRoleVo>> getByIdList(List<String> idList, String appId);
 
     /**
      * 自定义查询 角色-实例 列表
      *
      * @param rbacRoleDTO
      */
-    Response<IPage<RbacRoleVO>> customRbacRoleList(RbacRoleDTO rbacRoleDTO);
+    Response<IPage<RbacRoleVo>> customRbacRoleList(RbacRoleDTO rbacRoleDTO);
 
 }

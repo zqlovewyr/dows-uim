@@ -25,7 +25,7 @@ import org.dows.account.service.*;
 import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
 import org.dows.rbac.api.RbacRoleApi;
-import org.dows.rbac.vo.RbacRoleVO;
+import org.dows.rbac.vo.RbacRoleVo;
 import org.dows.user.api.api.UserInstanceApi;
 import org.dows.user.api.dto.UserInstanceDTO;
 import org.dows.user.api.vo.UserInstanceVo;
@@ -84,9 +84,9 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     throw new AccountException(EnumAccountStatusCode.ACCOUNT_EXIST_EXCEPTION);
                 });
         /* runsix:2.check whether rbacRoleId exist */
-        RbacRoleVO rbacRoleVO = null;
+        RbacRoleVo rbacRoleVO = null;
         if (Objects.nonNull(accountInstanceDTO.getRbacRoleId())) {
-           Response<RbacRoleVO> rbacRoleVOResponse = rbacRoleApi.getById(String.valueOf(accountInstanceDTO.getRbacRoleId()));
+           Response<RbacRoleVo> rbacRoleVOResponse = rbacRoleApi.getById(String.valueOf(accountInstanceDTO.getRbacRoleId()));
             rbacRoleVO = rbacRoleVOResponse.getData();
 /*            if (Objects.isNull(rbacRoleVO)) {
                 throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
@@ -245,14 +245,14 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         List<String> rbacRoleIdList = accountInstanceDTOList.parallelStream()
                 .map(accountInstanceDTO -> accountInstanceDTO.getRbacRoleId().toString())
                 .collect(Collectors.toList());
-        Map<Long, RbacRoleVO> kRbacRoleIdVRbacRoleVOMap = new ConcurrentHashMap<>();
+        Map<Long, RbacRoleVo> kRbacRoleIdVRbacRoleVOMap = new ConcurrentHashMap<>();
         if (!rbacRoleIdList.isEmpty()) {
  /*           Response<List<RbacRoleVO>> rbacRoleVOListResponse = rbacRoleApi.getByIdList(rbacRoleIdList);*/
-            Response<List<RbacRoleVO>> rbacRoleVOListResponse = new Response<List<RbacRoleVO>>();
-            List<RbacRoleVO> rbacRoleVOList = rbacRoleVOListResponse.getData();
+            Response<List<RbacRoleVo>> rbacRoleVOListResponse = new Response<List<RbacRoleVo>>();
+            List<RbacRoleVo> rbacRoleVOList = rbacRoleVOListResponse.getData();
             kRbacRoleIdVRbacRoleVOMap = rbacRoleVOList
                     .parallelStream()
-                    .collect(Collectors.toMap(RbacRoleVO::getId, a -> a));
+                    .collect(Collectors.toMap(RbacRoleVo::getId, a -> a));
             if (kRbacRoleIdVRbacRoleVOMap.size() != rbacRoleIdList.size()) {
     /*            throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);*/
             }
@@ -296,7 +296,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         }).collect(Collectors.toList());
         accountInstanceService.saveBatch(accountInstanceList);
         /* runsix:7.batch save accountRole if rbacRoleId exist */
-        Map<Long, RbacRoleVO> finalKRbacRoleIdVRbacRoleVO = kRbacRoleIdVRbacRoleVOMap;
+        Map<Long, RbacRoleVo> finalKRbacRoleIdVRbacRoleVO = kRbacRoleIdVRbacRoleVOMap;
         List<AccountRole> accountRoleList = accountInstanceDTOList.parallelStream()
                 .filter(accountInstanceDTO -> Objects.nonNull(accountInstanceDTO.getRbacRoleId()))
                 .map(accountInstanceDTO -> AccountRole
