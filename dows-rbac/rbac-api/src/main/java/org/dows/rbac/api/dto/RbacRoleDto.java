@@ -41,6 +41,8 @@ public class RbacRoleDto implements Serializable {
     private Integer roleLevel;
     @ApiModelProperty(value = "角色icon")
     private String roleIcon;
+    @ApiModelProperty("角色状态")
+    private Integer status;
     @ApiModelProperty(value = "角色组数量")
     private Integer subCount;
     @ApiModelProperty(value = "数据权限")

@@ -43,6 +43,9 @@ public class RbacRoleVo implements Serializable {
     @ApiModelProperty(value = "角色icon")
     private String icon;
 
+    @ApiModelProperty("角色状态")
+    private Integer status;
+
     @ApiModelProperty(value = "顺序")
     private Integer sorted;
 

@@ -52,6 +52,9 @@ public class RbacRole implements CrudEntity {
     @ApiModelProperty("角色icon")
     private String roleIcon;
 
+    @ApiModelProperty("角色状态")
+    private Integer status;
+
     @ApiModelProperty("描述")
     private String descr;
 
