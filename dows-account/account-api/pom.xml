@@ -14,9 +14,5 @@
             <groupId>org.dows.framework</groupId>
             <artifactId>crud-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>easyexcel</artifactId>
-        </dependency>
     </dependencies>
 </project>

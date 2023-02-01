@@ -1,6 +1,6 @@
 package org.dows.account.dto;
 
-import com.alibaba.excel.annotation.ExcelProperty;
+//import com.alibaba.excel.annotation.ExcelProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +21,7 @@ public class AccountInstanceDTO implements Serializable {
     private Long id;
     private String appId;
     /* runsix:field 'identifier' is in class AccountIdentifier. */
-    @ExcelProperty(value = "用户账号(code)")
+//    @ExcelProperty(value = "用户账号(code)")
     private String identifier;
     /* runsix:field 'rbacRoleId' is field 'id' in class RbacRole */
     private Long rbacRoleId;
@@ -29,7 +29,7 @@ public class AccountInstanceDTO implements Serializable {
     /* runsix:field 'accountOrgId' is field 'orgId' in class AccountOrg */
     private String accountOrgOrgId;
     private String accountId;
-    @ExcelProperty(value = "用户姓名")
+//    @ExcelProperty(value = "用户姓名")
     private String accountName;
     private String password;
     private String avatar;
