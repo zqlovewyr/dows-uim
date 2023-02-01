@@ -191,10 +191,18 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         AccountOrg accountOrg = new AccountOrg();
         //1.1、设置组织架构属性
         BeanUtils.copyProperties(accountOrgGroupDTO, accountOrg);
-        accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
-        accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted());
-        accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus());
-        accountOrg.setDt(accountOrgGroupDTO.getOrgDt());
+        if(StringUtils.isNotEmpty(accountOrgGroupDTO.getOrgDescr())){
+            accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
+        }
+        if(accountOrgGroupDTO.getOrgSorted() != null){
+            accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted());
+        }
+        if(accountOrgGroupDTO.getOrgStatus() != null){
+            accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus());
+        }
+        if(accountOrgGroupDTO.getOrgDt() != null){
+            accountOrg.setDt(accountOrgGroupDTO.getOrgDt());
+        }
         boolean flagOrg = accountOrgService.updateById(accountOrg);
         if (flagOrg == false) {
             flag = false;
