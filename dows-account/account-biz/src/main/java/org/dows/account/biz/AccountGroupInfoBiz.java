@@ -27,6 +27,8 @@ import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -55,8 +57,8 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
     @Transactional(rollbackFor = Exception.class)
     public Response<IPage<AccountGroupInfoVo>> customAccountGroupInfoList(AccountGroupInfoDTO accountGroupInfoDTO) {
         LambdaQueryWrapper<AccountGroupInfo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getOrgId()),AccountGroupInfo::getOrgId,accountGroupInfoDTO.getOrgId())
-                .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getOrgName()),AccountGroupInfo::getOrgName,accountGroupInfoDTO.getOrgName())
+        queryWrapper.eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getOrgId()), AccountGroupInfo::getOrgId, accountGroupInfoDTO.getOrgId())
+                .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getOrgName()), AccountGroupInfo::getOrgName, accountGroupInfoDTO.getOrgName())
                 .eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getGroupInfoId()), AccountGroupInfo::getGroupInfoId, accountGroupInfoDTO.getGroupInfoId())
                 .like(StringUtils.isNotEmpty(accountGroupInfoDTO.getGroupInfoName()), AccountGroupInfo::getGroupInfoName, accountGroupInfoDTO.getGroupInfoName())
                 .eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getAccountId()), AccountGroupInfo::getAccountId, accountGroupInfoDTO.getAccountId())
@@ -75,16 +77,19 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         IPage<AccountGroupInfo> groupInfoList = accountGroupInfoService.page(page, queryWrapper);
         //复制属性
         IPage<AccountGroupInfoVo> pageVo = new Page<>();
-        BeanUtils.copyProperties(groupInfoList, pageVo);
-        List<AccountGroupInfoVo> voList = pageVo.getRecords();
-        if(voList != null && voList.size() > 0) {
-            voList.forEach(vo -> {
+        BeanUtils.copyProperties(groupInfoList, pageVo,new String[]{"records"});
+        List<AccountGroupInfoVo> voList = new ArrayList<>();
+        if (groupInfoList.getRecords() != null && groupInfoList.getRecords().size() > 0) {
+            groupInfoList.getRecords().forEach(model -> {
+                AccountGroupInfoVo vo = new AccountGroupInfoVo();
+                BeanUtils.copyProperties(model,vo);
+                String orgId = model.getOrgId();
                 //获取机构人数
                 Integer num = accountGroupService.lambdaQuery()
-                        .eq(AccountGroup::getOrgId, vo.getOrgId())
-                        .eq(AccountGroup::getDeleted, false)
+                        .eq(AccountGroup::getOrgId, orgId)
                         .list().size();
                 vo.setNum(num);
+                voList.add(vo);
             });
         }
         pageVo.setRecords(voList);
@@ -136,8 +141,8 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         AtomicBoolean flag = new AtomicBoolean(true);
         //1、插入组织架构表
         AccountOrg accountOrg = new AccountOrg();
-        if(accountOrgGroupDTOs != null && accountOrgGroupDTOs.size() > 0) {
-            accountOrgGroupDTOs.forEach(accountOrgGroupDTO->{
+        if (accountOrgGroupDTOs != null && accountOrgGroupDTOs.size() > 0) {
+            accountOrgGroupDTOs.forEach(accountOrgGroupDTO -> {
                 //1.1、设置组织架构属性
                 BeanUtils.copyProperties(accountOrgGroupDTO, accountOrg);
                 accountOrg.setId(null);
@@ -190,11 +195,11 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         LambdaQueryWrapper<AccountGroupInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AccountGroupInfo::getOrgId, accountOrg.getId().toString());
         AccountGroupInfo groupInfo = accountGroupInfoService.getOne(queryWrapper);
-        if(groupInfo == null){
+        if (groupInfo == null) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_IS_NOT_EXIST);
         }
         //2.1、设置组实例属性
-        BeanUtils.copyProperties(accountOrgGroupDTO, groupInfo,new String[]{"id"});
+        BeanUtils.copyProperties(accountOrgGroupDTO, groupInfo, new String[]{"id"});
         groupInfo.setOrgId(accountOrg.getId().toString());
         boolean flagInfo = accountGroupInfoService.updateById(groupInfo);
         if (flagInfo == false) {
@@ -214,13 +219,13 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         AccountGroupInfo groupInfo = accountGroupInfoService.getById(id);
         //复制属性
         AccountGroupInfoVo vo = new AccountGroupInfoVo();
-        BeanUtils.copyProperties(groupInfo,vo);
+        BeanUtils.copyProperties(groupInfo, vo);
         //获取允许最大成员数、头像、描述、有效时间、组织类型、状态等
         AccountOrg accountOrg = accountOrgService.lambdaQuery()
                 .eq(AccountOrg::getOrgId, vo.getOrgId())
                 .eq(AccountOrg::getDeleted, false)
                 .one();
-        BeanUtils.copyProperties(accountOrg,vo);
+        BeanUtils.copyProperties(accountOrg, vo);
         return Response.ok(vo);
     }
 
@@ -234,7 +239,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
     public Response<Boolean> deleteAccountGroupInfoById(String id) {
         //1、获取对应数据
         AccountGroupInfo groupInfo = accountGroupInfoService.getById(id);
-        if(groupInfo == null){
+        if (groupInfo == null) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_IS_NOT_EXIST);
         }
         boolean flag = true;
@@ -243,7 +248,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         orgWrapper.set(AccountOrg::getDeleted, true)
                 .eq(AccountOrg::getId, groupInfo.getOrgId());
         boolean orgFlag = accountOrgService.update(orgWrapper);
-        if(orgFlag == false){
+        if (orgFlag == false) {
             flag = false;
         }
         //2、删除组-实例
@@ -251,7 +256,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         groupWrapper.set(AccountGroupInfo::getDeleted, true)
                 .eq(AccountGroupInfo::getId, id);
         boolean groupFlag = accountGroupInfoService.update(groupWrapper);
-        if(groupFlag == false){
+        if (groupFlag == false) {
             flag = false;
         }
         return Response.ok(flag);
@@ -269,7 +274,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         if (CollectionUtils.isEmpty(ids)) {
             return Response.ok(false);
         }
-        ids.forEach(item->{
+        ids.forEach(item -> {
             //1、删除组织架构
             LambdaUpdateWrapper<AccountOrg> orgWrapper = Wrappers.lambdaUpdate(AccountOrg.class);
             orgWrapper.set(AccountOrg::getDeleted, true)
