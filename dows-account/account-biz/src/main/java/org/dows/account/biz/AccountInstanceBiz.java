@@ -422,7 +422,6 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 instanceList.forEach(model -> {
                     AccountUser user = accountUserService.lambdaQuery()
                             .eq(AccountUser::getUserId, model.getId())
-                            .eq(AccountUser::getDeleted, false)
                             .one();
                     if (user != null) {
                         accountIds.add(user.getAccountId());
@@ -435,7 +434,6 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             //3、1 获取机构id
             List<AccountGroupInfo> infoList = accountGroupInfoService.lambdaQuery()
                     .like(AccountGroupInfo::getOrgName, accountInstanceDTO.getOrgName())
-                    .eq(AccountGroupInfo::getDeleted, false)
                     .list();
             //3.2、获取机构下的账户id集合
             infoList.forEach(model -> {
@@ -453,7 +451,6 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             //3、1 获取机构id
             List<AccountGroupInfo> infoList = accountGroupInfoService.lambdaQuery()
                     .like(AccountGroupInfo::getGroupInfoId, accountInstanceDTO.getGroupInfoId())
-                    .eq(AccountGroupInfo::getDeleted, false)
                     .list();
             //3.2、获取机构下的账户id集合
             infoList.forEach(model -> {
@@ -477,7 +474,6 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 .eq(accountInstanceDTO.getDt() != null, AccountInstance::getDt, accountInstanceDTO.getDt())
                 .gt(accountInstanceDTO.getStartTime() != null, AccountInstance::getDt, accountInstanceDTO.getStartTime())
                 .lt(accountInstanceDTO.getEndTime() != null, AccountInstance::getDt, accountInstanceDTO.getEndTime())
-                .eq(AccountInstance::getDeleted, false)
                 .orderByDesc(AccountInstance::getDt);
         Page<AccountInstance> page = new Page<>(accountInstanceDTO.getPageNo(), accountInstanceDTO.getPageSize());
         IPage<AccountInstance> instancePage = accountInstanceService.page(page, queryWrapper);
