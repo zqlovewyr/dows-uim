@@ -78,7 +78,7 @@ public class AccountRoleBiz implements AccountRoleApi {
     }
 
     @Override
-    public Response<Long> createAccountRole(AccountRoleDTO accountRoleDTO) {
+    public Response<Long> authAccountRole(AccountRoleDTO accountRoleDTO) {
         AccountRole role = new AccountRole();
         BeanUtils.copyProperties(accountRoleDTO,role);
         boolean flag = accountRoleService.save(role);

@@ -38,9 +38,9 @@ public class AccountRoleRest implements MybatisCrudRest<AccountRoleForm, Account
 
 
     @ApiOperation("授权 账号-角色")
-    @PostMapping("/createAccountRole")
-    public Response<Long> createAccountRole(@RequestBody AccountRoleDTO accountRoleDTO) {
-        Response<Long> vo = accountRoleApi.createAccountRole(accountRoleDTO);
+    @PostMapping("/authAccountRole")
+    public Response<Long> authAccountRole(@RequestBody AccountRoleDTO accountRoleDTO) {
+        Response<Long> vo = accountRoleApi.authAccountRole(accountRoleDTO);
         return vo;
     }
 

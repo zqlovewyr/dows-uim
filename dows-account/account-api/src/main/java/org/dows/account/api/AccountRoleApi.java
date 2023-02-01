@@ -39,5 +39,5 @@ public interface AccountRoleApi {
      *
      * @param accountRoleDTO
      */
-    Response<Long> createAccountRole(AccountRoleDTO accountRoleDTO);
+    Response<Long> authAccountRole(AccountRoleDTO accountRoleDTO);
 }
