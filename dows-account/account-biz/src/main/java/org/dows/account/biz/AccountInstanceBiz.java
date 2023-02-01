@@ -89,32 +89,31 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         if (Objects.nonNull(accountInstanceDTO.getRbacRoleId())) {
            Response<RbacRoleVo> rbacRoleVOResponse = rbacRoleApi.getById(String.valueOf(accountInstanceDTO.getRbacRoleId()));
             rbacRoleVO = rbacRoleVOResponse.getData();
-/*            if (Objects.isNull(rbacRoleVO)) {
-                throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
-            }*/
         }
         /* runsix:3.check whether accountOrgOrgId exist */
         AccountOrg accountOrg = null;
         if (StringUtils.isNotBlank(accountInstanceDTO.getAccountOrgOrgId())) {
             accountOrg = accountOrgService.lambdaQuery()
-                    .select(AccountOrg::getOrgId, AccountOrg::getOrgName)
-                    .eq(AccountOrg::getOrgId, accountInstanceDTO.getAccountOrgOrgId())
+                    .select(AccountOrg::getId, AccountOrg::getOrgName)
+                    .eq(AccountOrg::getId, accountInstanceDTO.getAccountOrgOrgId())
                     .oneOpt()
                     .orElseThrow(() -> {
                         throw new OrgException(EnumAccountStatusCode.ORG_NOT_EXIST_EXCEPTION);
                     });
         }
-        /* runsix:4.save accountIdentifier */
-        AccountIdentifier accountIdentifier = new AccountIdentifier();
-        BeanUtils.copyProperties(accountInstanceDTO, accountIdentifier);
-        accountIdentifier.setAccountId(IdWorker.getIdStr());
-        accountIdentifierService.save(accountIdentifier);
         /* runsix:5.save accountInstance */
         AccountInstance accountInstance = new AccountInstance();
         BeanUtils.copyProperties(accountInstanceDTO, accountInstance);
-        accountInstance.setAccountId(accountIdentifier.getAccountId());
-        accountInstance.setPassword(new BCryptPasswordEncoder().encode(accountInstanceDTO.getPassword()));
+        accountInstance.setAccountId(IdWorker.getIdStr());
+//        accountInstance.setPassword(new BCryptPasswordEncoder().encode(accountInstanceDTO.getPassword()));
         accountInstanceService.save(accountInstance);
+
+        /* runsix:4.save accountIdentifier */
+        AccountIdentifier accountIdentifier = new AccountIdentifier();
+        BeanUtils.copyProperties(accountInstanceDTO, accountIdentifier);
+        accountIdentifier.setAccountId(accountInstance.getId().toString());
+        accountIdentifierService.save(accountIdentifier);
+
         /* runsix:6.save accountRole if rbacRoleId exist */
         if (Objects.nonNull(rbacRoleVO)) {
             accountRoleService.save(
