@@ -70,12 +70,6 @@ public class UserInstanceDTO {
     @ApiModelProperty("用户时间")
     private Date userDate;
 
-    @ApiModelProperty("有效时间（开始时间）")
-    private Date indate;
-
-    @ApiModelProperty("失效时间（失效时间）")
-    private Date expdate;
-
     @ApiModelProperty("时间戳")
     private Date dt;
 

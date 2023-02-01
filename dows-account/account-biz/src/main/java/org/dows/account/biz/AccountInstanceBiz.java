@@ -19,6 +19,7 @@ import org.dows.account.biz.exception.AccountException;
 import org.dows.account.biz.exception.OrgException;
 import org.dows.account.biz.util.AccountUtil;
 import org.dows.account.biz.util.JwtUtil;
+import org.dows.account.biz.util.ReflectUtil;
 import org.dows.account.dto.AccountInstanceDTO;
 import org.dows.account.entity.*;
 import org.dows.account.service.*;
@@ -415,7 +416,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         if (StringUtils.isNotEmpty(accountInstanceDTO.getGender())) {
             dto.setGender(accountInstanceDTO.getGender());
         }
-        if (dto != null) {
+        if (!ReflectUtil.isObjectNull(dto)) {
             List<UserInstanceVo> instanceList = userInstanceApi.getUserInstanceList(dto).getData();
             if (instanceList != null && instanceList.size() > 0) {
                 instanceList.forEach(model -> {
@@ -480,43 +481,60 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 .orderByDesc(AccountInstance::getDt);
         Page<AccountInstance> page = new Page<>(accountInstanceDTO.getPageNo(), accountInstanceDTO.getPageSize());
         IPage<AccountInstance> instancePage = accountInstanceService.page(page, queryWrapper);
-        //3、复制
-        IPage<AccountInstanceVo> voPage = new Page<>();
-        BeanUtils.copyProperties(instancePage, voPage);
-        //4、设置属性
-        List<AccountInstanceVo> voList = voPage.getRecords();
-        voList.forEach(vo -> {
-            //4.1、设置姓名、性别
-            //4.1、1 根据accountId获取userId
-            AccountUser user = accountUserService.lambdaQuery()
-                    .eq(AccountUser::getAccountId, vo.getId())
-                    .eq(AccountUser::getDeleted, false)
-                    .one();
-            UserInstanceVo instance = userInstanceApi.getUserInstanceById(Long.valueOf(user.getUserId())).getData();
-            vo.setName(instance.getName());
-            vo.setGender(instance.getGender());
-            //4.1.2、设置机构信息
-            AccountGroup group = accountGroupService.lambdaQuery()
-                    .eq(AccountGroup::getAccountId, vo.getId())
-                    .eq(AccountGroup::getDeleted, false)
-                    .one();
-            if (group != null) {
-                AccountGroupInfo groupInfo = accountGroupInfoService.lambdaQuery()
-                        .eq(AccountGroupInfo::getAccountId, group.getOrgId())
-                        .eq(AccountGroupInfo::getDeleted, false)
+        //3、属性赋值
+        List<AccountInstanceVo> voList = new ArrayList<>();
+        if(instancePage.getRecords() != null && instancePage.getRecords().size() > 0){
+            instancePage.getRecords().forEach(model -> {
+                AccountInstanceVo vo = new AccountInstanceVo();
+                BeanUtils.copyProperties(model,vo);
+                //3.1、设置姓名、性别
+                //3.1、1 根据accountId获取userId
+                AccountUser user = accountUserService.lambdaQuery()
+                        .eq(AccountUser::getAccountId, model.getId())
                         .one();
-                vo.setOrgName(group.getOrgName());
-                vo.setGroupInfoId(groupInfo.getGroupInfoId());
-            }
-            //4.1.3 设置角色信息
-            AccountRole accountRole = accountRoleService.lambdaQuery()
-                    .eq(AccountRole::getPrincipalId, vo.getId())
-                    .eq(AccountRole::getDeleted, false)
-                    .one();
-            if (accountRole != null) {
-                vo.setRoleName(accountRole.getRoleName());
-            }
-        });
+                if(!ReflectUtil.isObjectNull(user)){
+                    UserInstanceVo instance = userInstanceApi.getUserInstanceById(Long.valueOf(user.getUserId())).getData();
+                    if(!ReflectUtil.isObjectNull(instance)){
+                        if(StringUtils.isNotEmpty(instance.getName())){
+                            vo.setName(instance.getName());
+                        }
+                        if(StringUtils.isNotEmpty(instance.getGender())){
+                            vo.setGender(instance.getGender());
+                        }
+                    }
+                }
+                //3.1.2、设置机构信息
+                AccountGroup group = accountGroupService.lambdaQuery()
+                        .eq(AccountGroup::getAccountId, model.getId())
+                        .one();
+                if (!ReflectUtil.isObjectNull(group) && group != null) {
+                    if(StringUtils.isNotEmpty(group.getOrgName())){
+                        vo.setOrgName(group.getOrgName());
+                    }
+                    AccountGroupInfo groupInfo = accountGroupInfoService.lambdaQuery()
+                            .eq(AccountGroupInfo::getAccountId, group.getOrgId())
+                            .one();
+                    if (!ReflectUtil.isObjectNull(groupInfo) && group != null){
+                        if(StringUtils.isNotEmpty(groupInfo.getGroupInfoId())){
+                            vo.setGroupInfoId(groupInfo.getGroupInfoId());
+                        }
+                    }
+                }
+                //3.1.3 设置角色信息
+                AccountRole accountRole = accountRoleService.lambdaQuery()
+                        .eq(AccountRole::getPrincipalId, model.getId())
+                        .one();
+                if (!ReflectUtil.isObjectNull(accountRole) && group != null) {
+                    if(StringUtils.isNotEmpty(accountRole.getRoleName())){
+                        vo.setRoleName(accountRole.getRoleName());
+                    }
+                }
+                voList.add(vo);
+            });
+        }
+        //4、复制
+        IPage<AccountInstanceVo> voPage = new Page<>();
+        BeanUtils.copyProperties(instancePage, voPage,new String[]{"records"});
         voPage.setRecords(voList);
         return Response.ok(voPage);
     }

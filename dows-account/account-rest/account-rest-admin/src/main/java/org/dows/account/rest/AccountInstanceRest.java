@@ -1,5 +1,6 @@
 package org.dows.account.rest;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.dows.account.dto.AccountInstanceDTO;
 import org.dows.account.entity.AccountInstance;
 import org.dows.account.form.AccountInstanceForm;
 import org.dows.account.service.AccountInstanceService;
+import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
 import org.springframework.web.bind.annotation.*;
@@ -49,8 +51,8 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
 
     @ApiOperation("查看 账号-实例-列表")
     @PostMapping("/customAccountInstanceList")
-    public void customAccountInstanceList(@RequestBody AccountInstanceDTO accountInstanceDTO) {
-        accountInstanceApi.customAccountInstanceList(accountInstanceDTO);
+    public Response<IPage<AccountInstanceVo>> customAccountInstanceList(@RequestBody AccountInstanceDTO accountInstanceDTO) {
+        return accountInstanceApi.customAccountInstanceList(accountInstanceDTO);
     }
 
     @ApiOperation("登录")

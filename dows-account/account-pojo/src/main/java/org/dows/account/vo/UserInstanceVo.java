@@ -55,12 +55,6 @@ public class UserInstanceVo implements Serializable {
     @ApiModelProperty(value = "户籍地址")
     private String domicile;
 
-    @ApiModelProperty(value = "有效时间（开始时间）")
-    private Date indate;
-
-    @ApiModelProperty(value = "失效时间（失效时间）")
-    private Date expdate;
-
     @ApiModelProperty(value = "时间戳")
     private Date dt;
 
