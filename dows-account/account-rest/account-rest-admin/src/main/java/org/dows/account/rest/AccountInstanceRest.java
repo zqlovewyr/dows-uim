@@ -15,6 +15,7 @@ import org.dows.framework.api.Response;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -71,6 +72,12 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
     @PostMapping("/login")
     public Response<Map<String, Object>> login(@RequestBody AccountInstanceDTO accountInstanceDTO) {
         return accountInstanceApi.login(accountInstanceDTO);
+    }
+
+    @ApiOperation("查询 账户-实例-列表(不带分页)")
+    @PostMapping("/getAccountInstanceList")
+    public Response<List<AccountInstanceVo>> getAccountInstanceList(@RequestBody AccountInstanceDTO accountInstanceDTO) {
+        return accountInstanceApi.getAccountInstanceList(accountInstanceDTO);
     }
 }
 

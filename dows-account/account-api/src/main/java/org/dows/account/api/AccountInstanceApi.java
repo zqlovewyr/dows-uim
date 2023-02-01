@@ -61,5 +61,4 @@ public interface AccountInstanceApi {
      * 查询 账户-实例-列表(不带分页)
      */
     Response<List<AccountInstanceVo>> getAccountInstanceList(AccountInstanceDTO accountInstanceDTO);
-
 }
