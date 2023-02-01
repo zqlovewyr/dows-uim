@@ -416,7 +416,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         if (StringUtils.isNotEmpty(accountInstanceDTO.getGender())) {
             dto.setGender(accountInstanceDTO.getGender());
         }
-        if (!ReflectUtil.isObjectNull(dto)) {
+        if (!ReflectUtil.isObjectNull(dto) && dto != null) {
             List<UserInstanceVo> instanceList = userInstanceApi.getUserInstanceList(dto).getData();
             if (instanceList != null && instanceList.size() > 0) {
                 instanceList.forEach(model -> {
