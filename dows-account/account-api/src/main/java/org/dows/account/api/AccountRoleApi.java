@@ -33,4 +33,11 @@ public interface AccountRoleApi {
      * @param accountRoleDTO
      */
     Response<Boolean> updateAccountRoleById(AccountRoleDTO accountRoleDTO);
+
+    /**
+     * 授权 账号-角色
+     *
+     * @param accountRoleDTO
+     */
+    Response<Long> createAccountRole(AccountRoleDTO accountRoleDTO);
 }

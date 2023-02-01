@@ -7,12 +7,17 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountRoleApi;
+import org.dows.account.biz.enums.EnumAccountRoleStatusCode;
+import org.dows.account.biz.enums.EnumAccountStatusCode;
+import org.dows.account.biz.exception.AccountException;
+import org.dows.account.biz.exception.AccountRoleException;
 import org.dows.account.dto.AccountRoleDTO;
 import org.dows.account.entity.AccountRole;
 import org.dows.account.service.AccountRoleService;
 import org.dows.account.vo.AccountRoleVo;
 import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,5 +75,16 @@ public class AccountRoleBiz implements AccountRoleApi {
         AccountRole role = new AccountRole();
         BeanUtils.copyProperties(accountRoleDTO, role);
         return Response.ok(accountRoleService.updateById(role));
+    }
+
+    @Override
+    public Response<Long> createAccountRole(AccountRoleDTO accountRoleDTO) {
+        AccountRole role = new AccountRole();
+        BeanUtils.copyProperties(accountRoleDTO,role);
+        boolean flag = accountRoleService.save(role);
+        if(flag == false){
+            throw new AccountRoleException(EnumAccountRoleStatusCode.ACCOUNT_ROLE_AUTH_FAIl_EXCEPTION);
+        }
+        return Response.ok(role.getId());
     }
 }
