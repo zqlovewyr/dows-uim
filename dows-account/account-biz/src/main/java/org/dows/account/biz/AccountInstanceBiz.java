@@ -374,6 +374,18 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         map.put("token", token);
         map.put("accountId", accountInstance.getAccountId());
         map.put("name", accountInstance.getAccountName());
+
+        //判断用户角色
+        LambdaQueryWrapper<AccountRole> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(StringUtils.isNotEmpty(accountInstance.getAccountId()), AccountRole::getPrincipalId, accountInstance.getAccountId());
+        AccountRole accountRole = accountRoleService.getOne(wrapper);
+        if (accountRole.getRoleId().equals("0")) {
+            map.put("role", "super");
+        }else if(accountRole.getRoleId().equals("1")){
+            map.put("role", "admin");
+        }else if(accountRole.getRoleId().equals("2")){
+            map.put("role", "member");
+        }
         return Response.ok(map);
     }
 
