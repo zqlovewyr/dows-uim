@@ -18,17 +18,19 @@ import org.dows.account.entity.*;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
+import org.dows.user.api.api.UserContactApi;
 import org.dows.user.api.api.UserInstanceApi;
+import org.dows.user.api.dto.UserContactDTO;
 import org.dows.user.api.dto.UserInstanceDTO;
+import org.dows.user.api.vo.UserContactVo;
+import org.dows.user.api.vo.UserInstanceVo;
 import org.dows.user.entity.UserContact;
 import org.dows.user.entity.UserInstance;
 import org.dows.user.service.UserContactService;
-import org.dows.user.service.UserInstanceService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -53,11 +55,9 @@ public class AccountGroupBiz implements AccountGroupApi {
 
     private final UserInstanceApi userInstanceApi;
 
-    private final UserInstanceService userInstanceService;
-
     private final AccountInstanceService accountInstanceService;
 
-    private final UserContactService userContactService;
+    private final UserContactApi userContactApi;
 
     /**
      * 根据组织ids 查询对应角色
@@ -117,10 +117,10 @@ public class AccountGroupBiz implements AccountGroupApi {
                 flag.set(false);
             }
             //2、创建用户实例
-            UserInstance userInstance = new UserInstance();
+            UserInstanceDTO userInstance = new UserInstanceDTO();
             BeanUtils.copyProperties(account, userInstance);
-            boolean userFlag = userInstanceService.save(userInstance);
-            if (userFlag == false) {
+            userInstanceApi.insertUserInstance(userInstance);
+            if (userInstance.getId() == null) {
                 flag.set(false);
             }
             //3、设置关联关系
@@ -189,11 +189,17 @@ public class AccountGroupBiz implements AccountGroupApi {
             userIds.addAll(accountGroupDTO.getUserIds());
         }
         if (StringUtils.isNotEmpty(accountGroupDTO.getContactNum())) {
-            List<UserContact> userContactList = userContactService.lambdaQuery()
-                    .select(UserContact::getId)
-                    .eq(UserContact::getContactNum, accountGroupDTO.getContactNum())
-                    .eq(UserContact::getDeleted, false)
-                    .list();
+            UserContactDTO dto = new UserContactDTO();
+            dto.setContactNum(accountGroupDTO.getContactNum());
+            List<UserContactVo> userContactList = userContactApi.getUserContactList(dto).getData();
+            List<UserContact>  contactList = new ArrayList<>();
+            if(userContactList != null && userContactList.size() > 0){
+                userContactList.forEach(model->{
+                    UserContact contact = new UserContact();
+                    BeanUtils.copyProperties(model,contact);
+                    contactList.add(contact);
+                });
+            }
             if (userContactList != null && userContactList.size() > 0) {
                 userContactList.forEach(userContact -> {
                     userIds.add(userContact.getId().toString());
@@ -202,13 +208,19 @@ public class AccountGroupBiz implements AccountGroupApi {
         }
         //3.2、根据用户身份证号获取对应用户Id
         if (StringUtils.isNotEmpty(accountGroupDTO.getIdNo())) {
-            List<UserInstance> userInstanceList = userInstanceService.lambdaQuery()
-                    .select(UserInstance::getId)
-                    .eq(UserInstance::getIdNo, accountGroupDTO.getIdNo())
-                    .eq(UserInstance::getDeleted, false)
-                    .list();
-            if (userInstanceList != null && userInstanceList.size() > 0) {
-                userInstanceList.forEach(userContact -> {
+            UserInstanceDTO dto = new UserInstanceDTO();
+            dto.setIdNo(accountGroupDTO.getIdNo());
+            List<UserInstanceVo> userInstanceList = userInstanceApi.getUserInstanceList(dto).getData();
+            List<UserInstance>  instanceList = new ArrayList<>();
+            if(userInstanceList != null && userInstanceList.size() > 0){
+                userInstanceList.forEach(model->{
+                    UserInstance instance = new UserInstance();
+                    BeanUtils.copyProperties(model,instance);
+                    instanceList.add(instance);
+                });
+            }
+            if (instanceList != null && instanceList.size() > 0) {
+                instanceList.forEach(userContact -> {
                     userIds.add(userContact.getId().toString());
                 });
             }
@@ -216,13 +228,19 @@ public class AccountGroupBiz implements AccountGroupApi {
 
         //3.3、根据用户姓名获取对应用户id
         if (StringUtils.isNotEmpty(accountGroupDTO.getName())) {
-            List<UserInstance> userInstanceList = userInstanceService.lambdaQuery()
-                    .select(UserInstance::getId)
-                    .eq(UserInstance::getName, accountGroupDTO.getName())
-                    .eq(UserInstance::getDeleted, false)
-                    .list();
-            if (userInstanceList != null && userInstanceList.size() > 0) {
-                userInstanceList.forEach(userContact -> {
+            UserInstanceDTO dto = new UserInstanceDTO();
+            dto.setIdNo(accountGroupDTO.getName());
+            List<UserInstanceVo> userInstanceList = userInstanceApi.getUserInstanceList(dto).getData();
+            List<UserInstance>  instanceList = new ArrayList<>();
+            if(userInstanceList != null && userInstanceList.size() > 0){
+                userInstanceList.forEach(model->{
+                    UserInstance instance = new UserInstance();
+                    BeanUtils.copyProperties(model,instance);
+                    instanceList.add(instance);
+                });
+            }
+            if (instanceList != null && instanceList.size() > 0) {
+                instanceList.forEach(userContact -> {
                     userIds.add(userContact.getId().toString());
                 });
             }
@@ -269,9 +287,19 @@ public class AccountGroupBiz implements AccountGroupApi {
             user = accountUserService.getOne(userWrapper.eq(AccountUser::getAccountId, vo.getAccountId()));
             if (user != null) {
                 LambdaQueryWrapper<UserInstance> instanceWrapper = new LambdaQueryWrapper<>();
-                instance = userInstanceService.getOne(instanceWrapper.eq(UserInstance::getId, user.getUserId()));
-                LambdaQueryWrapper<UserContact> contactWrapper = new LambdaQueryWrapper<>();
-                contact = userContactService.getOne(contactWrapper.eq(UserContact::getUserId, user.getUserId()));
+                UserInstanceDTO dto = new UserInstanceDTO();
+                dto.setId(Long.valueOf(user.getUserId()));
+                UserInstanceVo model = new UserInstanceVo();
+                model = userInstanceApi.getUserInstanceList(dto).getData().get(0);
+                //复制属性
+                BeanUtils.copyProperties(model,instance);
+                UserContactDTO contactDto = new UserContactDTO();
+                contactDto.setUserId(user.getUserId());
+                UserContactVo contactVo = new UserContactVo();
+                contactVo = userContactApi.getUserContactList(contactDto).getData().get(0);
+                //复制属性
+                BeanUtils.copyProperties(contactVo,contact);
+
             }
             //非空判断
             if (instance != null) {

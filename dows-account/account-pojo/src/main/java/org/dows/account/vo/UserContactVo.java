@@ -41,10 +41,10 @@ public class UserContactVo implements Serializable {
     private String contactNo;
 
     @ApiModelProperty(value = "联系类型（0:手机，1:邮箱，2:电话）")
-    private Integer contactTyp;
+    private Integer contactType;
 
     @ApiModelProperty(value = "状态")
-    private String state;
+    private String status;
 
     @ApiModelProperty(value = "排序")
     private Integer sorted;

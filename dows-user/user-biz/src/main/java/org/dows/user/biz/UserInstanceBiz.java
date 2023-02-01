@@ -15,10 +15,8 @@ import org.dows.user.enums.EnumUserStatusCode;
 import org.dows.user.exception.UserException;
 import org.dows.user.service.UserInstanceService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 
