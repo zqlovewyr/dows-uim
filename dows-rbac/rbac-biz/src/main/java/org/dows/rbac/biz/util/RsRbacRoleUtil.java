@@ -1,6 +1,6 @@
 package org.dows.rbac.biz.util;
 
-import org.dows.rbac.api.vo.RbacRoleVO;
+import org.dows.rbac.vo.RbacRoleVO;
 import org.dows.rbac.entity.RbacRole;
 
 import java.util.Objects;

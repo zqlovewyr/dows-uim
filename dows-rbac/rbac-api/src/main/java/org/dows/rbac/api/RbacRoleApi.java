@@ -1,13 +1,10 @@
 package org.dows.rbac.api;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dows.framework.api.Response;
-import org.dows.rbac.api.vo.RbacRoleVO;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.dows.rbac.dto.RbacRoleDTO;
+import org.dows.rbac.vo.RbacRoleVO;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import java.util.List;
 
 /**
@@ -17,13 +14,20 @@ import java.util.List;
  * @since 2022-07-14 22:57:19
  */
 public interface RbacRoleApi {
-    @GetMapping("/v1/rbac-role/{id}")
-    Response<RbacRoleVO> getById(@PathVariable String id);
 
-    @GetMapping("/v1/rbac-roles")
-    Response<List<RbacRoleVO>> getByIdList(@RequestBody List<String> rbacRoleIdList);
+    Response<RbacRoleVO> getById(String id);
 
-    @GetMapping("/v1/rbac-roles/{appid}")
-    Response<List<RbacRoleVO>> getByIdListAndAppId(@RequestBody List<String> rbacRoleIdList,@PathVariable String appid);
+    Response<List<RbacRoleVO>> getByIdList(List<String> rbacRoleIdList);
+
+    Response<List<RbacRoleVO>> getByIdListAndAppId(List<String> rbacRoleIdList,@PathVariable String appid);
+
+    Response<List<RbacRoleVO>> getByIdList(List<String> idList, String appId);
+
+    /**
+     * 自定义查询 角色-实例 列表
+     *
+     * @param rbacRoleDTO
+     */
+    Response<IPage<RbacRoleVO>> customRbacRoleList(RbacRoleDTO rbacRoleDTO);
 
 }

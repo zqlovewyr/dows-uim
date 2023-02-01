@@ -7,33 +7,20 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
-import org.dows.account.biz.enums.EnumAccountRoleStatusCode;
-import org.dows.account.biz.exception.AccountRoleException;
 import org.dows.account.biz.util.AccountUtil;
 import org.dows.account.dto.AccountOrgDTO;
-import org.dows.account.dto.AccountOrgGroupDTO;
 import org.dows.account.dto.TreeAccountOrgDTO;
 import org.dows.account.entity.AccountGroup;
 import org.dows.account.entity.AccountOrg;
-import org.dows.account.entity.AccountRole;
 import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountOrgService;
 import org.dows.account.service.AccountRoleService;
-import org.dows.account.vo.AccountGroupVo;
 import org.dows.account.vo.AccountOrgVo;
-import org.dows.framework.api.Response;
-/*import org.dows.rbac.api.RbacRoleApi;*/
-import org.dows.rbac.api.enums.EnumRbacRoleCode;
-import org.dows.rbac.api.enums.EnumRbacStatusCode;
-import org.dows.rbac.api.exception.RbacException;
-import org.dows.rbac.api.vo.RbacRoleVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -122,7 +109,7 @@ public class AccountOrgBiz {
      */
     @Transactional(rollbackFor = Exception.class)
     public AccountOrgVo createAccountOrg(@RequestBody AccountOrgDTO accountOrgDTO) {
-        //step1: check static rule
+/*        //step1: check static rule
         AccountUtil.validateAccountOrgDTO(accountOrgDTO);
         //step2: createOrg
         AccountOrg accountOrg = new AccountOrg();
@@ -140,13 +127,13 @@ public class AccountOrgBiz {
                 item.setTenantId(accountOrg.getTenantId());
             });
             // create OrgGroup
-/*            this.accountGroupBiz.batchInsertGroup(accountOrgGroups);*/
+*//*            this.accountGroupBiz.batchInsertGroup(accountOrgGroups);*//*
         }
         //step4: create account-role
         Long rbacRoleId = accountOrgDTO.getRbacRoleId();
         if (!Objects.isNull(rbacRoleId) && rbacRoleId == 0) {
 
-    /*        Response<RbacRoleVO> rbacRoleResponse = rbacRoleApi.getById(String.valueOf(rbacRoleId));*/
+    *//*        Response<RbacRoleVO> rbacRoleResponse = rbacRoleApi.getById(String.valueOf(rbacRoleId));*//*
             Response<RbacRoleVO> rbacRoleResponse = new Response<>();
             RbacRoleVO rbacRoleVO = rbacRoleResponse.getData();
             AccountRole accountRole = AccountRole.builder()
@@ -159,12 +146,12 @@ public class AccountOrgBiz {
             accountRoleService.save(accountRole);
         }
         //step5: return VO
-        AccountOrgVo accountOrgVo = new AccountOrgVo();
+        AccountOrgVO accountOrgVo = new AccountOrgVO();
         BeanUtils.copyProperties(accountOrgVo, accountOrg);
         return accountOrgVo;
     }
 
-    /**
+    *//**
      * Paging query an organization based on accountId by appId
      * Display the results according to different RbacRoleCodes
      * admin: Displays all root organizations of the appId and their corresponding teachers
@@ -182,8 +169,8 @@ public class AccountOrgBiz {
      * @param pageNo      pageNo
      * @param pageSize    pageSize
      * @return AccountOrgPage
-     */
-    public IPage<AccountOrgVo> pageAccountOrg(String appId, String accountId, String accountName
+     *//*
+    public IPage<AccountOrgVO> pageAccountOrg(String appId, String accountId, String accountName
             , Integer pageNo, Integer pageSize) {
         // check accountId with role
         List<AccountRole> accountRoles = accountRoleService.lambdaQuery()
@@ -197,7 +184,7 @@ public class AccountOrgBiz {
         }
         // check Current Application Permissions
         List<String> accountRoleRoleIds = accountRoles.stream().map(AccountRole::getRoleId).collect(Collectors.toList());
-/*        Response<List<RbacRoleVO>> rbacRoleVOResponse = rbacRoleApi.getByIdListAndAppId(accountRoleRoleIds, appId);*/
+*//*        Response<List<RbacRoleVO>> rbacRoleVOResponse = rbacRoleApi.getByIdListAndAppId(accountRoleRoleIds, appId);*//*
         Response<List<RbacRoleVO>> rbacRoleVOResponse = new Response<>();
         List<RbacRoleVO> rbacRoles = rbacRoleVOResponse.getData();
         if (CollectionUtils.isEmpty(rbacRoles)) {
@@ -240,22 +227,22 @@ public class AccountOrgBiz {
             });
             accountGroupMap = accountGroupList.stream().collect(Collectors.groupingBy(AccountGroup::getOrgId, HashMap::new, Collectors.toList()));
         }
-        IPage<AccountOrgVo> pageVo = new Page<>();
+        IPage<AccountOrgVO> pageVo = new Page<>();
         BeanUtils.copyProperties(accountOrgIPage, pageVo);
         // transfer AccountOrg to AccountOrgVo
         List<AccountOrg> records = accountOrgIPage.getRecords();
-        List<AccountOrgVo> accountOrgVoList = new ArrayList<>();
+        List<AccountOrgVO> accountOrgVoList = new ArrayList<>();
         records.forEach(item -> {
-            AccountOrgVo accountOrgVo = new AccountOrgVo();
+            AccountOrgVO accountOrgVo = new AccountOrgVO();
             BeanUtils.copyProperties(item, accountOrgVo);
             accountOrgVoList.add(accountOrgVo);
             List<AccountGroup> accountGroups = accountGroupMap.get(item.getOrgId());
             if (CollectionUtils.isEmpty(accountGroups)) {
                 accountOrgVo.setAccountGroupList(new ArrayList<>());
             } else {
-                List<AccountGroupVo> accountGroupList = new ArrayList<>();
+                List<AccountGroupVO> accountGroupList = new ArrayList<>();
                 accountGroups.forEach(accountGroup -> {
-                    AccountGroupVo accountGroupVo = new AccountGroupVo();
+                    AccountGroupVO accountGroupVo = new AccountGroupVO();
                     BeanUtils.copyProperties(accountGroup, accountGroupVo);
                     accountGroupList.add(accountGroupVo);
                 });
@@ -263,7 +250,8 @@ public class AccountOrgBiz {
             }
         });
         pageVo.setRecords(accountOrgVoList);
-        return pageVo;
+        return pageVo;*/
+        return null;
     }
 
     public IPage<AccountOrg> teacherPageAccountOrg(String accountId, String appId, Integer pageNo, Integer pageSize) {

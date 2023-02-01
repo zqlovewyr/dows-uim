@@ -6,8 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dows.framework.api.Response;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
 import org.dows.rbac.api.RbacRoleApi;
-import org.dows.rbac.api.vo.RbacRoleVO;
-import org.dows.rbac.biz.RbacRoleBiz;
+import org.dows.rbac.vo.RbacRoleVO;
 import org.dows.rbac.entity.RbacRole;
 import org.dows.rbac.form.RbacRoleForm;
 import org.dows.rbac.service.RbacRoleService;
@@ -26,24 +25,23 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("rbacRole")
-public class RbacRoleRest implements RbacRoleApi, MybatisCrudRest<RbacRoleForm, RbacRole, RbacRoleService> {
-    private final RbacRoleBiz rbacRoleBiz;
-    @Override
+public class RbacRoleRest implements MybatisCrudRest<RbacRoleForm, RbacRole, RbacRoleService> {
+    private final RbacRoleApi rbacRoleApi;
+
     @GetMapping("/v1/rbac-role/{id}")
     public Response<RbacRoleVO> getById(@PathVariable String id) {
-        return Response.ok(rbacRoleBiz.getById(id));
+        return rbacRoleApi.getById(id);
     }
 
-    @Override
+
     @GetMapping("/v1/rbac-role")
     public Response<List<RbacRoleVO>> getByIdList( List<String> rbacRoleIdList) {
-        return Response.ok(rbacRoleBiz.getByIdList(rbacRoleIdList));
+        return rbacRoleApi.getByIdList(rbacRoleIdList);
     }
 
-    @Override
     @GetMapping("/v1/rbac-roles/{appid}")
     public Response<List<RbacRoleVO>> getByIdListAndAppId(List<String> rbacRoleIdList, String appid) {
-        return Response.ok(rbacRoleBiz.getByIdList(rbacRoleIdList,appid));
+        return rbacRoleApi.getByIdList(rbacRoleIdList,appid);
     }
 
 }

@@ -1,4 +1,4 @@
-package org.dows.rbac.api.dto;
+package org.dows.rbac.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -10,9 +10,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @description: RBAC-功能资源(RbacUri)DTO类
+ * @description: RBAC-菜单资源(RbacMenu)DTO类
  * @author: VX:PN15855012581
- * @create: 2022-07-14 22:57:25
+ * @create: 2022-07-14 22:57:18
  */
 @Data
 @ToString
@@ -21,36 +21,32 @@ import java.util.Date;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "RbacUri对象", description = "RBAC-功能资源")
-public class RbacUriDto implements Serializable {
-    private static final long serialVersionUID = 288702958853349463L;
+@ApiModel(value = "RbacMenu对象", description = "RBAC-菜单资源")
+public class RbacMenuDTO implements Serializable {
+    private static final long serialVersionUID = 167690930706915909L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @ApiModelProperty(value = "主键ID")
+    @ApiModelProperty(value = "账号-菜单ID")
     private Long id;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @ApiModelProperty(value = "资源父ID")
+    @ApiModelProperty(value = "父ID")
     private Long resourcePid;
-    @ApiModelProperty(value = "资源名")
+    @ApiModelProperty(value = "权限码")
+    private String resourceCode;
+    @ApiModelProperty(value = "权限名称")
     private String resourceName;
     @ApiModelProperty(value = "资源名称首字母")
     private String resourceLetter;
-    @ApiModelProperty(value = "资源码")
-    private String resourceCode;
-    @ApiModelProperty(value = "类型: 1:功能资源")
-    private Integer resourceTyp;
-    @ApiModelProperty(value = "资源值")
+    @ApiModelProperty(value = "权限值")
     private String resourceVal;
-    @ApiModelProperty(value = "资源路径")
+    @ApiModelProperty(value = "uri")
     private String resourcePath;
-    @ApiModelProperty(value = "资源图标")
-    private String resourceIcon;
-    @ApiModelProperty(value = "资源描述")
-    private String resourceDescr;
-    @ApiModelProperty(value = "是否隐藏: 0不隐藏, 1隐藏. 默认: 0")
-    private Boolean visible;
-    @ApiModelProperty(value = "层级")
-    private Integer level;
+    @ApiModelProperty(value = "权限类型：2:菜单资源（目录/菜单）")
+    private Integer resourceTyp;
+    @ApiModelProperty(value = "子菜单数量")
+    private Integer subCount;
+    @ApiModelProperty(value = "排序")
+    private Integer sorted;
     @ApiModelProperty(value = "应用 id")
     private String appId;
     @ApiModelProperty(value = "乐观锁, 默认: 0")

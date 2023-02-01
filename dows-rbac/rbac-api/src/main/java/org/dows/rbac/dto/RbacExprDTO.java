@@ -1,4 +1,4 @@
-package org.dows.rbac.api.dto;
+package org.dows.rbac.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -22,7 +22,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel(value = "RbacExpr对象", description = "rbac-权限表达式")
-public class RbacExprDto implements Serializable {
+public class RbacExprDTO implements Serializable {
     private static final long serialVersionUID = -15934114576939718L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)

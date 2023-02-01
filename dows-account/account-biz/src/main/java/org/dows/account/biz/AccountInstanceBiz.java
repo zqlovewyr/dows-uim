@@ -24,9 +24,8 @@ import org.dows.account.entity.*;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
-import org.dows.rbac.api.enums.EnumRbacStatusCode;
-import org.dows.rbac.api.exception.RbacException;
-import org.dows.rbac.api.vo.RbacRoleVO;
+import org.dows.rbac.api.RbacRoleApi;
+import org.dows.rbac.vo.RbacRoleVO;
 import org.dows.user.api.api.UserInstanceApi;
 import org.dows.user.api.dto.UserInstanceDTO;
 import org.dows.user.api.vo.UserInstanceVo;
@@ -54,7 +53,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     private final AccountInstanceService accountInstanceService;
     private final AccountUserService accountUserService;
     private final AccountIdentifierService accountIdentifierService;
-/*    private final RbacRoleApi rbacRoleApi;*/
+    private final RbacRoleApi rbacRoleApi;
     private final AccountRoleService accountRoleService;
     private final AccountOrgService accountOrgService;
     private final AccountGroupService accountGroupService;
@@ -87,12 +86,11 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         /* runsix:2.check whether rbacRoleId exist */
         RbacRoleVO rbacRoleVO = null;
         if (Objects.nonNull(accountInstanceDTO.getRbacRoleId())) {
-/*            Response<RbacRoleVO> rbacRoleVOResponse = rbacRoleApi.getById(String.valueOf(accountInstanceDTO.getRbacRoleId()));*/
-            Response<RbacRoleVO> rbacRoleVOResponse = new Response<RbacRoleVO>();
+           Response<RbacRoleVO> rbacRoleVOResponse = rbacRoleApi.getById(String.valueOf(accountInstanceDTO.getRbacRoleId()));
             rbacRoleVO = rbacRoleVOResponse.getData();
-            if (Objects.isNull(rbacRoleVO)) {
+/*            if (Objects.isNull(rbacRoleVO)) {
                 throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
-            }
+            }*/
         }
         /* runsix:3.check whether accountOrgOrgId exist */
         AccountOrg accountOrg = null;
@@ -256,7 +254,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     .parallelStream()
                     .collect(Collectors.toMap(RbacRoleVO::getId, a -> a));
             if (kRbacRoleIdVRbacRoleVOMap.size() != rbacRoleIdList.size()) {
-                throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);
+    /*            throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);*/
             }
         }
         /* runsix:4.check whether accountOrgOrgId exist */

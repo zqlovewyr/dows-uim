@@ -1,4 +1,4 @@
-package org.dows.rbac.api.vo;
+package org.dows.rbac.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
