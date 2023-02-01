@@ -30,4 +30,17 @@ public interface RbacRoleApi {
      */
     Response<IPage<RbacRoleVo>> customRbacRoleList(RbacRoleDTO rbacRoleDTO);
 
+    /**
+     * 查看 角色-实例
+     *
+     * @param id
+     */
+    Response<RbacRoleVo> getRbacRoleById(long id);
+
+    /**
+     * 编辑 角色-实例
+     *
+     * @param rbacRoleDTO
+     */
+    Response<Boolean> updateRbacRoleById(RbacRoleDTO rbacRoleDTO);
 }

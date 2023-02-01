@@ -45,14 +45,14 @@ public class AccountRoleRest implements MybatisCrudRest<AccountRoleForm, Account
     }
 
 
-    @ApiOperation("查看 角色-实例")
+    @ApiOperation("查看 账号-角色")
     @GetMapping("/getAccountRoleById/{id}")
     public Response getAccountRoleById(@PathVariable("id") long id) {
         Response<AccountRoleVo> vo = accountRoleApi.getAccountRoleById(id);
         return Response.ok(vo);
     }
 
-    @ApiOperation("编辑 角色-实例")
+    @ApiOperation("编辑 账号-角色")
     @PutMapping("/updateAccountRoleById")
     public Response updateAccountRoleById(@RequestBody AccountRoleDTO accountRoleDTO) {
         Response<Boolean> flag = accountRoleApi.updateAccountRoleById(accountRoleDTO);

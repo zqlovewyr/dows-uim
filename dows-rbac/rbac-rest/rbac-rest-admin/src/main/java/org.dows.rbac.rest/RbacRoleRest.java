@@ -44,14 +44,25 @@ public class RbacRoleRest implements MybatisCrudRest<RbacRoleForm, RbacRole, Rba
         return rbacRoleApi.getByIdList(rbacRoleIdList,appid);
     }
 
-    /**
-     * 自定义查询 角色-实例 列表
-     *
-     * @param rbacRoleDTO
-     */
     @ApiOperation("自定义查询 角色-实例 列表")
     @PostMapping("/customRbacRoleList")
     public Response<IPage<RbacRoleVo>> customRbacRoleList(RbacRoleDTO rbacRoleDTO) {
         return rbacRoleApi.customRbacRoleList(rbacRoleDTO);
     }
+
+
+    @ApiOperation("查看 角色-实例")
+    @GetMapping("/getRbacRoleById/{id}")
+    public Response getRbacRoleById(@PathVariable("id") long id) {
+        Response<RbacRoleVo> vo = rbacRoleApi.getRbacRoleById(id);
+        return Response.ok(vo);
+    }
+
+    @ApiOperation("编辑 角色-实例")
+    @PutMapping("/updateRbacRoleById")
+    public Response updateRbacRoleById(@RequestBody RbacRoleDTO rbacRoleDTO) {
+        Response<Boolean> flag = rbacRoleApi.updateRbacRoleById(rbacRoleDTO);
+        return Response.ok(flag);
+    }
+
 }
