@@ -57,4 +57,9 @@ public interface AccountInstanceApi {
      */
     void updateAccountInstanceById(AccountInstanceDTO accountInstanceDTO);
 
+    /**
+     * 查询 账户-实例-列表(不带分页)
+     */
+    Response<List<AccountInstanceVo>> getAccountInstanceList(AccountInstanceDTO accountInstanceDTO);
+
 }

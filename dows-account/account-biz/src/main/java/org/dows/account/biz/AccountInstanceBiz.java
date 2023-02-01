@@ -533,4 +533,29 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         user.setId(Long.valueOf(accountUser.getUserId()));
         userInstanceApi.insertOrUpdateUserInstance(user).getData();
     }
+
+    @Override
+    public Response<List<AccountInstanceVo>> getAccountInstanceList(AccountInstanceDTO accountInstanceDTO) {
+        List<AccountInstance> voList = accountInstanceService.lambdaQuery()
+                .like(StringUtils.isNotEmpty(accountInstanceDTO.getAccountId()), AccountInstance::getAccountId, accountInstanceDTO.getAccountId())
+                .like(StringUtils.isNotEmpty(accountInstanceDTO.getAccountName()), AccountInstance::getAccountName, accountInstanceDTO.getAccountName())
+                .eq(StringUtils.isNotEmpty(accountInstanceDTO.getSource()), AccountInstance::getSource, accountInstanceDTO.getSource())
+                .like(StringUtils.isNotEmpty(accountInstanceDTO.getPhone()), AccountInstance::getPhone, accountInstanceDTO.getPhone())
+                .eq(StringUtils.isNotEmpty(accountInstanceDTO.getAppId()), AccountInstance::getAppId, accountInstanceDTO.getAppId())
+                .eq(accountInstanceDTO.getStatus() != null, AccountInstance::getStatus, accountInstanceDTO.getStatus())
+                .eq(accountInstanceDTO.getDt() != null, AccountInstance::getDt, accountInstanceDTO.getDt())
+                .gt(accountInstanceDTO.getStartTime() != null, AccountInstance::getDt, accountInstanceDTO.getStartTime())
+                .lt(accountInstanceDTO.getEndTime() != null, AccountInstance::getDt, accountInstanceDTO.getEndTime())
+                .orderByDesc(AccountInstance::getDt).list();
+        //复制属性
+        List<AccountInstanceVo> list = new ArrayList<>();
+        if(voList != null && voList.size() > 0){
+            voList.forEach(vo->{
+                AccountInstanceVo model = new AccountInstanceVo();
+                BeanUtils.copyProperties(vo,model);
+                list.add(model);
+            });
+        }
+        return Response.ok(list);
+    }
 }
