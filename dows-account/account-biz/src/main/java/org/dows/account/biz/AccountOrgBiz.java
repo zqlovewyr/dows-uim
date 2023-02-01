@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dows.account.api.AccountOrgApi;
 import org.dows.account.biz.util.AccountUtil;
 import org.dows.account.dto.AccountOrgDTO;
 import org.dows.account.dto.TreeAccountOrgDTO;
@@ -14,48 +15,21 @@ import org.dows.account.entity.AccountGroup;
 import org.dows.account.entity.AccountOrg;
 import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountOrgService;
-import org.dows.account.service.AccountRoleService;
 import org.dows.account.vo.AccountOrgVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.*;
 
 
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class AccountOrgBiz {
+public class AccountOrgBiz implements AccountOrgApi {
 
     private final AccountOrgService accountOrgService;
-
-/*    private final RbacRoleApi rbacRoleApi;*/
-
-    // todo 导入文件
-    public void importOrg(String file) {
-
-    }
-
-    // todo 导入组织对象
-    public void importOrg(TreeAccountOrgDTO file) {
-
-
-    }
-
-    // todo 列出所有组织记录
-    public void listOrg() {
-
-    }
-
-    // todo 根据条件列出所有层级组织(智能层级，所有组织)
-    public void listOrgTree(TreeAccountOrgDTO treeAccountOrgDTO) {
-
-
-    }
-
-    private final AccountGroupBiz accountGroupBiz;
-    private final AccountRoleService accountRoleService;
     private final AccountGroupService accountGroupService;
 
     /**
@@ -152,24 +126,24 @@ public class AccountOrgBiz {
     }
 
     *//**
-     * Paging query an organization based on accountId by appId
-     * Display the results according to different RbacRoleCodes
-     * admin: Displays all root organizations of the appId and their corresponding teachers
-     * teacher: Show the root organization managed by appId
-     * <p>
-     * <p>
-     * 根据 accountId,appId分页查询组织
-     * 根据不同的rbacRoleCode展示结果
-     * admin:展示appId所有root组织以及组织所对应的teacher
-     * teacher:展示appId所管理的root组织
-     *
-     * @param appId       appId
-     * @param accountId   accountId
-     * @param accountName accountName
-     * @param pageNo      pageNo
-     * @param pageSize    pageSize
-     * @return AccountOrgPage
-     *//*
+         * Paging query an organization based on accountId by appId
+         * Display the results according to different RbacRoleCodes
+         * admin: Displays all root organizations of the appId and their corresponding teachers
+         * teacher: Show the root organization managed by appId
+         * <p>
+         * <p>
+         * 根据 accountId,appId分页查询组织
+         * 根据不同的rbacRoleCode展示结果
+         * admin:展示appId所有root组织以及组织所对应的teacher
+         * teacher:展示appId所管理的root组织
+         *
+         * @param appId       appId
+         * @param accountId   accountId
+         * @param accountName accountName
+         * @param pageNo      pageNo
+         * @param pageSize    pageSize
+         * @return AccountOrgPage
+         *//*
     public IPage<AccountOrgVO> pageAccountOrg(String appId, String accountId, String accountName
             , Integer pageNo, Integer pageSize) {
         // check accountId with role
@@ -254,7 +228,7 @@ public class AccountOrgBiz {
         return null;
     }
 
-    public IPage<AccountOrg> teacherPageAccountOrg(String accountId, String appId, Integer pageNo, Integer pageSize) {
+    public IPage<AccountOrgVo> teacherPageAccountOrg(String accountId, String appId, Integer pageNo, Integer pageSize) {
         // list account_group
         List<AccountGroup> accountGroupList = accountGroupService.lambdaQuery()
                 .select(AccountGroup::getOrgId)
@@ -263,6 +237,7 @@ public class AccountOrgBiz {
                 .eq(AccountGroup::getDeleted, false)
                 .list();
         Page<AccountOrg> page = new Page<>(pageNo, pageSize);
+        Page<AccountOrgVo> voPage = new Page<>();
         if (CollectionUtils.isNotEmpty(accountGroupList)) {
             Set<String> orgIds = new HashSet<>();
             accountGroupList.forEach(item -> orgIds.add(item.getOrgId()));
@@ -271,19 +246,25 @@ public class AccountOrgBiz {
                     .in(AccountOrg::getOrgId, orgIds)
                     .eq(AccountOrg::getDeleted, false)
                     .orderByDesc(AccountOrg::getDt);
-            return accountOrgService.page(page, queryWrapper);
+            page = accountOrgService.page(page, queryWrapper);
+            BeanUtils.copyProperties(page, voPage);
+            return voPage;
         }
-        return page;
+        BeanUtils.copyProperties(page, voPage);
+        return voPage;
     }
 
-    public IPage<AccountOrg> adminPageAccountOrg(String appId, Integer pageNo, Integer pageSize) {
+    public IPage<AccountOrgVo> adminPageAccountOrg(String appId, Integer pageNo, Integer pageSize) {
         // TODO 只获取root节点，以及root节点的教师
         LambdaQueryWrapper<AccountOrg> queryWrapper = new LambdaQueryWrapper<AccountOrg>()
                 .eq(AccountOrg::getAppId, appId)
                 .eq(AccountOrg::getPid, 0)
                 .eq(AccountOrg::getDeleted, false);
         Page<AccountOrg> page = new Page<>(pageNo, pageSize);
-        return accountOrgService.page(page, queryWrapper);
+        Page<AccountOrgVo> voPage = new Page<>();
+        page = accountOrgService.page(page, queryWrapper);
+        BeanUtils.copyProperties(page, voPage);
+        return voPage;
     }
 
 }
