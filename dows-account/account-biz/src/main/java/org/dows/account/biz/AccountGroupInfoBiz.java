@@ -238,8 +238,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         BeanUtils.copyProperties(groupInfo, vo);
         //获取允许最大成员数、头像、描述、有效时间、组织类型、状态等
         AccountOrg accountOrg = accountOrgService.lambdaQuery()
-                .eq(AccountOrg::getOrgId, vo.getOrgId())
-                .eq(AccountOrg::getDeleted, false)
+                .eq(AccountOrg::getId, vo.getOrgId())
                 .one();
         BeanUtils.copyProperties(accountOrg, vo);
         return Response.ok(vo);
