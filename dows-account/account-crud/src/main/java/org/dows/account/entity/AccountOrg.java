@@ -71,10 +71,10 @@ public class AccountOrg implements CrudEntity {
     private String orgType;
 
     @ApiModelProperty("排序")
-    private String sorted;
+    private Integer sorted;
 
     @ApiModelProperty("状态")
-    private String status;
+    private Integer status;
 
     @ApiModelProperty("有效时间")
     private Date indate;

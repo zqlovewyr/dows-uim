@@ -110,10 +110,18 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         //1.1、设置组织架构属性
         BeanUtils.copyProperties(accountOrgGroupDTO, accountOrg);
         accountOrg.setOrgId(String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID)));
-        accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
-        accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted().toString());
-        accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus().toString());
-        accountOrg.setDt(accountOrgGroupDTO.getOrgDt());
+        if(StringUtils.isNotEmpty(accountOrgGroupDTO.getOrgDescr())){
+            accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
+        }
+        if(accountOrgGroupDTO.getOrgSorted() != null){
+            accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted());
+        }
+        if(accountOrgGroupDTO.getOrgStatus() != null){
+            accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus());
+        }
+        if(accountOrgGroupDTO.getOrgDt() != null){
+            accountOrg.setDt(accountOrgGroupDTO.getOrgDt());
+        }
         boolean flagOrg = accountOrgService.save(accountOrg);
         if (flagOrg == false) {
             flag = false;
@@ -148,8 +156,8 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
                 accountOrg.setId(null);
                 accountOrg.setOrgId(String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID)));
                 accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
-                accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted().toString());
-                accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus().toString());
+                accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted());
+                accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus());
                 accountOrg.setDt(accountOrgGroupDTO.getOrgDt());
                 boolean flagOrg = accountOrgService.save(accountOrg);
                 if (flagOrg == false) {
@@ -184,8 +192,8 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         //1.1、设置组织架构属性
         BeanUtils.copyProperties(accountOrgGroupDTO, accountOrg);
         accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
-        accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted().toString());
-        accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus().toString());
+        accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted());
+        accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus());
         accountOrg.setDt(accountOrgGroupDTO.getOrgDt());
         boolean flagOrg = accountOrgService.updateById(accountOrg);
         if (flagOrg == false) {
