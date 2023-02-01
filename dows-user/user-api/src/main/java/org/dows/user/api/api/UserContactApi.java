@@ -3,10 +3,7 @@ package org.dows.user.api.api;
 
 import org.dows.framework.api.Response;
 import org.dows.user.api.dto.UserContactDTO;
-import org.dows.user.api.dto.UserInstanceDTO;
 import org.dows.user.api.vo.UserContactVo;
-import org.dows.user.api.vo.UserInstanceVo;
-
 import java.util.List;
 
 /**
