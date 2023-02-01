@@ -70,10 +70,21 @@ public class UserInstanceBiz implements UserInstanceApi {
     }
 
     @Override
-    public Response<Long> insertOrUpdateUserInstance(UserInstanceDTO userInstanceDTO) {
+    public Response<Long> insertUserInstance(UserInstanceDTO userInstanceDTO) {
         UserInstance userInstance = new UserInstance();
         BeanUtils.copyProperties(userInstanceDTO, userInstance);
         boolean userFlag = userInstanceService.save(userInstance);
+        if(userFlag == false){
+            throw new UserException(EnumUserStatusCode.USER_CREATE_FAIL_EXCEPTION);
+        }
+        return Response.ok(userInstance.getId());
+    }
+
+    @Override
+    public Response<Long> updateUserInstance(UserInstanceDTO userInstanceDTO) {
+        UserInstance userInstance = new UserInstance();
+        BeanUtils.copyProperties(userInstanceDTO, userInstance);
+        boolean userFlag = userInstanceService.updateById(userInstance);
         if(userFlag == false){
             throw new UserException(EnumUserStatusCode.USER_CREATE_FAIL_EXCEPTION);
         }

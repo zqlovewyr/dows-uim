@@ -550,14 +550,13 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         //2、通过账号ID找到用户ID
         AccountUser accountUser = accountUserService.lambdaQuery()
                 .eq(AccountUser::getAccountId, account.getId())
-                .eq(AccountUser::getDeleted, false)
                 .one();
         //2、修改用户-实例
         UserInstanceDTO user = new UserInstanceDTO();
         user.setName(accountInstanceDTO.getUserName());
         user.setGender(accountInstanceDTO.getGender());
         user.setId(Long.valueOf(accountUser.getUserId()));
-        userInstanceApi.insertOrUpdateUserInstance(user).getData();
+        userInstanceApi.updateUserInstance(user).getData();
     }
 
     @Override

@@ -336,7 +336,7 @@ public class AccountGroupBiz implements AccountGroupApi {
         //2、创建用户实例
         UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
         BeanUtils.copyProperties(accountGroupDTO, userInstanceDTO);
-        Long userId = userInstanceApi.insertOrUpdateUserInstance(userInstanceDTO).getData();
+        Long userId = userInstanceApi.insertUserInstance(userInstanceDTO).getData();
         map.put("userId", userId);
 
         //3、设置关联关系
