@@ -257,55 +257,87 @@ public class AccountGroupBiz implements AccountGroupApi {
             AccountRole role = accountRoleService.getOne(roleWrapper.eq(AccountRole::getPrincipalId, vo.getAccountId())
                     .eq(AccountRole::getDeleted, false)
                     .eq(AccountRole::getPrincipalType, EnumAccountRolePrincipalType.PERSONAL.getCode()));
-            vo.setRoleName(role.getRoleName());
+            //非空判断
+            if (role != null && StringUtils.isNotEmpty(role.getRoleName())) {
+                vo.setRoleName(role.getRoleName());
+            }
             //5.2、设置成员相关信息
+            AccountUser user = new AccountUser();
+            UserInstance instance = new UserInstance();
+            UserContact contact = new UserContact();
             LambdaQueryWrapper<AccountUser> userWrapper = new LambdaQueryWrapper<>();
-            AccountUser user = accountUserService.getOne(userWrapper.eq(AccountUser::getAccountId, vo.getAccountId())
-                    .eq(AccountUser::getDeleted, false));
-            LambdaQueryWrapper<UserInstance> instanceWrapper = new LambdaQueryWrapper<>();
-            UserInstance instance = userInstanceService.getOne(instanceWrapper.eq(UserInstance::getId, user.getUserId())
-                    .eq(UserInstance::getDeleted, false));
-            LambdaQueryWrapper<UserContact> contactWrapper = new LambdaQueryWrapper<>();
-            UserContact contact = userContactService.getOne(contactWrapper.eq(UserContact::getUserId, user.getUserId())
-                    .eq(UserContact::getDeleted, false));
-            vo.setGender(instance.getGender());
-            vo.setUserName(instance.getName());
-            vo.setIdNo(instance.getIdNo());
-            vo.setContactNum(contact.getContactNum());
-            vo.setExamineTime(accountGroupDTO.getExamineTime());
-            vo.setRecordTime(accountGroupDTO.getRecordTime());
+            user = accountUserService.getOne(userWrapper.eq(AccountUser::getAccountId, vo.getAccountId()));
+            if (user != null) {
+                LambdaQueryWrapper<UserInstance> instanceWrapper = new LambdaQueryWrapper<>();
+                instance = userInstanceService.getOne(instanceWrapper.eq(UserInstance::getId, user.getUserId()));
+                LambdaQueryWrapper<UserContact> contactWrapper = new LambdaQueryWrapper<>();
+                contact = userContactService.getOne(contactWrapper.eq(UserContact::getUserId, user.getUserId()));
+            }
+            //非空判断
+            if (instance != null) {
+                if (StringUtils.isNotEmpty(instance.getGender())) {
+                    vo.setGender(instance.getGender());
+                }
+                if (StringUtils.isNotEmpty(instance.getName())) {
+                    vo.setUserName(instance.getName());
+                }
+                if (StringUtils.isNotEmpty(instance.getIdNo())) {
+                    vo.setIdNo(instance.getIdNo());
+                }
+            }
+            if (contact != null) {
+                if (StringUtils.isNotEmpty(contact.getContactNum())) {
+                    vo.setContactNum(contact.getContactNum());
+                }
+            }
+            if (accountGroupDTO != null) {
+                if (accountGroupDTO.getExamineTime() != null) {
+                    vo.setExamineTime(accountGroupDTO.getExamineTime());
+                }
+                if (accountGroupDTO.getRecordTime() != null) {
+                    vo.setRecordTime(accountGroupDTO.getRecordTime());
+                }
+            }
             //5.3、设置组织架构负责人
             LambdaQueryWrapper<AccountGroupInfo> ownerWrapper = new LambdaQueryWrapper<>();
             AccountGroupInfo groupInfo = accountGroupInfoService.getOne(ownerWrapper.eq(AccountGroupInfo::getOrgId, vo.getOrgId())
                     .eq(AccountGroupInfo::getDeleted, false));
-            vo.setOwnerId(groupInfo.getAccountId());
-            vo.setOwnerName(groupInfo.getOwner());
+            //非空判断
+            if (groupInfo != null) {
+                if (StringUtils.isNotEmpty(groupInfo.getAccountId())) {
+                    vo.setOwnerId(groupInfo.getAccountId());
+                }
+                if (StringUtils.isNotEmpty(groupInfo.getOwner())) {
+                    vo.setOwnerName(groupInfo.getOwner());
+                }
+            }
+            voList.add(vo);
         });
         //复制属性
         IPage<AccountGroupVo> pageVo = new Page<>();
-        BeanUtils.copyProperties(groupPage, pageVo);
+        BeanUtils.copyProperties(groupPage, pageVo,new String[]{"records"});
         pageVo.setRecords(voList);
         return Response.ok(pageVo);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Map<String,Object>> insertOrUpdateAccountGroup(AccountGroupDTO accountGroupDTO) {
-        Map<String,Object> map = new HashMap<>();
+    public Response<Map<String, Object>> insertOrUpdateAccountGroup(AccountGroupDTO accountGroupDTO) {
+        Map<String, Object> map = new HashMap<>();
         //1、创建账号实例
         AccountInstance accountInstance = new AccountInstance();
         BeanUtils.copyProperties(accountGroupDTO, accountInstance);
         boolean accountFlag = accountInstanceService.save(accountInstance);
-        if(accountFlag == false){
+        if (accountFlag == false) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_CREATE_FAIL_EXCEPTION);
         }
-        map.put("accountId",accountInstance.getId());
+        map.put("accountId", accountInstance.getId());
 
         //2、创建用户实例
         UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
         BeanUtils.copyProperties(accountGroupDTO, userInstanceDTO);
         Long userId = userInstanceApi.insertOrUpdateUserInstance(userInstanceDTO).getData();
-        map.put("userId",userId);
+        map.put("userId", userId);
 
         //3、设置关联关系
         AccountUser accountUser = new AccountUser();
@@ -313,20 +345,20 @@ public class AccountGroupBiz implements AccountGroupApi {
         accountUser.setUserId(userId.toString());
         accountUser.setAccountId(accountInstance.getId().toString());
         boolean unionFlag = accountUserService.save(accountUser);
-        if(unionFlag == false){
+        if (unionFlag == false) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_USER_UNION_FAIL_EXCEPTION);
         }
-        map.put("unionId",accountUser.getId());
+        map.put("unionId", accountUser.getId());
 
         //4、创建组员实例
         AccountGroup accountGroup = new AccountGroup();
         BeanUtils.copyProperties(accountGroupDTO, accountGroup);
         accountGroup.setUserId(userId.toString());
         boolean groupFlag = accountGroupService.save(accountGroup);
-        if(groupFlag == false){
+        if (groupFlag == false) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_GROUP_MEMBER_FAIL_EXCEPTION);
         }
-        map.put("groupId",accountGroup.getId());
+        map.put("groupId", accountGroup.getId());
 
         return Response.ok(map);
     }

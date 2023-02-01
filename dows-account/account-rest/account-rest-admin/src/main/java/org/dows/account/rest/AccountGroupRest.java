@@ -1,5 +1,6 @@
 package org.dows.account.rest;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.dows.account.dto.AccountOrgGroupDTO;
 import org.dows.account.entity.AccountGroup;
 import org.dows.account.form.AccountGroupForm;
 import org.dows.account.service.AccountGroupService;
+import org.dows.account.vo.AccountGroupVo;
 import org.dows.framework.api.Response;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
 import org.springframework.web.bind.annotation.*;
@@ -47,9 +49,8 @@ public class AccountGroupRest implements MybatisCrudRest<AccountGroupForm, Accou
 
     @ApiOperation("自定义查询 账号-组-成员 列表")
     @PostMapping("/customAccountGroupList")
-    public Response customAccountGroupList(@RequestBody AccountGroupDTO accountGroupDTO) {
-        accountGroupApi.customAccountGroupList(accountGroupDTO);
-        return Response.ok();
+    public Response<IPage<AccountGroupVo>> customAccountGroupList(@RequestBody AccountGroupDTO accountGroupDTO) {
+        return accountGroupApi.customAccountGroupList(accountGroupDTO);
     }
 }
 
