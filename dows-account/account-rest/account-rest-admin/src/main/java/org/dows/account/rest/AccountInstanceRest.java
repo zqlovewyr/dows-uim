@@ -1,22 +1,19 @@
 package org.dows.account.rest;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountInstanceApi;
-import org.dows.account.biz.AccountInstanceBiz;
 import org.dows.account.dto.AccountInstanceDTO;
 import org.dows.account.entity.AccountInstance;
 import org.dows.account.form.AccountInstanceForm;
 import org.dows.account.service.AccountInstanceService;
-import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 
 /**
  * 账号-实例(AccountInstance)表控制层
@@ -58,8 +55,8 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
 
     @ApiOperation("登录")
     @PostMapping("/login")
-    public void login(@RequestBody AccountInstanceDTO accountInstanceDTO) {
-        accountInstanceApi.login(accountInstanceDTO);
+    public Response<Map<String, Object>> login(@RequestBody AccountInstanceDTO accountInstanceDTO) {
+        return accountInstanceApi.login(accountInstanceDTO);
     }
 }
 

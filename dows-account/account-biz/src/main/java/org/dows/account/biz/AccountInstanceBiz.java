@@ -346,8 +346,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         //1、获取账户是否存在
         LambdaQueryWrapper<AccountInstance> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(accountInstanceDTO.getAccountName()), AccountInstance::getAccountName, accountInstanceDTO.getAccountName())
-                .eq(StringUtils.isNotEmpty(accountInstanceDTO.getPassword()), AccountInstance::getPassword, accountInstanceDTO.getPassword())
-                .eq(AccountInstance::getDeleted, false);
+                .eq(StringUtils.isNotEmpty(accountInstanceDTO.getPassword()), AccountInstance::getPassword, accountInstanceDTO.getPassword());
         AccountInstance accountInstance = accountInstanceService.getOne(queryWrapper);
         if (accountInstance == null) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);
