@@ -46,7 +46,7 @@ public class RbacRoleRest implements MybatisCrudRest<RbacRoleForm, RbacRole, Rba
 
     @ApiOperation("自定义查询 角色-实例 列表")
     @PostMapping("/customRbacRoleList")
-    public Response<IPage<RbacRoleVo>> customRbacRoleList(RbacRoleDTO rbacRoleDTO) {
+    public Response<IPage<RbacRoleVo>> customRbacRoleList(@RequestBody RbacRoleDTO rbacRoleDTO) {
         return rbacRoleApi.customRbacRoleList(rbacRoleDTO);
     }
 
