@@ -62,6 +62,18 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
        accountInstanceApi.updateAccountInstanceById(accountInstanceDTO);
     }
 
+    @ApiOperation("删除 账号-实例")
+    @PutMapping("/deleteAccountInstanceById/{id}")
+    public Response<Boolean> deleteAccountInstanceById(@PathVariable("id") Long id) {
+        return accountInstanceApi.deleteAccountInstanceById(id);
+    }
+
+    @ApiOperation("批量删除 账号-实例")
+    @PutMapping("/batchDeleteAccountInstances")
+    public void batchDeleteAccountInstances(@RequestParam("ids") List<String> ids) {
+        accountInstanceApi.batchDeleteAccountInstances(ids);
+    }
+
     @ApiOperation("新增 账号-实例")
     @PostMapping("/createAccountInstance")
     public Response<AccountInstanceVo> createAccountInstance(@RequestBody AccountInstanceDTO accountInstanceDTO) {

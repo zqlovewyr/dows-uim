@@ -61,4 +61,18 @@ public interface AccountInstanceApi {
      * 查询 账户-实例-列表(不带分页)
      */
     Response<List<AccountInstanceVo>> getAccountInstanceList(AccountInstanceDTO accountInstanceDTO);
+
+    /**
+     * 删除 账号-实例
+     *
+     * @param id
+     */
+    Response<Boolean> deleteAccountInstanceById(Long id);
+
+    /**
+     * 批量删除 账号-实例
+     * @param ids
+     * @return
+     */
+    void batchDeleteAccountInstances(List<String> ids);
 }

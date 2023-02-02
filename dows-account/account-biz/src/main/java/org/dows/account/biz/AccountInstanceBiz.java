@@ -4,8 +4,11 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.listener.ReadListener;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -581,5 +584,24 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             });
         }
         return Response.ok(list);
+    }
+
+    @Override
+    public Response<Boolean> deleteAccountInstanceById(Long id) {
+        LambdaUpdateWrapper<AccountInstance> instanceWrapper = Wrappers.lambdaUpdate(AccountInstance.class);
+        instanceWrapper.set(AccountInstance::getDeleted, true)
+                .eq(AccountInstance::getId, id);
+        boolean flag = accountInstanceService.update(instanceWrapper);
+        return Response.ok(flag);
+    }
+
+    @Override
+    public void batchDeleteAccountInstances(List<String> ids) {
+        ids.forEach(id->{
+            LambdaUpdateWrapper<AccountInstance> instanceWrapper = Wrappers.lambdaUpdate(AccountInstance.class);
+            instanceWrapper.set(AccountInstance::getDeleted, true)
+                    .eq(AccountInstance::getId, id);
+            accountInstanceService.update(instanceWrapper);
+        });
     }
 }
