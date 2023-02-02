@@ -40,4 +40,11 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         Response<Long> id = userFamilyApi.insertUserFamily(userFamilyDTO);
         return id;
     }
+
+    @ApiOperation("编辑 用户-家庭")
+    @PostMapping("/updateUserFamilyById")
+    public Response<Long> updateUserFamilyById(@RequestBody UserFamilyDTO userFamilyDTO) {
+        Response<Long> id = userFamilyApi.updateUserFamilyById(userFamilyDTO);
+        return id;
+    }
 }

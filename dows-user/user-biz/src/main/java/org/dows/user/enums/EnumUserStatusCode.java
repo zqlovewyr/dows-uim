@@ -12,7 +12,8 @@ import org.dows.framework.api.StatusCode;
 public enum EnumUserStatusCode implements StatusCode {
     USER_CREATE_FAIL_EXCEPTION(500001, "创建用户失败"),
     USER_IS_NOT_EXIST_EXCEPTION(500002, "该用户不存在"),
-    USER_FAMILY_CREATE_FAIL_EXCEPTION(500003, "创建家庭失败");
+    USER_FAMILY_CREATE_FAIL_EXCEPTION(500003, "创建家庭失败"),
+    USER_FAMILY_UPDATE_FAIL_EXCEPTION(500004, "更新家庭失败");
     final Integer code;
     final String descr;
 }

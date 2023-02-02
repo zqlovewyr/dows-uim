@@ -24,4 +24,11 @@ public interface UserFamilyApi {
      * @param userFamilyDTO
      */
     Response<Long> insertUserFamily(UserFamilyDTO userFamilyDTO);
+
+    /**
+     * 编辑 用户-家庭
+     *
+     * @param userFamilyDTO
+     */
+    Response<Long> updateUserFamilyById(UserFamilyDTO userFamilyDTO);
 }

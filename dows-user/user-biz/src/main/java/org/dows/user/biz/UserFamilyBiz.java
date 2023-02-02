@@ -8,6 +8,7 @@ import org.dows.user.api.api.UserFamilyApi;
 import org.dows.user.api.dto.UserFamilyDTO;
 import org.dows.user.api.vo.UserFamilyVo;
 import org.dows.user.entity.UserFamily;
+import org.dows.user.entity.UserInstance;
 import org.dows.user.enums.EnumUserStatusCode;
 import org.dows.user.exception.UserException;
 import org.dows.user.service.UserFamilyService;
@@ -132,6 +133,23 @@ public class UserFamilyBiz implements UserFamilyApi {
             throw new UserException(EnumUserStatusCode.USER_FAMILY_CREATE_FAIL_EXCEPTION);
         }
         return Response.ok(model.getId());
+    }
+
+
+    /**
+     * 新增 用户-家庭
+     *
+     * @param userFamilyDTO
+     */
+    @Override
+    public Response<Long> updateUserFamilyById(UserFamilyDTO userFamilyDTO) {
+        UserFamily userFamily = new UserFamily();
+        BeanUtils.copyProperties(userFamilyDTO, userFamily);
+        boolean userFlag = userFamilyService.updateById(userFamily);
+        if(userFlag == false){
+            throw new UserException(EnumUserStatusCode.USER_FAMILY_UPDATE_FAIL_EXCEPTION);
+        }
+        return Response.ok(userFamily.getId());
     }
 
 }
