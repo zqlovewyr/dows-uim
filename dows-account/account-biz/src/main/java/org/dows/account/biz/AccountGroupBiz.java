@@ -297,10 +297,12 @@ public class AccountGroupBiz implements AccountGroupApi {
                 BeanUtils.copyProperties(model, instance);
                 UserContactDTO contactDto = new UserContactDTO();
                 contactDto.setUserId(user.getUserId());
-                UserContactVo contactVo = new UserContactVo();
-                contactVo = userContactApi.getUserContactList(contactDto).getData().get(0);
-                //复制属性
-                BeanUtils.copyProperties(contactVo, contact);
+                List<UserContactVo> contactVoList = new ArrayList<>();
+                contactVoList = userContactApi.getUserContactList(contactDto).getData();
+                if(contactVoList != null && contactVoList.size() > 0){
+                    //复制属性
+                    BeanUtils.copyProperties(contactVoList.get(0), contact);
+                }
 
             }
             //非空判断

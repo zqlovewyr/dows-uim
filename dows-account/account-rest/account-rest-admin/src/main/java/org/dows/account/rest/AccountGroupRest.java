@@ -33,14 +33,14 @@ public class AccountGroupRest implements MybatisCrudRest<AccountGroupForm, Accou
 
     private final AccountGroupApi accountGroupApi;
 
-    @ApiOperation("保存 账号-组织")
+    @ApiOperation("保存 账号-组织-成员")
     @PostMapping("/createAccountGroups")
     public Response createAccountGroup(@RequestBody AccountGroupDTO accountGroupDTO) {
         accountGroupApi.insertOrUpdateAccountGroup(accountGroupDTO);
         return Response.ok();
     }
 
-    @ApiOperation("批量保存 账号-组织")
+    @ApiOperation("批量保存 账号-组织-成员")
     @PostMapping("/batchCreateAccountGroups")
     public Response batchCreateAccountGroup(@RequestBody List<AccountGroupDTO> accountGroupDTOs) {
         accountGroupApi.batchInsertGroup(accountGroupDTOs);
