@@ -27,7 +27,7 @@ public class AccountRest {
 
     @GetMapping("test")
     public Response test() {
-        return Response.ok("success");
+        return Response.ok("succe ss");
     }
 
     @GetMapping("page")
