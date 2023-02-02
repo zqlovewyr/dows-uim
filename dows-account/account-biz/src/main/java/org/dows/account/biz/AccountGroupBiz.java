@@ -12,11 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountGroupApi;
 import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
+import org.dows.account.biz.util.RangeUtil;
 import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.entity.*;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountGroupVo;
+import org.dows.account.vo.NormalDataVo;
 import org.dows.framework.api.Response;
 import org.dows.user.api.api.UserContactApi;
 import org.dows.user.api.api.UserInstanceApi;
@@ -26,7 +28,6 @@ import org.dows.user.api.vo.UserContactVo;
 import org.dows.user.api.vo.UserInstanceVo;
 import org.dows.user.entity.UserContact;
 import org.dows.user.entity.UserInstance;
-import org.dows.user.service.UserContactService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -192,11 +194,11 @@ public class AccountGroupBiz implements AccountGroupApi {
             UserContactDTO dto = new UserContactDTO();
             dto.setContactNum(accountGroupDTO.getContactNum());
             List<UserContactVo> userContactList = userContactApi.getUserContactList(dto).getData();
-            List<UserContact>  contactList = new ArrayList<>();
-            if(userContactList != null && userContactList.size() > 0){
-                userContactList.forEach(model->{
+            List<UserContact> contactList = new ArrayList<>();
+            if (userContactList != null && userContactList.size() > 0) {
+                userContactList.forEach(model -> {
                     UserContact contact = new UserContact();
-                    BeanUtils.copyProperties(model,contact);
+                    BeanUtils.copyProperties(model, contact);
                     contactList.add(contact);
                 });
             }
@@ -211,11 +213,11 @@ public class AccountGroupBiz implements AccountGroupApi {
             UserInstanceDTO dto = new UserInstanceDTO();
             dto.setIdNo(accountGroupDTO.getIdNo());
             List<UserInstanceVo> userInstanceList = userInstanceApi.getUserInstanceList(dto).getData();
-            List<UserInstance>  instanceList = new ArrayList<>();
-            if(userInstanceList != null && userInstanceList.size() > 0){
-                userInstanceList.forEach(model->{
+            List<UserInstance> instanceList = new ArrayList<>();
+            if (userInstanceList != null && userInstanceList.size() > 0) {
+                userInstanceList.forEach(model -> {
                     UserInstance instance = new UserInstance();
-                    BeanUtils.copyProperties(model,instance);
+                    BeanUtils.copyProperties(model, instance);
                     instanceList.add(instance);
                 });
             }
@@ -231,11 +233,11 @@ public class AccountGroupBiz implements AccountGroupApi {
             UserInstanceDTO dto = new UserInstanceDTO();
             dto.setIdNo(accountGroupDTO.getName());
             List<UserInstanceVo> userInstanceList = userInstanceApi.getUserInstanceList(dto).getData();
-            List<UserInstance>  instanceList = new ArrayList<>();
-            if(userInstanceList != null && userInstanceList.size() > 0){
-                userInstanceList.forEach(model->{
+            List<UserInstance> instanceList = new ArrayList<>();
+            if (userInstanceList != null && userInstanceList.size() > 0) {
+                userInstanceList.forEach(model -> {
                     UserInstance instance = new UserInstance();
-                    BeanUtils.copyProperties(model,instance);
+                    BeanUtils.copyProperties(model, instance);
                     instanceList.add(instance);
                 });
             }
@@ -292,13 +294,13 @@ public class AccountGroupBiz implements AccountGroupApi {
                 UserInstanceVo model = new UserInstanceVo();
                 model = userInstanceApi.getUserInstanceList(dto).getData().get(0);
                 //复制属性
-                BeanUtils.copyProperties(model,instance);
+                BeanUtils.copyProperties(model, instance);
                 UserContactDTO contactDto = new UserContactDTO();
                 contactDto.setUserId(user.getUserId());
                 UserContactVo contactVo = new UserContactVo();
                 contactVo = userContactApi.getUserContactList(contactDto).getData().get(0);
                 //复制属性
-                BeanUtils.copyProperties(contactVo,contact);
+                BeanUtils.copyProperties(contactVo, contact);
 
             }
             //非空判断
@@ -343,7 +345,7 @@ public class AccountGroupBiz implements AccountGroupApi {
         });
         //复制属性
         IPage<AccountGroupVo> pageVo = new Page<>();
-        BeanUtils.copyProperties(groupPage, pageVo,new String[]{"records"});
+        BeanUtils.copyProperties(groupPage, pageVo, new String[]{"records"});
         pageVo.setRecords(voList);
         return Response.ok(pageVo);
     }
@@ -416,5 +418,147 @@ public class AccountGroupBiz implements AccountGroupApi {
             accountGroupService.update(groupWrapper);
         });
         return Response.ok(true);
+    }
+
+    @Override
+    public Response<List<NormalDataVo>> getAgeRateList(AccountGroupDTO accountGroupDTO) {
+        List<NormalDataVo> dataList = new ArrayList<>();
+        //1、获取客户列表
+        List<AccountGroup> groupList = accountGroupService.lambdaQuery()
+                .like(StringUtils.isNotEmpty(accountGroupDTO.getOrgId()), AccountGroup::getOrgId, accountGroupDTO.getOrgId())
+                .like(StringUtils.isNotEmpty(accountGroupDTO.getOrgName()), AccountGroup::getOrgName, accountGroupDTO.getOrgName())
+                .like(StringUtils.isNotEmpty(accountGroupDTO.getAccountId()), AccountGroup::getAccountId, accountGroupDTO.getAccountId())
+                .like(StringUtils.isNotEmpty(accountGroupDTO.getAccountName()), AccountGroup::getAccountName, accountGroupDTO.getAccountName())
+                .like(StringUtils.isNotEmpty(accountGroupDTO.getUserId()), AccountGroup::getUserId, accountGroupDTO.getUserId())
+                .like(StringUtils.isNotEmpty(accountGroupDTO.getAppId()), AccountGroup::getAppId, accountGroupDTO.getAppId())
+                .like(StringUtils.isNotEmpty(accountGroupDTO.getTenantId()), AccountGroup::getTenantId, accountGroupDTO.getTenantId())
+                .eq(accountGroupDTO.getDt() != null, AccountGroup::getDt, accountGroupDTO.getDt())
+                .gt(accountGroupDTO.getStartTime() != null, AccountGroup::getDt, accountGroupDTO.getStartTime())
+                .lt(accountGroupDTO.getEndTime() != null, AccountGroup::getDt, accountGroupDTO.getEndTime())
+                .orderByDesc(AccountGroup::getDt).list();
+        //2、获取对应用户表年龄
+        List<AccountGroupVo> voList = new ArrayList<>();
+        if (groupList != null && groupList.size() > 0) {
+            groupList.forEach(vo -> {
+                AccountUser accountUser = accountUserService.lambdaQuery()
+                        .eq(AccountUser::getAccountId, vo.getAccountId())
+                        .one();
+                if (accountUser == null) {
+                    throw new AccountException(EnumAccountStatusCode.ACCOUNT_USER_NOT_EXIST_EXCEPTION);
+                }
+                UserInstanceVo instanceVo = userInstanceApi.getUserInstanceById(Long.valueOf(accountUser.getUserId())).getData();
+                AccountGroupVo groupVo = new AccountGroupVo();
+                //复制属性
+                BeanUtils.copyProperties(vo, groupVo);
+                //设置年龄
+                if(StringUtils.isNotEmpty(instanceVo.getAge())){
+                    groupVo.setAge(instanceVo.getAge());
+                }
+                voList.add(groupVo);
+            });
+        }
+      //3、去除年龄为空的数据
+      List<AccountGroupVo> list = voList.stream().filter(AccountGroupVo -> AccountGroupVo.getAge() != null).collect(Collectors.toList());
+      //4、按年龄分组
+      List<String> ageList = Arrays.asList(new String[]{"0~1","1~3","3~6","6~12","12~18","18~45","45~65","65以上"});
+      ageList.forEach(age->{
+          //4.1 0~1
+          if(age.equals("0~1")){
+              AtomicReference<Integer> num1 = new AtomicReference<>(0);
+              list.forEach(vo->{
+                  boolean flag1 = RangeUtil.inNumRange(Integer.parseInt(vo.getAge()),"[0,1)");
+                  if(flag1 == true){
+                     num1.getAndSet(num1.get() + 1);
+                  }
+              });
+              NormalDataVo data = new NormalDataVo(age,num1.get().longValue());
+              dataList.add(data);
+          }
+         //4.2 1~3
+          if(age.equals("1~3")){
+              AtomicReference<Integer> num1 = new AtomicReference<>(0);
+              list.forEach(vo->{
+                  boolean flag1 = RangeUtil.inNumRange(Integer.parseInt(vo.getAge()),"[1,3)");
+                  if(flag1 == true){
+                      num1.getAndSet(num1.get() + 1);
+                  }
+              });
+              NormalDataVo data = new NormalDataVo(age,num1.get().longValue());
+              dataList.add(data);
+          }
+          //4.3 3~6
+          if(age.equals("3~6")){
+              AtomicReference<Integer> num1 = new AtomicReference<>(0);
+              list.forEach(vo->{
+                  boolean flag1 = RangeUtil.inNumRange(Integer.parseInt(vo.getAge()),"[3,6)");
+                  if(flag1 == true){
+                      num1.getAndSet(num1.get() + 1);
+                  }
+              });
+              NormalDataVo data = new NormalDataVo(age,num1.get().longValue());
+              dataList.add(data);
+          }
+          //4.4 6~12
+          if(age.equals("6~12")){
+              AtomicReference<Integer> num1 = new AtomicReference<>(0);
+              list.forEach(vo->{
+                  boolean flag1 = RangeUtil.inNumRange(Integer.parseInt(vo.getAge()),"[6,12)");
+                  if(flag1 == true){
+                      num1.getAndSet(num1.get() + 1);
+                  }
+              });
+              NormalDataVo data = new NormalDataVo(age,num1.get().longValue());
+              dataList.add(data);
+          }
+          //4.5 12~18
+          if(age.equals("12~18")){
+              AtomicReference<Integer> num1 = new AtomicReference<>(0);
+              list.forEach(vo->{
+                  boolean flag1 = RangeUtil.inNumRange(Integer.parseInt(vo.getAge()),"[12,18)");
+                  if(flag1 == true){
+                      num1.getAndSet(num1.get() + 1);
+                  }
+              });
+              NormalDataVo data = new NormalDataVo(age,num1.get().longValue());
+              dataList.add(data);
+          }
+          //4.6 18~45
+          if(age.equals("18~45")){
+              AtomicReference<Integer> num1 = new AtomicReference<>(0);
+              list.forEach(vo->{
+                  boolean flag1 = RangeUtil.inNumRange(Integer.parseInt(vo.getAge()),"[18,45)");
+                  if(flag1 == true){
+                      num1.getAndSet(num1.get() + 1);
+                  }
+              });
+              NormalDataVo data = new NormalDataVo(age,num1.get().longValue());
+              dataList.add(data);
+          }
+          //4.7 45~65
+          if(age.equals("18~45")){
+              AtomicReference<Integer> num1 = new AtomicReference<>(0);
+              list.forEach(vo->{
+                  boolean flag1 = RangeUtil.inNumRange(Integer.parseInt(vo.getAge()),"[45,65)");
+                  if(flag1 == true){
+                      num1.getAndSet(num1.get() + 1);
+                  }
+              });
+              NormalDataVo data = new NormalDataVo(age,num1.get().longValue());
+              dataList.add(data);
+          }
+          //4.8 65以上
+          if(age.equals("65以上")){
+              AtomicReference<Integer> num1 = new AtomicReference<>(0);
+              list.forEach(vo->{
+                  boolean flag1 = RangeUtil.inNumRange(Integer.parseInt(vo.getAge()),"[65,]");
+                  if(flag1 == true){
+                      num1.getAndSet(num1.get() + 1);
+                  }
+              });
+              NormalDataVo data = new NormalDataVo(age,num1.get().longValue());
+              dataList.add(data);
+          }
+      });
+      return Response.ok(dataList);
     }
 }

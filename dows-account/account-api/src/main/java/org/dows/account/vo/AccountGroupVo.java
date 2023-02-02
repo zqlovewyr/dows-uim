@@ -40,6 +40,9 @@ public class AccountGroupVo {
     @ApiModelProperty("账号名")
     private String accountName;
 
+    @ApiModelProperty("年龄")
+    private String age;
+
     @ApiModelProperty("用户ID")
     private String userId;
 

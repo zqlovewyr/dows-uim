@@ -7,11 +7,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountGroupApi;
 import org.dows.account.dto.AccountGroupDTO;
-import org.dows.account.dto.AccountOrgGroupDTO;
 import org.dows.account.entity.AccountGroup;
 import org.dows.account.form.AccountGroupForm;
 import org.dows.account.service.AccountGroupService;
 import org.dows.account.vo.AccountGroupVo;
+import org.dows.account.vo.NormalDataVo;
 import org.dows.framework.api.Response;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
 import org.springframework.web.bind.annotation.*;
@@ -51,6 +51,12 @@ public class AccountGroupRest implements MybatisCrudRest<AccountGroupForm, Accou
     @PostMapping("/customAccountGroupList")
     public Response<IPage<AccountGroupVo>> customAccountGroupList(@RequestBody AccountGroupDTO accountGroupDTO) {
         return accountGroupApi.customAccountGroupList(accountGroupDTO);
+    }
+
+    @ApiOperation("查询年龄段占比 组-成员")
+    @PostMapping("/getAgeRateList")
+    public Response<List<NormalDataVo>> getAgeRateList(@RequestBody AccountGroupDTO accountGroupDTO) {
+        return accountGroupApi.getAgeRateList(accountGroupDTO);
     }
 }
 

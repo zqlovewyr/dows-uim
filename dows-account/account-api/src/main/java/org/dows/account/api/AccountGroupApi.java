@@ -3,6 +3,7 @@ package org.dows.account.api;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.vo.AccountGroupVo;
+import org.dows.account.vo.NormalDataVo;
 import org.dows.framework.api.Response;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
@@ -59,4 +60,12 @@ public interface AccountGroupApi {
      * @param accountGroupDTOs
      */
     Response<Object> batchDeleteGroupMembers(List<AccountGroupDTO> accountGroupDTOs);
+
+    /**
+     * 查询年龄段占比 组-成员
+     *
+     * @param accountGroupDTO
+     * @return
+     */
+    Response<List<NormalDataVo>> getAgeRateList(AccountGroupDTO accountGroupDTO);
 }
