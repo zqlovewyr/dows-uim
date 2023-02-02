@@ -82,4 +82,11 @@ public interface AccountGroupApi {
      * @param accountGroupDTO
      */
     Response<Map<String,Object>> updateAccountGroupById(AccountGroupDTO accountGroupDTO);
+
+    /**
+     * 删除 账号-组-成员
+     *
+     * @param id
+     */
+    Response<Boolean> deleteAccountGroup(Long id);
 }

@@ -617,4 +617,16 @@ public class AccountGroupBiz implements AccountGroupApi {
         map.put("userId", userId);
         return Response.ok(map);
     }
+
+    @Override
+    public Response<Boolean> deleteAccountGroup(Long id) {
+        AccountGroup accountGroup = accountGroupService.lambdaQuery()
+                .eq(AccountGroup::getAccountId, id)
+                .one();
+        LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
+        groupWrapper.set(AccountGroup::getDeleted, true)
+                .eq(AccountGroup::getId, accountGroup.getId());
+        boolean flag = accountGroupService.update(groupWrapper);
+        return Response.ok(flag);
+    }
 }
