@@ -32,24 +32,6 @@ import java.util.Map;
 public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm, AccountInstance, AccountInstanceService> {
     private final AccountInstanceApi accountInstanceApi;
 
-/*    @ApiOperation("实例注册")
-    @PostMapping("/register")
-    public Response<AccountInstanceVo> register(@RequestBody AccountInstanceDTO accountInstanceDTO) {
-        return Response.ok(accountInstanceBiz.createAccountInstance(accountInstanceDTO).getData());
-    }
-
-    @PostMapping("/batchRegister")
-    public void batchRegister(@RequestParam MultipartFile file,
-                              @RequestParam String appId,
-                              @RequestParam(required = false) Long rbacRoleId,
-                              @RequestParam(required = false) String accountOrgOrgId,
-                              @RequestParam(required = false) String password,
-                              @RequestParam(required = false) String avatar,
-                              @RequestParam(required = false) String source,
-                              @RequestParam(required = false) String phone) {
-        accountInstanceBiz.batchRegister(file, appId, rbacRoleId, accountOrgOrgId, password, avatar, source, phone);
-    }*/
-
     @ApiOperation("查看 账号-实例-列表")
     @PostMapping("/customAccountInstanceList")
     public Response<IPage<AccountInstanceVo>> customAccountInstanceList(@RequestBody AccountInstanceDTO accountInstanceDTO) {
