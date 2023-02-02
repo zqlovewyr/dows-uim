@@ -4,6 +4,8 @@ import org.dows.framework.api.Response;
 import org.dows.user.api.dto.UserFamilyDTO;
 import org.dows.user.api.vo.UserFamilyVo;
 
+import java.util.List;
+
 /**
  * 用户-家庭信息(UserFamily)Api接口
  *
@@ -31,4 +33,11 @@ public interface UserFamilyApi {
      * @param userFamilyDTO
      */
     Response<Long> updateUserFamilyById(UserFamilyDTO userFamilyDTO);
+
+    /**
+     * 删除 用户-家庭
+     *
+     * @param ids
+     */
+    void batchDeleteUserFamilys(List<String> ids);
 }

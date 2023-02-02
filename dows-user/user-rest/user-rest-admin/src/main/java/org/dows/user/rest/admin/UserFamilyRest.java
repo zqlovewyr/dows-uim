@@ -15,6 +15,8 @@ import org.dows.user.form.UserFamilyForm;
 import org.dows.user.service.UserFamilyService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author Administrator
  * @date 2023/2/2 15:09
@@ -46,5 +48,11 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
     public Response<Long> updateUserFamilyById(@RequestBody UserFamilyDTO userFamilyDTO) {
         Response<Long> id = userFamilyApi.updateUserFamilyById(userFamilyDTO);
         return id;
+    }
+
+    @ApiOperation("批量删除 用户-家庭")
+    @PostMapping("/batchDeleteUserFamilys")
+    public void batchDeleteUserFamilys(@RequestParam("ids") List<String> ids) {
+        userFamilyApi.batchDeleteUserFamilys(ids);
     }
 }

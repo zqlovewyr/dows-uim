@@ -1,6 +1,8 @@
 package org.dows.user.biz;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.framework.api.Response;
@@ -125,6 +127,7 @@ public class UserFamilyBiz implements UserFamilyApi {
      * @param userFamilyDTO
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Response<Long> insertUserFamily(UserFamilyDTO userFamilyDTO) {
         UserFamily model = new UserFamily();
         BeanUtils.copyProperties(userFamilyDTO,model);
@@ -142,6 +145,7 @@ public class UserFamilyBiz implements UserFamilyApi {
      * @param userFamilyDTO
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Response<Long> updateUserFamilyById(UserFamilyDTO userFamilyDTO) {
         UserFamily userFamily = new UserFamily();
         BeanUtils.copyProperties(userFamilyDTO, userFamily);
@@ -152,4 +156,14 @@ public class UserFamilyBiz implements UserFamilyApi {
         return Response.ok(userFamily.getId());
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void batchDeleteUserFamilys(List<String> ids) {
+        ids.forEach(id->{
+            LambdaUpdateWrapper<UserFamily> familyWrapper = Wrappers.lambdaUpdate(UserFamily.class);
+            familyWrapper.set(UserFamily::getDeleted, true)
+                    .eq(UserFamily::getId, id);
+            userFamilyService.update(familyWrapper);
+        });
+    }
 }
