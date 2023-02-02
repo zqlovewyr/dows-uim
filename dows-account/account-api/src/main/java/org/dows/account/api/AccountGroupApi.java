@@ -89,4 +89,11 @@ public interface AccountGroupApi {
      * @param id
      */
     Response<Boolean> deleteAccountGroup(Long id);
+
+    /**
+     * 批量删除 账号-组-成员
+     *
+     * @param ids
+     */
+    void batchDeleteGroups(List<String> ids);
 }
