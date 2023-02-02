@@ -1,6 +1,7 @@
 package org.dows.user.api.api;
 
 import org.dows.framework.api.Response;
+import org.dows.user.api.dto.UserFamilyDTO;
 import org.dows.user.api.vo.UserFamilyVo;
 
 /**
@@ -16,4 +17,11 @@ public interface UserFamilyApi {
      * @param userId
      */
     Response<UserFamilyVo> getGenealogyList(String userId);
+
+    /**
+     * 新增 用户-家庭
+     *
+     * @param userFamilyDTO
+     */
+    Response<Long> insertUserFamily(UserFamilyDTO userFamilyDTO);
 }

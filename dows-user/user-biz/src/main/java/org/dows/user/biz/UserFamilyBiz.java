@@ -118,4 +118,20 @@ public class UserFamilyBiz implements UserFamilyApi {
         return dtoList;
     }
 
+    /**
+     * 新增 用户-家庭
+     *
+     * @param userFamilyDTO
+     */
+    @Override
+    public Response<Long> insertUserFamily(UserFamilyDTO userFamilyDTO) {
+        UserFamily model = new UserFamily();
+        BeanUtils.copyProperties(userFamilyDTO,model);
+        boolean flag = userFamilyService.save(model);
+        if(flag == false){
+            throw new UserException(EnumUserStatusCode.USER_FAMILY_CREATE_FAIL_EXCEPTION);
+        }
+        return Response.ok(model.getId());
+    }
+
 }
