@@ -121,14 +121,14 @@ public class AccountGroupBiz implements AccountGroupApi {
             //2、创建用户实例
             UserInstanceDTO userInstance = new UserInstanceDTO();
             BeanUtils.copyProperties(account, userInstance);
-            userInstanceApi.insertUserInstance(userInstance);
+            Long id = userInstanceApi.insertUserInstance(userInstance).getData();
             if (userInstance.getId() == null) {
                 flag.set(false);
             }
             //3、设置关联关系
             AccountUser accountUser = new AccountUser();
             BeanUtils.copyProperties(account, accountUser);
-            accountUser.setUserId(userInstance.getId().toString());
+            accountUser.setUserId(id.toString());
             accountUser.setAccountId(accountInstance.getId().toString());
             boolean unionFlag = accountUserService.save(accountUser);
             if (unionFlag == false) {
@@ -137,7 +137,7 @@ public class AccountGroupBiz implements AccountGroupApi {
             //4、创建组员实例
             AccountGroup accountGroup = new AccountGroup();
             BeanUtils.copyProperties(account, accountGroup);
-            accountGroup.setUserId(userInstance.getId().toString());
+            accountGroup.setUserId(id.toString());
             boolean groupFlag = accountGroupService.save(accountGroup);
             if (groupFlag == false) {
                 flag.set(false);
