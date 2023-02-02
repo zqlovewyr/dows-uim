@@ -359,7 +359,7 @@ public class AccountGroupBiz implements AccountGroupApi {
         //1、创建账号实例
         AccountInstance accountInstance = new AccountInstance();
         BeanUtils.copyProperties(accountGroupDTO, accountInstance);
-        boolean accountFlag = accountInstanceService.save(accountInstance);
+        boolean accountFlag = accountInstanceService.saveOrUpdate(accountInstance);
         if (accountFlag == false) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_CREATE_FAIL_EXCEPTION);
         }
@@ -586,5 +586,35 @@ public class AccountGroupBiz implements AccountGroupApi {
             voList.add(vo);
         });
         return Response.ok(voList);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Response<Map<String,Object>> updateAccountGroupById(AccountGroupDTO accountGroupDTO) {
+        Map<String, Object> map = new HashMap<>();
+        //1、更新账号实例
+        AccountInstance accountInstance = new AccountInstance();
+        BeanUtils.copyProperties(accountGroupDTO, accountInstance);
+        boolean accountFlag = accountInstanceService.saveOrUpdate(accountInstance);
+        if (accountFlag == false) {
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_CREATE_FAIL_EXCEPTION);
+        }
+        map.put("accountId", accountInstance.getId());
+
+        //2、更新用户实例
+        UserInstanceDTO dto = new UserInstanceDTO();
+        dto.setAccountId(accountGroupDTO.getAccountId());
+        dto.setUserId(accountGroupDTO.getUserId());
+        List<UserInstanceVo> instanceList = userInstanceApi.getUserInstanceList(dto).getData();
+        UserInstance model = new UserInstance();
+        if(instanceList != null && instanceList.size() > 0){
+            BeanUtils.copyProperties(instanceList.get(0),model);
+        }
+        UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
+        BeanUtils.copyProperties(model, userInstanceDTO);
+        BeanUtils.copyProperties(accountGroupDTO, userInstanceDTO);
+        Long userId = userInstanceApi.updateUserInstance(userInstanceDTO).getData();
+        map.put("userId", userId);
+        return Response.ok(map);
     }
 }

@@ -17,6 +17,7 @@ import org.dows.framework.crud.mybatis.MybatisCrudRest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 账号-组(AccountGroup)表控制层
@@ -34,10 +35,17 @@ public class AccountGroupRest implements MybatisCrudRest<AccountGroupForm, Accou
     private final AccountGroupApi accountGroupApi;
 
     @ApiOperation("保存 账号-组织-成员")
-    @PostMapping("/createAccountGroups")
+    @PostMapping("/createAccountGroup")
     public Response createAccountGroup(@RequestBody AccountGroupDTO accountGroupDTO) {
         accountGroupApi.insertOrUpdateAccountGroup(accountGroupDTO);
         return Response.ok();
+    }
+
+
+    @ApiOperation("编辑 账号-组织-成员")
+    @PutMapping("/updateAccountGroupById")
+    public Response<Map<String,Object>> updateAccountGroupById(@RequestBody AccountGroupDTO accountGroupDTO) {
+        return accountGroupApi.updateAccountGroupById(accountGroupDTO);
     }
 
     @ApiOperation("自定义查询 账号-组-成员 列表")

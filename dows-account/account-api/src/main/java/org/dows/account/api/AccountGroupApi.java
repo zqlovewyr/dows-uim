@@ -33,7 +33,7 @@ public interface AccountGroupApi {
     Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDTO);
 
     /**
-     * 添加/编辑 账号-组-成员
+     * 添加 账号-组-成员
      *
      * @param accountGroupDTO
      */
@@ -75,4 +75,11 @@ public interface AccountGroupApi {
      * @param accountGroupDTO
      */
     Response<List<AccountGroupVo>> getAccountGroupList(AccountGroupDTO accountGroupDTO);
+
+    /**
+     * 编辑 账号-组-成员
+     *
+     * @param accountGroupDTO
+     */
+    Response<Map<String,Object>> updateAccountGroupById(AccountGroupDTO accountGroupDTO);
 }
