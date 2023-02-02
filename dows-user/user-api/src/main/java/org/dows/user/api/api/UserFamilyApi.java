@@ -1,5 +1,6 @@
 package org.dows.user.api.api;
 
+import org.dows.framework.api.Response;
 import org.dows.user.api.vo.UserFamilyVo;
 
 /**
@@ -14,5 +15,5 @@ public interface UserFamilyApi {
      *
      * @param userId
      */
-    UserFamilyVo getGenealogyList(String userId);
+    Response<UserFamilyVo> getGenealogyList(String userId);
 }

@@ -3,6 +3,7 @@ package org.dows.user.biz;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dows.framework.api.Response;
 import org.dows.user.api.api.UserFamilyApi;
 import org.dows.user.api.dto.UserFamilyDTO;
 import org.dows.user.api.vo.UserFamilyVo;
@@ -30,7 +31,7 @@ public class UserFamilyBiz implements UserFamilyApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public UserFamilyVo getGenealogyList(String userId) {
+    public Response<UserFamilyVo> getGenealogyList(String userId) {
         //1、判断是否为户主
         LambdaQueryWrapper<UserFamily> queryWrapper = new LambdaQueryWrapper<>();
         UserFamily userFamily = userFamilyService.getOne(queryWrapper.eq(UserFamily::getUserId, userId)
@@ -73,7 +74,7 @@ public class UserFamilyBiz implements UserFamilyApi {
         //6、复制属性
         UserFamilyVo vo = new UserFamilyVo();
         BeanUtils.copyProperties(householderDTO, vo);
-        return vo;
+        return Response.ok(vo);
     }
 
     /**
