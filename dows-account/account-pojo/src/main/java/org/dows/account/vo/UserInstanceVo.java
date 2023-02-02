@@ -55,6 +55,9 @@ public class UserInstanceVo implements Serializable {
     @ApiModelProperty(value = "户籍地址")
     private String domicile;
 
+    @ApiModelProperty("租户ID")
+    private String tenantId;
+
     @ApiModelProperty(value = "时间戳")
     private Date dt;
 

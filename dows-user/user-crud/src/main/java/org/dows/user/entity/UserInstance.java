@@ -62,6 +62,9 @@ public class UserInstance implements CrudEntity {
     @ApiModelProperty("生日")
     private Date birthday;
 
+    @ApiModelProperty("租户ID")
+    private String tenantId;
+
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("时间戳")
     private Date dt;

@@ -61,6 +61,9 @@ public class UserInstanceDTO {
     @ApiModelProperty("生日")
     private Date birthday;
 
+    @ApiModelProperty("租户ID")
+    private String tenantId;
+
     @ApiModelProperty(value = "生日开始时间")
     private Date birthdayStartTime;
 

@@ -68,6 +68,12 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
         return accountInstanceApi.login(accountInstanceDTO);
     }
 
+/*    @ApiOperation("忘记密码")
+    @PostMapping("/resetPwd")
+    public Response<Map<String, Object>> resetPwd(@RequestBody AccountInstanceDTO accountInstanceDTO) {
+        return accountInstanceApi.resetPwd(accountInstanceDTO);
+    }*/
+
     @ApiOperation("查询 账户-实例-列表(不带分页)")
     @PostMapping("/getAccountInstanceList")
     public Response<List<AccountInstanceVo>> getAccountInstanceList(@RequestBody AccountInstanceDTO accountInstanceDTO) {

@@ -51,6 +51,9 @@ public class UserInstanceVo {
     @ApiModelProperty("生日")
     private Date birthday;
 
+    @ApiModelProperty("租户ID")
+    private String tenantId;
+
     @ApiModelProperty("时间戳")
     private Date dt;
 
