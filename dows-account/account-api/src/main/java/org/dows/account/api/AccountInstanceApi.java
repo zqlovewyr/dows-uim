@@ -71,8 +71,15 @@ public interface AccountInstanceApi {
 
     /**
      * 批量删除 账号-实例
+     *
      * @param ids
-     * @return
      */
     void batchDeleteAccountInstances(List<String> ids);
+
+    /**
+     * 重置密码 账号-实例
+     *
+     * @param accountInstanceDTO
+     */
+    Response<Boolean> resetPwd(AccountInstanceDTO accountInstanceDTO);
 }

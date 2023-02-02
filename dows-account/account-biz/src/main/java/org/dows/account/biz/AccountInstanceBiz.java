@@ -604,4 +604,20 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             accountInstanceService.update(instanceWrapper);
         });
     }
+
+    @Override
+    public Response<Boolean> resetPwd(AccountInstanceDTO accountInstanceDTO) {
+        //1、获取对应账户名的账户
+        AccountInstance accountInstance = accountInstanceService.lambdaQuery()
+                .eq(AccountInstance::getAccountName, accountInstanceDTO.getAccountName())
+                .one();
+        if(accountInstance == null){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);
+        }
+        //2、更改密码
+        LambdaUpdateWrapper<AccountInstance> instanceWrapper = Wrappers.lambdaUpdate(AccountInstance.class);
+        instanceWrapper.set(AccountInstance::getPassword, accountInstanceDTO.getPassword())
+                .eq(AccountInstance::getId, accountInstance.getId());
+        return Response.ok(accountInstanceService.update(instanceWrapper));
+    }
 }
