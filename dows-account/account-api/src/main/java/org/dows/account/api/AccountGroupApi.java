@@ -68,4 +68,11 @@ public interface AccountGroupApi {
      * @return
      */
     Response<List<NormalDataVo>> getAgeRateList(AccountGroupDTO accountGroupDTO);
+
+    /**
+     * 查看 组-成员-列表（不分页）
+     *
+     * @param accountGroupDTO
+     */
+    Response<List<AccountGroupVo>> getAccountGroupList(AccountGroupDTO accountGroupDTO);
 }

@@ -561,4 +561,28 @@ public class AccountGroupBiz implements AccountGroupApi {
       });
       return Response.ok(dataList);
     }
+
+    @Override
+    public Response<List<AccountGroupVo>> getAccountGroupList(AccountGroupDTO accountGroupDTO) {
+        List<AccountGroup> groupList = accountGroupService.lambdaQuery()
+                .like(StringUtils.isNotEmpty(accountGroupDTO.getOrgId()), AccountGroup::getOrgId, accountGroupDTO.getOrgId())
+                .like(StringUtils.isNotEmpty(accountGroupDTO.getOrgName()), AccountGroup::getOrgName, accountGroupDTO.getOrgName())
+                .like(StringUtils.isNotEmpty(accountGroupDTO.getAccountId()), AccountGroup::getAccountId, accountGroupDTO.getAccountId())
+                .like(StringUtils.isNotEmpty(accountGroupDTO.getAccountName()), AccountGroup::getAccountName, accountGroupDTO.getAccountName())
+                .like(StringUtils.isNotEmpty(accountGroupDTO.getUserId()), AccountGroup::getUserId, accountGroupDTO.getUserId())
+                .like(StringUtils.isNotEmpty(accountGroupDTO.getAppId()), AccountGroup::getAppId, accountGroupDTO.getAppId())
+                .like(StringUtils.isNotEmpty(accountGroupDTO.getTenantId()), AccountGroup::getTenantId, accountGroupDTO.getTenantId())
+                .eq(accountGroupDTO.getDt() != null, AccountGroup::getDt, accountGroupDTO.getDt())
+                .gt(accountGroupDTO.getStartTime() != null, AccountGroup::getDt, accountGroupDTO.getStartTime())
+                .lt(accountGroupDTO.getEndTime() != null, AccountGroup::getDt, accountGroupDTO.getEndTime())
+                .orderByDesc(AccountGroup::getDt).list();
+        //复制属性
+        List<AccountGroupVo> voList = new ArrayList<>();
+        groupList.forEach(group->{
+            AccountGroupVo vo = new AccountGroupVo();
+            BeanUtils.copyProperties(group,vo);
+            voList.add(vo);
+        });
+        return Response.ok(voList);
+    }
 }
