@@ -78,6 +78,9 @@ public class AccountOrgVo implements Serializable {
     @ApiModelProperty(value = "是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
 
+    @ApiModelProperty("状态")
+    private Integer status;
+
     @ApiModelProperty(value = "组织下-账号")
     private List<AccountGroupVo> accountGroupList;
 
