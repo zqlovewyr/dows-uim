@@ -109,7 +109,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
                 .eq(AccountGroupInfo::getOrgId, accountGroupInfoDTO.getOrgId())
                 .one();
         if(groupInfo != null){
-            throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_IS_NOT_EXIST);
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_IS_EXIST_EXCEPTION);
         }
         //2、插入组-实例表
         AccountGroupInfo accountGroupInfo = new AccountGroupInfo();

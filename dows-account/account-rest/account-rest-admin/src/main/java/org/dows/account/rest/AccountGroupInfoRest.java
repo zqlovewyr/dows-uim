@@ -32,7 +32,7 @@ public class AccountGroupInfoRest implements MybatisCrudRest<AccountGroupInfoFor
 
     private final AccountGroupInfoApi accountGroupInfoApi;
 
-    @ApiOperation("自定义查询 账号-组负责人 分页列表")
+    @ApiOperation("自定义查询 账号-组-实例 分页列表")
     @PostMapping("/customAccountGroupInfoList")
     public Response customAccountGroupInfoList(@RequestBody AccountGroupInfoDTO accountGroupInfoDTO) {
         Response<IPage<AccountGroupInfoVo>> voList = accountGroupInfoApi.customAccountGroupInfoList(accountGroupInfoDTO);
