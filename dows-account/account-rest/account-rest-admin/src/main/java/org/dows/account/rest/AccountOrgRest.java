@@ -43,15 +43,5 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
         return accountOrgBiz.createAccountOrg(accountOrgDTO);
     }
 
-/*    @ApiOperation("查询 账号-组织 列表")
-    @GetMapping({"/pageAccountOrg/{page}/{size}"})
-    public Response<IPage<AccountOrgVo>> pageAccountOrg(@RequestParam("应用ID") String appId
-            , @RequestParam("账号ID") String accountId
-            , @RequestParam("账号名") String accountName
-            , @PathVariable("page") Integer pageNo
-            , @PathVariable("size") Integer pageSize) {
-        return Response.ok(accountOrgBiz.pageAccountOrg(appId, accountId, accountName, pageNo, pageSize));
-    }*/
-
 }
 
