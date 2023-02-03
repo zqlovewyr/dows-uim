@@ -73,9 +73,6 @@ public class AccountOrg implements CrudEntity {
     @ApiModelProperty("状态")
     private Integer status;
 
-    @ApiModelProperty("手机号")
-    private String phone;
-
     @JsonIgnore
     @TableLogic
     @TableField(fill = FieldFill.INSERT)
@@ -87,12 +84,6 @@ public class AccountOrg implements CrudEntity {
 
     @ApiModelProperty("允许最大成员数")
     private Integer maxNumber;
-
-    @ApiModelProperty("有效时间")
-    private Date indate;
-
-    @ApiModelProperty("失效时间")
-    private Date expdate;
 
 }
 

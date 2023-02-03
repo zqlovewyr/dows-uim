@@ -63,24 +63,11 @@ public class AccountOrgDTO {
     @ApiModelProperty("状态")
     private String status;
 
-    @ApiModelProperty("联系方式")
-    private String phone;
-
     @ApiModelProperty("组织成员集合")
     private List<AccountOrgGroupDTO> accountOrgGroups;
 
     @ApiModelProperty("允许最大成员数")
     private Integer maxNumber;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty("有效时间")
-    private Date indate;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty("失效时间")
-    private Date expdate;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")

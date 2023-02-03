@@ -268,8 +268,6 @@ public class AccountOrgBiz implements AccountOrgApi {
                 .eq(accountOrgDTO.getDt() != null, AccountOrg::getDt, accountOrgDTO.getDt())
                 .gt(accountOrgDTO.getStartTime() != null, AccountOrg::getDt, accountOrgDTO.getStartTime())
                 .lt(accountOrgDTO.getEndTime() != null, AccountOrg::getDt, accountOrgDTO.getEndTime())
-                .gt(accountOrgDTO.getIndate() != null, AccountOrg::getIndate, accountOrgDTO.getIndate())
-                .lt(accountOrgDTO.getExpdate() != null, AccountOrg::getIndate, accountOrgDTO.getExpdate())
                 .orderByDesc(AccountOrg::getDt);
         Page<AccountOrg> page = new Page<>(accountOrgDTO.getPageNo(), accountOrgDTO.getPageSize());
         IPage<AccountOrg> orgList = accountOrgService.page(page, queryWrapper);

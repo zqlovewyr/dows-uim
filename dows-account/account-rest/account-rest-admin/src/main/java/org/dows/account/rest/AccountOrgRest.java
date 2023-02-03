@@ -65,18 +65,19 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
     }
 
     @ApiOperation("保存 机构-实例 同时创建机构和组及成员")
-    @PostMapping("/insertAccountGroupInfo")
+    @PostMapping("/insertAccountOrg")
     @Transactional(rollbackFor = Exception.class)
-    public void insertAccountGroupInfo(@RequestBody AccountOrgGroupDTO accountOrgGroupDTO) {
+    public void insertAccountOrg(@RequestBody AccountOrgGroupDTO accountOrgGroupDTO) {
         //1、创建机构
         AccountOrgDTO org = new AccountOrgDTO();
         BeanUtils.copyProperties(accountOrgGroupDTO, org, new String[]{"id"});
-        org.setDescr(accountOrgGroupDTO.getOrgDescr());
+        if(StringUtils.isNotEmpty(accountOrgGroupDTO.getOrgDescr())){
+            org.setDescr(accountOrgGroupDTO.getOrgDescr());
+        }
         Long orgId = accountOrgApi.createAccountOrg(org).getData();
         //2、创建一个默认管理员
         AccountInstanceDTO instance = new AccountInstanceDTO();
         BeanUtils.copyProperties(accountOrgGroupDTO, instance, new String[]{"id"});
-        instance.setPhone(accountOrgGroupDTO.getOwnerPhone());
         //2.1 默认创建的机构管理员
         instance.setRbacRoleId(1L);
         instance.setAccountOrgOrgId(orgId.toString());
