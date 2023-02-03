@@ -47,7 +47,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
     private final AccountGroupService accountGroupService;
 
     /**
-     * 自定义账号-组负责人 列表
+     * 自定义账号-机构-组 列表
      *
      * @param accountGroupInfoDTO
      * @return Response<IPage < AccountGroupInfoVo>>
