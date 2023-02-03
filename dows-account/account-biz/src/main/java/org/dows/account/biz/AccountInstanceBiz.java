@@ -594,7 +594,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     AccountGroupInfo groupInfo = accountGroupInfoService.lambdaQuery()
                             .eq(AccountGroupInfo::getAccountId, group.getOrgId())
                             .one();
-                    if (!ReflectUtil.isObjectNull(groupInfo) && group != null){
+                    if (!ReflectUtil.isObjectNull(groupInfo) && groupInfo != null){
                         if(StringUtils.isNotEmpty(groupInfo.getGroupInfoId())){
                             vo.setGroupInfoId(groupInfo.getGroupInfoId());
                         }
@@ -604,7 +604,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 AccountRole accountRole = accountRoleService.lambdaQuery()
                         .eq(AccountRole::getPrincipalId, model.getId())
                         .one();
-                if (!ReflectUtil.isObjectNull(accountRole) && group != null) {
+                if (!ReflectUtil.isObjectNull(accountRole) && accountRole != null) {
                     if(StringUtils.isNotEmpty(accountRole.getRoleName())){
                         vo.setRoleName(accountRole.getRoleName());
                     }
