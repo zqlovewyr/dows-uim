@@ -39,6 +39,9 @@ public class AccountOrgVo implements Serializable {
     @ApiModelProperty("父ID(pid空时为总店)")
     private Long pid;
 
+    @ApiModelProperty(value = "联系电话")
+    private String telePhone;
+
     @ApiModelProperty(value = "组code")
     private String orgCode;
 
@@ -46,7 +49,7 @@ public class AccountOrgVo implements Serializable {
     private String orgName;
 
     @ApiModelProperty(value = "机构人数")
-    private Integer num;
+    private Integer currentNum;
 
     @ApiModelProperty("名称首字母")
     private String nameLetters;

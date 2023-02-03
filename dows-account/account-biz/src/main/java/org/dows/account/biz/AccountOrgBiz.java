@@ -17,7 +17,9 @@ import org.dows.account.biz.util.IDUtil;
 import org.dows.account.dto.AccountOrgDTO;
 import org.dows.account.dto.TreeAccountOrgDTO;
 import org.dows.account.entity.AccountGroup;
+import org.dows.account.entity.AccountGroupInfo;
 import org.dows.account.entity.AccountOrg;
+import org.dows.account.service.AccountGroupInfoService;
 import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountOrgService;
 import org.dows.account.vo.AccountOrgVo;
@@ -36,6 +38,7 @@ public class AccountOrgBiz implements AccountOrgApi {
 
     private final AccountOrgService accountOrgService;
     private final AccountGroupService accountGroupService;
+    private final AccountGroupInfoService groupInfoService;
 
     /**
      * 创建树形结构 accountOrg 账号-组织
@@ -176,12 +179,18 @@ public class AccountOrgBiz implements AccountOrgApi {
             orgList.getRecords().forEach(model -> {
                 AccountOrgVo vo = new AccountOrgVo();
                 BeanUtils.copyProperties(model,vo);
-                String orgId = model.getOrgId();
+                String orgId = model.getId().toString();
                 //获取机构人数
                 Integer num = accountGroupService.lambdaQuery()
                         .eq(AccountGroup::getOrgId, orgId)
                         .list().size();
-                vo.setNum(num);
+                vo.setCurrentNum(num);
+                //获取当前负责人电话
+                AccountGroupInfo info = groupInfoService.lambdaQuery().eq(AccountGroupInfo::getOrgId,orgId).one();
+                if(info != null){
+                    vo.setTelePhone(info.getOwnerPhone());
+                }
+                // TODO 否则，从组织架构基础表找(account_org_info)
                 voList.add(vo);
             });
         }
