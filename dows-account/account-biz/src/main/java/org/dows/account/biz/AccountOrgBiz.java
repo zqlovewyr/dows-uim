@@ -14,24 +14,18 @@ import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
 import org.dows.account.biz.util.AccountUtil;
 import org.dows.account.biz.util.IDUtil;
-import org.dows.account.dto.AccountGroupInfoDTO;
 import org.dows.account.dto.AccountOrgDTO;
 import org.dows.account.dto.TreeAccountOrgDTO;
 import org.dows.account.entity.AccountGroup;
-import org.dows.account.entity.AccountGroupInfo;
-import org.dows.account.entity.AccountInstance;
 import org.dows.account.entity.AccountOrg;
 import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountOrgService;
-import org.dows.account.vo.AccountGroupInfoVo;
 import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
-
 import java.util.*;
 
 
@@ -308,5 +302,15 @@ public class AccountOrgBiz implements AccountOrgApi {
         if(flag == false){
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_UPDATE_FAIL_EXCEPTION);
         }
+    }
+
+    @Override
+    public Response<AccountOrgVo> getAccountOrgById(Long id) {
+        AccountOrg model = accountOrgService.getById(id);
+        AccountOrgVo vo = new AccountOrgVo();
+        if(model != null){
+            BeanUtils.copyProperties(model,vo);
+        }
+        return Response.ok(vo);
     }
 }

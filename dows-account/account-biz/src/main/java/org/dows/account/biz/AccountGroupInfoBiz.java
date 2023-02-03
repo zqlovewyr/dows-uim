@@ -27,6 +27,7 @@ import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -76,16 +77,16 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         IPage<AccountGroupInfo> groupInfoList = accountGroupInfoService.page(page, queryWrapper);
         //复制属性
         IPage<AccountGroupInfoVo> pageVo = new Page<>();
-        BeanUtils.copyProperties(groupInfoList, pageVo,new String[]{"records"});
+        BeanUtils.copyProperties(groupInfoList, pageVo, new String[]{"records"});
         List<AccountGroupInfoVo> voList = new ArrayList<>();
         if (groupInfoList.getRecords() != null && groupInfoList.getRecords().size() > 0) {
             groupInfoList.getRecords().forEach(model -> {
                 AccountGroupInfoVo vo = new AccountGroupInfoVo();
-                BeanUtils.copyProperties(model,vo);
+                BeanUtils.copyProperties(model, vo);
                 String orgId = model.getOrgId();
                 //获取组别人数
                 Integer num = accountGroupService.lambdaQuery()
-                        .eq(AccountGroup::getGroupId, orgId)
+                        .eq(AccountGroup::getOrgId, orgId)
                         .list().size();
                 vo.setNum(num);
                 voList.add(vo);
@@ -108,7 +109,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
                 .eq(AccountGroupInfo::getGroupInfoName, accountGroupInfoDTO.getGroupInfoName())
                 .eq(AccountGroupInfo::getOrgId, accountGroupInfoDTO.getOrgId())
                 .one();
-        if(groupInfo != null){
+        if (groupInfo != null) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_IS_EXIST_EXCEPTION);
         }
         //2、插入组-实例表
@@ -214,25 +215,19 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<List<AccountGroupInfoVo>> getAccountGroupInfoByOrgId(Long orgId) {
+    public Response<AccountGroupInfoVo> getAccountGroupInfoByOrgId(Long orgId) {
         LambdaQueryWrapper<AccountGroupInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AccountGroupInfo::getOrgId, orgId.toString());
-        List<AccountGroupInfo> groupInfoList = accountGroupInfoService.list(queryWrapper);
-        List<AccountGroupInfoVo> voList = new ArrayList<>();
-        if(groupInfoList != null && groupInfoList.size() > 0){
-            for(AccountGroupInfo group:groupInfoList){
-                //复制属性
-                AccountGroupInfoVo vo = new AccountGroupInfoVo();
-                BeanUtils.copyProperties(group, vo);
-                //获取允许最大成员数、头像、描述、有效时间、组织类型、状态等
-                AccountOrg accountOrg = accountOrgService.lambdaQuery()
-                        .eq(AccountOrg::getId, vo.getOrgId())
-                        .one();
-                BeanUtils.copyProperties(accountOrg, vo);
-                voList.add(vo);
-            }
-        }
-        return Response.ok(voList);
+        AccountGroupInfo groupInfo = accountGroupInfoService.getOne(queryWrapper);
+        //复制属性
+        AccountGroupInfoVo vo = new AccountGroupInfoVo();
+        BeanUtils.copyProperties(groupInfo, vo);
+        //获取允许最大成员数、头像、描述、有效时间、组织类型、状态等
+        AccountOrg accountOrg = accountOrgService.lambdaQuery()
+                .eq(AccountOrg::getId, vo.getOrgId())
+                .one();
+        BeanUtils.copyProperties(accountOrg, vo);
+        return Response.ok(vo);
     }
 
     /**

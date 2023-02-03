@@ -34,8 +34,6 @@ public class AccountGroupDto implements Serializable {
     private String orgId;
     @ApiModelProperty(value = "岗位名")
     private String orgName;
-    @ApiModelProperty("组别名")
-    private String groupName;
     @ApiModelProperty(value = "岗位code")
     private String orgCode;
     @ApiModelProperty(value = "icon")

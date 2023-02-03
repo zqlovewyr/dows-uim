@@ -1,10 +1,8 @@
 package org.dows.account.api;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.dows.account.dto.AccountGroupInfoDTO;
 import org.dows.account.dto.AccountOrgDTO;
 import org.dows.account.dto.TreeAccountOrgDTO;
-import org.dows.account.vo.AccountGroupInfoVo;
 import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
 
@@ -51,4 +49,11 @@ public interface AccountOrgApi {
      * @return AccountOrgVo
      */
     void updateAccountOrgById(AccountOrgDTO accountOrgDTO);
+
+    /**
+     * 查看 机构-实例
+     *
+     * @param id
+     */
+    Response<AccountOrgVo> getAccountOrgById(Long id);
 }

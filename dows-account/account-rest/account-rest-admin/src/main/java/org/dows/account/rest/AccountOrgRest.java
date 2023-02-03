@@ -123,16 +123,22 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
         }
         accountOrgApi.updateAccountOrgById(accountOrg);
         //2、更新组-实例表
-        Response<List<AccountGroupInfoVo>> data = accountGroupInfoApi.getAccountGroupInfoByOrgId(accountOrg.getId());
-        if (data.getData() != null && data.getData().size() > 0) {
-            //2.1、设置组实例属性
-            BeanUtils.copyProperties(accountOrgGroupDTO, data.getData().get(0), new String[]{"id"});
-            AccountGroupInfoDTO dto = new AccountGroupInfoDTO();
-            BeanUtils.copyProperties(data.getData().get(0), dto);
-            dto.setOrgId(accountOrg.getId().toString());
-            accountGroupInfoApi.updateAccountGroupInfo(dto);
-        }
+        AccountGroupInfoVo data = accountGroupInfoApi.getAccountGroupInfoByOrgId(accountOrg.getId()).getData();
+        //2.1、设置组实例属性
+        BeanUtils.copyProperties(accountOrgGroupDTO, data, new String[]{"id"});
+        AccountGroupInfoDTO dto = new AccountGroupInfoDTO();
+        BeanUtils.copyProperties(data, dto);
+        dto.setOrgId(accountOrg.getId().toString());
+        accountGroupInfoApi.updateAccountGroupInfo(dto);
     }
 
+    @ApiOperation("查看 机构-实例")
+    @GetMapping("/getAccountOrgById/{id}")
+    public Response<AccountGroupInfoVo> getAccountOrgById(@PathVariable("id") Long id) {
+        //1、根据ID获取组织机构信息
+        AccountOrgVo vo = accountOrgApi.getAccountOrgById(id).getData();
+        //2、根据组织机构ID获取组织信息
+        return accountGroupInfoApi.getAccountGroupInfoByOrgId(vo.getId());
+    }
 }
 

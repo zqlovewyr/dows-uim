@@ -37,7 +37,7 @@ public interface AccountInstanceApi {
     void batchRegister(MultipartFile file, String appId, Long rbacRoleId, String accountOrgOrgId, String password, String avatar, String source, String phone);
 
     /**
-     * 登录 账号-实例
+     * 登录 账号-实例s
      *
      * @param accountInstanceDTO
      */
