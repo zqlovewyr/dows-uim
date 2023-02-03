@@ -72,6 +72,7 @@ public class AccountInstance implements CrudEntity {
     @ApiModelProperty("是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
 
+    @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("")
     private Date dt;
 

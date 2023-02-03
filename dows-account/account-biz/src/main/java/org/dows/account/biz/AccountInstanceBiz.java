@@ -196,30 +196,35 @@ public class AccountInstanceBiz implements AccountInstanceApi {
 
         /* runsix:6.save accountRole if rbacRoleId exist */
         if (Objects.nonNull(rbacRoleVO)) {
-            accountRoleService.save(
-                    AccountRole
-                            .builder()
-                            .roleId(accountInstanceDTO.getRbacRoleId().toString())
-                            .roleName(rbacRoleVO.getRoleName())
-                            .roleCode(rbacRoleVO.getRoleCode())
-                            .principalType(EnumAccountRolePrincipalType.PERSONAL.getCode())
-                            .principalId(accountInstance.getAccountId())
-                            .principalName(accountInstanceDTO.getAccountName())
-                            .build()
-            );
+            AccountRole role = new AccountRole();
+            BeanUtils.copyProperties(rbacRoleVO,role);
+            role.setRoleId(accountInstanceDTO.getRbacRoleId().toString());
+            role.setPrincipalType(accountInstanceDTO.getPrincipalType());
+            role.setPrincipalId(accountInstance.getAccountId());
+            if(StringUtils.isNotEmpty(accountInstanceDTO.getAccountName())){
+                role.setPrincipalName(accountInstanceDTO.getAccountName());
+            }
+            role.setStatus(1);
+            if(StringUtils.isNotEmpty(accountInstanceDTO.getTenantId())){
+                role.setTenantId(accountInstanceDTO.getTenantId());
+            }
+            accountRoleService.save(role);
         }
         /* runsix:7.save accountGroup if orgId exist */
         if (Objects.nonNull(accountOrg)) {
-            accountGroupService.save(
-                    AccountGroup
-                            .builder()
-                            .orgId(accountInstanceDTO.getAccountOrgOrgId())
-                            .orgName(accountOrg.getOrgName())
-                            .accountId(accountInstance.getId().toString())
-                            .accountName(accountInstance.getAccountName())
-                            .appId(accountInstanceDTO.getAppId())
-                            .build()
-            );
+            AccountGroup accountGroup = new AccountGroup();
+            accountGroup.setOrgId(accountInstanceDTO.getAccountOrgOrgId());
+            accountGroup.setOrgName(accountOrg.getOrgName());
+            accountGroup.setAccountId(accountInstance.getId().toString());
+            if(StringUtils.isNotEmpty(accountInstance.getAccountName())){
+                accountGroup.setAccountName(accountInstance.getAccountName());
+            }
+            if(StringUtils.isNotEmpty(accountInstanceDTO.getUserId())){
+                accountGroup.setUserId(accountInstanceDTO.getUserId());
+            }
+            accountGroup.setAppId(accountInstanceDTO.getAppId());
+            accountGroup.setTenantId(accountInstanceDTO.getTenantId());
+            accountGroupService.save(accountGroup);
         }
         /* runsix:8.convert entity to vo and return */
         AccountInstanceVo accountInstanceVo = new AccountInstanceVo();

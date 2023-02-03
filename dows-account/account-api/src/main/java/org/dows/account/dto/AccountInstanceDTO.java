@@ -20,6 +20,7 @@ public class AccountInstanceDTO implements Serializable {
     private static final long serialVersionUID = 4496765086642042824L;
     private Long id;
     private String appId;
+    private String tenantId;
     /* runsix:field 'identifier' is in class AccountIdentifier. */
 //    @ExcelProperty(value = "用户账号(code)")
     private String identifier;
@@ -43,11 +44,17 @@ public class AccountInstanceDTO implements Serializable {
     @ApiModelProperty("机构名称")
     private String orgName;
 
+    @ApiModelProperty("用户ID")
+    private String userId;
+
     @ApiModelProperty("用户姓名")
     private String userName;
 
     @ApiModelProperty("用户性别")
     private String gender;
+
+    @ApiModelProperty("账户主体类型，0-个人，1-组")
+    private Integer principalType;
 
     @ApiModelProperty("创建时间")
     private Date dt;

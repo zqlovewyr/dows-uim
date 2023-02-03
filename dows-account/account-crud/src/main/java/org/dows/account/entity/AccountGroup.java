@@ -63,6 +63,7 @@ public class AccountGroup implements CrudEntity {
     @ApiModelProperty("是否逻辑删除")
     private Boolean deleted;
 
+    @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("")
     private Date dt;
 

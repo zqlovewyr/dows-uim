@@ -11,6 +11,7 @@ import org.dows.account.api.AccountInstanceApi;
 import org.dows.account.api.AccountOrgApi;
 import org.dows.account.api.AccountUserApi;
 import org.dows.account.biz.AccountOrgBiz;
+import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.dto.*;
 import org.dows.account.entity.AccountOrg;
 import org.dows.account.form.AccountOrgForm;
@@ -81,6 +82,7 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
         //2.1 默认创建的机构管理员
         instance.setRbacRoleId(1L);
         instance.setAccountOrgOrgId(orgId.toString());
+        instance.setPrincipalType(EnumAccountRolePrincipalType.PERSONAL.getCode());
         AccountInstanceVo vo = accountInstanceApi.createAccountInstance(instance).getData();
         //3、创建管理账户对应的用户信息
         UserInstanceDTO user = new UserInstanceDTO();
