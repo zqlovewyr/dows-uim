@@ -56,4 +56,11 @@ public interface AccountOrgApi {
      * @param id
      */
     Response<AccountOrgVo> getAccountOrgById(Long id);
+
+    /**
+     * 删除 机构-实例
+     *
+     * @param id
+     */
+    void deleteAccountOrgById(Long id);
 }

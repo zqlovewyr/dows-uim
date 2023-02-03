@@ -1,10 +1,12 @@
 package org.dows.account.biz;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import org.dows.account.dto.AccountOrgDTO;
 import org.dows.account.dto.TreeAccountOrgDTO;
 import org.dows.account.entity.AccountGroup;
 import org.dows.account.entity.AccountGroupInfo;
+import org.dows.account.entity.AccountInstance;
 import org.dows.account.entity.AccountOrg;
 import org.dows.account.service.AccountGroupInfoService;
 import org.dows.account.service.AccountGroupService;
@@ -39,6 +42,7 @@ public class AccountOrgBiz implements AccountOrgApi {
     private final AccountOrgService accountOrgService;
     private final AccountGroupService accountGroupService;
     private final AccountGroupInfoService groupInfoService;
+    private final AccountGroupInfoService accountGroupInfoService;
 
     /**
      * 创建树形结构 accountOrg 账号-组织
@@ -216,5 +220,54 @@ public class AccountOrgBiz implements AccountOrgApi {
             BeanUtils.copyProperties(model,vo);
         }
         return Response.ok(vo);
+    }
+
+    @Override
+    public void deleteAccountOrgById(Long id) {
+        //1、删除组织架构
+        AccountOrg accountOrg = accountOrgService.lambdaQuery()
+                .eq(AccountOrg::getId, id)
+                .eq(AccountOrg::getDeleted, false)
+                .one();
+        if (accountOrg != null) {
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_NOT_EXIST_EXCEPTION);
+        }
+        LambdaUpdateWrapper<AccountOrg> orgWrapper = Wrappers.lambdaUpdate(AccountOrg.class);
+        orgWrapper.set(AccountOrg::getDeleted, true)
+                .eq(AccountOrg::getId, id);
+        boolean flag1 = accountOrgService.update(orgWrapper);
+        if(flag1 == false){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_UPDATE_FAIL_EXCEPTION);
+        }
+        //2、如果有成员，删除成员信息
+        AccountGroup accountGroup = accountGroupService.lambdaQuery()
+                .eq(AccountGroup::getOrgId, id)
+                .eq(AccountGroup::getDeleted, false)
+                .one();
+        if (accountOrg != null) {
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_GROUP_NOT_EXIST_EXCEPTION);
+        }
+        LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
+        groupWrapper.set(AccountGroup::getDeleted, true)
+                .eq(AccountGroup::getOrgId, id);
+        boolean flag2 = accountOrgService.update(orgWrapper);
+        if(flag2 == false){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_GROUP_UPDATE_FAIL_EXCEPTION);
+        }
+        //3、删除组织信息
+        AccountGroupInfo accountGroupInfo = accountGroupInfoService.lambdaQuery()
+                .eq(AccountGroupInfo::getOrgId, id)
+                .eq(AccountGroupInfo::getDeleted, false)
+                .one();
+        if (accountGroupInfo != null) {
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_GROUP_INFO_NOT_EXIST_EXCEPTION);
+        }
+        LambdaUpdateWrapper<AccountGroupInfo> infoWrapper = Wrappers.lambdaUpdate(AccountGroupInfo.class);
+        infoWrapper.set(AccountGroupInfo::getDeleted, true)
+                .eq(AccountGroupInfo::getOrgId, id);
+        boolean flag3 = accountGroupInfoService.update(infoWrapper);
+        if(flag3 == false){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_GROUP_INFO_NOT_EXIST_EXCEPTION);
+        }
     }
 }

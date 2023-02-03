@@ -145,5 +145,11 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
         //2、根据组织机构ID获取组织信息
         return accountGroupInfoApi.getAccountGroupInfoByOrgId(vo.getId());
     }
+
+    @ApiOperation("删除单个 机构-实例")
+    @DeleteMapping("/deleteAccountOrgById/{id}")
+    public void deleteAccountOrgById(@PathVariable("id") Long id) {
+        accountOrgApi.deleteAccountOrgById(id);
+    }
 }
 
