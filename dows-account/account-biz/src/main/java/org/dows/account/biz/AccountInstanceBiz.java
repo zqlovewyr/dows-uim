@@ -197,10 +197,10 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         /* runsix:6.save accountRole if rbacRoleId exist */
         if (Objects.nonNull(rbacRoleVO)) {
             AccountRole role = new AccountRole();
-            BeanUtils.copyProperties(rbacRoleVO,role);
+            BeanUtils.copyProperties(rbacRoleVO,role,new String[]{"id"});
             role.setRoleId(accountInstanceDTO.getRbacRoleId().toString());
             role.setPrincipalType(accountInstanceDTO.getPrincipalType());
-            role.setPrincipalId(accountInstance.getId());
+            role.setPrincipalId(accountInstance.getId().toString());
             if(StringUtils.isNotEmpty(accountInstanceDTO.getAccountName())){
                 role.setPrincipalName(accountInstanceDTO.getAccountName());
             }
