@@ -17,6 +17,7 @@ import org.dows.account.entity.AccountOrg;
 import org.dows.account.form.AccountOrgForm;
 import org.dows.account.service.AccountOrgService;
 import org.dows.account.vo.AccountGroupInfoVo;
+import org.dows.account.vo.AccountGroupVo;
 import org.dows.account.vo.AccountInstanceVo;
 import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
