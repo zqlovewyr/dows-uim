@@ -40,9 +40,9 @@ public interface AccountGroupInfoApi {
     /**
      * 编辑 账号-组-实例
      *
-     * @param accountOrgGroupDTO
+     * @param accountGroupInfoDTO
      */
-    Response<Boolean> updateAccountGroupInfo(AccountOrgGroupDTO accountOrgGroupDTO);
+    void updateAccountGroupInfo(AccountGroupInfoDTO accountGroupInfoDTO);
 
     /**
      * 查看 账号-组-实例
@@ -50,6 +50,13 @@ public interface AccountGroupInfoApi {
      * @param id
      */
     Response<AccountGroupInfoVo> getAccountGroupInfoById(Long id);
+
+    /**
+     * 查看 账号-组-实例
+     *
+     * @param orgId
+     */
+    Response<List<AccountGroupInfoVo>> getAccountGroupInfoByOrgId(Long orgId);
 
     /**
      * 删除单个 账号-组-实例

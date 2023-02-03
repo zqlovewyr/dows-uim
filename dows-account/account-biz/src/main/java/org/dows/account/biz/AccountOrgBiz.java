@@ -19,6 +19,7 @@ import org.dows.account.dto.AccountOrgDTO;
 import org.dows.account.dto.TreeAccountOrgDTO;
 import org.dows.account.entity.AccountGroup;
 import org.dows.account.entity.AccountGroupInfo;
+import org.dows.account.entity.AccountInstance;
 import org.dows.account.entity.AccountOrg;
 import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountOrgService;
@@ -299,4 +300,13 @@ public class AccountOrgBiz implements AccountOrgApi {
         return Response.ok(pageVo);
     }
 
+    @Override
+    public void updateAccountOrgById(AccountOrgDTO accountOrgDTO) {
+        AccountOrg accountOrg = new AccountOrg();
+        BeanUtils.copyProperties(accountOrgDTO, accountOrg);
+        boolean flag = accountOrgService.updateById(accountOrg);
+        if(flag == false){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_UPDATE_FAIL_EXCEPTION);
+        }
+    }
 }

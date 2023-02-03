@@ -30,7 +30,8 @@ public enum EnumAccountStatusCode implements StatusCode {
     ACCOUNT_USER_NOT_EXIST_EXCEPTION(400018,"该账号没有对应的用户信息"),
     ORG_CREATE_FAIL_EXCEPTION(400019, "创建组织架构失败"),
     GROUP_INFO_CREATE_FAIL_EXCEPTION(400020, "创建组织失败"),
-    ACCOUNT_ORG_IS_EXIST_EXCEPTION(400021, "该组织架构下的组织已存在");
+    ACCOUNT_ORG_IS_EXIST_EXCEPTION(400021, "该组织架构下的组织已存在"),
+    ACCOUNT_ORG_UPDATE_FAIL_EXCEPTION(400022, "更新组织架构失败");
     final Integer code;
     final String descr;
 }

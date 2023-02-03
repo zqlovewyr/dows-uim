@@ -43,4 +43,12 @@ public interface AccountOrgApi {
      * @param accountOrgDTO
      */
     Response<IPage<AccountOrgVo>> customAccountOrgList(AccountOrgDTO accountOrgDTO);
+
+    /**
+     * 更新 机构-实例
+     *
+     * @param accountOrgDTO single accountOrgDTO
+     * @return AccountOrgVo
+     */
+    void updateAccountOrgById(AccountOrgDTO accountOrgDTO);
 }

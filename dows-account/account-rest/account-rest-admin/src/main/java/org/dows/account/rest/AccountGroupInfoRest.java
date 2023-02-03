@@ -75,9 +75,8 @@ public class AccountGroupInfoRest implements MybatisCrudRest<AccountGroupInfoFor
 
     @ApiOperation("更新 账号-组-实例")
     @PutMapping("/updateAccountGroupInfo")
-    public Response updateAccountGroup(@RequestBody AccountOrgGroupDTO accountOrgGroupDTO) {
-        Response<Boolean> flag = accountGroupInfoApi.updateAccountGroupInfo(accountOrgGroupDTO);
-        return Response.ok(flag);
+    public void updateAccountGroup(@RequestBody AccountGroupInfoDTO accountGroupInfoDTO) {
+        accountGroupInfoApi.updateAccountGroupInfo(accountGroupInfoDTO);
     }
 
     @ApiOperation("删除单个 账号-组-实例")

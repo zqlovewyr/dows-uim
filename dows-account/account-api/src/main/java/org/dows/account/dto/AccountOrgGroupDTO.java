@@ -42,6 +42,9 @@ public class AccountOrgGroupDTO {
     @ApiModelProperty("组织架构名称")
     private String orgName;
 
+    @ApiModelProperty("组织机构电话")
+    private String phone;
+
     @ApiModelProperty("组织架构code")
     private String orgCode;
 

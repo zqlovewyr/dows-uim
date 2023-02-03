@@ -1,6 +1,7 @@
 package org.dows.account.rest;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,8 @@ import org.dows.user.api.dto.UserInstanceDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 账号-组织架构(AccountOrg)表控制层
@@ -67,12 +70,12 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
     public void insertAccountGroupInfo(@RequestBody AccountOrgGroupDTO accountOrgGroupDTO) {
         //1、创建机构
         AccountOrgDTO org = new AccountOrgDTO();
-        BeanUtils.copyProperties(accountOrgGroupDTO,org,new String[]{"id"});
+        BeanUtils.copyProperties(accountOrgGroupDTO, org, new String[]{"id"});
         org.setDescr(accountOrgGroupDTO.getOrgDescr());
         Long orgId = accountOrgApi.createAccountOrg(org).getData();
         //2、创建一个默认管理员
         AccountInstanceDTO instance = new AccountInstanceDTO();
-        BeanUtils.copyProperties(accountOrgGroupDTO,instance,new String[]{"id"});
+        BeanUtils.copyProperties(accountOrgGroupDTO, instance, new String[]{"id"});
         instance.setPhone(accountOrgGroupDTO.getOwnerPhone());
         //2.1 默认创建的机构管理员
         instance.setRbacRoleId(1L);
@@ -80,7 +83,7 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
         AccountInstanceVo vo = accountInstanceApi.createAccountInstance(instance).getData();
         //3、创建管理账户对应的用户信息
         UserInstanceDTO user = new UserInstanceDTO();
-        BeanUtils.copyProperties(accountOrgGroupDTO,instance,new String[]{"id"});
+        BeanUtils.copyProperties(accountOrgGroupDTO, instance, new String[]{"id"});
         Long userId = userInstanceApi.insertUserInstance(user).getData();
         //4、创建用户和账户映射关系
         AccountUserDTO accountUser = new AccountUserDTO();
@@ -89,7 +92,7 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
         accountUserApi.createAccountUser(accountUser);
         //5、创建机构对应组
         AccountGroupInfoDTO info = new AccountGroupInfoDTO();
-        BeanUtils.copyProperties(accountOrgGroupDTO,info,new String[]{"id"});
+        BeanUtils.copyProperties(accountOrgGroupDTO, info, new String[]{"id"});
         info.setDescr(accountOrgGroupDTO.getGroupDescr());
         info.setOrgId(orgId.toString());
         info.setAccountId(vo.getId().toString());
@@ -103,6 +106,32 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
     public Response customAccountOrgList(@RequestBody AccountOrgDTO accountOrgDTO) {
         Response<IPage<AccountOrgVo>> voList = accountOrgApi.customAccountOrgList(accountOrgDTO);
         return Response.ok(voList);
+    }
+
+
+    @ApiOperation("更新 机构-实例")
+    @PutMapping("/updateAccountOrg")
+    @Transactional(rollbackFor = Exception.class)
+    public void updateAccountGroupInfo(@RequestBody AccountOrgGroupDTO accountOrgGroupDTO) {
+        boolean flag = true;
+        //1、更新组织架构表
+        AccountOrgDTO accountOrg = new AccountOrgDTO();
+        //1.1、设置组织架构属性
+        BeanUtils.copyProperties(accountOrgGroupDTO, accountOrg);
+        if (StringUtils.isNotEmpty(accountOrgGroupDTO.getOrgDescr())) {
+            accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
+        }
+        accountOrgApi.updateAccountOrgById(accountOrg);
+        //2、更新组-实例表
+        Response<List<AccountGroupInfoVo>> data = accountGroupInfoApi.getAccountGroupInfoByOrgId(accountOrg.getId());
+        if (data.getData() != null && data.getData().size() > 0) {
+            //2.1、设置组实例属性
+            BeanUtils.copyProperties(accountOrgGroupDTO, data.getData().get(0), new String[]{"id"});
+            AccountGroupInfoDTO dto = new AccountGroupInfoDTO();
+            BeanUtils.copyProperties(data.getData().get(0), dto);
+            dto.setOrgId(accountOrg.getId().toString());
+            accountGroupInfoApi.updateAccountGroupInfo(dto);
+        }
     }
 
 }

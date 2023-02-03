@@ -166,47 +166,24 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
     /**
      * 编辑 账号-组-实例
      *
-     * @param accountOrgGroupDTO
+     * @param accountGroupInfoDTO
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> updateAccountGroupInfo(AccountOrgGroupDTO accountOrgGroupDTO) {
-        boolean flag = true;
-        //1、插入组织架构表
-        AccountOrg accountOrg = new AccountOrg();
-        //1.1、设置组织架构属性
-        BeanUtils.copyProperties(accountOrgGroupDTO, accountOrg);
-        if(StringUtils.isNotEmpty(accountOrgGroupDTO.getOrgDescr())){
-            accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
-        }
-        if(accountOrgGroupDTO.getSorted() != null){
-            accountOrg.setSorted(accountOrgGroupDTO.getSorted());
-        }
-        if(accountOrgGroupDTO.getStatus() != null){
-            accountOrg.setStatus(accountOrgGroupDTO.getStatus());
-        }
-        if(accountOrgGroupDTO.getDt() != null){
-            accountOrg.setDt(accountOrgGroupDTO.getDt());
-        }
-        boolean flagOrg = accountOrgService.updateById(accountOrg);
-        if (flagOrg == false) {
-            flag = false;
-        }
-        //2、插入组-实例表
+    public void updateAccountGroupInfo(AccountGroupInfoDTO accountGroupInfoDTO) {
+        //1、更新组-实例表
         LambdaQueryWrapper<AccountGroupInfo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AccountGroupInfo::getOrgId, accountOrg.getId().toString());
+        queryWrapper.eq(AccountGroupInfo::getOrgId, accountGroupInfoDTO.getOrgId().toString());
         AccountGroupInfo groupInfo = accountGroupInfoService.getOne(queryWrapper);
         if (groupInfo == null) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_IS_NOT_EXIST);
         }
-        //2.1、设置组实例属性
-        BeanUtils.copyProperties(accountOrgGroupDTO, groupInfo, new String[]{"id"});
-        groupInfo.setOrgId(accountOrg.getId().toString());
+        //1.1、设置组实例属性
+        BeanUtils.copyProperties(accountGroupInfoDTO, groupInfo, new String[]{"id"});
         boolean flagInfo = accountGroupInfoService.updateById(groupInfo);
         if (flagInfo == false) {
-            flag = false;
+            throw new AccountException(EnumAccountStatusCode.GROUP_INFO_CREATE_FAIL_EXCEPTION);
         }
-        return Response.ok(flag);
     }
 
     /**
@@ -227,6 +204,35 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
                 .one();
         BeanUtils.copyProperties(accountOrg, vo);
         return Response.ok(vo);
+    }
+
+    /**
+     * 查看 账号-组-实例
+     *
+     * @param orgId
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Response<List<AccountGroupInfoVo>> getAccountGroupInfoByOrgId(Long orgId) {
+        LambdaQueryWrapper<AccountGroupInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AccountGroupInfo::getOrgId, orgId.toString());
+        List<AccountGroupInfo> groupInfoList = accountGroupInfoService.list(queryWrapper);
+        List<AccountGroupInfoVo> voList = new ArrayList<>();
+        if(groupInfoList != null && groupInfoList.size() > 0){
+            for(AccountGroupInfo group:groupInfoList){
+                //复制属性
+                AccountGroupInfoVo vo = new AccountGroupInfoVo();
+                BeanUtils.copyProperties(group, vo);
+                //获取允许最大成员数、头像、描述、有效时间、组织类型、状态等
+                AccountOrg accountOrg = accountOrgService.lambdaQuery()
+                        .eq(AccountOrg::getId, vo.getOrgId())
+                        .one();
+                BeanUtils.copyProperties(accountOrg, vo);
+                voList.add(vo);
+            }
+        }
+        return Response.ok(voList);
     }
 
     /**
