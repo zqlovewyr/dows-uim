@@ -200,7 +200,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             BeanUtils.copyProperties(rbacRoleVO,role);
             role.setRoleId(accountInstanceDTO.getRbacRoleId().toString());
             role.setPrincipalType(accountInstanceDTO.getPrincipalType());
-            role.setPrincipalId(accountInstance.getAccountId());
+            role.setPrincipalId(accountInstance.getId());
             if(StringUtils.isNotEmpty(accountInstanceDTO.getAccountName())){
                 role.setPrincipalName(accountInstanceDTO.getAccountName());
             }

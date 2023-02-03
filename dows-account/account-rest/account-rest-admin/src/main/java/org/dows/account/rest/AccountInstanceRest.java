@@ -6,13 +6,19 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountInstanceApi;
+import org.dows.account.api.AccountUserApi;
 import org.dows.account.dto.AccountInstanceDTO;
+import org.dows.account.dto.AccountUserDTO;
 import org.dows.account.entity.AccountInstance;
 import org.dows.account.form.AccountInstanceForm;
 import org.dows.account.service.AccountInstanceService;
+import org.dows.account.service.AccountUserService;
 import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
+import org.dows.user.api.api.UserInstanceApi;
+import org.dows.user.api.dto.UserInstanceDTO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +37,10 @@ import java.util.Map;
 @RequestMapping("accountInstance")
 public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm, AccountInstance, AccountInstanceService> {
     private final AccountInstanceApi accountInstanceApi;
+    
+    private final UserInstanceApi userInstanceApi;
+
+    private final AccountUserApi accountUserApi;
 
     @ApiOperation("查看 账号-实例-列表")
     @PostMapping("/customAccountInstanceList")
@@ -58,8 +68,20 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
 
     @ApiOperation("新增 账号-实例")
     @PostMapping("/createAccountInstance")
-    public Response<AccountInstanceVo> createAccountInstance(@RequestBody AccountInstanceDTO accountInstanceDTO) {
-        return accountInstanceApi.createAccountInstance(accountInstanceDTO);
+    public Response<Long> createAccountInstance(@RequestBody AccountInstanceDTO accountInstanceDTO) {
+        //1、新增账号信息
+        AccountInstanceVo vo = accountInstanceApi.createAccountInstance(accountInstanceDTO).getData();
+        //2、新增用户信息
+        UserInstanceDTO user = new UserInstanceDTO();
+        BeanUtils.copyProperties(accountInstanceDTO,user);
+        user.setName(accountInstanceDTO.getUserName());
+        Long userId = userInstanceApi.insertUserInstance(user).getData();
+        //3、创建账户和用户之间的关联关系
+        AccountUserDTO accountUserDTO = new AccountUserDTO();
+        accountUserDTO.setAccountId(vo.getId().toString());
+        accountUserDTO.setUserId(userId.toString());
+        Long uionId = this.accountUserApi.createAccountUser(accountUserDTO).getData();
+        return Response.ok(uionId);
     }
 
     @ApiOperation("登录")
