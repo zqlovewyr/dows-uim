@@ -106,7 +106,6 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
     @PostMapping("/customAccountOrgList")
     public Response customAccountOrgList(@RequestBody AccountOrgDTO accountOrgDTO) {
         Response<IPage<AccountOrgVo>> voList = accountOrgApi.customAccountOrgList(accountOrgDTO);
-        //1、获取档期啊
         return Response.ok(voList);
     }
 
