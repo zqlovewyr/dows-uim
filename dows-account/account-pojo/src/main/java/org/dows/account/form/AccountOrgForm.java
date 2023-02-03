@@ -77,5 +77,8 @@ public class AccountOrgForm implements Serializable {
     @ApiModelProperty("失效时间")
     private Date expdate;
 
+    @ApiModelProperty("联系方式")
+    private String phone;
+
 }
 

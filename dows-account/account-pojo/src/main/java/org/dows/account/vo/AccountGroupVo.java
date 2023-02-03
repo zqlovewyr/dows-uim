@@ -35,8 +35,14 @@ public class AccountGroupVo implements Serializable {
     @ApiModelProperty(value = "组织架构ID")
     private String orgId;
 
-    @ApiModelProperty(value = "岗位名/组名")
+    @ApiModelProperty(value = "组织架构名称")
     private String orgName;
+
+    @ApiModelProperty("组别ID")
+    private String groupId;
+
+    @ApiModelProperty("组别名称")
+    private String groupName;
 
     @ApiModelProperty(value = "账号ID")
     private String accountId;

@@ -36,11 +36,17 @@ public class AccountGroup implements CrudEntity {
     @ApiModelProperty("自增主键ID")
     private Long id;
 
-    @ApiModelProperty("组织ID")
+    @ApiModelProperty("组织架构ID")
     private String orgId;
 
-    @ApiModelProperty("组织名")
+    @ApiModelProperty("组织架构名")
     private String orgName;
+
+    @ApiModelProperty("组别ID")
+    private String groupId;
+
+    @ApiModelProperty("组别名")
+    private String groupName;
 
     @ApiModelProperty("账号ID")
     private String accountId;

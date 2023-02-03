@@ -1,8 +1,10 @@
 package org.dows.account.api;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.dows.account.dto.AccountGroupInfoDTO;
 import org.dows.account.dto.AccountOrgDTO;
 import org.dows.account.dto.TreeAccountOrgDTO;
+import org.dows.account.vo.AccountGroupInfoVo;
 import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
 
@@ -33,4 +35,12 @@ public interface AccountOrgApi {
     IPage<AccountOrgVo> teacherPageAccountOrg(String accountId, String appId, Integer pageNo, Integer pageSize);
 
     IPage<AccountOrgVo> adminPageAccountOrg(String appId, Integer pageNo, Integer pageSize);
+
+    /**
+     *
+     * 自定义查询 机构-实例 分页列表
+     *
+     * @param accountOrgDTO
+     */
+    Response<IPage<AccountOrgVo>> customAccountOrgList(AccountOrgDTO accountOrgDTO);
 }

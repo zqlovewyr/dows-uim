@@ -34,6 +34,12 @@ public class AccountGroupVo {
     @ApiModelProperty("组织名")
     private String orgName;
 
+    @ApiModelProperty("组别ID")
+    private String groupId;
+
+    @ApiModelProperty("组别名")
+    private String groupName;
+
     @ApiModelProperty("账号ID")
     private String accountId;
 

@@ -99,9 +99,9 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
 
 
     @ApiOperation("自定义查询 机构-实例 分页列表")
-    @PostMapping("/customAccountGroupInfoList")
-    public Response customAccountGroupInfoList(@RequestBody AccountGroupInfoDTO accountGroupInfoDTO) {
-        Response<IPage<AccountGroupInfoVo>> voList = accountGroupInfoApi.customAccountGroupInfoList(accountGroupInfoDTO);
+    @PostMapping("/customAccountOrgList")
+    public Response customAccountOrgList(@RequestBody AccountOrgDTO accountOrgDTO) {
+        Response<IPage<AccountOrgVo>> voList = accountOrgApi.customAccountOrgList(accountOrgDTO);
         return Response.ok(voList);
     }
 

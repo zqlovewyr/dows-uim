@@ -83,9 +83,9 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
                 AccountGroupInfoVo vo = new AccountGroupInfoVo();
                 BeanUtils.copyProperties(model,vo);
                 String orgId = model.getOrgId();
-                //获取机构人数
+                //获取组别人数
                 Integer num = accountGroupService.lambdaQuery()
-                        .eq(AccountGroup::getOrgId, orgId)
+                        .eq(AccountGroup::getGroupId, orgId)
                         .list().size();
                 vo.setNum(num);
                 voList.add(vo);

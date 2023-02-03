@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,12 +14,15 @@ import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
 import org.dows.account.biz.util.AccountUtil;
 import org.dows.account.biz.util.IDUtil;
+import org.dows.account.dto.AccountGroupInfoDTO;
 import org.dows.account.dto.AccountOrgDTO;
 import org.dows.account.dto.TreeAccountOrgDTO;
 import org.dows.account.entity.AccountGroup;
+import org.dows.account.entity.AccountGroupInfo;
 import org.dows.account.entity.AccountOrg;
 import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountOrgService;
+import org.dows.account.vo.AccountGroupInfoVo;
 import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
@@ -248,6 +252,51 @@ public class AccountOrgBiz implements AccountOrgApi {
         page = accountOrgService.page(page, queryWrapper);
         BeanUtils.copyProperties(page, voPage);
         return voPage;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Response<IPage<AccountOrgVo>> customAccountOrgList(AccountOrgDTO accountOrgDTO) {
+        LambdaQueryWrapper<AccountOrg> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(accountOrgDTO.getPid() != null, AccountOrg::getPid, accountOrgDTO.getPid())
+                .like(StringUtils.isNotEmpty(accountOrgDTO.getOrgId()), AccountOrg::getOrgId, accountOrgDTO.getOrgId())
+                .like(StringUtils.isNotEmpty(accountOrgDTO.getOrgName()), AccountOrg::getOrgName, accountOrgDTO.getOrgName())
+                .like(StringUtils.isNotEmpty(accountOrgDTO.getOrgCode()), AccountOrg::getOrgCode, accountOrgDTO.getOrgCode())
+                .eq(StringUtils.isNotEmpty(accountOrgDTO.getNameLetters()), AccountOrg::getNameLetters, accountOrgDTO.getNameLetters())
+                .eq(StringUtils.isNotEmpty(accountOrgDTO.getProfile()), AccountOrg::getProfile, accountOrgDTO.getProfile())
+                .like(StringUtils.isNotEmpty(accountOrgDTO.getAppId()), AccountOrg::getAppId, accountOrgDTO.getAppId())
+                .like(StringUtils.isNotEmpty(accountOrgDTO.getTenantId()), AccountOrg::getTenantId, accountOrgDTO.getTenantId())
+                .like(StringUtils.isNotEmpty(accountOrgDTO.getDescr()), AccountOrg::getDescr, accountOrgDTO.getDescr())
+                .eq(accountOrgDTO.getOrgType() != null, AccountOrg::getOrgType, accountOrgDTO.getOrgType())
+                .eq(StringUtils.isNotEmpty(accountOrgDTO.getSorted()), AccountOrg::getSorted, accountOrgDTO.getSorted())
+                .eq(accountOrgDTO.getStatus() != null, AccountOrg::getStatus, accountOrgDTO.getStatus())
+                .eq(accountOrgDTO.getDt() != null, AccountOrg::getDt, accountOrgDTO.getDt())
+                .gt(accountOrgDTO.getStartTime() != null, AccountOrg::getDt, accountOrgDTO.getStartTime())
+                .lt(accountOrgDTO.getEndTime() != null, AccountOrg::getDt, accountOrgDTO.getEndTime())
+                .gt(accountOrgDTO.getIndate() != null, AccountOrg::getIndate, accountOrgDTO.getIndate())
+                .lt(accountOrgDTO.getExpdate() != null, AccountOrg::getIndate, accountOrgDTO.getExpdate())
+                .orderByDesc(AccountOrg::getDt);
+        Page<AccountOrg> page = new Page<>(accountOrgDTO.getPageNo(), accountOrgDTO.getPageSize());
+        IPage<AccountOrg> orgList = accountOrgService.page(page, queryWrapper);
+        //复制属性
+        IPage<AccountOrgVo> pageVo = new Page<>();
+        BeanUtils.copyProperties(orgList, pageVo,new String[]{"records"});
+        List<AccountOrgVo> voList = new ArrayList<>();
+        if (orgList.getRecords() != null && orgList.getRecords().size() > 0) {
+            orgList.getRecords().forEach(model -> {
+                AccountOrgVo vo = new AccountOrgVo();
+                BeanUtils.copyProperties(model,vo);
+                String orgId = model.getOrgId();
+                //获取机构人数
+                Integer num = accountGroupService.lambdaQuery()
+                        .eq(AccountGroup::getOrgId, orgId)
+                        .list().size();
+                vo.setNum(num);
+                voList.add(vo);
+            });
+        }
+        pageVo.setRecords(voList);
+        return Response.ok(pageVo);
     }
 
 }

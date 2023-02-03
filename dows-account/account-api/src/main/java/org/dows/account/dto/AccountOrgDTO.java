@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,9 @@ public class AccountOrgDTO {
 
     @ApiModelProperty(value = "父ID(父级组织ID)")
     private Long pid;
+
+    @ApiModelProperty("实体域组织机构ID")
+    private String orgId;
 
     @ApiModelProperty(value = "组织名称", required = true)
     private String orgName;
@@ -59,16 +63,42 @@ public class AccountOrgDTO {
     @ApiModelProperty("状态")
     private String status;
 
+    @ApiModelProperty("联系方式")
+    private String phone;
+
     @ApiModelProperty("组织成员集合")
     private List<AccountOrgGroupDTO> accountOrgGroups;
 
     @ApiModelProperty("允许最大成员数")
     private Integer maxNumber;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("有效时间")
     private Date indate;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("失效时间")
     private Date expdate;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "开始时间")
+    private Date startTime;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "结束时间")
+    private Date endTime;
+
+    @ApiModelProperty("创建时间")
+    private Date dt;
+
+    @ApiModelProperty(value = "页数")
+    private Integer pageNo;
+
+    @ApiModelProperty(value = "分页大小")
+    private Integer pageSize;
 
 }

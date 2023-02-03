@@ -45,6 +45,9 @@ public class AccountOrgVo implements Serializable {
     @ApiModelProperty(value = "组织架构名")
     private String orgName;
 
+    @ApiModelProperty(value = "机构人数")
+    private Integer num;
+
     @ApiModelProperty("名称首字母")
     private String nameLetters;
 
@@ -71,6 +74,9 @@ public class AccountOrgVo implements Serializable {
 
     @ApiModelProperty("失效时间")
     private Date expdate;
+
+    @ApiModelProperty("联系方式")
+    private String phone;
 
     @ApiModelProperty(value = "时间戳/创建时间")
     private Date dt;
