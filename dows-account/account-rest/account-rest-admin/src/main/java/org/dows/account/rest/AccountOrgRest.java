@@ -39,8 +39,8 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
 
     @ApiOperation("保存 账号-组织")
     @PostMapping({"/createAccountOrg"})
-    public Response<AccountOrgVo> createAccountOrg(@RequestBody AccountOrgDTO accountOrgDTO) {
-        return Response.ok(accountOrgBiz.createAccountOrg(accountOrgDTO));
+    public Response<Long> createAccountOrg(@RequestBody AccountOrgDTO accountOrgDTO) {
+        return accountOrgBiz.createAccountOrg(accountOrgDTO);
     }
 
 /*    @ApiOperation("查询 账号-组织 列表")

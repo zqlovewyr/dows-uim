@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dows.account.dto.AccountOrgDTO;
 import org.dows.account.dto.TreeAccountOrgDTO;
 import org.dows.account.vo.AccountOrgVo;
+import org.dows.framework.api.Response;
 
 /**
  * 账号-组织架构维度信息(AccountGroup)Api接口
@@ -26,7 +27,7 @@ public interface AccountOrgApi {
      * @param accountOrgDTO single accountOrgDTO
      * @return AccountOrgVo
      */
-    AccountOrgVo createAccountOrg(AccountOrgDTO accountOrgDTO);
+    Response<Long> createAccountOrg(AccountOrgDTO accountOrgDTO);
 
 
     IPage<AccountOrgVo> teacherPageAccountOrg(String accountId, String appId, Integer pageNo, Integer pageSize);

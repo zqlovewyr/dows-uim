@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountOrgApi;
+import org.dows.account.biz.enums.EnumAccountStatusCode;
+import org.dows.account.biz.exception.AccountException;
 import org.dows.account.biz.util.AccountUtil;
 import org.dows.account.dto.AccountOrgDTO;
 import org.dows.account.dto.TreeAccountOrgDTO;
@@ -16,7 +18,9 @@ import org.dows.account.entity.AccountOrg;
 import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountOrgService;
 import org.dows.account.vo.AccountOrgVo;
+import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -82,50 +86,26 @@ public class AccountOrgBiz implements AccountOrgApi {
      * @return AccountOrgVo
      */
     @Transactional(rollbackFor = Exception.class)
-    public AccountOrgVo createAccountOrg(@RequestBody AccountOrgDTO accountOrgDTO) {
-/*        //step1: check static rule
-        AccountUtil.validateAccountOrgDTO(accountOrgDTO);
-        //step2: createOrg
-        AccountOrg accountOrg = new AccountOrg();
-        BeanUtils.copyProperties(accountOrgDTO, accountOrg);
-        accountOrg.setOrgId(IdWorker.getIdStr());
-        this.accountOrgService.save(accountOrg);
-        //step3: exist orgGroups with batchInsert
-        List<AccountOrgGroupDTO> accountOrgGroups = accountOrgDTO.getAccountOrgGroups();
-        if (!CollectionUtils.isEmpty(accountOrgGroups)) {
-            // transitional ordId,OrgName,appId,tenantId
-            accountOrgGroups.forEach(item -> {
-                item.setOrgId(accountOrg.getOrgId());
-                item.setOrgName(accountOrg.getOrgName());
-                item.setAppId(accountOrg.getAppId());
-                item.setTenantId(accountOrg.getTenantId());
-            });
-            // create OrgGroup
-*//*            this.accountGroupBiz.batchInsertGroup(accountOrgGroups);*//*
+    public Response<Long> createAccountOrg(@RequestBody AccountOrgDTO accountOrgDTO) {
+        //1、 校验该组织是否已存在
+        AccountOrg accountOrg = accountOrgService.lambdaQuery()
+                .eq(AccountOrg::getOrgName, accountOrgDTO.getOrgName())
+                .eq(AccountOrg::getOrgCode, accountOrgDTO.getOrgCode())
+                .one();
+        if(accountOrg != null){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_IS_NOT_EXIST);
         }
-        //step4: create account-role
-        Long rbacRoleId = accountOrgDTO.getRbacRoleId();
-        if (!Objects.isNull(rbacRoleId) && rbacRoleId == 0) {
-
-    *//*        Response<RbacRoleVO> rbacRoleResponse = rbacRoleApi.getById(String.valueOf(rbacRoleId));*//*
-            Response<RbacRoleVO> rbacRoleResponse = new Response<>();
-            RbacRoleVO rbacRoleVO = rbacRoleResponse.getData();
-            AccountRole accountRole = AccountRole.builder()
-                    .roleId(rbacRoleVO.getId().toString())
-                    .roleName(rbacRoleVO.getRoleName())
-                    .roleCode(rbacRoleVO.getRoleCode())
-                    .principalType(EnumAccountRolePrincipalType.GROUP.getCode())
-                    .principalId(accountOrg.getOrgId())
-                    .principalName(accountOrg.getOrgName()).build();
-            accountRoleService.save(accountRole);
+        //2、创建组织
+        AccountOrg model = new AccountOrg();
+        BeanUtils.copyProperties(accountOrgDTO,model);
+        boolean flag = accountOrgService.save(model);
+        if(flag == false){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_CREATE_FAIL_EXCEPTION);
         }
-        //step5: return VO
-        AccountOrgVO accountOrgVo = new AccountOrgVO();
-        BeanUtils.copyProperties(accountOrgVo, accountOrg);
-        return accountOrgVo;
+        return Response.ok(model.getId());
     }
 
-    *//**
+        /*
          * Paging query an organization based on accountId by appId
          * Display the results according to different RbacRoleCodes
          * admin: Displays all root organizations of the appId and their corresponding teachers
@@ -225,8 +205,8 @@ public class AccountOrgBiz implements AccountOrgApi {
         });
         pageVo.setRecords(accountOrgVoList);
         return pageVo;*/
-        return null;
-    }
+/*        return null;
+    }*/
 
     public IPage<AccountOrgVo> teacherPageAccountOrg(String accountId, String appId, Integer pageNo, Integer pageSize) {
         // list account_group
