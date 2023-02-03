@@ -21,13 +21,16 @@ import java.util.Date;
 @ApiModel(value = "AccountGroupInfoDTO对象", description = "账号-组负责人信息")
 public class AccountGroupInfoDTO {
 
+    @ApiModelProperty("允许最大成员数")
+    private Integer maxNumber;
+
     @ApiModelProperty("组别ID")
     private String groupInfoId;
 
     @ApiModelProperty("组名/团队名称")
     private String groupInfoName;
 
-    @ApiModelProperty("组别状态")
+    @ApiModelProperty("组别状态(0-禁用,1-启用)")
     private Integer status;
 
     @ApiModelProperty("邮编")
@@ -86,6 +89,12 @@ public class AccountGroupInfoDTO {
 
     @ApiModelProperty(value = "结束时间")
     private Date endTime;
+
+    @ApiModelProperty(value = "有效开始时间")
+    private Date indate;
+
+    @ApiModelProperty(value = "有效结束时间")
+    private Date expdate;
 
     @ApiModelProperty(value = "页数")
     private Integer pageNo;

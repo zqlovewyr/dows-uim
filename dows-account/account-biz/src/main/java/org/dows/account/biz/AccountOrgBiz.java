@@ -8,9 +8,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountOrgApi;
+import org.dows.account.biz.constant.BaseConstant;
 import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
 import org.dows.account.biz.util.AccountUtil;
+import org.dows.account.biz.util.IDUtil;
 import org.dows.account.dto.AccountOrgDTO;
 import org.dows.account.dto.TreeAccountOrgDTO;
 import org.dows.account.entity.AccountGroup;
@@ -93,14 +95,15 @@ public class AccountOrgBiz implements AccountOrgApi {
                 .eq(AccountOrg::getOrgCode, accountOrgDTO.getOrgCode())
                 .one();
         if(accountOrg != null){
-            throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_IS_NOT_EXIST);
+            throw new AccountException(EnumAccountStatusCode.ORG_NOT_EXIST_EXCEPTION);
         }
         //2、创建组织
         AccountOrg model = new AccountOrg();
         BeanUtils.copyProperties(accountOrgDTO,model);
+        model.setOrgId(String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID)));
         boolean flag = accountOrgService.save(model);
         if(flag == false){
-            throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_CREATE_FAIL_EXCEPTION);
+            throw new AccountException(EnumAccountStatusCode.ORG_CREATE_FAIL_EXCEPTION);
         }
         return Response.ok(model.getId());
     }

@@ -40,7 +40,6 @@ public class AccountGroupInfoForm {
     @ApiModelProperty("组别ID")
     private String groupInfoId;
 
-
     @ApiModelProperty("组名/团队名称")
     private String groupInfoName;
 
@@ -53,21 +52,26 @@ public class AccountGroupInfoForm {
     @ApiModelProperty("负责人名称")
     private String owner;
 
-
     @ApiModelProperty("负责人电话")
     private Boolean ownerPhone;
-
 
     @ApiModelProperty("所在区域")
     private String district;
 
-
     @ApiModelProperty("团队地址")
     private String address;
 
-
     @ApiModelProperty("团队描述")
     private String descr;
+
+    @ApiModelProperty("允许最大成员数")
+    private Integer maxNumber;
+
+    @ApiModelProperty("有效时间")
+    private Date indate;
+
+    @ApiModelProperty("失效时间")
+    private Date expdate;
 
 
 }

@@ -98,43 +98,29 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
     /**
      * 插入 账号-组-实例
      *
-     * @param accountOrgGroupDTO
+     * @param accountGroupInfoDTO
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> insertAccountGroupInfo(AccountOrgGroupDTO accountOrgGroupDTO) {
-        boolean flag = true;
-        //1、插入组织架构表
-        AccountOrg accountOrg = new AccountOrg();
-        //1.1、设置组织架构属性
-        BeanUtils.copyProperties(accountOrgGroupDTO, accountOrg);
-        accountOrg.setOrgId(String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID)));
-        if(StringUtils.isNotEmpty(accountOrgGroupDTO.getOrgDescr())){
-            accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
-        }
-        if(accountOrgGroupDTO.getOrgSorted() != null){
-            accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted());
-        }
-        if(accountOrgGroupDTO.getOrgStatus() != null){
-            accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus());
-        }
-        if(accountOrgGroupDTO.getOrgDt() != null){
-            accountOrg.setDt(accountOrgGroupDTO.getOrgDt());
-        }
-        boolean flagOrg = accountOrgService.save(accountOrg);
-        if (flagOrg == false) {
-            flag = false;
+    public Response<Long> insertAccountGroupInfo(AccountGroupInfoDTO accountGroupInfoDTO) {
+        //1、判断该组是否存在
+        AccountGroupInfo groupInfo = accountGroupInfoService.lambdaQuery()
+                .eq(AccountGroupInfo::getGroupInfoName, accountGroupInfoDTO.getGroupInfoName())
+                .eq(AccountGroupInfo::getOrgId, accountGroupInfoDTO.getOrgId())
+                .one();
+        if(groupInfo != null){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_IS_NOT_EXIST);
         }
         //2、插入组-实例表
         AccountGroupInfo accountGroupInfo = new AccountGroupInfo();
         //2.1、设置组实例属性
-        BeanUtils.copyProperties(accountOrgGroupDTO, accountGroupInfo);
-        accountGroupInfo.setOrgId(accountOrg.getId().toString());
-        boolean flagInfo = accountGroupInfoService.save(accountGroupInfo);
-        if (flagInfo == false) {
-            flag = false;
+        BeanUtils.copyProperties(accountGroupInfoDTO, accountGroupInfo);
+        accountGroupInfo.setGroupInfoId(String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID)));
+        boolean flag = accountGroupInfoService.save(accountGroupInfo);
+        if (flag == false) {
+            throw new AccountException(EnumAccountStatusCode.GROUP_INFO_CREATE_FAIL_EXCEPTION);
         }
-        return Response.ok(flag);
+        return Response.ok(accountGroupInfo.getId());
     }
 
     /**

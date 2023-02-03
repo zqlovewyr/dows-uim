@@ -83,10 +83,10 @@ public class AccountGroupInfoVo {
     @ApiModelProperty("头像")
     private String profile;
 
-    @ApiModelProperty("有效时间")
+    @ApiModelProperty("有效开始时间")
     private Date indate;
 
-    @ApiModelProperty("失效时间")
+    @ApiModelProperty("失效开始时间")
     private Date expdate;
 
     @ApiModelProperty("组织类型")

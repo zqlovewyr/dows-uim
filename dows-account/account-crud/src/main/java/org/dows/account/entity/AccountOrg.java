@@ -46,9 +46,6 @@ public class AccountOrg implements CrudEntity {
     @ApiModelProperty("组织名称")
     private String orgName;
 
-    @ApiModelProperty("允许最大成员数")
-    private Integer maxNumber;
-
     @ApiModelProperty("名称首字母")
     private String nameLetters;
 
@@ -75,12 +72,6 @@ public class AccountOrg implements CrudEntity {
 
     @ApiModelProperty("状态")
     private Integer status;
-
-    @ApiModelProperty("有效时间")
-    private Date indate;
-
-    @ApiModelProperty("失效时间")
-    private Date expdate;
 
     @JsonIgnore
     @TableLogic

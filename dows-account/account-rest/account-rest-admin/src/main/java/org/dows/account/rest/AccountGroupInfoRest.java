@@ -40,10 +40,9 @@ public class AccountGroupInfoRest implements MybatisCrudRest<AccountGroupInfoFor
     }
 
     @ApiOperation("保存 账号-组-实例")
-    @PostMapping("/insertAccountGroup")
-    public Response insertAccountGroup(@RequestBody AccountOrgGroupDTO accountOrgGroupDTO) {
-        Response<Boolean> flag = accountGroupInfoApi.insertAccountGroupInfo(accountOrgGroupDTO);
-        return Response.ok(flag);
+    @PostMapping("/insertAccountGroupInfo")
+    public Response<Long> insertAccountGroupInfo(@RequestBody AccountGroupInfoDTO accountGroupInfoDTO) {
+        return accountGroupInfoApi.insertAccountGroupInfo(accountGroupInfoDTO);
     }
 
     @ApiOperation("批量保存 账号-组-实例")

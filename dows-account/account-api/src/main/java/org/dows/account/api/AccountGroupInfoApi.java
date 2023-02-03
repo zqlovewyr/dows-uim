@@ -26,9 +26,9 @@ public interface AccountGroupInfoApi {
     /**
      * 插入 账号-组-实例
      *
-     * @param accountOrgGroupDTO
+     * @param accountGroupInfoDTO
      */
-    Response<Boolean> insertAccountGroupInfo(AccountOrgGroupDTO accountOrgGroupDTO);
+    Response<Long> insertAccountGroupInfo(AccountGroupInfoDTO accountGroupInfoDTO);
 
     /**
      * 批量插入 账号-组-实例

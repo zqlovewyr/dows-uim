@@ -39,9 +39,6 @@ public class AccountOrgVo {
     @ApiModelProperty(value = "组织架构名")
     private String orgName;
 
-    @ApiModelProperty("允许最大成员数")
-    private Integer maxNumber;
-
     @ApiModelProperty("名称首字母")
     private String nameLetters;
 
