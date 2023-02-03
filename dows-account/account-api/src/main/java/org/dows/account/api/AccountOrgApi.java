@@ -6,6 +6,8 @@ import org.dows.account.dto.TreeAccountOrgDTO;
 import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
 
+import java.util.List;
+
 /**
  * 账号-组织架构维度信息(AccountGroup)Api接口
  *
@@ -63,4 +65,11 @@ public interface AccountOrgApi {
      * @param id
      */
     void deleteAccountOrgById(Long id);
+
+    /**
+     * 批量删除 组织架构
+     *
+     * @param ids
+     */
+    void batchDeleteAccountOrgs(List<String> ids);
 }
