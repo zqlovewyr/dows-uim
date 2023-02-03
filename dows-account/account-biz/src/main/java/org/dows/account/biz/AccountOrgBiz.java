@@ -163,7 +163,7 @@ public class AccountOrgBiz implements AccountOrgApi {
                 .like(StringUtils.isNotEmpty(accountOrgDTO.getTenantId()), AccountOrg::getTenantId, accountOrgDTO.getTenantId())
                 .like(StringUtils.isNotEmpty(accountOrgDTO.getDescr()), AccountOrg::getDescr, accountOrgDTO.getDescr())
                 .eq(accountOrgDTO.getOrgType() != null, AccountOrg::getOrgType, accountOrgDTO.getOrgType())
-                .eq(StringUtils.isNotEmpty(accountOrgDTO.getSorted()), AccountOrg::getSorted, accountOrgDTO.getSorted())
+                .eq(accountOrgDTO.getSorted() != null, AccountOrg::getSorted, accountOrgDTO.getSorted())
                 .eq(accountOrgDTO.getStatus() != null, AccountOrg::getStatus, accountOrgDTO.getStatus())
                 .eq(accountOrgDTO.getDt() != null, AccountOrg::getDt, accountOrgDTO.getDt())
                 .gt(accountOrgDTO.getStartTime() != null, AccountOrg::getDt, accountOrgDTO.getStartTime())

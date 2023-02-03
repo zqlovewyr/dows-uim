@@ -92,6 +92,8 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
         AccountUserDTO accountUser = new AccountUserDTO();
         accountUser.setAccountId(vo.getId().toString());
         accountUser.setUserId(String.valueOf(userId));
+        accountUser.setAppId(accountOrgGroupDTO.getAppId());
+        accountUser.setTentantId(accountOrgGroupDTO.getTenantId());
         accountUserApi.createAccountUser(accountUser);
         //5、创建机构对应组
         AccountGroupInfoDTO info = new AccountGroupInfoDTO();

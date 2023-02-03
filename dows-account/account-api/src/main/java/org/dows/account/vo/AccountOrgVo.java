@@ -61,7 +61,7 @@ public class AccountOrgVo {
     private Date dt;
 
     @ApiModelProperty("组织类型")
-    private String orgType;
+    private Integer orgType;
 
     @ApiModelProperty("排序")
     private String sorted;

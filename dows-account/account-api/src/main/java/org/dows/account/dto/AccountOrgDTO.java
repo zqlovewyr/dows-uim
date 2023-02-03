@@ -55,13 +55,13 @@ public class AccountOrgDTO {
     private Long rbacRoleId;
 
     @ApiModelProperty("组织类型")
-    private String orgType;
+    private Integer orgType;
 
     @ApiModelProperty("排序")
-    private String sorted;
+    private Integer sorted;
 
     @ApiModelProperty("状态")
-    private String status;
+    private Integer status;
 
     @ApiModelProperty("组织成员集合")
     private List<AccountOrgGroupDTO> accountOrgGroups;
