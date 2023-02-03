@@ -6,16 +6,27 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountGroupInfoApi;
-import org.dows.account.dto.AccountGroupInfoDTO;
-import org.dows.account.dto.AccountOrgGroupDTO;
+import org.dows.account.api.AccountInstanceApi;
+import org.dows.account.api.AccountOrgApi;
+import org.dows.account.api.AccountUserApi;
+import org.dows.account.dto.*;
 import org.dows.account.entity.AccountGroupInfo;
+import org.dows.account.entity.AccountInstance;
+import org.dows.account.entity.AccountUser;
 import org.dows.account.form.AccountGroupInfoForm;
 import org.dows.account.service.AccountGroupInfoService;
 import org.dows.account.vo.AccountGroupInfoVo;
+import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
+import org.dows.user.api.api.UserInstanceApi;
+import org.dows.user.api.dto.UserInstanceDTO;
+import org.dows.user.entity.UserInstance;
+import org.springframework.beans.BeanUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 账号-组(AccountGroupInfo)表控制层
@@ -32,17 +43,19 @@ public class AccountGroupInfoRest implements MybatisCrudRest<AccountGroupInfoFor
 
     private final AccountGroupInfoApi accountGroupInfoApi;
 
+    private final AccountOrgApi accountOrgApi;
+
+    private final AccountInstanceApi accountInstanceApi;
+
+    private final UserInstanceApi userInstanceApi;
+
+    private final AccountUserApi accountUserApi;
+
     @ApiOperation("自定义查询 账号-组-实例 分页列表")
     @PostMapping("/customAccountGroupInfoList")
     public Response customAccountGroupInfoList(@RequestBody AccountGroupInfoDTO accountGroupInfoDTO) {
         Response<IPage<AccountGroupInfoVo>> voList = accountGroupInfoApi.customAccountGroupInfoList(accountGroupInfoDTO);
         return Response.ok(voList);
-    }
-
-    @ApiOperation("保存 账号-组-实例")
-    @PostMapping("/insertAccountGroupInfo")
-    public Response<Long> insertAccountGroupInfo(@RequestBody AccountGroupInfoDTO accountGroupInfoDTO) {
-        return accountGroupInfoApi.insertAccountGroupInfo(accountGroupInfoDTO);
     }
 
     @ApiOperation("批量保存 账号-组-实例")

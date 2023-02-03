@@ -20,7 +20,9 @@ import java.util.List;
 @ApiModel(value = "AccountOrgDTO对象", description = "账号-组织架构")
 public class AccountOrgDTO {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @ApiModelProperty(value = "主键Id")
+    private Long id;
+
     @ApiModelProperty(value = "父ID(父级组织ID)")
     private Long pid;
 
@@ -59,5 +61,14 @@ public class AccountOrgDTO {
 
     @ApiModelProperty("组织成员集合")
     private List<AccountOrgGroupDTO> accountOrgGroups;
+
+    @ApiModelProperty("允许最大成员数")
+    private Integer maxNumber;
+
+    @ApiModelProperty("有效时间")
+    private Date indate;
+
+    @ApiModelProperty("失效时间")
+    private Date expdate;
 
 }

@@ -141,9 +141,9 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
                 accountOrg.setId(null);
                 accountOrg.setOrgId(String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID)));
                 accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
-                accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted());
-                accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus());
-                accountOrg.setDt(accountOrgGroupDTO.getOrgDt());
+                accountOrg.setSorted(accountOrgGroupDTO.getSorted());
+                accountOrg.setStatus(accountOrgGroupDTO.getStatus());
+                accountOrg.setDt(accountOrgGroupDTO.getDt());
                 boolean flagOrg = accountOrgService.save(accountOrg);
                 if (flagOrg == false) {
                     flag.set(false);
@@ -179,14 +179,14 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         if(StringUtils.isNotEmpty(accountOrgGroupDTO.getOrgDescr())){
             accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
         }
-        if(accountOrgGroupDTO.getOrgSorted() != null){
-            accountOrg.setSorted(accountOrgGroupDTO.getOrgSorted());
+        if(accountOrgGroupDTO.getSorted() != null){
+            accountOrg.setSorted(accountOrgGroupDTO.getSorted());
         }
-        if(accountOrgGroupDTO.getOrgStatus() != null){
-            accountOrg.setStatus(accountOrgGroupDTO.getOrgStatus());
+        if(accountOrgGroupDTO.getStatus() != null){
+            accountOrg.setStatus(accountOrgGroupDTO.getStatus());
         }
-        if(accountOrgGroupDTO.getOrgDt() != null){
-            accountOrg.setDt(accountOrgGroupDTO.getOrgDt());
+        if(accountOrgGroupDTO.getDt() != null){
+            accountOrg.setDt(accountOrgGroupDTO.getDt());
         }
         boolean flagOrg = accountOrgService.updateById(accountOrg);
         if (flagOrg == false) {

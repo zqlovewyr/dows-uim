@@ -63,6 +63,15 @@ public class AccountOrgVo implements Serializable {
     @ApiModelProperty(value = "乐观锁, 默认: 0")
     private Integer ver;
 
+    @ApiModelProperty("允许最大成员数")
+    private Integer maxNumber;
+
+    @ApiModelProperty("有效时间")
+    private Date indate;
+
+    @ApiModelProperty("失效时间")
+    private Date expdate;
+
     @ApiModelProperty(value = "时间戳/创建时间")
     private Date dt;
 

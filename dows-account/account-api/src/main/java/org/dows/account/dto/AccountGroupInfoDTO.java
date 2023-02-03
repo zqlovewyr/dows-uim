@@ -24,9 +24,6 @@ import java.util.Date;
 @ApiModel(value = "AccountGroupInfoDTO对象", description = "账号-组负责人信息")
 public class AccountGroupInfoDTO {
 
-    @ApiModelProperty("允许最大成员数")
-    private Integer maxNumber;
-
     @ApiModelProperty("组别ID")
     private String groupInfoId;
 
@@ -87,29 +84,15 @@ public class AccountGroupInfoDTO {
     @ApiModelProperty("创建时间")
     private Date dt;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty(value = "开始时间")
-    private Date startTime;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty(value = "结束时间")
-    private Date endTime;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty(value = "有效开始时间")
-    private Date indate;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty(value = "有效结束时间")
-    private Date expdate;
-
     @ApiModelProperty(value = "页数")
     private Integer pageNo;
 
     @ApiModelProperty(value = "分页大小")
     private Integer pageSize;
+
+    @ApiModelProperty(value = "开始时间")
+    private Date startTime;
+
+    @ApiModelProperty(value = "结束时间")
+    private Date endTime;
 }

@@ -30,17 +30,20 @@ public class AccountOrgGroupDTO {
     @ApiModelProperty("组织架构父ID")
     private Integer pId;
 
+    @ApiModelProperty("允许最大成员数")
+    private Integer maxNumber;
+
     @ApiModelProperty("组织架构ID")
     private String orgId;
+
+    @ApiModelProperty("名称首字母")
+    private String nameLetters;
 
     @ApiModelProperty("组织架构名称")
     private String orgName;
 
     @ApiModelProperty("组织架构code")
     private String orgCode;
-
-    @ApiModelProperty("组织架构允许最大成员数")
-    private Integer maxNumber;
 
     @ApiModelProperty("组织架构头像")
     private String profile;
@@ -52,13 +55,10 @@ public class AccountOrgGroupDTO {
     private Integer orgType;
 
     @ApiModelProperty("组织架构排序")
-    private Integer orgSorted;
+    private Integer sorted;
 
-    @ApiModelProperty("组织架构状态")
-    private Integer orgStatus;
-
-    @ApiModelProperty("组织架构创建时间")
-    private Date orgDt;
+    @ApiModelProperty("状态")
+    private Integer status;
 
     @ApiModelProperty("应用ID")
     private String appId;
@@ -68,21 +68,20 @@ public class AccountOrgGroupDTO {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty("有效时间")
+    @ApiModelProperty(value = "有效开始时间")
     private Date indate;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty("失效时间")
+    @ApiModelProperty(value = "有效结束时间")
     private Date expdate;
-
 
     /**
      * 组-实例
      */
 
-    @ApiModelProperty("主键ID")
-    private Long groupPrimaryId;
+    @ApiModelProperty("组名称")
+    private String groupInfoName;
 
     @ApiModelProperty("负责人账号ID")
     private String accountId;
@@ -115,7 +114,7 @@ public class AccountOrgGroupDTO {
     private String ownerPosition;
 
     @ApiModelProperty("")
-    private Date groupDt;
+    private Date dt;
 
     @ApiModelProperty("邮编")
     private String postal;
@@ -126,4 +125,12 @@ public class AccountOrgGroupDTO {
     @ApiModelProperty("机构网址")
     private String website;
 
+    @ApiModelProperty("头像")
+    private String avatar;
+
+    @ApiModelProperty("来源")
+    private String source;
+
+    @ApiModelProperty("身份唯一识别标识")
+    private String identifier;
 }

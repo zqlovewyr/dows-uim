@@ -82,5 +82,14 @@ public class AccountOrg implements CrudEntity {
     @ApiModelProperty("")
     private Date dt;
 
+    @ApiModelProperty("允许最大成员数")
+    private Integer maxNumber;
+
+    @ApiModelProperty("有效时间")
+    private Date indate;
+
+    @ApiModelProperty("失效时间")
+    private Date expdate;
+
 }
 

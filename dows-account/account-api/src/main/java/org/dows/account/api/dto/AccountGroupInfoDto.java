@@ -63,15 +63,6 @@ public class AccountGroupInfoDto {
     @ApiModelProperty("团队描述")
     private String descr;
 
-    @ApiModelProperty("允许最大成员数")
-    private Integer maxNumber;
-
-    @ApiModelProperty("有效时间")
-    private Date indate;
-
-    @ApiModelProperty("失效时间")
-    private Date expdate;
-
     @JsonIgnore
     @TableLogic
     @TableField(fill = FieldFill.INSERT)

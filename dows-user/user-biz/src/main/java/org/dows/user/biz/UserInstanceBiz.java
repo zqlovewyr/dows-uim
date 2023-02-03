@@ -10,10 +10,12 @@ import org.dows.framework.api.Response;
 import org.dows.user.api.api.UserInstanceApi;
 import org.dows.user.api.dto.UserInstanceDTO;
 import org.dows.user.api.vo.UserInstanceVo;
+import org.dows.user.constant.BaseConstant;
 import org.dows.user.entity.UserInstance;
 import org.dows.user.enums.EnumUserStatusCode;
 import org.dows.user.exception.UserException;
 import org.dows.user.service.UserInstanceService;
+import org.dows.user.util.IDUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,6 +73,7 @@ public class UserInstanceBiz implements UserInstanceApi {
     public Response<Long> insertUserInstance(UserInstanceDTO userInstanceDTO) {
         UserInstance userInstance = new UserInstance();
         BeanUtils.copyProperties(userInstanceDTO, userInstance);
+        userInstance.setUserId(String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID)));
         boolean userFlag = userInstanceService.save(userInstance);
         if(userFlag == false){
             throw new UserException(EnumUserStatusCode.USER_CREATE_FAIL_EXCEPTION);

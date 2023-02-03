@@ -69,6 +69,9 @@ public class AccountOrgVo {
     @ApiModelProperty("状态")
     private String status;
 
+    @ApiModelProperty("允许最大成员数")
+    private Integer maxNumber;
+
     @ApiModelProperty("有效时间")
     private Date indate;
 

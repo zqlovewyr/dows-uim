@@ -1,5 +1,9 @@
 package org.dows.account.api;
 
+import org.dows.account.dto.AccountOrgDTO;
+import org.dows.account.dto.AccountUserDTO;
+import org.dows.framework.api.Response;
+
 /**
  * 账号-用户维度信息(AccountUser)Api接口
  *
@@ -7,4 +11,6 @@ package org.dows.account.api;
  * @since 2021-09-10 15:41:36
  */
 public interface AccountUserApi {
+
+    Response<Long> createAccountUser(AccountUserDTO accountUserDTO);
 }

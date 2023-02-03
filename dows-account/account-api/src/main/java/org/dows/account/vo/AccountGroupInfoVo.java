@@ -35,9 +35,6 @@ public class AccountGroupInfoVo {
     @ApiModelProperty("组织架构当前人数")
     private Integer num;
 
-    @ApiModelProperty("组织架构允许最大人数")
-    private Integer maxNumber;
-
     @ApiModelProperty("邮编")
     private String postal;
 
@@ -82,12 +79,6 @@ public class AccountGroupInfoVo {
 
     @ApiModelProperty("头像")
     private String profile;
-
-    @ApiModelProperty("有效开始时间")
-    private Date indate;
-
-    @ApiModelProperty("失效开始时间")
-    private Date expdate;
 
     @ApiModelProperty("组织类型")
     private Integer orgType;

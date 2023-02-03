@@ -65,9 +65,17 @@ public class AccountOrgForm implements Serializable {
     @ApiModelProperty("状态")
     private String status;
 
-    @JsonIgnore
+    @ApiModelProperty("是否删除")
     private Boolean deleted;
 
+    @ApiModelProperty("允许最大成员数")
+    private Integer maxNumber;
+
+    @ApiModelProperty("有效时间")
+    private Date indate;
+
+    @ApiModelProperty("失效时间")
+    private Date expdate;
 
 }
 
