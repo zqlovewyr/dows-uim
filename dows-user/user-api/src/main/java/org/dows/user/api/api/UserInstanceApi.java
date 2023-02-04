@@ -48,4 +48,17 @@ public interface UserInstanceApi {
      */
     Response<List<UserInstanceVo>> getUserInstanceList(UserInstanceDTO userInstanceDTO);
 
+    /**
+     * 删除单个 账号-组-实例
+     *
+     * @param id
+     */
+    Response<Boolean> deleteUserInstanceById(String id);
+
+    /**
+     * 批量删除 账号-组-实例
+     *
+     * @param ids
+     */
+    void deleteUserInstances(List<String> ids);
 }

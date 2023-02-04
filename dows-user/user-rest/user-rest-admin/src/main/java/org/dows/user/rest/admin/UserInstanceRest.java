@@ -2,6 +2,7 @@ package org.dows.user.rest.admin;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,8 @@ import org.dows.user.entity.UserInstance;
 import org.dows.user.service.UserInstanceService;
 import org.dows.user.form.UserInstanceForm;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 用户-实例(UserInstance)表控制层
@@ -55,6 +58,19 @@ public class UserInstanceRest implements MybatisCrudRest<UserInstanceForm, UserI
     @GetMapping("/getUserInstanceById/{id}")
     public Response<UserInstanceVo> getUserInstanceById(@PathVariable("id") Long id) {
         return userInstanceApi.getUserInstanceById(id);
+    }
+
+    @ApiOperation("删除单个 用户-实例")
+    @DeleteMapping("/deleteUserInstanceById/{id}")
+    public Response deleteUserInstanceById(@PathVariable("id") Long id) {
+        Response<Boolean> flag = userInstanceApi.deleteUserInstanceById(id.toString());
+        return Response.ok(flag);
+    }
+
+    @ApiOperation("批量删除 用户-实例")
+    @DeleteMapping("/deleteUserInstances")
+    public void deleteUserInstances(@RequestParam("ids") List<String> ids) {
+        userInstanceApi.deleteUserInstances(ids);
     }
 }
 

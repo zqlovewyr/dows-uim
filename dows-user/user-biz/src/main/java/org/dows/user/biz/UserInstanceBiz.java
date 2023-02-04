@@ -1,8 +1,10 @@
 package org.dows.user.biz;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,7 @@ import org.dows.user.util.IDUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,21 +45,21 @@ public class UserInstanceBiz implements UserInstanceApi {
     @Transactional(rollbackFor = Exception.class)
     public Response<IPage<UserInstanceVo>> userInstanceUnionList(UserInstanceDTO userInstanceDTO) {
         LambdaQueryWrapper<UserInstance> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.in(userInstanceDTO.getUserIds() != null && userInstanceDTO.getUserIds().size() > 0,UserInstance::getUserId, userInstanceDTO.getUserIds())
-                .and(StringUtils.isNotEmpty(userInstanceDTO.getNameNoPhone()),t->t.like(UserInstance::getName,userInstanceDTO.getNameNoPhone()).or().like(UserInstance::getIdNo,userInstanceDTO.getNameNoPhone()).or().like(UserInstance::getPhone,userInstanceDTO.getNameNoPhone()))
-                .like(StringUtils.isNotEmpty(userInstanceDTO.getName()),UserInstance::getName, userInstanceDTO.getName())
-                .like(StringUtils.isNotEmpty(userInstanceDTO.getIdNo()),UserInstance::getIdNo, userInstanceDTO.getIdNo())
-                .eq(StringUtils.isNotEmpty(userInstanceDTO.getAge()),UserInstance::getAge, userInstanceDTO.getAge())
-                .like(StringUtils.isNotEmpty(userInstanceDTO.getNation()),UserInstance::getNation, userInstanceDTO.getNation())
-                .like(StringUtils.isNotEmpty(userInstanceDTO.getSignOrg()),UserInstance::getSignOrg, userInstanceDTO.getSignOrg())
-                .like(StringUtils.isNotEmpty(userInstanceDTO.getDomicile()),UserInstance::getDomicile, userInstanceDTO.getDomicile())
-                .eq(userInstanceDTO.getBirthday() != null,UserInstance::getBirthday, userInstanceDTO.getBirthday())
-                .gt(userInstanceDTO.getBirthdayStartTime() != null,UserInstance::getBirthday, userInstanceDTO.getBirthdayStartTime())
-                .lt(userInstanceDTO.getBirthdayEndTime() != null,UserInstance::getBirthday, userInstanceDTO.getBirthdayEndTime())
-                .gt(userInstanceDTO.getBirthdayStartTime() != null,UserInstance::getBirthday, userInstanceDTO.getBirthdayStartTime())
-                .lt(userInstanceDTO.getBirthdayEndTime() != null,UserInstance::getBirthday, userInstanceDTO.getBirthdayEndTime())
-                .gt(userInstanceDTO.getUserDate() != null,UserInstance::getDt,userInstanceDTO.getUserDate())
-                .lt(userInstanceDTO.getUserDate() != null,UserInstance::getDt,userInstanceDTO.getUserDate())
+        queryWrapper.in(userInstanceDTO.getUserIds() != null && userInstanceDTO.getUserIds().size() > 0, UserInstance::getUserId, userInstanceDTO.getUserIds())
+                .and(StringUtils.isNotEmpty(userInstanceDTO.getNameNoPhone()), t -> t.like(UserInstance::getName, userInstanceDTO.getNameNoPhone()).or().like(UserInstance::getIdNo, userInstanceDTO.getNameNoPhone()).or().like(UserInstance::getPhone, userInstanceDTO.getNameNoPhone()))
+                .like(StringUtils.isNotEmpty(userInstanceDTO.getName()), UserInstance::getName, userInstanceDTO.getName())
+                .like(StringUtils.isNotEmpty(userInstanceDTO.getIdNo()), UserInstance::getIdNo, userInstanceDTO.getIdNo())
+                .eq(StringUtils.isNotEmpty(userInstanceDTO.getAge()), UserInstance::getAge, userInstanceDTO.getAge())
+                .like(StringUtils.isNotEmpty(userInstanceDTO.getNation()), UserInstance::getNation, userInstanceDTO.getNation())
+                .like(StringUtils.isNotEmpty(userInstanceDTO.getSignOrg()), UserInstance::getSignOrg, userInstanceDTO.getSignOrg())
+                .like(StringUtils.isNotEmpty(userInstanceDTO.getDomicile()), UserInstance::getDomicile, userInstanceDTO.getDomicile())
+                .eq(userInstanceDTO.getBirthday() != null, UserInstance::getBirthday, userInstanceDTO.getBirthday())
+                .gt(userInstanceDTO.getBirthdayStartTime() != null, UserInstance::getBirthday, userInstanceDTO.getBirthdayStartTime())
+                .lt(userInstanceDTO.getBirthdayEndTime() != null, UserInstance::getBirthday, userInstanceDTO.getBirthdayEndTime())
+                .gt(userInstanceDTO.getBirthdayStartTime() != null, UserInstance::getBirthday, userInstanceDTO.getBirthdayStartTime())
+                .lt(userInstanceDTO.getBirthdayEndTime() != null, UserInstance::getBirthday, userInstanceDTO.getBirthdayEndTime())
+                .gt(userInstanceDTO.getUserDate() != null, UserInstance::getDt, userInstanceDTO.getUserDate())
+                .lt(userInstanceDTO.getUserDate() != null, UserInstance::getDt, userInstanceDTO.getUserDate())
                 .eq(userInstanceDTO.getDt() != null, UserInstance::getDt, userInstanceDTO.getDt())
                 .gt(userInstanceDTO.getStartTime() != null, UserInstance::getDt, userInstanceDTO.getStartTime())
                 .lt(userInstanceDTO.getEndTime() != null, UserInstance::getDt, userInstanceDTO.getEndTime())
@@ -76,7 +79,7 @@ public class UserInstanceBiz implements UserInstanceApi {
         BeanUtils.copyProperties(userInstanceDTO, userInstance);
         userInstance.setUserId(String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID)));
         boolean userFlag = userInstanceService.save(userInstance);
-        if(userFlag == false){
+        if (userFlag == false) {
             throw new UserException(EnumUserStatusCode.USER_CREATE_FAIL_EXCEPTION);
         }
         return Response.ok(userInstance.getId());
@@ -87,7 +90,7 @@ public class UserInstanceBiz implements UserInstanceApi {
         UserInstance userInstance = new UserInstance();
         BeanUtils.copyProperties(userInstanceDTO, userInstance);
         boolean userFlag = userInstanceService.updateById(userInstance);
-        if(userFlag == false){
+        if (userFlag == false) {
             throw new UserException(EnumUserStatusCode.USER_CREATE_FAIL_EXCEPTION);
         }
         return Response.ok(userInstance.getId());
@@ -98,24 +101,54 @@ public class UserInstanceBiz implements UserInstanceApi {
         UserInstance userInstance = userInstanceService.getById(id);
         //复制属性
         UserInstanceVo vo = new UserInstanceVo();
-        BeanUtils.copyProperties(userInstance,vo);
+        BeanUtils.copyProperties(userInstance, vo);
         return Response.ok(vo);
     }
 
     @Override
     public Response<List<UserInstanceVo>> getUserInstanceList(UserInstanceDTO userInstanceDTO) {
         List<UserInstance> userInstanceList = userInstanceService.lambdaQuery()
-                .like(StringUtils.isNotEmpty(userInstanceDTO.getName()),UserInstance::getName, userInstanceDTO.getName())
-                .eq(StringUtils.isNotEmpty(userInstanceDTO.getGender()),UserInstance::getGender, userInstanceDTO.getGender())
+                .like(StringUtils.isNotEmpty(userInstanceDTO.getName()), UserInstance::getName, userInstanceDTO.getName())
+                .eq(StringUtils.isNotEmpty(userInstanceDTO.getGender()), UserInstance::getGender, userInstanceDTO.getGender())
                 .eq(UserInstance::getDeleted, false)
                 .list();
         //复制属性
         List<UserInstanceVo> voList = new ArrayList<>();
-        userInstanceList.forEach(user->{
+        userInstanceList.forEach(user -> {
             UserInstanceVo vo = new UserInstanceVo();
-            BeanUtils.copyProperties(user,vo);
+            BeanUtils.copyProperties(user, vo);
             voList.add(vo);
         });
         return Response.ok(voList);
+    }
+
+    @Override
+    public Response<Boolean> deleteUserInstanceById(String id) {
+        //1、获取对应数据
+        UserInstance userInstance = userInstanceService.getById(id);
+        if (userInstance == null) {
+            throw new UserException(EnumUserStatusCode.USER_IS_NOT_EXIST_EXCEPTION);
+        }
+        //1、删除组织架构
+        LambdaUpdateWrapper<UserInstance> instanceWrapper = Wrappers.lambdaUpdate(UserInstance.class);
+        instanceWrapper.set(UserInstance::getDeleted, true)
+                .eq(UserInstance::getId, id);
+        return Response.ok(userInstanceService.update(instanceWrapper));
+    }
+
+    @Override
+    public void deleteUserInstances(List<String> ids) {
+        ids.forEach(id -> {
+            //1、获取对应数据
+            UserInstance userInstance = userInstanceService.getById(id);
+            if (userInstance == null) {
+                throw new UserException(EnumUserStatusCode.USER_IS_NOT_EXIST_EXCEPTION);
+            }
+            //1、删除组织架构
+            LambdaUpdateWrapper<UserInstance> instanceWrapper = Wrappers.lambdaUpdate(UserInstance.class);
+            instanceWrapper.set(UserInstance::getDeleted, true)
+                    .eq(UserInstance::getId, id);
+            userInstanceService.update(instanceWrapper);
+        });
     }
 }
