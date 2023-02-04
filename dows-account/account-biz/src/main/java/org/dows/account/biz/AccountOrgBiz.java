@@ -157,8 +157,24 @@ public class AccountOrgBiz implements AccountOrgApi {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Response<IPage<AccountOrgVo>> customAccountOrgList(AccountOrgDTO accountOrgDTO) {
+        //1、如果存在团队负责人,筛选出团队负责人对应的机构
+        Set<String> ids = new HashSet<>();
+        if (StringUtils.isNotEmpty(accountOrgDTO.getOwner())) {
+            List<AccountGroupInfo> groupInfoList = accountGroupInfoService.lambdaQuery()
+                    .select(AccountGroupInfo::getOrgId)
+                    .eq(AccountGroupInfo::getOwner, accountOrgDTO.getOwner())
+                    .list();
+            if (groupInfoList != null && groupInfoList.size() > 0) {
+                groupInfoList.forEach(accountGroupInfo -> {
+                    ids.add(accountGroupInfo.getOrgId());
+                });
+            }
+        }
+
         LambdaQueryWrapper<AccountOrg> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(accountOrgDTO.getPid() != null, AccountOrg::getPid, accountOrgDTO.getPid())
+        queryWrapper
+                .in(ids != null && ids.size() > 0, AccountOrg::getId, ids)
+                .eq(accountOrgDTO.getPid() != null, AccountOrg::getPid, accountOrgDTO.getPid())
                 .like(StringUtils.isNotEmpty(accountOrgDTO.getOrgId()), AccountOrg::getOrgId, accountOrgDTO.getOrgId())
                 .like(StringUtils.isNotEmpty(accountOrgDTO.getOrgName()), AccountOrg::getOrgName, accountOrgDTO.getOrgName())
                 .like(StringUtils.isNotEmpty(accountOrgDTO.getOrgCode()), AccountOrg::getOrgCode, accountOrgDTO.getOrgCode())

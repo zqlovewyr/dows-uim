@@ -116,9 +116,6 @@ public class AccountOrgGroupDTO {
     @ApiModelProperty("团队描述")
     private String groupDescr;
 
-    @ApiModelProperty("负责人职位")
-    private String ownerPosition;
-
     @ApiModelProperty("")
     private Date dt;
 

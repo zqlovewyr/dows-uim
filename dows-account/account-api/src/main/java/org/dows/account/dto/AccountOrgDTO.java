@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author：wHuan
@@ -68,6 +69,9 @@ public class AccountOrgDTO {
 
     @ApiModelProperty("允许最大成员数")
     private Integer maxNumber;
+
+    @ApiModelProperty("负责人名称")
+    private String owner;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
