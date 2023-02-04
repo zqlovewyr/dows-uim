@@ -104,6 +104,9 @@ public class AccountOrgGroupDTO {
     @ApiModelProperty("负责人电话")
     private String ownerPhone;
 
+    @ApiModelProperty("负责人职位")
+    private String ownerPosition;
+
     @ApiModelProperty("所在区域")
     private String district;
 

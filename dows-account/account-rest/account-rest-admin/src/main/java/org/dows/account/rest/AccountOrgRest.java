@@ -107,6 +107,26 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
     }
 
 
+    @ApiOperation("保存 团队-实例（不建立管理员）")
+    @PostMapping("/insertAccountOrgNotAdmin")
+    @Transactional(rollbackFor = Exception.class)
+    public void insertAccountOrgNotAdmin(@RequestBody AccountOrgGroupDTO accountOrgGroupDTO) {
+        //1、创建机构
+        AccountOrgDTO org = new AccountOrgDTO();
+        BeanUtils.copyProperties(accountOrgGroupDTO, org, new String[]{"id"});
+        if(StringUtils.isNotEmpty(accountOrgGroupDTO.getOrgDescr())){
+            org.setDescr(accountOrgGroupDTO.getOrgDescr());
+        }
+        Long orgId = accountOrgApi.createAccountOrg(org).getData();
+        //2、创建机构对应组
+        AccountGroupInfoDTO info = new AccountGroupInfoDTO();
+        BeanUtils.copyProperties(accountOrgGroupDTO, info, new String[]{"id"});
+        info.setDescr(accountOrgGroupDTO.getGroupDescr());
+        info.setOrgId(orgId.toString());
+        accountGroupInfoApi.insertAccountGroupInfo(info);
+    }
+
+
     @ApiOperation("自定义查询 机构-实例 分页列表")
     @PostMapping("/customAccountOrgList")
     public Response customAccountOrgList(@RequestBody AccountOrgDTO accountOrgDTO) {
