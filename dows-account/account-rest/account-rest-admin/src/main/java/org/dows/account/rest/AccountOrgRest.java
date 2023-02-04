@@ -139,7 +139,6 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
     @PutMapping("/updateAccountOrg")
     @Transactional(rollbackFor = Exception.class)
     public void updateAccountGroupInfo(@RequestBody AccountOrgGroupDTO accountOrgGroupDTO) {
-        boolean flag = true;
         //1、更新组织架构表
         AccountOrgDTO accountOrg = new AccountOrgDTO();
         //1.1、设置组织架构属性

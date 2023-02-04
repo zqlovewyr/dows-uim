@@ -33,17 +33,21 @@ import org.dows.rbac.vo.RbacRoleVo;
 import org.dows.user.api.api.UserInstanceApi;
 import org.dows.user.api.dto.UserInstanceDTO;
 import org.dows.user.api.vo.UserInstanceVo;
+import org.dows.user.entity.UserInstance;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
+
 import static org.dows.account.biz.util.AccountUtil.getKeyOfkIdentifierAppIdV;
 
 
@@ -90,7 +94,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         /* runsix:2.check whether rbacRoleId exist */
         RbacRoleVo rbacRoleVO = null;
         if (Objects.nonNull(accountInstanceDTO.getRbacRoleId())) {
-           Response<RbacRoleVo> rbacRoleVOResponse = rbacRoleApi.getById(String.valueOf(accountInstanceDTO.getRbacRoleId()));
+            Response<RbacRoleVo> rbacRoleVOResponse = rbacRoleApi.getById(String.valueOf(accountInstanceDTO.getRbacRoleId()));
             rbacRoleVO = rbacRoleVOResponse.getData();
         }
         /* runsix:3.check whether accountOrgOrgId exist */
@@ -183,7 +187,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         AccountInstance accountInstance = new AccountInstance();
         BeanUtils.copyProperties(accountInstanceDTO, accountInstance);
         accountInstance.setAccountId(IdWorker.getIdStr());
-        if(StringUtils.isNotEmpty(accountInstanceDTO.getPassword())){
+        if (StringUtils.isNotEmpty(accountInstanceDTO.getPassword())) {
             accountInstance.setPassword("123456");
         }
         accountInstanceService.save(accountInstance);
@@ -197,15 +201,15 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         /* runsix:6.save accountRole if rbacRoleId exist */
         if (Objects.nonNull(rbacRoleVO)) {
             AccountRole role = new AccountRole();
-            BeanUtils.copyProperties(rbacRoleVO,role,new String[]{"id"});
+            BeanUtils.copyProperties(rbacRoleVO, role, new String[]{"id"});
             role.setRoleId(accountInstanceDTO.getRbacRoleId().toString());
             role.setPrincipalType(accountInstanceDTO.getPrincipalType());
             role.setPrincipalId(accountInstance.getId().toString());
-            if(StringUtils.isNotEmpty(accountInstanceDTO.getAccountName())){
+            if (StringUtils.isNotEmpty(accountInstanceDTO.getAccountName())) {
                 role.setPrincipalName(accountInstanceDTO.getAccountName());
             }
             role.setStatus(1);
-            if(StringUtils.isNotEmpty(accountInstanceDTO.getTenantId())){
+            if (StringUtils.isNotEmpty(accountInstanceDTO.getTenantId())) {
                 role.setTenantId(accountInstanceDTO.getTenantId());
             }
             accountRoleService.save(role);
@@ -216,10 +220,10 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             accountGroup.setOrgId(accountInstanceDTO.getAccountOrgOrgId());
             accountGroup.setOrgName(accountOrg.getOrgName());
             accountGroup.setAccountId(accountInstance.getId().toString());
-            if(StringUtils.isNotEmpty(accountInstance.getAccountName())){
+            if (StringUtils.isNotEmpty(accountInstance.getAccountName())) {
                 accountGroup.setAccountName(accountInstance.getAccountName());
             }
-            if(StringUtils.isNotEmpty(accountInstanceDTO.getUserId())){
+            if (StringUtils.isNotEmpty(accountInstanceDTO.getUserId())) {
                 accountGroup.setUserId(accountInstanceDTO.getUserId());
             }
             accountGroup.setAppId(accountInstanceDTO.getAppId());
@@ -332,14 +336,14 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 .collect(Collectors.toList());
         Map<Long, RbacRoleVo> kRbacRoleIdVRbacRoleVOMap = new ConcurrentHashMap<>();
         if (!rbacRoleIdList.isEmpty()) {
- /*           Response<List<RbacRoleVO>> rbacRoleVOListResponse = rbacRoleApi.getByIdList(rbacRoleIdList);*/
+            /*           Response<List<RbacRoleVO>> rbacRoleVOListResponse = rbacRoleApi.getByIdList(rbacRoleIdList);*/
             Response<List<RbacRoleVo>> rbacRoleVOListResponse = new Response<List<RbacRoleVo>>();
             List<RbacRoleVo> rbacRoleVOList = rbacRoleVOListResponse.getData();
             kRbacRoleIdVRbacRoleVOMap = rbacRoleVOList
                     .parallelStream()
                     .collect(Collectors.toMap(RbacRoleVo::getId, a -> a));
             if (kRbacRoleIdVRbacRoleVOMap.size() != rbacRoleIdList.size()) {
-    /*            throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);*/
+                /*            throw new RbacException(EnumRbacStatusCode.RBAC_ROLE_NOT_EXIST_EXCEPTION);*/
             }
         }
         /* runsix:4.check whether accountOrgOrgId exist */
@@ -466,9 +470,9 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         AccountRole accountRole = accountRoleService.getOne(wrapper);
         if (accountRole.getRoleId().equals("0")) {
             map.put("role", "superAdmin");
-        }else if(accountRole.getRoleId().equals("1")){
+        } else if (accountRole.getRoleId().equals("1")) {
             map.put("role", "admin");
-        }else if(accountRole.getRoleId().equals("2")){
+        } else if (accountRole.getRoleId().equals("2")) {
             map.put("role", "member");
         }
         return Response.ok(map);
@@ -522,8 +526,8 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             //3.2、获取机构下的账户id集合
             infoList.forEach(model -> {
                 List<AccountGroup> groupList = accountGroupService.lambdaQuery().eq(AccountGroup::getOrgId, model.getOrgId()).eq(AccountGroup::getDeleted, false).list();
-                if(groupList != null && groupList.size() > 0){
-                    groupList.forEach(group->{
+                if (groupList != null && groupList.size() > 0) {
+                    groupList.forEach(group -> {
                         accountIds.add(group.getAccountId());
                     });
                 }
@@ -539,8 +543,8 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             //3.2、获取机构下的账户id集合
             infoList.forEach(model -> {
                 List<AccountGroup> groupList = accountGroupService.lambdaQuery().eq(AccountGroup::getOrgId, model.getOrgId()).eq(AccountGroup::getDeleted, false).list();
-                if(groupList != null && groupList.size() > 0){
-                    groupList.forEach(group->{
+                if (groupList != null && groupList.size() > 0) {
+                    groupList.forEach(group -> {
                         accountIds.add(group.getAccountId());
                     });
                 }
@@ -563,22 +567,22 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         IPage<AccountInstance> instancePage = accountInstanceService.page(page, queryWrapper);
         //3、属性赋值
         List<AccountInstanceVo> voList = new ArrayList<>();
-        if(instancePage.getRecords() != null && instancePage.getRecords().size() > 0){
+        if (instancePage.getRecords() != null && instancePage.getRecords().size() > 0) {
             instancePage.getRecords().forEach(model -> {
                 AccountInstanceVo vo = new AccountInstanceVo();
-                BeanUtils.copyProperties(model,vo);
+                BeanUtils.copyProperties(model, vo);
                 //3.1、设置姓名、性别
                 //3.1、1 根据accountId获取userId
                 AccountUser user = accountUserService.lambdaQuery()
                         .eq(AccountUser::getAccountId, model.getId())
                         .one();
-                if(!ReflectUtil.isObjectNull(user)){
+                if (!ReflectUtil.isObjectNull(user)) {
                     UserInstanceVo instance = userInstanceApi.getUserInstanceById(Long.valueOf(user.getUserId())).getData();
-                    if(!ReflectUtil.isObjectNull(instance)){
-                        if(StringUtils.isNotEmpty(instance.getName())){
+                    if (!ReflectUtil.isObjectNull(instance)) {
+                        if (StringUtils.isNotEmpty(instance.getName())) {
                             vo.setName(instance.getName());
                         }
-                        if(StringUtils.isNotEmpty(instance.getGender())){
+                        if (StringUtils.isNotEmpty(instance.getGender())) {
                             vo.setGender(instance.getGender());
                         }
                     }
@@ -588,14 +592,14 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                         .eq(AccountGroup::getAccountId, model.getId())
                         .one();
                 if (!ReflectUtil.isObjectNull(group) && group != null) {
-                    if(StringUtils.isNotEmpty(group.getOrgName())){
+                    if (StringUtils.isNotEmpty(group.getOrgName())) {
                         vo.setOrgName(group.getOrgName());
                     }
                     AccountGroupInfo groupInfo = accountGroupInfoService.lambdaQuery()
                             .eq(AccountGroupInfo::getAccountId, group.getOrgId())
                             .one();
-                    if (!ReflectUtil.isObjectNull(groupInfo) && groupInfo != null){
-                        if(StringUtils.isNotEmpty(groupInfo.getGroupInfoId())){
+                    if (!ReflectUtil.isObjectNull(groupInfo) && groupInfo != null) {
+                        if (StringUtils.isNotEmpty(groupInfo.getGroupInfoId())) {
                             vo.setGroupInfoId(groupInfo.getGroupInfoId());
                         }
                     }
@@ -605,7 +609,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                         .eq(AccountRole::getPrincipalId, model.getId())
                         .one();
                 if (!ReflectUtil.isObjectNull(accountRole) && accountRole != null) {
-                    if(StringUtils.isNotEmpty(accountRole.getRoleName())){
+                    if (StringUtils.isNotEmpty(accountRole.getRoleName())) {
                         vo.setRoleName(accountRole.getRoleName());
                     }
                 }
@@ -614,7 +618,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         }
         //4、复制
         IPage<AccountInstanceVo> voPage = new Page<>();
-        BeanUtils.copyProperties(instancePage, voPage,new String[]{"records"});
+        BeanUtils.copyProperties(instancePage, voPage, new String[]{"records"});
         voPage.setRecords(voList);
         return Response.ok(voPage);
     }
@@ -628,7 +632,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         account.setPassword(accountInstanceDTO.getPassword());
         account.setId(accountInstanceDTO.getId());
         boolean flag1 = accountInstanceService.updateById(account);
-        if(flag1 == false){
+        if (flag1 == false) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_UPDATE_FAIL_EXCEPTION);
         }
         //2、通过账号ID找到用户ID
@@ -658,10 +662,10 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 .orderByDesc(AccountInstance::getDt).list();
         //复制属性
         List<AccountInstanceVo> list = new ArrayList<>();
-        if(voList != null && voList.size() > 0){
-            voList.forEach(vo->{
+        if (voList != null && voList.size() > 0) {
+            voList.forEach(vo -> {
                 AccountInstanceVo model = new AccountInstanceVo();
-                BeanUtils.copyProperties(vo,model);
+                BeanUtils.copyProperties(vo, model);
                 list.add(model);
             });
         }
@@ -679,7 +683,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
 
     @Override
     public void batchDeleteAccountInstances(List<String> ids) {
-        ids.forEach(id->{
+        ids.forEach(id -> {
             LambdaUpdateWrapper<AccountInstance> instanceWrapper = Wrappers.lambdaUpdate(AccountInstance.class);
             instanceWrapper.set(AccountInstance::getDeleted, true)
                     .eq(AccountInstance::getId, id);
@@ -693,7 +697,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         AccountInstance accountInstance = accountInstanceService.lambdaQuery()
                 .eq(AccountInstance::getAccountName, accountInstanceDTO.getAccountName())
                 .one();
-        if(accountInstance == null){
+        if (accountInstance == null) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);
         }
         //2、更改密码
@@ -701,5 +705,42 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         instanceWrapper.set(AccountInstance::getPassword, accountInstanceDTO.getPassword())
                 .eq(AccountInstance::getId, accountInstance.getId());
         return Response.ok(accountInstanceService.update(instanceWrapper));
+    }
+
+    @Override
+    public Response<AccountInstanceVo> getAccountInstanceById(Long id) {
+        //1、获取账户实例
+        AccountInstance accountInstance = accountInstanceService.lambdaQuery()
+                .eq(AccountInstance::getId, id)
+                .one();
+        if (accountInstance == null) {
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);
+        }
+        AccountInstanceVo model = new AccountInstanceVo().builder().build().setAccountName(accountInstance.getAccountName())
+                .setAccountPwd(accountInstance.getPassword())
+                .setPhone(accountInstance.getPhone());
+        //2、通过账户和用户关联表找到对应的用户ID
+        AccountUser accountUser = accountUserService.lambdaQuery()
+                .eq(AccountUser::getAccountId, id.toString())
+                .one();
+        if (accountUser != null) {
+            UserInstanceVo vo = userInstanceApi.getUserInstanceById(Long.valueOf(accountUser.getUserId())).getData();
+            BeanUtils.copyProperties(vo, model);
+        }
+        //4、获取角色实例
+        AccountRole accountRole = accountRoleService.lambdaQuery()
+                .eq(AccountRole::getPrincipalId, id.toString())
+                .one();
+        if (accountRole != null) {
+            model.setRoleName(accountRole.getRoleName());
+        }
+        //5、获取机构实例
+        AccountGroup accountGroup = accountGroupService.lambdaQuery()
+                .eq(AccountGroup::getAccountId, id.toString())
+                .one();
+        if (accountGroup != null) {
+            model.setOrgName(accountGroup.getOrgName());
+        }
+        return Response.ok(model);
     }
 }

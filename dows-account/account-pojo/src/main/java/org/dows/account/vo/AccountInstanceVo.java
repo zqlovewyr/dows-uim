@@ -69,6 +69,9 @@ public class AccountInstanceVo implements Serializable {
     @ApiModelProperty(value = "乐观锁, 默认: 0")
     private Integer ver;
 
+    @ApiModelProperty("账号绑定的唯一手机号(可更换)")
+    private String phone;
+
 
 }
 

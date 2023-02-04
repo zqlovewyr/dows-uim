@@ -623,7 +623,7 @@ public class AccountGroupBiz implements AccountGroupApi {
     @Transactional(rollbackFor = Exception.class)
     public Response<Boolean> deleteAccountGroup(Long id) {
         AccountGroup accountGroup = accountGroupService.lambdaQuery()
-                .eq(AccountGroup::getAccountId, id)
+                .eq(AccountGroup::getAccountId, id.toString())
                 .one();
         LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
         groupWrapper.set(AccountGroup::getDeleted, true)
@@ -637,7 +637,7 @@ public class AccountGroupBiz implements AccountGroupApi {
     public void batchDeleteGroups(List<String> ids) {
         for (String id : ids) {
             AccountGroup accountGroup = accountGroupService.lambdaQuery()
-                    .eq(AccountGroup::getAccountId, id)
+                    .eq(AccountGroup::getAccountId, id.toString())
                     .one();
             LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
             groupWrapper.set(AccountGroup::getDeleted, true)

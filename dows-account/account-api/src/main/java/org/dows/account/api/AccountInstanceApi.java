@@ -82,4 +82,11 @@ public interface AccountInstanceApi {
      * @param accountInstanceDTO
      */
     Response<Boolean> resetPwd(AccountInstanceDTO accountInstanceDTO);
+
+    /**
+     * 查看 账号-实例
+     *
+     * @param id
+     */
+    Response<AccountInstanceVo> getAccountInstanceById(Long id);
 }
