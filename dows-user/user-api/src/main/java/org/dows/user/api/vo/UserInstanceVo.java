@@ -36,6 +36,9 @@ public class UserInstanceVo {
     @ApiModelProperty("身份证号")
     private String idNo;
 
+    @ApiModelProperty("手机号")
+    private String phone;
+
     @ApiModelProperty("年龄")
     private String age;
 

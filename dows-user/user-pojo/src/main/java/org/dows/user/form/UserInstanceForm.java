@@ -42,6 +42,9 @@ public class UserInstanceForm implements Serializable {
     @ApiModelProperty("名族")
     private String nation;
 
+    @ApiModelProperty("手机号")
+    private String phone;
+
     @ApiModelProperty("发证机关")
     private String signOrg;
 

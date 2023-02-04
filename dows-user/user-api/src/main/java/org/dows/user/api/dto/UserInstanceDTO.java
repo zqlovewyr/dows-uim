@@ -25,6 +25,9 @@ public class UserInstanceDTO {
     @ApiModelProperty("自增主键ID")
     private Long id;
 
+    @ApiModelProperty("姓名、身份证号或者手机号")
+    private String nameNoPhone;
+
     @ApiModelProperty("账户ID")
     private String accountId;
 
@@ -45,6 +48,9 @@ public class UserInstanceDTO {
 
     @ApiModelProperty("身份证号")
     private String idNo;
+
+    @ApiModelProperty("手机号")
+    private String phone;
 
     @ApiModelProperty("年龄")
     private String age;

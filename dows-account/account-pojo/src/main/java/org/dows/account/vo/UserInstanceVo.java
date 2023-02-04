@@ -37,6 +37,9 @@ public class UserInstanceVo implements Serializable {
     @ApiModelProperty(value = "性别")
     private Integer sex;
 
+    @ApiModelProperty("手机号")
+    private String phone;
+
     @ApiModelProperty(value = "身份证号")
     private String idNo;
 
