@@ -16,10 +16,7 @@ import org.dows.user.api.vo.UserInstanceVo;
 import org.dows.user.entity.UserInstance;
 import org.dows.user.service.UserInstanceService;
 import org.dows.user.form.UserInstanceForm;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 用户-实例(UserInstance)表控制层
@@ -49,10 +46,15 @@ public class UserInstanceRest implements MybatisCrudRest<UserInstanceForm, UserI
     }
 
     @ApiOperation("更新 用户-实例")
-    @PostMapping("/updateUserInstance")
+    @PutMapping("/updateUserInstance")
     public Response<Long> updateUserInstance(@RequestBody UserInstanceDTO userInstanceDTO) {
         return userInstanceApi.updateUserInstance(userInstanceDTO);
     }
 
+    @ApiOperation("查看 用户-实例")
+    @GetMapping("/getUserInstanceById/{id}")
+    public Response<UserInstanceVo> getUserInstanceById(@PathVariable("id") Long id) {
+        return userInstanceApi.getUserInstanceById(id);
+    }
 }
 
