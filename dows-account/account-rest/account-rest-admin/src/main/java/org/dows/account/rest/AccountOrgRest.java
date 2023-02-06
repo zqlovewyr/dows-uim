@@ -84,6 +84,7 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
         instance.setRbacRoleId(1L);
         instance.setAccountOrgOrgId(orgId.toString());
         instance.setPrincipalType(EnumAccountRolePrincipalType.PERSONAL.getCode());
+        instance.setAccountName(accountOrgGroupDTO.getOrgCode() + "888");
         AccountInstanceVo vo = accountInstanceApi.createAccountInstance(instance).getData();
         //3、创建管理账户对应的用户信息
         UserInstanceDTO user = new UserInstanceDTO();
@@ -143,12 +144,13 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
         AccountOrgDTO accountOrg = new AccountOrgDTO();
         //1.1、设置组织架构属性
         BeanUtils.copyProperties(accountOrgGroupDTO, accountOrg);
+        accountOrg.setId(accountOrgGroupDTO.getId().toString());
         if (StringUtils.isNotEmpty(accountOrgGroupDTO.getOrgDescr())) {
             accountOrg.setDescr(accountOrgGroupDTO.getOrgDescr());
         }
         accountOrgApi.updateAccountOrgById(accountOrg);
         //2、更新组-实例表
-        AccountGroupInfoVo data = accountGroupInfoApi.getAccountGroupInfoByOrgId(accountOrg.getId()).getData();
+        AccountGroupInfoVo data = accountGroupInfoApi.getAccountGroupInfoByOrgId(Long.valueOf(accountOrg.getId())).getData();
         //2.1、设置组实例属性
         BeanUtils.copyProperties(accountOrgGroupDTO, data, new String[]{"id"});
         AccountGroupInfoDTO dto = new AccountGroupInfoDTO();

@@ -574,7 +574,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 //3.1、设置姓名、性别
                 //3.1、1 根据accountId获取userId
                 AccountUser user = accountUserService.lambdaQuery()
-                        .eq(AccountUser::getAccountId, model.getId())
+                        .eq(AccountUser::getAccountId, model.getId().toString())
                         .one();
                 if (!ReflectUtil.isObjectNull(user)) {
                     UserInstanceVo instance = userInstanceApi.getUserInstanceById(Long.valueOf(user.getUserId())).getData();
@@ -589,7 +589,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 }
                 //3.1.2、设置机构信息
                 AccountGroup group = accountGroupService.lambdaQuery()
-                        .eq(AccountGroup::getAccountId, model.getId())
+                        .eq(AccountGroup::getAccountId, model.getId().toString())
                         .one();
                 if (!ReflectUtil.isObjectNull(group) && group != null) {
                     if (StringUtils.isNotEmpty(group.getOrgName())) {
@@ -606,7 +606,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 }
                 //3.1.3 设置角色信息
                 AccountRole accountRole = accountRoleService.lambdaQuery()
-                        .eq(AccountRole::getPrincipalId, model.getId())
+                        .eq(AccountRole::getPrincipalId, model.getId().toString())
                         .one();
                 if (!ReflectUtil.isObjectNull(accountRole) && accountRole != null) {
                     if (StringUtils.isNotEmpty(accountRole.getRoleName())) {

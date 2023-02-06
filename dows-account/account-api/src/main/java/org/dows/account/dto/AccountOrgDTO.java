@@ -23,7 +23,7 @@ import java.util.Set;
 public class AccountOrgDTO {
 
     @ApiModelProperty(value = "主键Id")
-    private Long id;
+    private String id;
 
     @ApiModelProperty(value = "父ID(父级组织ID)")
     private Long pid;

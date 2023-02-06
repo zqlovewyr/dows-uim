@@ -43,14 +43,6 @@ public class AccountGroupInfoRest implements MybatisCrudRest<AccountGroupInfoFor
 
     private final AccountGroupInfoApi accountGroupInfoApi;
 
-    private final AccountOrgApi accountOrgApi;
-
-    private final AccountInstanceApi accountInstanceApi;
-
-    private final UserInstanceApi userInstanceApi;
-
-    private final AccountUserApi accountUserApi;
-
     @ApiOperation("自定义查询 账号-组-实例 分页列表")
     @PostMapping("/customAccountGroupInfoList")
     public Response customAccountGroupInfoList(@RequestBody AccountGroupInfoDTO accountGroupInfoDTO) {

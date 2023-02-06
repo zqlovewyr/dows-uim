@@ -223,6 +223,7 @@ public class AccountOrgBiz implements AccountOrgApi {
     public void updateAccountOrgById(AccountOrgDTO accountOrgDTO) {
         AccountOrg accountOrg = new AccountOrg();
         BeanUtils.copyProperties(accountOrgDTO, accountOrg);
+        accountOrg.setId(Long.valueOf(accountOrgDTO.getId()));
         boolean flag = accountOrgService.updateById(accountOrg);
         if (flag == false) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_UPDATE_FAIL_EXCEPTION);
@@ -257,21 +258,21 @@ public class AccountOrgBiz implements AccountOrgApi {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_UPDATE_FAIL_EXCEPTION);
         }
         //2、如果有成员，删除成员信息
-        AccountGroup accountGroup = accountGroupService.lambdaQuery()
+        List<AccountGroup> accountGroupList = accountGroupService.lambdaQuery()
                 .eq(AccountGroup::getOrgId, id)
-                .one();
-        if (accountGroup != null) {
-            LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
-            groupWrapper.set(AccountGroup::getDeleted, true)
-                    .eq(AccountGroup::getOrgId, id);
-            boolean flag2 = accountGroupService.update(groupWrapper);
-            if (!flag2) {
-                throw new AccountException(EnumAccountStatusCode.ACCOUNT_GROUP_UPDATE_FAIL_EXCEPTION);
-            }
+                .list();
+        if (accountGroupList != null && accountGroupList.size() > 0) {
+                LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
+                groupWrapper.set(AccountGroup::getDeleted, true)
+                        .eq(AccountGroup::getOrgId, id);
+                boolean flag2 = accountGroupService.update(groupWrapper);
+                if (!flag2) {
+                    throw new AccountException(EnumAccountStatusCode.ACCOUNT_GROUP_UPDATE_FAIL_EXCEPTION);
+                }
         }
         //3、删除组织信息
         AccountGroupInfo accountGroupInfo = accountGroupInfoService.lambdaQuery()
-                .eq(AccountGroupInfo::getOrgId, id)
+                .eq(AccountGroupInfo::getOrgId, id.toString())
                 .one();
         if (accountGroupInfo != null) {
             LambdaUpdateWrapper<AccountGroupInfo> infoWrapper = Wrappers.lambdaUpdate(AccountGroupInfo.class);

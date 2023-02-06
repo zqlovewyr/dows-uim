@@ -22,7 +22,7 @@ import java.util.Date;
 public class UserInstanceVo {
 
     @ApiModelProperty("自增主键ID")
-    private Long id;
+    private String id;
 
     @ApiModelProperty("用户ID")
     private String userId;
