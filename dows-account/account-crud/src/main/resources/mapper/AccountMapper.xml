@@ -34,6 +34,9 @@
             and t3.city IS NOT NULL
             and t1.phone IS NOT NULL
         </if>
+        <if test="accountQuery.accountName != null">
+            AND like concat( '%' , #{accountQuery.accountName}, '%')
+        </if>
         <if test="accountQuery.createStartDate != null">
             AND DATE(t3.create_time) &gt;= #{accountQuery.createStartDate}
         </if>

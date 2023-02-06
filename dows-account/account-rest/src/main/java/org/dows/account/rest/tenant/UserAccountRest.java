@@ -59,6 +59,6 @@ public class UserAccountRest {
     @ApiOperation(value = "根据客户账号id获取详情")
     public Response<AccountVo> getInfo(
             @ApiParam(required = true, value = "账号id") @PathVariable("accountId") String accountId){
-        return accountBiz.getInfoByAccountId(accountId);
+        return Response.ok(accountBiz.getInfoByAccountId(accountId));
     }
 }

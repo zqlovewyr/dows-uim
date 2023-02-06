@@ -35,6 +35,8 @@ public class AccountRest {
     public Response<IPage<AccountVo>> pageList(
             @ApiParam(value = "页码", required = true) Integer page,
             @ApiParam(value = "每页数据条数", required = true) Integer size,
+            @ApiParam(value = "会员名称") @RequestParam(required = false) String accountName,
+            @ApiParam(value = "会员活跃度true升序false降序") @RequestParam(required = false) Boolean activeSort,
             @ApiParam(value = "注册开始时间yyyy-MM-dd") @RequestParam(required = false) @DateTimeFormat(pattern = MyConstant.DEFAULT_DATE_FORMAT) LocalDate createStartDate,
             @ApiParam(value = "注册截止时间yyyy-MM-dd") @RequestParam(required = false) @DateTimeFormat(pattern = MyConstant.DEFAULT_DATE_FORMAT) LocalDate createEndDate,
             @ApiParam(value = "生日开始时间yyyy-MM-dd") @RequestParam(required = false) @DateTimeFormat(pattern = MyConstant.DEFAULT_DATE_FORMAT) LocalDate birthdayStartDate,
@@ -52,6 +54,8 @@ public class AccountRest {
         accountQuery.setInfoIfFull(infoIfFull);
         accountQuery.setMoneySort(moneySort);
         accountQuery.setLastOrderTimeSort(lastOrderTimeSort);
+        accountQuery.setAccountName(accountName);
+        accountQuery.setActiveSort(activeSort);
         return accountBiz.getAccuntListPage(accountQuery);
     }
 
@@ -59,6 +63,6 @@ public class AccountRest {
     @ApiOperation(value = "根据客户账号id获取详情")
     public Response<AccountVo> getInfo(
             @ApiParam(required = true, value = "账号id") @PathVariable("accountId") String accountId){
-        return accountBiz.getInfoByAccountId(accountId);
+        return Response.ok(accountBiz.getInfoByAccountId(accountId));
     }
 }

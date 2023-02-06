@@ -1,39 +1,48 @@
 package org.dows.account.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.dows.account.util.BirthdayUtil;
 import org.dows.account.util.MyConstant;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
+/**
+ * 用户信息
+ *
+ * @author vctgo
+ */
 @Data
-@ApiModel(value = "客户信息", description = "客户信息")
-public class AccountVo {
-    @ApiModelProperty(value = "主键")
-    //主键ID
-    //@JsonSerialize(using= ToStringSerializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+public class LoginUserVo implements Serializable
+{
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 用户唯一标识
+     */
+    private String token;
+    /**
+     * 用户名id
+     */
     private Long id;
+
+    @ApiModelProperty(value = "租户ID")
+    private String tenantId;
+
+    @ApiModelProperty(value = "应用ID")
+    private String appId;
 
     @ApiModelProperty(value = "账号名")
     private String accountName;
-    @ApiModelProperty(value = "密码")
-    private String password;
     @ApiModelProperty(value = "头像")
     private String avatar;
 
     @ApiModelProperty(value = "手机号")
     private String phone;
-    @ApiModelProperty(value = "租户ID")
-    private String tenantId;
-
-    @ApiModelProperty(value = "appId")
-    private String appId;
 
     @ApiModelProperty(value = "客户账号id")
     private String accountId;
@@ -92,15 +101,28 @@ public class AccountVo {
     @ApiModelProperty(value = "年龄")
     private Integer age;
 
-    public Integer getAge() {
-        return BirthdayUtil.getAge(this.birthday);
-    }
+    /**
+     * 登录时间
+     */
+    private Long loginTime;
 
-    public String getShengXiao() {
-        return BirthdayUtil.getChineseZodiac(this.birthday);
-    }
+    /**
+     * 过期时间
+     */
+    private Long expireTime;
 
-    public String getConstellation() {
-        return BirthdayUtil.getConstellation(this.birthday);
-    }
+
+
+    /**
+     * 权限列表
+     */
+    private Set<String> permissions;
+
+    /**
+     * 角色列表
+     */
+    private Set<String> roles;
+
+
+
 }

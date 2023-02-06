@@ -27,5 +27,9 @@ public class AccountQuery extends PageQuery {
 
     private Boolean moneySort;
 
+    private Boolean activeSort;
+
+    private String accountName;
+
     Boolean lastOrderTimeSort;
 }
