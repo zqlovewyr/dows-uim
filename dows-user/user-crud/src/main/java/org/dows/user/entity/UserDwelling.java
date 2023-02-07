@@ -35,6 +35,9 @@ public class UserDwelling implements CrudEntity {
     @ApiModelProperty("主键")
     private Long id;
 
+    @ApiModelProperty("家庭ID")
+    private String familyId;
+
     @ApiModelProperty("地址")
     private String address;
 
@@ -58,6 +61,9 @@ public class UserDwelling implements CrudEntity {
 
     @ApiModelProperty("饮水")
     private String water;
+
+    @ApiModelProperty("社区")
+    private String community;
 
     @ApiModelProperty("厨房排风设施")
     private String exhaustFacility;

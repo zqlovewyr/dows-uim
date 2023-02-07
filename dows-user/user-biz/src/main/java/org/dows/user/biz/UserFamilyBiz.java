@@ -15,10 +15,14 @@ import org.dows.user.api.api.UserFamilyApi;
 import org.dows.user.api.api.UserInstanceApi;
 import org.dows.user.api.dto.UserFamilyDTO;
 import org.dows.user.api.vo.UserFamilyVo;
+import org.dows.user.entity.UserAddress;
+import org.dows.user.entity.UserDwelling;
 import org.dows.user.entity.UserFamily;
 import org.dows.user.entity.UserInstance;
 import org.dows.user.enums.EnumUserStatusCode;
 import org.dows.user.exception.UserException;
+import org.dows.user.service.UserAddressService;
+import org.dows.user.service.UserDwellingService;
 import org.dows.user.service.UserFamilyService;
 import org.dows.user.service.UserInstanceService;
 import org.springframework.beans.BeanUtils;
@@ -43,6 +47,8 @@ public class UserFamilyBiz implements UserFamilyApi {
     private final UserFamilyService userFamilyService;
 
     private final UserInstanceService userInstanceService;
+
+    private final UserDwellingService userDwellingService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -97,9 +103,6 @@ public class UserFamilyBiz implements UserFamilyApi {
      * 根据当前户主，获取上三代
      */
     private static List<UserFamilyDTO> createParentList(UserFamilyDTO familyHouseholder, List<UserFamilyDTO> list) {
-/*        return list.stream().filter(model -> familyHouseholder.getParentId().equals(model.getUserId()))
-                .peek(model -> model.setChildren(createParentList(model, list)))
-                .collect(Collectors.toList());*/
         Integer num = 0;
         List<UserFamilyDTO> dtoList = list.stream().filter(model -> familyHouseholder.getParentId().equals(model.getUserId())).collect(Collectors.toList());
         if (dtoList.size() > 0) {
@@ -181,15 +184,15 @@ public class UserFamilyBiz implements UserFamilyApi {
 
     @Override
     public Response<IPage<UserFamilyVo>> getFamilyArchivesList(UserFamilyDTO userFamilyDTO) {
-        //1、根据用户名、身份证号、手机号、居住地址获取对应的userId
+        //1、根据用户名、身份证号、手机号获取对应的userId
         Set<String> userIds = new HashSet<>();
+        Set<String> familyIds = new HashSet<>();
         if (StringUtils.isNotEmpty(userFamilyDTO.getNameNoPhoneAddress())) {
             List<UserInstance> userInstancesList = userInstanceService.lambdaQuery()
                     .select(UserInstance::getUserId)
                     .and(StringUtils.isNotEmpty(userFamilyDTO.getNameNoPhoneAddress()), t -> t.like(UserInstance::getName, userFamilyDTO.getNameNoPhoneAddress())
                             .or().like(UserInstance::getIdNo, userFamilyDTO.getNameNoPhoneAddress())
                             .or().like(UserInstance::getPhone, userFamilyDTO.getNameNoPhoneAddress()))
-                    .or().like(UserInstance::getResidential, userFamilyDTO.getNameNoPhoneAddress())
                     .list();
             if (userInstancesList != null && userInstancesList.size() > 0) {
                 userInstancesList.forEach(userInstance -> {
@@ -200,11 +203,26 @@ public class UserFamilyBiz implements UserFamilyApi {
                 userIds.add("fill");
             }
         }
-        //2、根据
+        //2、根据居住地址获取对应的userId
+        if (StringUtils.isNotEmpty(userFamilyDTO.getNameNoPhoneAddress())) {
+            List<UserDwelling> userDwellingList = userDwellingService.lambdaQuery()
+                    .select(UserDwelling::getFamilyId)
+                    .like(StringUtils.isNotEmpty(userFamilyDTO.getNameNoPhoneAddress()),UserDwelling::getAddress,userFamilyDTO.getNameNoPhoneAddress())
+                    .list();
+            if (userDwellingList != null && userDwellingList.size() > 0) {
+                userDwellingList.forEach(userAddress -> {
+                    familyIds.add(userAddress.getFamilyId());
+                });
+            }
+            if (familyIds.size() == 0) {
+                familyIds.add("fill");
+            }
+        }
         //1、获取以户主为主体的家庭信息
         LambdaQueryWrapper<UserFamily> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(userFamilyDTO.getParentId()), UserFamily::getParentId, userFamilyDTO.getParentId())
                 .eq(StringUtils.isNotEmpty(userFamilyDTO.getFamilyId()), UserFamily::getFamilyId, userFamilyDTO.getFamilyId())
+                .in(familyIds != null && familyIds.size() > 0,UserFamily::getId,familyIds)
                 .eq(StringUtils.isNotEmpty(userFamilyDTO.getUserId()), UserFamily::getUserId, userFamilyDTO.getUserId())
                 .in(userIds != null && userIds.size() > 0,UserFamily::getUserId,userIds)
                 .eq(StringUtils.isNotEmpty(userFamilyDTO.getMemberId()), UserFamily::getMemberId, userFamilyDTO.getMemberId())
@@ -222,23 +240,19 @@ public class UserFamilyBiz implements UserFamilyApi {
         IPage<UserFamilyVo> pageVo = new Page<>();
         if (familyList != null && familyList.size() > 0) {
             familyList.forEach(family -> {
-/*                List<UserFamily> modelList = userFamilyService.lambdaQuery()
-                        .eq(UserFamily::getFamilyId, family.getFamilyId())
-                        .orderByDesc(UserFamily::getDt).list();
-                //2.1、获取户主
-                UserFamily model = new UserFamily();
-                if(modelList != null && modelList.size() > 0){
-                    model = modelList.stream().filter(item -> item.getHouseholder().equals("1")).findFirst().get();
-                }*/
                 //2.1、根据户主id获取户主姓名
                 UserInstance userInstance = userInstanceService.getById(family.getUserId());
+                //获取户主地址和社区
+                UserDwelling userDwelling = userDwellingService.lambdaQuery()
+                        .eq(UserDwelling::getFamilyId,family.getId())
+                        .one();
                 //2.3、设置属性
                 UserFamilyVo entity = new UserFamilyVo().builder().build()
                         .setId(family.getId())
                         .setHouseholderName(userInstance.getName())
                         .setIdNo(userInstance.getIdNo())
-                        .setResidential(userInstance.getResidential())
-                        .setCommunity(userInstance.getCommunity());
+                        .setResidential(userDwelling.getAddress())
+                        .setCommunity(userDwelling.getCommunity());
                 voList.add(entity);
             });
         }
