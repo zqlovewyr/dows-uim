@@ -630,14 +630,14 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         AccountInstance account = new AccountInstance();
         account.setPhone(accountInstanceDTO.getPhone());
         account.setPassword(accountInstanceDTO.getPassword());
-        account.setId(accountInstanceDTO.getId());
+        account.setId(Long.valueOf(accountInstanceDTO.getId()));
         boolean flag1 = accountInstanceService.updateById(account);
         if (flag1 == false) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_UPDATE_FAIL_EXCEPTION);
         }
         //2、通过账号ID找到用户ID
         AccountUser accountUser = accountUserService.lambdaQuery()
-                .eq(AccountUser::getAccountId, account.getId())
+                .eq(AccountUser::getAccountId, account.getId().toString())
                 .one();
         //2、修改用户-实例
         UserInstanceDTO user = new UserInstanceDTO();

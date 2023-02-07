@@ -18,7 +18,7 @@ import java.util.Date;
 @Builder
 public class AccountInstanceDTO implements Serializable {
     private static final long serialVersionUID = 4496765086642042824L;
-    private Long id;
+    private String id;
     private String appId;
     private String tenantId;
     /* runsix:field 'identifier' is in class AccountIdentifier. */

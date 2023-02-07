@@ -72,7 +72,7 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
 
     @ApiOperation("新增 账号-实例")
     @PostMapping("/createAccountInstance")
-    public Response<Long> createAccountInstance(@RequestBody AccountInstanceDTO accountInstanceDTO) {
+    public Response<String> createAccountInstance(@RequestBody AccountInstanceDTO accountInstanceDTO) {
         //1、新增账号信息
         AccountInstanceVo vo = accountInstanceApi.createAccountInstance(accountInstanceDTO).getData();
         //2、新增用户信息
@@ -85,7 +85,7 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
         accountUserDTO.setAccountId(vo.getId().toString());
         accountUserDTO.setUserId(userId.toString());
         Long uionId = this.accountUserApi.createAccountUser(accountUserDTO).getData();
-        return Response.ok(uionId);
+        return Response.ok(uionId.toString());
     }
 
     @ApiOperation("登录")
