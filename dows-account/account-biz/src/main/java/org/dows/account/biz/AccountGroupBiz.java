@@ -637,11 +637,14 @@ public class AccountGroupBiz implements AccountGroupApi {
     public void batchDeleteGroups(List<String> ids) {
         for (String id : ids) {
             AccountGroup accountGroup = accountGroupService.lambdaQuery()
-                    .eq(AccountGroup::getAccountId, id.toString())
+                    .eq(AccountGroup::getAccountId, id)
                     .one();
+            if(accountGroup == null){
+                throw new AccountException(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);
+            }
             LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
             groupWrapper.set(AccountGroup::getDeleted, true)
-                    .eq(AccountGroup::getId, accountGroup.getId());
+                    .eq(AccountGroup::getId, Long.valueOf(id));
            accountGroupService.update(groupWrapper);
         }
     }

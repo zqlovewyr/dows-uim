@@ -168,7 +168,7 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
 
     @ApiOperation("删除单个 机构-实例")
     @DeleteMapping("/deleteAccountOrgById/{id}")
-    public void deleteAccountOrgById(@PathVariable("id") Long id) {
+    public void deleteAccountOrgById(@PathVariable("id") String id) {
         accountOrgApi.deleteAccountOrgById(id);
     }
 

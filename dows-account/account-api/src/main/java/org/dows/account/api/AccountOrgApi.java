@@ -64,7 +64,7 @@ public interface AccountOrgApi {
      *
      * @param id
      */
-    void deleteAccountOrgById(Long id);
+    void deleteAccountOrgById(String id);
 
     /**
      * 批量删除 组织架构

@@ -245,17 +245,17 @@ public class AccountOrgBiz implements AccountOrgApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteAccountOrgById(Long id) {
+    public void deleteAccountOrgById(String id) {
         //1、删除组织架构
         AccountOrg accountOrg = accountOrgService.lambdaQuery()
-                .eq(AccountOrg::getId, id)
+                .eq(AccountOrg::getId, Long.valueOf(id))
                 .one();
         if (accountOrg == null) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_NOT_EXIST_EXCEPTION);
         }
         LambdaUpdateWrapper<AccountOrg> orgWrapper = Wrappers.lambdaUpdate(AccountOrg.class);
         orgWrapper.set(AccountOrg::getDeleted, true)
-                .eq(AccountOrg::getId, id);
+                .eq(AccountOrg::getId, Long.valueOf(id));
         boolean flag1 = accountOrgService.update(orgWrapper);
         if (!flag1) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_UPDATE_FAIL_EXCEPTION);
@@ -275,7 +275,7 @@ public class AccountOrgBiz implements AccountOrgApi {
         }
         //3、删除组织信息
         AccountGroupInfo accountGroupInfo = accountGroupInfoService.lambdaQuery()
-                .eq(AccountGroupInfo::getOrgId, id.toString())
+                .eq(AccountGroupInfo::getOrgId, id)
                 .one();
         if (accountGroupInfo != null) {
             LambdaUpdateWrapper<AccountGroupInfo> infoWrapper = Wrappers.lambdaUpdate(AccountGroupInfo.class);
