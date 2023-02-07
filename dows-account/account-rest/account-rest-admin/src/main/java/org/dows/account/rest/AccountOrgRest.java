@@ -10,7 +10,6 @@ import org.dows.account.api.AccountGroupInfoApi;
 import org.dows.account.api.AccountInstanceApi;
 import org.dows.account.api.AccountOrgApi;
 import org.dows.account.api.AccountUserApi;
-import org.dows.account.biz.AccountOrgBiz;
 import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.dto.*;
 import org.dows.account.entity.AccountOrg;

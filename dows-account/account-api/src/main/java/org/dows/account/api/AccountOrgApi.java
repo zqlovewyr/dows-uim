@@ -5,7 +5,6 @@ import org.dows.account.dto.AccountOrgDTO;
 import org.dows.account.dto.TreeAccountOrgDTO;
 import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
-
 import java.util.List;
 
 /**
