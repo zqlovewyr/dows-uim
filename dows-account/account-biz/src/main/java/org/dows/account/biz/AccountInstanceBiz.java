@@ -176,8 +176,8 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         AccountOrg accountOrg = null;
         if (StringUtils.isNotBlank(accountInstanceDTO.getAccountOrgOrgId())) {
             accountOrg = accountOrgService.lambdaQuery()
-                    .select(AccountOrg::getId, AccountOrg::getOrgName)
-                    .eq(AccountOrg::getId, accountInstanceDTO.getAccountOrgOrgId())
+                    .select(AccountOrg::getId, AccountOrg::getId)
+                    .eq(AccountOrg::getId, Long.valueOf(accountInstanceDTO.getAccountOrgOrgId()))
                     .oneOpt()
                     .orElseThrow(() -> {
                         throw new OrgException(EnumAccountStatusCode.ORG_NOT_EXIST_EXCEPTION);
@@ -708,20 +708,22 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     }
 
     @Override
-    public Response<AccountInstanceVo> getAccountInstanceById(Long id) {
+    public Response<AccountInstanceVo> getAccountInstanceById(String id) {
         //1、获取账户实例
         AccountInstance accountInstance = accountInstanceService.lambdaQuery()
-                .eq(AccountInstance::getId, id)
+                .eq(AccountInstance::getId, Long.valueOf(id))
                 .one();
         if (accountInstance == null) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);
         }
-        AccountInstanceVo model = new AccountInstanceVo().builder().build().setAccountName(accountInstance.getAccountName())
+        AccountInstanceVo model = new AccountInstanceVo().builder().build()
+                .setId(Long.valueOf(accountInstance.getId()))
+                .setAccountName(accountInstance.getAccountName())
                 .setAccountPwd(accountInstance.getPassword())
                 .setPhone(accountInstance.getPhone());
         //2、通过账户和用户关联表找到对应的用户ID
         AccountUser accountUser = accountUserService.lambdaQuery()
-                .eq(AccountUser::getAccountId, id.toString())
+                .eq(AccountUser::getAccountId, id)
                 .one();
         if (accountUser != null) {
             UserInstanceVo vo = userInstanceApi.getUserInstanceById(Long.valueOf(accountUser.getUserId())).getData();
@@ -729,14 +731,14 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         }
         //4、获取角色实例
         AccountRole accountRole = accountRoleService.lambdaQuery()
-                .eq(AccountRole::getPrincipalId, id.toString())
+                .eq(AccountRole::getPrincipalId, id)
                 .one();
         if (accountRole != null) {
             model.setRoleName(accountRole.getRoleName());
         }
         //5、获取机构实例
         AccountGroup accountGroup = accountGroupService.lambdaQuery()
-                .eq(AccountGroup::getAccountId, id.toString())
+                .eq(AccountGroup::getAccountId, id)
                 .one();
         if (accountGroup != null) {
             model.setOrgName(accountGroup.getOrgName());

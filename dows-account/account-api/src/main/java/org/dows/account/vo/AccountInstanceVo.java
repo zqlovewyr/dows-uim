@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
 public class AccountInstanceVo {
 
     @ApiModelProperty(value = "账号-标识 ID")
-    private Long id;
+    private String id;
 
     @ApiModelProperty(value = "账号ID/用户ID/会员ID/商户ID")
     private Long accountId;

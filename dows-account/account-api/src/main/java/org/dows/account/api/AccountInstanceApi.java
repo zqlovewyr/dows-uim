@@ -88,5 +88,5 @@ public interface AccountInstanceApi {
      *
      * @param id
      */
-    Response<AccountInstanceVo> getAccountInstanceById(Long id);
+    Response<AccountInstanceVo> getAccountInstanceById(String id);
 }

@@ -56,7 +56,7 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
 
     @ApiOperation("查看 账号-实例")
     @GetMapping("/getAccountInstanceById/{id}")
-    public Response<AccountInstanceVo> getAccountInstanceById(@PathVariable("id") Long id) {
+    public Response<AccountInstanceVo> getAccountInstanceById(@PathVariable("id") String id) {
         return accountInstanceApi.getAccountInstanceById(id);
     }
 
