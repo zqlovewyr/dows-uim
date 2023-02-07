@@ -24,7 +24,7 @@ import java.util.List;
 @ApiModel(value = "AccountOrgVo对象", description = "账号-组织架构维度信息")
 public class AccountOrgVo {
     @ApiModelProperty(value = "账号-组ID")
-    private Long id;
+    private String id;
 
     @ApiModelProperty("实体域组织机构ID")
     private String orgId;

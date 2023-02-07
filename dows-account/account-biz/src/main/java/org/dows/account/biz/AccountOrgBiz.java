@@ -212,6 +212,8 @@ public class AccountOrgBiz implements AccountOrgApi {
                     vo.setTelePhone(info.getOwnerPhone());
                 }
                 // TODO 否则，从组织架构基础表找(account_org_info)
+                //主键id转换为String
+                vo.setId(model.getId().toString());
                 voList.add(vo);
             });
         }
