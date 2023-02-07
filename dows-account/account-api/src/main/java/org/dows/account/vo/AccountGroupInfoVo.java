@@ -88,4 +88,7 @@ public class AccountGroupInfoVo {
 
     @ApiModelProperty("创建时间")
     private Date dt;
+
+    @ApiModelProperty("省级行政区-地级行政区")
+    private String absoluteArea;
 }

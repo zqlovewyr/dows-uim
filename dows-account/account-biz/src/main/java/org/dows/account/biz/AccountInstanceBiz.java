@@ -495,6 +495,9 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     accountIds.add(accountRole.getPrincipalId());
                 });
             }
+            if(accountIds.size() == 0){
+                accountIds.add("fill");
+            }
         }
 
 
@@ -510,6 +513,9 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 accountRoleList.forEach(accountRole -> {
                     accountIds.add(accountRole.getPrincipalId());
                 });
+            }
+            if(accountIds.size() == 0){
+                accountIds.add("fill");
             }
         }
 
@@ -534,11 +540,14 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     }
                 });
             }
+            if(accountIds.size() == 0){
+                accountIds.add("fill");
+            }
         }
 
         //3、根据姓名、手机号查询用户之姓名
         UserInstanceDTO dtoName = new UserInstanceDTO();
-        if(StringUtils.isNotEmpty(accountInstanceDTO.getAccountNamePhone())){
+        if (StringUtils.isNotEmpty(accountInstanceDTO.getAccountNamePhone())) {
             dtoName.setName(accountInstanceDTO.getAccountNamePhone());
         }
         if (!ReflectUtil.isObjectNull(dtoName) && dtoName != null) {
@@ -553,10 +562,13 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     }
                 });
             }
+            if(accountIds.size() == 0){
+                accountIds.add("fill");
+            }
         }
         //3、根据姓名、手机号查询用户之手机号
         UserInstanceDTO dtoPhone = new UserInstanceDTO();
-        if(StringUtils.isNotEmpty(accountInstanceDTO.getAccountNamePhone())){
+        if (StringUtils.isNotEmpty(accountInstanceDTO.getAccountNamePhone())) {
             dtoPhone.setPhone(accountInstanceDTO.getAccountNamePhone());
         }
         if (!ReflectUtil.isObjectNull(dtoPhone) && dtoPhone != null) {
@@ -570,6 +582,27 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                         accountIds.add(user.getAccountId());
                     }
                 });
+            }
+            if(accountIds.size() == 0){
+                accountIds.add("fill");
+            }
+        }
+
+        //3、根据账号名称查询用户账号id
+        AccountInstanceDTO account = new AccountInstanceDTO();
+        if (StringUtils.isNotEmpty(accountInstanceDTO.getAccountNamePhone())) {
+            account.setAccountName(accountInstanceDTO.getAccountNamePhone());
+        }
+        if (!ReflectUtil.isObjectNull(account) && account != null) {
+            List<AccountInstance> instanceList = accountInstanceService.lambdaQuery()
+                    .like(AccountInstance::getAccountName, accountInstanceDTO.getAccountNamePhone()).list();
+            if (instanceList != null && instanceList.size() > 0) {
+                instanceList.forEach(model -> {
+                    accountIds.add(model.getId().toString());
+                });
+            }
+            if(accountIds.size() == 0){
+                accountIds.add("fill");
             }
         }
 
@@ -587,6 +620,9 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                         accountIds.add(group.getAccountId());
                     });
                 }
+                if(accountIds.size() == 0){
+                    accountIds.add("fill");
+                }
             });
         }
 
@@ -603,6 +639,9 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     groupList.forEach(group -> {
                         accountIds.add(group.getAccountId());
                     });
+                }
+                if(accountIds.size() == 0){
+                    accountIds.add("fill");
                 }
             });
         }

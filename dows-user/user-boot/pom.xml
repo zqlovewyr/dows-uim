@@ -17,10 +17,10 @@
             <artifactId>user-biz</artifactId>
         </dependency>
 
-<!--        <dependency>
+        <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>user-config</artifactId>
-        </dependency>-->
+        </dependency>
     </dependencies>
 
 
