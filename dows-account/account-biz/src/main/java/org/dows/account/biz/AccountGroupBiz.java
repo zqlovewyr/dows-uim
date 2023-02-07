@@ -123,7 +123,7 @@ public class AccountGroupBiz implements AccountGroupApi {
             UserInstanceDTO userInstance = new UserInstanceDTO();
             BeanUtils.copyProperties(account, userInstance);
             Long id = userInstanceApi.insertUserInstance(userInstance).getData();
-            if (userInstance.getId() == null) {
+            if (id == null) {
                 flag.set(false);
             }
             //3、设置关联关系

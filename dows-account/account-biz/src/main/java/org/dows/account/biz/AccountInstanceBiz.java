@@ -481,7 +481,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Response<IPage<AccountInstanceVo>> customAccountInstanceList(AccountInstanceDTO accountInstanceDTO) {
-        //1、获取角色对应账号Id
+        //1.1、获取角色Id获取对应账号Id
         Set<String> accountIds = new HashSet<>();
         if (accountInstanceDTO.getRoleId() != null) {
             List<AccountRole> accountRoleList = accountRoleService.lambdaQuery()
@@ -496,6 +496,24 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 });
             }
         }
+
+
+        //1.2、获取角色名称获取对应账号Id
+        if (StringUtils.isNotEmpty(accountInstanceDTO.getRoleName())) {
+            List<AccountRole> accountRoleList = accountRoleService.lambdaQuery()
+                    .select(AccountRole::getPrincipalId)
+                    .eq(AccountRole::getRoleName, accountInstanceDTO.getRoleName())
+                    .eq(AccountRole::getPrincipalType, EnumAccountRolePrincipalType.PERSONAL.getCode())
+                    .eq(AccountRole::getDeleted, false)
+                    .list();
+            if (accountRoleList != null && accountRoleList.size() > 0) {
+                accountRoleList.forEach(accountRole -> {
+                    accountIds.add(accountRole.getPrincipalId());
+                });
+            }
+        }
+
+
         //2、根据姓名、性别查询对应用户
         UserInstanceDTO dto = new UserInstanceDTO();
         if (StringUtils.isNotEmpty(accountInstanceDTO.getUserName())) {
@@ -517,13 +535,51 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 });
             }
         }
-        //3、根据所属机构名称查询账户
+
+        //3、根据姓名、手机号查询用户之姓名
+        UserInstanceDTO dtoName = new UserInstanceDTO();
+        if(StringUtils.isNotEmpty(accountInstanceDTO.getAccountNamePhone())){
+            dtoName.setName(accountInstanceDTO.getAccountNamePhone());
+        }
+        if (!ReflectUtil.isObjectNull(dtoName) && dtoName != null) {
+            List<UserInstanceVo> instanceList = userInstanceApi.getUserInstanceList(dtoName).getData();
+            if (instanceList != null && instanceList.size() > 0) {
+                instanceList.forEach(model -> {
+                    AccountUser user = accountUserService.lambdaQuery()
+                            .eq(AccountUser::getUserId, model.getId())
+                            .one();
+                    if (user != null) {
+                        accountIds.add(user.getAccountId());
+                    }
+                });
+            }
+        }
+        //3、根据姓名、手机号查询用户之手机号
+        UserInstanceDTO dtoPhone = new UserInstanceDTO();
+        if(StringUtils.isNotEmpty(accountInstanceDTO.getAccountNamePhone())){
+            dtoPhone.setPhone(accountInstanceDTO.getAccountNamePhone());
+        }
+        if (!ReflectUtil.isObjectNull(dtoPhone) && dtoPhone != null) {
+            List<UserInstanceVo> instanceList = userInstanceApi.getUserInstanceList(dtoPhone).getData();
+            if (instanceList != null && instanceList.size() > 0) {
+                instanceList.forEach(model -> {
+                    AccountUser user = accountUserService.lambdaQuery()
+                            .eq(AccountUser::getUserId, model.getId())
+                            .one();
+                    if (user != null) {
+                        accountIds.add(user.getAccountId());
+                    }
+                });
+            }
+        }
+
+        //4、根据所属机构名称查询账户
         if (StringUtils.isNotEmpty(accountInstanceDTO.getOrgName())) {
-            //3、1 获取机构id
+            //4、1 获取机构id
             List<AccountGroupInfo> infoList = accountGroupInfoService.lambdaQuery()
                     .like(AccountGroupInfo::getOrgName, accountInstanceDTO.getOrgName())
                     .list();
-            //3.2、获取机构下的账户id集合
+            //4.2、获取机构下的账户id集合
             infoList.forEach(model -> {
                 List<AccountGroup> groupList = accountGroupService.lambdaQuery().eq(AccountGroup::getOrgId, model.getOrgId()).eq(AccountGroup::getDeleted, false).list();
                 if (groupList != null && groupList.size() > 0) {
@@ -534,15 +590,15 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             });
         }
 
-        //4、根据组别ID查询账户
-        if (StringUtils.isNotEmpty(accountInstanceDTO.getGroupInfoId())) {
-            //3、1 获取机构id
-            List<AccountGroupInfo> infoList = accountGroupInfoService.lambdaQuery()
-                    .like(AccountGroupInfo::getGroupInfoId, accountInstanceDTO.getGroupInfoId())
+        //5、根据组别ID查询账户
+        if (StringUtils.isNotEmpty(accountInstanceDTO.getTeamName())) {
+            //5、1 获取机构id
+            List<AccountOrg> orgList = accountOrgService.lambdaQuery()
+                    .like(AccountOrg::getOrgName, accountInstanceDTO.getTeamName())
                     .list();
-            //3.2、获取机构下的账户id集合
-            infoList.forEach(model -> {
-                List<AccountGroup> groupList = accountGroupService.lambdaQuery().eq(AccountGroup::getOrgId, model.getOrgId()).eq(AccountGroup::getDeleted, false).list();
+            //5.2、获取机构下的账户id集合
+            orgList.forEach(model -> {
+                List<AccountGroup> groupList = accountGroupService.lambdaQuery().eq(AccountGroup::getOrgId, model.getId()).eq(AccountGroup::getDeleted, false).list();
                 if (groupList != null && groupList.size() > 0) {
                     groupList.forEach(group -> {
                         accountIds.add(group.getAccountId());
@@ -551,9 +607,10 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             });
         }
 
-        //2、查询列表
+        //6、查询列表
         LambdaQueryWrapper<AccountInstance> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StringUtils.isNotEmpty(accountInstanceDTO.getAccountId()), AccountInstance::getAccountId, accountInstanceDTO.getAccountId())
+                .in(accountIds != null && accountIds.size() > 0, AccountInstance::getId, accountIds)
                 .like(StringUtils.isNotEmpty(accountInstanceDTO.getAccountName()), AccountInstance::getAccountName, accountInstanceDTO.getAccountName())
                 .eq(StringUtils.isNotEmpty(accountInstanceDTO.getSource()), AccountInstance::getSource, accountInstanceDTO.getSource())
                 .like(StringUtils.isNotEmpty(accountInstanceDTO.getPhone()), AccountInstance::getPhone, accountInstanceDTO.getPhone())
@@ -565,14 +622,14 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 .orderByDesc(AccountInstance::getDt);
         Page<AccountInstance> page = new Page<>(accountInstanceDTO.getPageNo(), accountInstanceDTO.getPageSize());
         IPage<AccountInstance> instancePage = accountInstanceService.page(page, queryWrapper);
-        //3、属性赋值
+        //7、属性赋值
         List<AccountInstanceVo> voList = new ArrayList<>();
         if (instancePage.getRecords() != null && instancePage.getRecords().size() > 0) {
             instancePage.getRecords().forEach(model -> {
                 AccountInstanceVo vo = new AccountInstanceVo();
                 BeanUtils.copyProperties(model, vo);
-                //3.1、设置姓名、性别
-                //3.1、1 根据accountId获取userId
+                //7.1、设置姓名、性别
+                //7.1、1 根据accountId获取userId
                 AccountUser user = accountUserService.lambdaQuery()
                         .eq(AccountUser::getAccountId, model.getId().toString())
                         .one();
@@ -587,7 +644,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                         }
                     }
                 }
-                //3.1.2、设置机构信息
+                //7.1.2、设置机构信息
                 AccountGroup group = accountGroupService.lambdaQuery()
                         .eq(AccountGroup::getAccountId, model.getId().toString())
                         .one();
@@ -604,7 +661,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                         }
                     }
                 }
-                //3.1.3 设置角色信息
+                //7.1.3 设置角色信息
                 AccountRole accountRole = accountRoleService.lambdaQuery()
                         .eq(AccountRole::getPrincipalId, model.getId().toString())
                         .one();
@@ -616,7 +673,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 voList.add(vo);
             });
         }
-        //4、复制
+        //8、复制
         IPage<AccountInstanceVo> voPage = new Page<>();
         BeanUtils.copyProperties(instancePage, voPage, new String[]{"records"});
         voPage.setRecords(voList);

@@ -113,6 +113,7 @@ public class UserInstanceBiz implements UserInstanceApi {
         List<UserInstance> userInstanceList = userInstanceService.lambdaQuery()
                 .like(StringUtils.isNotEmpty(userInstanceDTO.getName()), UserInstance::getName, userInstanceDTO.getName())
                 .eq(StringUtils.isNotEmpty(userInstanceDTO.getGender()), UserInstance::getGender, userInstanceDTO.getGender())
+                .eq(StringUtils.isNotEmpty(userInstanceDTO.getPhone()), UserInstance::getPhone, userInstanceDTO.getPhone())
                 .eq(UserInstance::getDeleted, false)
                 .list();
         //复制属性
@@ -120,6 +121,7 @@ public class UserInstanceBiz implements UserInstanceApi {
         userInstanceList.forEach(user -> {
             UserInstanceVo vo = new UserInstanceVo();
             BeanUtils.copyProperties(user, vo);
+            vo.setId(user.getId().toString());
             voList.add(vo);
         });
         return Response.ok(voList);

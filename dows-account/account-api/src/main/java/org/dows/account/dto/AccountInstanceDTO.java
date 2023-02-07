@@ -1,11 +1,14 @@
 package org.dows.account.dto;
 
 //import com.alibaba.excel.annotation.ExcelProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -37,9 +40,13 @@ public class AccountInstanceDTO implements Serializable {
     private String source;
     private String phone;
     private Integer status;
+    private String roleName;
 
-    @ApiModelProperty("组别Id")
-    private String groupInfoId;
+    @ApiModelProperty("组别名称")
+    private String teamName;
+
+    @ApiModelProperty("账号/姓名/手机号")
+    private String accountNamePhone;
 
     @ApiModelProperty("机构名称")
     private String orgName;
@@ -59,9 +66,13 @@ public class AccountInstanceDTO implements Serializable {
     @ApiModelProperty("创建时间")
     private Date dt;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "开始时间")
     private Date startTime;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "结束时间")
     private Date endTime;
 
