@@ -1,5 +1,6 @@
 package org.dows.user.api.api;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dows.framework.api.Response;
 import org.dows.user.api.dto.UserFamilyDTO;
 import org.dows.user.api.vo.UserFamilyVo;
@@ -40,4 +41,11 @@ public interface UserFamilyApi {
      * @param ids
      */
     void batchDeleteUserFamilys(List<String> ids);
+
+    /**
+     * 获取 用户-家庭档案列表
+     *
+     * @param userFamilyDTO
+     */
+    Response<IPage<UserFamilyVo>> getFamilyArchivesList(UserFamilyDTO userFamilyDTO);
 }

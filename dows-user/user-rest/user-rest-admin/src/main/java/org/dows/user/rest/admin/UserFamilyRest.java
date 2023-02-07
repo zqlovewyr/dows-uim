@@ -1,5 +1,6 @@
 package org.dows.user.rest.admin;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,13 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
     public Response<UserFamilyVo> getGenealogyList(@PathVariable("id") Long id) {
         Response<UserFamilyVo> vo = userFamilyApi.getGenealogyList(id.toString());
         return vo;
+    }
+
+    @ApiOperation("查询 家庭档案列表")
+    @PostMapping("/getFamilyArchivesList")
+    public Response<IPage<UserFamilyVo>> getFamilyArchivesList(@RequestBody UserFamilyDTO userFamilyDTO) {
+        Response<IPage<UserFamilyVo>>  pageList = userFamilyApi.getFamilyArchivesList(userFamilyDTO);
+        return pageList;
     }
 
     @ApiOperation("新增 用户-家庭")

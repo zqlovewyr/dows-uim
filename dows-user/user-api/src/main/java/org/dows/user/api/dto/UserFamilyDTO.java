@@ -1,9 +1,11 @@
 package org.dows.user.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -43,13 +45,34 @@ public class UserFamilyDTO {
     @ApiModelProperty("是否户主[0:否，1：是]")
     private Boolean householder;
 
+    @ApiModelProperty("用户名/身份证号/联系电话/居住地址")
+    private String nameNoPhoneAddress;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("时间戳")
     private Date dt;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty("开始时间")
+    private Date startTime;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty("结束时间")
+    private Date endTime;
 
     @ApiModelProperty("下三代")
     private List<UserFamilyDTO> children;
 
     @ApiModelProperty("上三代")
     private List<UserFamilyDTO> parent;
+
+    @ApiModelProperty(value = "页数")
+    private Integer pageNo;
+
+    @ApiModelProperty(value = "分页大小")
+    private Integer pageSize;
 
 }

@@ -51,6 +51,12 @@ public class UserInstanceForm implements Serializable {
     @ApiModelProperty("户籍地址")
     private String domicile;
 
+    @ApiModelProperty("居住地址")
+    private String residential;
+
+    @ApiModelProperty("所属社区")
+    private String community;
+
     @ApiModelProperty("性别")
     private String gender;
 }

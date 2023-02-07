@@ -67,6 +67,12 @@ public class UserInstanceDTO {
     @ApiModelProperty("户籍地址")
     private String domicile;
 
+    @ApiModelProperty("居住地址")
+    private String residential;
+
+    @ApiModelProperty("所属社区")
+    private String community;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("生日")

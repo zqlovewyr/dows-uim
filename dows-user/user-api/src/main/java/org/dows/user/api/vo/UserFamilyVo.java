@@ -45,6 +45,24 @@ public class UserFamilyVo {
     @ApiModelProperty("时间戳")
     private Date dt;
 
+    @ApiModelProperty("户主姓名")
+    private String householderName;
+
+    @ApiModelProperty("身份证号")
+    private String idNo;
+
+    @ApiModelProperty("手机号")
+    private String phone;
+
+    @ApiModelProperty("手机号")
+    private String domicile;
+
+    @ApiModelProperty("居住地址")
+    private String residential;
+
+    @ApiModelProperty("所属社区")
+    private String community;
+
     @ApiModelProperty("下三代")
     private List<UserFamilyDTO> children;
 
