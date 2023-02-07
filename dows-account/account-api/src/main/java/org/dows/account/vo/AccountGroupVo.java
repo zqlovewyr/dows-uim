@@ -26,7 +26,7 @@ import java.util.Date;
 @ApiModel(value = "AccountGroupVo对象", description = "账号-组")
 public class AccountGroupVo {
     @ApiModelProperty("自增主键ID")
-    private Long id;
+    private String id;
 
     @ApiModelProperty("组织ID")
     private String orgId;

@@ -25,7 +25,7 @@ public class AccountOrgGroupDTO {
      * 组织架构-实例
      */
     @ApiModelProperty("主键ID")
-    private Long id;
+    private String id;
 
     @ApiModelProperty("组织架构父ID")
     private Integer pId;

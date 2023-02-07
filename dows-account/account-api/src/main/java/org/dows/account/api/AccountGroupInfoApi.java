@@ -56,7 +56,7 @@ public interface AccountGroupInfoApi {
      *
      * @param orgId
      */
-    Response<AccountGroupInfoVo> getAccountGroupInfoByOrgId(Long orgId);
+    Response<AccountGroupInfoVo> getAccountGroupInfoByOrgId(String orgId);
 
     /**
      * 删除单个 账号-组-实例

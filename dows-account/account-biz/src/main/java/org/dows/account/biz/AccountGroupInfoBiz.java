@@ -215,9 +215,9 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<AccountGroupInfoVo> getAccountGroupInfoByOrgId(Long orgId) {
+    public Response<AccountGroupInfoVo> getAccountGroupInfoByOrgId(String orgId) {
         LambdaQueryWrapper<AccountGroupInfo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AccountGroupInfo::getOrgId, orgId.toString());
+        queryWrapper.eq(AccountGroupInfo::getOrgId, orgId);
         AccountGroupInfo groupInfo = accountGroupInfoService.getOne(queryWrapper);
         //复制属性
         AccountGroupInfoVo vo = new AccountGroupInfoVo();
@@ -227,6 +227,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
                 .eq(AccountOrg::getId, vo.getOrgId())
                 .one();
         BeanUtils.copyProperties(accountOrg, vo);
+        vo.setId(accountOrg.getId().toString());
         return Response.ok(vo);
     }
 

@@ -17,7 +17,6 @@ import org.dows.account.entity.AccountOrg;
 import org.dows.account.form.AccountOrgForm;
 import org.dows.account.service.AccountOrgService;
 import org.dows.account.vo.AccountGroupInfoVo;
-import org.dows.account.vo.AccountGroupVo;
 import org.dows.account.vo.AccountInstanceVo;
 import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
@@ -27,7 +26,6 @@ import org.dows.user.api.dto.UserInstanceDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 /**
@@ -150,7 +148,7 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
         }
         accountOrgApi.updateAccountOrgById(accountOrg);
         //2、更新组-实例表
-        AccountGroupInfoVo data = accountGroupInfoApi.getAccountGroupInfoByOrgId(Long.valueOf(accountOrg.getId())).getData();
+        AccountGroupInfoVo data = accountGroupInfoApi.getAccountGroupInfoByOrgId(accountOrg.getId()).getData();
         //2.1、设置组实例属性
         BeanUtils.copyProperties(accountOrgGroupDTO, data, new String[]{"id"});
         AccountGroupInfoDTO dto = new AccountGroupInfoDTO();
@@ -161,7 +159,7 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
 
     @ApiOperation("查看 机构-实例")
     @GetMapping("/getAccountOrgById/{id}")
-    public Response<AccountGroupInfoVo> getAccountOrgById(@PathVariable("id") Long id) {
+    public Response<AccountGroupInfoVo> getAccountOrgById(@PathVariable("id") String id) {
         //1、根据ID获取组织机构信息
         AccountOrgVo vo = accountOrgApi.getAccountOrgById(id).getData();
         //2、根据组织机构ID获取组织信息

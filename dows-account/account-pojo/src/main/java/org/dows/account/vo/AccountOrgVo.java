@@ -29,8 +29,7 @@ public class AccountOrgVo implements Serializable {
     private static final long serialVersionUID = -99474169347524042L;
 
     @ApiModelProperty(value = "账号-组ID")
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private Long id;
+    private String id;
 
     @ApiModelProperty("实体域组织机构ID")
     private String orgId;

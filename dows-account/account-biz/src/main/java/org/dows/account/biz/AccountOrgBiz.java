@@ -231,11 +231,12 @@ public class AccountOrgBiz implements AccountOrgApi {
     }
 
     @Override
-    public Response<AccountOrgVo> getAccountOrgById(Long id) {
-        AccountOrg model = accountOrgService.getById(id);
+    public Response<AccountOrgVo> getAccountOrgById(String id) {
+        AccountOrg model = accountOrgService.getById(Long.valueOf(id));
         AccountOrgVo vo = new AccountOrgVo();
         if (model != null) {
             BeanUtils.copyProperties(model, vo);
+            vo.setId(model.getId().toString());
         }
         return Response.ok(vo);
     }
