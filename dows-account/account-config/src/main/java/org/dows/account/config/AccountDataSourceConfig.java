@@ -3,9 +3,11 @@ package org.dows.account.config;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.aopalliance.intercept.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.dows.framework.crud.mybatis.utils.FieldFillHandler;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -22,6 +24,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 //@AutoConfiguration(before = )
 @Configuration("accountDataSourceConfig")
@@ -33,6 +36,9 @@ public class AccountDataSourceConfig {
 
     @Autowired
     private MybatisPlusProperties mybatisPlusProperties;
+
+    @Autowired
+    private MybatisConfig mybatisConfig;
 
     @Bean(name = "accountHikariConfig")
     @ConfigurationProperties(prefix = "spring.datasource.hikari")
@@ -83,6 +89,11 @@ public class AccountDataSourceConfig {
         MybatisConfiguration configuration = mybatisPlusProperties.getConfiguration();
         mybatisSqlSessionFactoryBean.setConfiguration(configuration);
         mybatisSqlSessionFactoryBean.setDataSource(dataSource);
+
+        /**
+         * 分页插件
+         */
+        mybatisSqlSessionFactoryBean.setPlugins(mybatisConfig.mybatisPlusInterceptor());
         /**
          * 设置mapper
          * classpath*:account/mapper/*Mapper.xml
