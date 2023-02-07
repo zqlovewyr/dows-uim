@@ -12,7 +12,6 @@ import org.dows.account.dto.AccountUserDTO;
 import org.dows.account.entity.AccountInstance;
 import org.dows.account.form.AccountInstanceForm;
 import org.dows.account.service.AccountInstanceService;
-import org.dows.account.service.AccountUserService;
 import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
@@ -20,7 +19,6 @@ import org.dows.user.api.api.UserInstanceApi;
 import org.dows.user.api.dto.UserInstanceDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Map;
 
