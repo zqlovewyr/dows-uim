@@ -27,7 +27,7 @@ public interface UserInstanceApi {
      *
      * @param userInstanceDTO
      */
-    Response<Long> insertUserInstance(UserInstanceDTO userInstanceDTO);
+    Response<String> insertUserInstance(UserInstanceDTO userInstanceDTO);
 
     /**
      * 编辑 用户-实例

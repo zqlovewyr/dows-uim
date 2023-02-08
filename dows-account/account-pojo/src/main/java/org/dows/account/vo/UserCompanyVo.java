@@ -32,7 +32,7 @@ public class UserCompanyVo implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "用户ID")
-    private Long userId;
+    private String userId;
 
     @ApiModelProperty(value = "公司名称")
     private String companyName;

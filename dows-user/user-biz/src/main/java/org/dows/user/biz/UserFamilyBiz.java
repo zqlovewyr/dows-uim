@@ -3,6 +3,7 @@ package org.dows.user.biz;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -143,14 +144,15 @@ public class UserFamilyBiz implements UserFamilyApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Long> insertUserFamily(UserFamilyDTO userFamilyDTO) {
+    public Response<String> insertUserFamily(UserFamilyDTO userFamilyDTO) {
         UserFamily model = new UserFamily();
         BeanUtils.copyProperties(userFamilyDTO, model);
+        model.setFamilyId(IdWorker.getIdStr());
         boolean flag = userFamilyService.save(model);
         if (flag == false) {
             throw new UserException(EnumUserStatusCode.USER_FAMILY_CREATE_FAIL_EXCEPTION);
         }
-        return Response.ok(model.getId());
+        return Response.ok(model.getId().toString());
     }
 
 

@@ -74,7 +74,7 @@ public class UserInstanceBiz implements UserInstanceApi {
     }
 
     @Override
-    public Response<Long> insertUserInstance(UserInstanceDTO userInstanceDTO) {
+    public Response<String> insertUserInstance(UserInstanceDTO userInstanceDTO) {
         UserInstance userInstance = new UserInstance();
         BeanUtils.copyProperties(userInstanceDTO, userInstance);
         userInstance.setUserId(String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID)));
@@ -82,7 +82,7 @@ public class UserInstanceBiz implements UserInstanceApi {
         if (userFlag == false) {
             throw new UserException(EnumUserStatusCode.USER_CREATE_FAIL_EXCEPTION);
         }
-        return Response.ok(userInstance.getId());
+        return Response.ok(userInstance.getId().toString());
     }
 
     @Override

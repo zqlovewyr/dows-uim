@@ -86,7 +86,7 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
         //3、创建管理账户对应的用户信息
         UserInstanceDTO user = new UserInstanceDTO();
         BeanUtils.copyProperties(accountOrgGroupDTO, instance, new String[]{"id"});
-        Long userId = userInstanceApi.insertUserInstance(user).getData();
+        String userId = userInstanceApi.insertUserInstance(user).getData();
         //4、创建用户和账户映射关系
         AccountUserDTO accountUser = new AccountUserDTO();
         accountUser.setAccountId(vo.getId().toString());

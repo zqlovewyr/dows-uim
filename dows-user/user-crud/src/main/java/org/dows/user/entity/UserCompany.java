@@ -39,11 +39,11 @@ public class UserCompany implements CrudEntity {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("用户ID")
-    private Long userId;
+    private String userId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("地址ID")
-    private Long adressId;
+    private String adressId;
 
     @ApiModelProperty("公司名称")
     private String companyName;

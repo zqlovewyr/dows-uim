@@ -31,10 +31,10 @@ public class UserCompanyForm implements Serializable {
     private Long id;
 
     @ApiModelProperty("用户ID")
-    private Long userId;
+    private String userId;
 
     @ApiModelProperty("地址ID")
-    private Long adressId;
+    private String adressId;
 
     @ApiModelProperty("公司名称")
     private String companyName;

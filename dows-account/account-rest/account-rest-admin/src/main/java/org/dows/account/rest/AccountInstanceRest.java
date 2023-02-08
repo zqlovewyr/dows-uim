@@ -79,11 +79,11 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
         UserInstanceDTO user = new UserInstanceDTO();
         BeanUtils.copyProperties(accountInstanceDTO,user);
         user.setName(accountInstanceDTO.getUserName());
-        Long userId = userInstanceApi.insertUserInstance(user).getData();
+        String userId = userInstanceApi.insertUserInstance(user).getData();
         //3、创建账户和用户之间的关联关系
         AccountUserDTO accountUserDTO = new AccountUserDTO();
         accountUserDTO.setAccountId(vo.getId().toString());
-        accountUserDTO.setUserId(userId.toString());
+        accountUserDTO.setUserId(userId);
         Long uionId = this.accountUserApi.createAccountUser(accountUserDTO).getData();
         return Response.ok(uionId.toString());
     }

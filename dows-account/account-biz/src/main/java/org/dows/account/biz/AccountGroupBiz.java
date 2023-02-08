@@ -122,8 +122,8 @@ public class AccountGroupBiz implements AccountGroupApi {
             //2、创建用户实例
             UserInstanceDTO userInstance = new UserInstanceDTO();
             BeanUtils.copyProperties(account, userInstance);
-            Long id = userInstanceApi.insertUserInstance(userInstance).getData();
-            if (id == null) {
+            String id = userInstanceApi.insertUserInstance(userInstance).getData();
+            if (StringUtils.isEmpty(id)) {
                 flag.set(false);
             }
             //3、设置关联关系
@@ -369,7 +369,7 @@ public class AccountGroupBiz implements AccountGroupApi {
         //2、创建用户实例
         UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
         BeanUtils.copyProperties(accountGroupDTO, userInstanceDTO);
-        Long userId = userInstanceApi.insertUserInstance(userInstanceDTO).getData();
+        String userId = userInstanceApi.insertUserInstance(userInstanceDTO).getData();
         map.put("userId", userId);
 
         //3、设置关联关系

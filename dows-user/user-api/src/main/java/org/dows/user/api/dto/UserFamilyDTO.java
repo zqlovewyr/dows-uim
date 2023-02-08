@@ -58,8 +58,10 @@ public class UserFamilyDTO {
     private String gender;
 
     @ApiModelProperty("婚姻状况")
-    private String married;
+    private Boolean married;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("生日")
     private String birthday;
 
@@ -67,7 +69,7 @@ public class UserFamilyDTO {
     private String phone;
 
     @ApiModelProperty("职业")
-    private String occupation;
+    private String profession;
 
     @ApiModelProperty("教育程度")
     private String degree;

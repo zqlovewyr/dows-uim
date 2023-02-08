@@ -36,7 +36,7 @@ public class UserCompanyQuery implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
     @ApiModelProperty(value = "用户ID")
-    private Long userId;
+    private String userId;
     @ApiModelProperty(value = "公司名称")
     private String companyName;
     private String companyCode;

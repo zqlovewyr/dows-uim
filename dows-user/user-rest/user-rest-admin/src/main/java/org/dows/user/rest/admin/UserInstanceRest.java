@@ -40,7 +40,7 @@ public class UserInstanceRest implements MybatisCrudRest<UserInstanceForm, UserI
 
     @ApiOperation("新增 用户-实例")
     @PostMapping("/insertUserInstance")
-    public Response<Long> insertUserInstance(@RequestBody UserInstanceDTO userInstanceDTO) {
+    public Response<String> insertUserInstance(@RequestBody UserInstanceDTO userInstanceDTO) {
         return userInstanceApi.insertUserInstance(userInstanceDTO);
     }
 

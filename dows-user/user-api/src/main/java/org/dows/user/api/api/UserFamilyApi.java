@@ -26,7 +26,7 @@ public interface UserFamilyApi {
      *
      * @param userFamilyDTO
      */
-    Response<Long> insertUserFamily(UserFamilyDTO userFamilyDTO);
+    Response<String> insertUserFamily(UserFamilyDTO userFamilyDTO);
 
     /**
      * 编辑 用户-家庭
