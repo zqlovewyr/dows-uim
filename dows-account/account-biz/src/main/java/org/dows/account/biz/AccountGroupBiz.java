@@ -579,11 +579,25 @@ public class AccountGroupBiz implements AccountGroupApi {
                 .gt(accountGroupDTO.getStartTime() != null, AccountGroup::getDt, accountGroupDTO.getStartTime())
                 .lt(accountGroupDTO.getEndTime() != null, AccountGroup::getDt, accountGroupDTO.getEndTime())
                 .orderByDesc(AccountGroup::getDt).list();
-        //复制属性
+        //1、复制属性
         List<AccountGroupVo> voList = new ArrayList<>();
         groupList.forEach(group -> {
             AccountGroupVo vo = new AccountGroupVo();
             BeanUtils.copyProperties(group, vo);
+            //1、设置用户信息
+            LambdaQueryWrapper<AccountUser> userWrapper = new LambdaQueryWrapper<>();
+            AccountUser accountUser = accountUserService.getOne(userWrapper.eq(AccountUser::getAccountId, vo.getAccountId()));
+            LambdaQueryWrapper<AccountUser> instanceWrapper = new LambdaQueryWrapper<>();
+            UserInstanceVo userVo = userInstanceApi.getUserInstanceById(accountUser.getUserId()).getData();
+            vo.setUserName(userVo.getName());
+            //2、设置角色
+            LambdaQueryWrapper<AccountRole> roleWrapper = new LambdaQueryWrapper<>();
+            AccountRole accountRole = accountRoleService.getOne(roleWrapper.eq(AccountRole::getPrincipalId, vo.getAccountId()));
+            vo.setRoleName(accountRole.getRoleName());
+            //3、设置团队负责人
+            LambdaQueryWrapper<AccountGroupInfo> groupInfoWrapper = new LambdaQueryWrapper<>();
+            AccountGroupInfo accountGroupInfo = accountGroupInfoService.getOne(groupInfoWrapper.eq(AccountGroupInfo::getOrgId, vo.getOrgId()));
+            vo.setOwnerName(accountGroupInfo.getOwner());
             voList.add(vo);
         });
         return Response.ok(voList);
