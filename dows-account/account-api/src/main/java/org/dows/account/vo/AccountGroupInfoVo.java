@@ -48,7 +48,7 @@ public class AccountGroupInfoVo {
     private String groupInfoId;
 
     @ApiModelProperty("团队描述")
-    private String groupInfoDesc;
+    private String groupDescr;
 
     @ApiModelProperty("组名/团队名称")
     private String groupInfoName;

@@ -228,7 +228,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
                 .one();
         BeanUtils.copyProperties(accountOrg, vo);
         vo.setId(accountOrg.getId().toString());
-        vo.setGroupInfoDesc(groupInfo.getDescr());
+        vo.setGroupDescr(groupInfo.getDescr());
         return Response.ok(vo);
     }
 

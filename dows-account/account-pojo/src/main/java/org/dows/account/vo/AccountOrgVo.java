@@ -75,7 +75,7 @@ public class AccountOrgVo implements Serializable {
     private String ownerName;
 
     @ApiModelProperty("团队描述")
-    private String groupInfoDescr;
+    private String groupDescr;
 
     @ApiModelProperty(value = "时间戳/创建时间")
     private Date dt;

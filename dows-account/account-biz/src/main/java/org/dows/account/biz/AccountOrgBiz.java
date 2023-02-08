@@ -211,7 +211,7 @@ public class AccountOrgBiz implements AccountOrgApi {
                 if (info != null) {
                     vo.setTelePhone(info.getOwnerPhone());
                     vo.setOwnerName(info.getOwner());
-                    vo.setGroupInfoDescr(info.getDescr());
+                    vo.setGroupDescr(info.getDescr());
                 }
                 // TODO 否则，从组织架构基础表找(account_org_info)
                 //主键id转换为String
