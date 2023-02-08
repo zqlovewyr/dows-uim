@@ -28,6 +28,13 @@ public interface UserFamilyApi {
     Response<UserFamilyVo> getUserFamilyByUserId(String userId);
 
     /**
+     * 查询 用户-家庭
+     *
+     * @param id
+     */
+    Response<UserFamilyVo> getUserFamilyById(String id);
+
+    /**
      * 新增 用户-家庭
      *
      * @param userFamilyDTO

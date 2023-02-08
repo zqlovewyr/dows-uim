@@ -113,6 +113,20 @@ public class UserFamilyBiz implements UserFamilyApi {
         return Response.ok(vo);
     }
 
+    @Override
+    public Response<UserFamilyVo> getUserFamilyById(String id) {
+        LambdaQueryWrapper<UserFamily> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserFamily::getId, Long.valueOf(id));
+        UserFamily userFamily = userFamilyService.getOne(queryWrapper);
+        //复制属性
+        UserFamilyVo vo = new UserFamilyVo();
+        if (userFamily != null) {
+            BeanUtils.copyProperties(userFamily, vo);
+            vo.setId(userFamily.getId().toString());
+        }
+        return Response.ok(vo);
+    }
+
     /**
      * 递归获取
      * 根据当前户主，获取上三代

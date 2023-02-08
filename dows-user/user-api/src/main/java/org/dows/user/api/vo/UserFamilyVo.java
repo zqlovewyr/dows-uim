@@ -54,6 +54,15 @@ public class UserFamilyVo {
     @ApiModelProperty("身份证号")
     private String idNo;
 
+    @ApiModelProperty("地址")
+    private String address;
+
+    @ApiModelProperty("家庭电话")
+    private String telephone;
+
+    @ApiModelProperty("社区")
+    private String community;
+
     @ApiModelProperty("手机号")
     private String phone;
 
@@ -69,11 +78,32 @@ public class UserFamilyVo {
     @ApiModelProperty("生日")
     private Date birthday;
 
-    @ApiModelProperty("所属社区")
-    private String community;
-
     @ApiModelProperty("婚姻状况")
     private Boolean married;
+
+    @ApiModelProperty("居住面积")
+    private String acreage;
+
+    @ApiModelProperty("邮政编码")
+    private String zipCode;
+
+    @ApiModelProperty("房屋类型")
+    private String houseType;
+
+    @ApiModelProperty("厨房排风设施")
+    private String exhaustFacility;
+
+    @ApiModelProperty("厨房使用方式")
+    private String kitchen;
+
+    @ApiModelProperty("燃料")
+    private String fuel;
+
+    @ApiModelProperty("饮水")
+    private String water;
+
+    @ApiModelProperty("人均面积")
+    private String perarea;
 
     @ApiModelProperty("职业")
     private String profession;
