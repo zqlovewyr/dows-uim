@@ -1,13 +1,14 @@
 package org.dows.user.biz;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.framework.api.Response;
 import org.dows.user.api.api.UserExtinfoApi;
 import org.dows.user.api.dto.UserExtinfoDTO;
 import org.dows.user.api.vo.UserExtinfoVo;
-import org.dows.user.api.vo.UserFamilyVo;
 import org.dows.user.entity.UserExtinfo;
 import org.dows.user.entity.UserFamily;
 import org.dows.user.enums.EnumUserStatusCode;
@@ -48,5 +49,31 @@ public class UserExtinfoBiz implements UserExtinfoApi {
             vo.setId(userExtinfo.getId().toString());
         }
         return Response.ok(vo);
+    }
+
+    @Override
+    public Response<String> updateUserExtinfoById(UserExtinfoDTO userExtinfoDTO) {
+        UserExtinfo userExtinfo = new UserExtinfo();
+        BeanUtils.copyProperties(userExtinfoDTO, userExtinfo);
+        userExtinfo.setId(Long.valueOf(userExtinfoDTO.getId()));
+        boolean userFlag = userExtinfoService.updateById(userExtinfo);
+        if (userFlag == false) {
+            throw new UserException(EnumUserStatusCode.USER_EXTINFO_UPDATE_FAIL_EXCEPTION);
+        }
+        return Response.ok(userExtinfo.getId().toString());
+    }
+
+    @Override
+    public Response<Boolean> deleteUserExtinfoById(String id) {
+        //1、获取对应数据
+        UserExtinfo userExtinfo = userExtinfoService.getById(id);
+        if (userExtinfo == null) {
+            throw new UserException(EnumUserStatusCode.USER_EXTINFO_IS_NOT_EXIST_EXCEPTION);
+        }
+        //1、删除用户扩展关系
+        LambdaUpdateWrapper<UserExtinfo> extinfoWrapper = Wrappers.lambdaUpdate(UserExtinfo.class);
+        extinfoWrapper.set(UserExtinfo::getDeleted, true)
+                .eq(UserExtinfo::getId, id);
+        return Response.ok(userExtinfoService.update(extinfoWrapper));
     }
 }

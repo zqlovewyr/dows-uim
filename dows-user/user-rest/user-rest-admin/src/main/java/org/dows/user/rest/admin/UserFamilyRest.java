@@ -83,7 +83,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         return Response.ok(userInstanceId);
     }
 
-    @ApiOperation("新增 用户-家庭-成员")
+    @ApiOperation("查询 用户-家庭-成员")
     @GetMapping("/getFamilyMemberById/{id}")
     public Response<UserFamilyVo> getFamilyMemberById(@PathVariable("id") String id) {
         UserFamilyVo familyVo = new UserFamilyVo();
@@ -107,6 +107,70 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(instanceVo.getId()).getData();
         familyVo.setDegree(educationVo.getDegree());
         return Response.ok(familyVo);
+    }
+
+
+    @ApiOperation("编辑 用户-家庭-成员")
+    @PostMapping("/updateFamilyMemberById")
+    @Transactional(rollbackFor = Exception.class)
+    public void updateFamilyMemberById(@RequestBody UserFamilyDTO userFamilyDTO) {
+        //1、更新家庭成员实例
+        UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
+        BeanUtils.copyProperties(userFamilyDTO, userInstanceDTO);
+        userInstanceApi.updateUserInstance(userInstanceDTO).getData();
+        //2、更新用户家庭
+        UserFamilyVo familyVo = userFamilyApi.getUserFamilyByUserId(userFamilyDTO.getId()).getData();
+        UserFamilyDTO model = new UserFamilyDTO();
+        BeanUtils.copyProperties(userFamilyDTO, model);
+        model.setId(familyVo.getId());
+        userFamilyApi.updateUserFamilyById(model);
+        //3、新增用户扩展信息
+        UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(userFamilyDTO.getId()).getData();
+        UserExtinfoDTO userExtinfoDTO = new UserExtinfoDTO();
+        BeanUtils.copyProperties(userFamilyDTO, userExtinfoDTO);
+        userExtinfoDTO.setId(extinfoVo.getId());
+        userExtinfoApi.updateUserExtinfoById(userExtinfoDTO);
+        //4、更新用户工作信息
+        UserJobVo jobVo = userJobApi.getUserJobByUserId(userFamilyDTO.getId()).getData();
+        UserJobDTO userJobDTO = new UserJobDTO();
+        BeanUtils.copyProperties(userFamilyDTO, userJobDTO);
+        userJobDTO.setId(jobVo.getId());
+        userJobApi.updateUserJobById(userJobDTO);
+        //5、更新用户公司信息
+        UserCompanyVo companyVo = userCompanyApi.getUserCompanyByUserId(userFamilyDTO.getId()).getData();
+        UserCompanyDTO userCompanyDTO = new UserCompanyDTO();
+        BeanUtils.copyProperties(userFamilyDTO, userCompanyDTO);
+        userCompanyDTO.setId(companyVo.getId());
+        userCompanyApi.updateUserCompanyById(userCompanyDTO);
+        //6、更新用户教育信息
+        UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(userFamilyDTO.getId()).getData();
+        UserEducationDTO userEducationDTO = new UserEducationDTO();
+        BeanUtils.copyProperties(userFamilyDTO, userEducationDTO);
+        userEducationDTO.setId(educationVo.getId());
+        userEducationApi.updateUserEducationById(userEducationDTO);
+    }
+
+    @ApiOperation("删除 用户-家庭-成员")
+    @DeleteMapping("/deleteFamilyMemberById/{id}")
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteFamilyMemberById(@PathVariable("id") String id) {
+        //1、删除家庭成员实例
+        userInstanceApi.deleteUserInstanceById(id);
+        //2、删除用户家庭
+        UserFamilyVo familyVo = userFamilyApi.getUserFamilyByUserId(id).getData();
+        userFamilyApi.deleteUserFamilyById(familyVo.getId());
+        //3、删除用户扩展信息
+        UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(id).getData();
+        userExtinfoApi.deleteUserExtinfoById(extinfoVo.getId());
+        //4、删除用户工作信息
+        UserJobVo jobVo = userJobApi.getUserJobByUserId(id).getData();
+        userJobApi.deleteUserJobById(jobVo.getId());
+        //5、删除用户公司信息
+        UserCompanyVo companyVo = userCompanyApi.getUserCompanyByUserId(id).getData();
+        userCompanyApi.deleteUserCompanyById(companyVo.getId());
+        //6、删除用户教育信息
+        UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(id).getData();
+        userEducationApi.deleteUserEducationById(educationVo.getId());
     }
 
     @ApiOperation("查询 用户-家庭-户主-列表")
@@ -157,8 +221,8 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
 
     @ApiOperation("编辑 用户-家庭")
     @PostMapping("/updateUserFamilyById")
-    public Response<Long> updateUserFamilyById(@RequestBody UserFamilyDTO userFamilyDTO) {
-        Response<Long> id = userFamilyApi.updateUserFamilyById(userFamilyDTO);
+    public Response<String> updateUserFamilyById(@RequestBody UserFamilyDTO userFamilyDTO) {
+        Response<String> id = userFamilyApi.updateUserFamilyById(userFamilyDTO);
         return id;
     }
 

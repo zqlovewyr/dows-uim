@@ -26,4 +26,18 @@ public interface UserJobApi {
      * @param userId
      */
     Response<UserJobVo> getUserJobByUserId(String userId);
+
+    /**
+     * 编辑 用户-工作信息
+     *
+     * @param userJobDTO
+     */
+    Response<String> updateUserJobById(UserJobDTO userJobDTO);
+
+    /**
+     * 删除单个 用户-工作信息
+     *
+     * @param id
+     */
+    Response<Boolean> deleteUserJobById(String id);
 }

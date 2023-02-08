@@ -25,7 +25,7 @@ import java.util.List;
 public class UserFamilyDTO {
 
     @ApiModelProperty("主键")
-    private Long id;
+    private String id;
 
     @ApiModelProperty("父ID")
     private String parentId;

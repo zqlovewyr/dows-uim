@@ -39,7 +39,7 @@ public interface UserFamilyApi {
      *
      * @param userFamilyDTO
      */
-    Response<Long> updateUserFamilyById(UserFamilyDTO userFamilyDTO);
+    Response<String> updateUserFamilyById(UserFamilyDTO userFamilyDTO);
 
     /**
      * 删除 用户-家庭
@@ -61,4 +61,11 @@ public interface UserFamilyApi {
      * @param userFamilyDTO
      */
     Response<IPage<UserFamilyVo>> getFamilyMemberList(UserFamilyDTO userFamilyDTO);
+
+    /**
+     * 删除单个 用户-家庭-成员-列表
+     *
+     * @param id
+     */
+    Response<Boolean> deleteUserFamilyById(String id);
 }

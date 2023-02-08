@@ -26,4 +26,19 @@ public interface UserEducationApi {
      * @param userId
      */
     Response<UserEducationVo> getUserEducationByUserId(String userId);
+
+
+    /**
+     * 编辑 用户-教育信息
+     *
+     * @param userEducationDTO
+     */
+    Response<String> updateUserEducationById(UserEducationDTO userEducationDTO);
+
+    /**
+     * 删除单个 用户-教育信息
+     *
+     * @param id
+     */
+    Response<Boolean> deleteUserEducationById(String id);
 }

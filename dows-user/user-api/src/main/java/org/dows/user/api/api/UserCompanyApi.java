@@ -27,4 +27,18 @@ public interface UserCompanyApi {
      * @param userId
      */
     Response<UserCompanyVo> getUserCompanyByUserId(String userId);
+
+    /**
+     * 编辑 用户-公司信息
+     *
+     * @param userCompanyDTO
+     */
+    Response<String> updateUserCompanyById(UserCompanyDTO userCompanyDTO);
+
+    /**
+     * 删除单个 用户-公司信息
+     *
+     * @param id
+     */
+    Response<Boolean> deleteUserCompanyById(String id);
 }

@@ -177,14 +177,15 @@ public class UserFamilyBiz implements UserFamilyApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Long> updateUserFamilyById(UserFamilyDTO userFamilyDTO) {
+    public Response<String> updateUserFamilyById(UserFamilyDTO userFamilyDTO) {
         UserFamily userFamily = new UserFamily();
         BeanUtils.copyProperties(userFamilyDTO, userFamily);
+        userFamily.setId(Long.valueOf(userFamilyDTO.getId()));
         boolean userFlag = userFamilyService.updateById(userFamily);
         if (userFlag == false) {
             throw new UserException(EnumUserStatusCode.USER_FAMILY_UPDATE_FAIL_EXCEPTION);
         }
-        return Response.ok(userFamily.getId());
+        return Response.ok(userFamily.getId().toString());
     }
 
     @Override
@@ -333,5 +334,19 @@ public class UserFamilyBiz implements UserFamilyApi {
         }
         pageVo.setRecords(voList);
         return Response.ok(pageVo);
+    }
+
+    @Override
+    public Response<Boolean> deleteUserFamilyById(String id) {
+        //1、获取对应数据
+        UserFamily userFamily = userFamilyService.getById(id);
+        if (userFamily == null) {
+            throw new UserException(EnumUserStatusCode.USER_FAMILY_IS_NOT_EXIST_EXCEPTION);
+        }
+        //1、删除用户家庭关系
+        LambdaUpdateWrapper<UserFamily> familyWrapper = Wrappers.lambdaUpdate(UserFamily.class);
+        familyWrapper.set(UserFamily::getDeleted, true)
+                .eq(UserFamily::getId, id);
+        return Response.ok(userFamilyService.update(familyWrapper));
     }
 }

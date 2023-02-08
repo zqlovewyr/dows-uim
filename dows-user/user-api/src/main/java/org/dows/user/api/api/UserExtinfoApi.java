@@ -2,6 +2,7 @@ package org.dows.user.api.api;
 
 import org.dows.framework.api.Response;
 import org.dows.user.api.dto.UserExtinfoDTO;
+import org.dows.user.api.dto.UserFamilyDTO;
 import org.dows.user.api.vo.UserExtinfoVo;
 import org.dows.user.api.vo.UserFamilyVo;
 
@@ -26,4 +27,18 @@ public interface UserExtinfoApi {
      * @param userId
      */
     Response<UserExtinfoVo> getUserExtinfoByUserId(String userId);
+
+    /**
+     * 编辑 用户-扩展信息
+     *
+     * @param userExtinfoDTO
+     */
+    Response<String> updateUserExtinfoById(UserExtinfoDTO userExtinfoDTO);
+
+    /**
+     * 删除单个 用户-扩展信息
+     *
+     * @param id
+     */
+    Response<Boolean> deleteUserExtinfoById(String id);
 }

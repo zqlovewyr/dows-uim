@@ -21,7 +21,7 @@ import java.util.Date;
 public class UserEducationDTO {
 
     @ApiModelProperty("主键")
-    private Long id;
+    private String id;
 
     @ApiModelProperty("用户ID")
     private String userId;
