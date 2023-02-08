@@ -3,6 +3,7 @@ package org.dows.user.api.api;
 import org.dows.framework.api.Response;
 import org.dows.user.api.dto.UserEducationDTO;
 import org.dows.user.api.dto.UserExtinfoDTO;
+import org.dows.user.api.vo.UserEducationVo;
 
 /**
  * 用户-教育信息(UserEducation)Api接口
@@ -18,4 +19,11 @@ public interface UserEducationApi {
      * @param userEducationDTO
      */
     Response<String> insertUserEducation(UserEducationDTO userEducationDTO);
+
+    /**
+     * 查看 用户-教育信息
+     *
+     * @param userId
+     */
+    Response<UserEducationVo> getUserEducationByUserId(String userId);
 }

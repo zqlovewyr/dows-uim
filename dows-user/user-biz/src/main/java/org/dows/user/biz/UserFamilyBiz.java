@@ -16,6 +16,7 @@ import org.dows.user.api.api.UserFamilyApi;
 import org.dows.user.api.api.UserInstanceApi;
 import org.dows.user.api.dto.UserFamilyDTO;
 import org.dows.user.api.vo.UserFamilyVo;
+import org.dows.user.api.vo.UserInstanceVo;
 import org.dows.user.entity.UserAddress;
 import org.dows.user.entity.UserDwelling;
 import org.dows.user.entity.UserFamily;
@@ -66,7 +67,6 @@ public class UserFamilyBiz implements UserFamilyApi {
         UserFamily familyHouseholder = new UserFamily();
         if (userFamily.getHouseholder() == false) {
             String familyId = userFamily.getFamilyId();
-            LambdaQueryWrapper<UserFamily> familyWrapper = new LambdaQueryWrapper<>();
             familyHouseholder = userFamilyService.getOne(queryWrapper.eq(UserFamily::getFamilyId, familyId)
                     .eq(UserFamily::getHouseholder, true)
                     .eq(UserFamily::getDeleted, false));
@@ -96,6 +96,20 @@ public class UserFamilyBiz implements UserFamilyApi {
         //6、复制属性
         UserFamilyVo vo = new UserFamilyVo();
         BeanUtils.copyProperties(householderDTO, vo);
+        return Response.ok(vo);
+    }
+
+    @Override
+    public Response<UserFamilyVo> getUserFamilyByUserId(String userId) {
+        LambdaQueryWrapper<UserFamily> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserFamily::getUserId, userId);
+        UserFamily userFamily = userFamilyService.getOne(queryWrapper);
+        //复制属性
+        UserFamilyVo vo = new UserFamilyVo();
+        if (userFamily != null) {
+            BeanUtils.copyProperties(userFamily, vo);
+            vo.setId(userFamily.getId().toString());
+        }
         return Response.ok(vo);
     }
 
@@ -250,7 +264,7 @@ public class UserFamilyBiz implements UserFamilyApi {
                         .one();
                 //4.3、设置属性
                 UserFamilyVo entity = new UserFamilyVo().builder().build()
-                        .setId(family.getId())
+                        .setId(family.getId().toString())
                         .setHouseholderName(userInstance.getName())
                         .setIdNo(userInstance.getIdNo())
                         .setResidential(userDwelling.getAddress())
@@ -310,7 +324,7 @@ public class UserFamilyBiz implements UserFamilyApi {
                 //4.2、设置属性
                 UserFamilyVo entity = UserFamilyVo.builder()
                         .memberName(userInstance.getName())
-                        .id(userInstance.getId())
+                        .id(userInstance.getId().toString())
                         .idNo(userInstance.getIdNo())
                         .gender(userInstance.getGender())
                         .relation(family.getRelation()).build();

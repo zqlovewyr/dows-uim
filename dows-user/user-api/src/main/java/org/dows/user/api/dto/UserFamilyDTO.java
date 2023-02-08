@@ -63,7 +63,7 @@ public class UserFamilyDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("生日")
-    private String birthday;
+    private Date birthday;
 
     @ApiModelProperty("联系电话")
     private String phone;

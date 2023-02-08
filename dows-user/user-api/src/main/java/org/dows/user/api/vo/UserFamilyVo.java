@@ -22,7 +22,7 @@ import java.util.List;
 @ApiModel(value = "UserFamilyVo对象", description = "用户-家庭信息")
 public class UserFamilyVo {
     @ApiModelProperty("主键")
-    private Long id;
+    private String id;
 
     @ApiModelProperty("父ID")
     private String parentId;
@@ -66,8 +66,23 @@ public class UserFamilyVo {
     @ApiModelProperty("居住地址")
     private String residential;
 
+    @ApiModelProperty("生日")
+    private Date birthday;
+
     @ApiModelProperty("所属社区")
     private String community;
+
+    @ApiModelProperty("婚姻状况")
+    private Boolean married;
+
+    @ApiModelProperty("职业")
+    private String profession;
+
+    @ApiModelProperty("工作单位")
+    private String companyName;
+
+    @ApiModelProperty("教育程度")
+    private String degree;
 
     @ApiModelProperty("下三代")
     private List<UserFamilyDTO> children;

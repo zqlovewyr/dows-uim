@@ -9,7 +9,7 @@ import org.dows.framework.api.Response;
 import org.dows.framework.crud.mybatis.MybatisCrudRest;
 import org.dows.user.api.api.*;
 import org.dows.user.api.dto.*;
-import org.dows.user.api.vo.UserFamilyVo;
+import org.dows.user.api.vo.*;
 import org.dows.user.entity.UserFamily;
 import org.dows.user.form.UserFamilyForm;
 import org.dows.user.service.UserFamilyService;
@@ -80,7 +80,33 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         BeanUtils.copyProperties(userFamilyDTO, userEducationDTO);
         userEducationDTO.setUserId(userInstanceId);
         userEducationApi.insertUserEducation(userEducationDTO);
-        return Response.ok(familyId);
+        return Response.ok(userInstanceId);
+    }
+
+    @ApiOperation("新增 用户-家庭-成员")
+    @GetMapping("/getFamilyMemberById/{id}")
+    public Response<UserFamilyVo> getFamilyMemberById(@PathVariable("id") String id) {
+        UserFamilyVo familyVo = new UserFamilyVo();
+        //1、获取家庭成员实例
+        UserInstanceVo instanceVo = userInstanceApi.getUserInstanceById(id).getData();
+        BeanUtils.copyProperties(instanceVo,familyVo);
+        familyVo.setMemberName(instanceVo.getName());
+        //2、获取用户家庭信息
+        UserFamilyVo model =  userFamilyApi.getUserFamilyByUserId(instanceVo.getId()).getData();
+        familyVo.setRelation(model.getRelation());
+        //3、获取用户扩展信息
+        UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(instanceVo.getId()).getData();
+        familyVo.setMarried(extinfoVo.getMarried());
+        //4、获取用户工作信息
+        UserJobVo jobVo = userJobApi.getUserJobByUserId(instanceVo.getId()).getData();
+        familyVo.setProfession(jobVo.getProfession());
+        //5、获取用户公司信息
+        UserCompanyVo companyVo = userCompanyApi.getUserCompanyByUserId(instanceVo.getId()).getData();
+        familyVo.setCompanyName(companyVo.getCompanyName());
+        //6、获取用户教育信息
+        UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(instanceVo.getId()).getData();
+        familyVo.setDegree(educationVo.getDegree());
+        return Response.ok(familyVo);
     }
 
     @ApiOperation("查询 用户-家庭-户主-列表")

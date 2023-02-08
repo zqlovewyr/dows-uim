@@ -1,15 +1,17 @@
 package org.dows.user.api.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
 /**
  * @author Administrator
- * @date 2023/2/8 13:29
+ * @date 2023/2/8 13:58
  */
 @Data
 @ToString
@@ -18,8 +20,8 @@ import java.util.Date;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "UserExtinfoVo对象", description = "用户-扩展信息")
-public class UserExtinfoVo {
+@ApiModel(value = "UserJobVo对象", description = "用户-工作信息")
+public class UserJobVo {
 
     @ApiModelProperty("主键")
     private String id;
@@ -27,21 +29,18 @@ public class UserExtinfoVo {
     @ApiModelProperty("用户ID")
     private String userId;
 
-    @ApiModelProperty("性格[多个,分割]")
-    private String character;
+    @ApiModelProperty("职业")
+    private String profession;
 
-    @ApiModelProperty("特长[多个,分割]")
-    private String features;
+    @ApiModelProperty("工作单位名称")
+    private String orgName;
 
-    @ApiModelProperty("简介")
-    private String intro;
-
-    @ApiModelProperty("婚姻状态[0：未婚，1：已婚]")
-    private Boolean married;
-
-    @ApiModelProperty("时间戳")
-    private Date dt;
+    @ApiModelProperty("单位[日|月|年]")
+    private String unit;
 
     @ApiModelProperty("逻辑删除")
     private Boolean deleted;
+
+    @ApiModelProperty("时间戳")
+    private Date dt;
 }

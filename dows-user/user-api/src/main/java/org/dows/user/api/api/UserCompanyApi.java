@@ -3,6 +3,8 @@ package org.dows.user.api.api;
 import org.dows.framework.api.Response;
 import org.dows.user.api.dto.UserCompanyDTO;
 import org.dows.user.api.dto.UserExtinfoDTO;
+import org.dows.user.api.vo.UserCompanyVo;
+import org.dows.user.api.vo.UserJobVo;
 
 /**
  * 用户-公司信息(UserCompany)Api接口
@@ -18,4 +20,11 @@ public interface UserCompanyApi {
      * @param userCompanyDTO
      */
     Response<String> insertUserCompany(UserCompanyDTO userCompanyDTO);
+
+    /**
+     * 查看 用户-公司信息
+     *
+     * @param userId
+     */
+    Response<UserCompanyVo> getUserCompanyByUserId(String userId);
 }

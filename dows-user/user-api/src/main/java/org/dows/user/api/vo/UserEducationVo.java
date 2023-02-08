@@ -9,7 +9,7 @@ import java.util.Date;
 
 /**
  * @author Administrator
- * @date 2023/2/8 13:29
+ * @date 2023/2/8 13:49
  */
 @Data
 @ToString
@@ -18,8 +18,8 @@ import java.util.Date;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "UserExtinfoVo对象", description = "用户-扩展信息")
-public class UserExtinfoVo {
+@ApiModel(value = "UserEducationVo对象", description = "用户-教育信息")
+public class UserEducationVo {
 
     @ApiModelProperty("主键")
     private String id;
@@ -27,21 +27,16 @@ public class UserExtinfoVo {
     @ApiModelProperty("用户ID")
     private String userId;
 
-    @ApiModelProperty("性格[多个,分割]")
-    private String character;
+    @ApiModelProperty("教育程度[小学|中学|高中|大学|...]")
+    private String degree;
 
-    @ApiModelProperty("特长[多个,分割]")
-    private String features;
-
-    @ApiModelProperty("简介")
-    private String intro;
-
-    @ApiModelProperty("婚姻状态[0：未婚，1：已婚]")
-    private Boolean married;
+    @ApiModelProperty("学校|机构名称")
+    private String orgName;
 
     @ApiModelProperty("时间戳")
     private Date dt;
 
     @ApiModelProperty("逻辑删除")
     private Boolean deleted;
+
 }

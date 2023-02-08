@@ -21,6 +21,13 @@ public interface UserFamilyApi {
     Response<UserFamilyVo> getGenealogyList(String userId);
 
     /**
+     * 查询 用户-家庭
+     *
+     * @param userId
+     */
+    Response<UserFamilyVo> getUserFamilyByUserId(String userId);
+
+    /**
      * 新增 用户-家庭
      *
      * @param userFamilyDTO

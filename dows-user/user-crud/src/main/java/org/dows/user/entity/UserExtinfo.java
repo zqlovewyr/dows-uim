@@ -39,6 +39,7 @@ public class UserExtinfo implements CrudEntity {
     @ApiModelProperty("用户ID")
     private String userId;
 
+    @TableField(value="'character'")
     @ApiModelProperty("性格[多个,分割]")
     private String character;
 
