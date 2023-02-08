@@ -12,9 +12,25 @@ import java.util.List;
  */
 public interface AccountUserApi {
 
+    /**
+     * 根据accountId查询
+     * @param accountId
+     * @return
+     */
     AccountVo getInfoByAccountId(String accountId);
 
+    /**
+     * 根据多个accountId查询
+     * @param accountIds
+     * @return
+     */
     List<AccountVo> getInfoByAccountIds(String[] accountIds);
 
+    /**
+     * 根据账号名称及类型查询
+     * @param accountName
+     * @param accountType
+     * @return
+     */
     AccountVo queryAccountVoByAccountName(String accountName,Integer accountType);
 }
