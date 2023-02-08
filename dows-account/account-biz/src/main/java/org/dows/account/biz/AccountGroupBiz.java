@@ -291,7 +291,7 @@ public class AccountGroupBiz implements AccountGroupApi {
             if (user != null) {
                 LambdaQueryWrapper<UserInstance> instanceWrapper = new LambdaQueryWrapper<>();
                 UserInstanceDTO dto = new UserInstanceDTO();
-                dto.setId(Long.valueOf(user.getUserId()));
+                dto.setId(user.getUserId());
                 UserInstanceVo model = new UserInstanceVo();
                 model = userInstanceApi.getUserInstanceList(dto).getData().get(0);
                 //复制属性
@@ -449,7 +449,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                 if (accountUser == null) {
                     throw new AccountException(EnumAccountStatusCode.ACCOUNT_USER_NOT_EXIST_EXCEPTION);
                 }
-                UserInstanceVo instanceVo = userInstanceApi.getUserInstanceById(Long.valueOf(accountUser.getUserId())).getData();
+                UserInstanceVo instanceVo = userInstanceApi.getUserInstanceById(accountUser.getUserId()).getData();
                 AccountGroupVo groupVo = new AccountGroupVo();
                 //复制属性
                 BeanUtils.copyProperties(vo, groupVo);
@@ -614,7 +614,7 @@ public class AccountGroupBiz implements AccountGroupApi {
         UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
         BeanUtils.copyProperties(model, userInstanceDTO);
         BeanUtils.copyProperties(accountGroupDTO, userInstanceDTO);
-        Long userId = userInstanceApi.updateUserInstance(userInstanceDTO).getData();
+        String userId = userInstanceApi.updateUserInstance(userInstanceDTO).getData();
         map.put("userId", userId);
         return Response.ok(map);
     }

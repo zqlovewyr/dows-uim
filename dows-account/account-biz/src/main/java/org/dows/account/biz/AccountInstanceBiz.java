@@ -673,7 +673,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                         .eq(AccountUser::getAccountId, model.getId().toString())
                         .one();
                 if (!ReflectUtil.isObjectNull(user)) {
-                    UserInstanceVo instance = userInstanceApi.getUserInstanceById(Long.valueOf(user.getUserId())).getData();
+                    UserInstanceVo instance = userInstanceApi.getUserInstanceById(user.getUserId()).getData();
                     if (!ReflectUtil.isObjectNull(instance)) {
                         if (StringUtils.isNotEmpty(instance.getName())) {
                             vo.setName(instance.getName());
@@ -739,7 +739,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         UserInstanceDTO user = new UserInstanceDTO();
         user.setName(accountInstanceDTO.getUserName());
         user.setGender(accountInstanceDTO.getGender());
-        user.setId(Long.valueOf(accountUser.getUserId()));
+        user.setId(accountUser.getUserId());
         userInstanceApi.updateUserInstance(user).getData();
     }
 
@@ -822,7 +822,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 .eq(AccountUser::getAccountId, id)
                 .one();
         if (accountUser != null) {
-            UserInstanceVo vo = userInstanceApi.getUserInstanceById(Long.valueOf(accountUser.getUserId())).getData();
+            UserInstanceVo vo = userInstanceApi.getUserInstanceById(accountUser.getUserId()).getData();
             BeanUtils.copyProperties(vo, model);
         }
         //4、获取角色实例

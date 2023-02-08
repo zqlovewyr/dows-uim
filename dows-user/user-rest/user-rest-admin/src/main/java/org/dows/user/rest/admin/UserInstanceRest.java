@@ -46,13 +46,13 @@ public class UserInstanceRest implements MybatisCrudRest<UserInstanceForm, UserI
 
     @ApiOperation("更新 用户-实例")
     @PutMapping("/updateUserInstance")
-    public Response<Long> updateUserInstance(@RequestBody UserInstanceDTO userInstanceDTO) {
+    public Response<String> updateUserInstance(@RequestBody UserInstanceDTO userInstanceDTO) {
         return userInstanceApi.updateUserInstance(userInstanceDTO);
     }
 
     @ApiOperation("查看 用户-实例")
     @GetMapping("/getUserInstanceById/{id}")
-    public Response<UserInstanceVo> getUserInstanceById(@PathVariable("id") Long id) {
+    public Response<UserInstanceVo> getUserInstanceById(@PathVariable("id") String id) {
         return userInstanceApi.getUserInstanceById(id);
     }
 

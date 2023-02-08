@@ -26,7 +26,7 @@ import java.util.Set;
 public class UserInstanceDTO {
 
     @ApiModelProperty("自增主键ID")
-    private Long id;
+    private String id;
 
     @ApiModelProperty("姓名、身份证号或者手机号")
     private String nameNoPhone;

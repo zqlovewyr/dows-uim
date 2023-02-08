@@ -86,18 +86,19 @@ public class UserInstanceBiz implements UserInstanceApi {
     }
 
     @Override
-    public Response<Long> updateUserInstance(UserInstanceDTO userInstanceDTO) {
+    public Response<String> updateUserInstance(UserInstanceDTO userInstanceDTO) {
         UserInstance userInstance = new UserInstance();
         BeanUtils.copyProperties(userInstanceDTO, userInstance);
+        userInstance.setId(Long.valueOf(userInstanceDTO.getId()));
         boolean userFlag = userInstanceService.updateById(userInstance);
         if (userFlag == false) {
             throw new UserException(EnumUserStatusCode.USER_CREATE_FAIL_EXCEPTION);
         }
-        return Response.ok(userInstance.getId());
+        return Response.ok(userInstance.getId().toString());
     }
 
     @Override
-    public Response<UserInstanceVo> getUserInstanceById(Long id) {
+    public Response<UserInstanceVo> getUserInstanceById(String id) {
         UserInstance userInstance = userInstanceService.getById(Long.valueOf(id));
         //复制属性
         UserInstanceVo vo = new UserInstanceVo();

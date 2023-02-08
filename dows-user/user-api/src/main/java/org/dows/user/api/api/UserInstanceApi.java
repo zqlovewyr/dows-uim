@@ -32,14 +32,14 @@ public interface UserInstanceApi {
     /**
      * 编辑 用户-实例
      */
-    Response<Long> updateUserInstance(UserInstanceDTO userInstanceDTO);
+    Response<String> updateUserInstance(UserInstanceDTO userInstanceDTO);
 
     /**
      * 查看 用户-实例
      *
      * @param id
      */
-    Response<UserInstanceVo> getUserInstanceById(Long id);
+    Response<UserInstanceVo> getUserInstanceById(String id);
 
     /**
      * 查看 用户-实例
