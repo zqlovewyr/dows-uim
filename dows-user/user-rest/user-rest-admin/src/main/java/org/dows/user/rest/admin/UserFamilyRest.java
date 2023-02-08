@@ -10,17 +10,12 @@ import org.dows.framework.crud.mybatis.MybatisCrudRest;
 import org.dows.user.api.api.*;
 import org.dows.user.api.dto.*;
 import org.dows.user.api.vo.UserFamilyVo;
-import org.dows.user.entity.UserExtinfo;
 import org.dows.user.entity.UserFamily;
-import org.dows.user.entity.UserJob;
 import org.dows.user.form.UserFamilyForm;
-import org.dows.user.service.UserDwellingService;
-import org.dows.user.service.UserEducationService;
 import org.dows.user.service.UserFamilyService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 /**
@@ -48,7 +43,14 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         return vo;
     }
 
-    @ApiOperation("查询 家庭档案列表")
+    @ApiOperation("查询 用户-家庭-成员-列表")
+    @PostMapping("/getFamilyMemberList")
+    public Response<IPage<UserFamilyVo>> getFamilyMemberList(@RequestBody UserFamilyDTO userFamilyDTO) {
+        Response<IPage<UserFamilyVo>> pageList = userFamilyApi.getFamilyMemberList(userFamilyDTO);
+        return pageList;
+    }
+
+    @ApiOperation("查询 用户-家庭-户主-列表")
     @PostMapping("/getFamilyArchivesList")
     public Response<IPage<UserFamilyVo>> getFamilyArchivesList(@RequestBody UserFamilyDTO userFamilyDTO) {
         Response<IPage<UserFamilyVo>> pageList = userFamilyApi.getFamilyArchivesList(userFamilyDTO);

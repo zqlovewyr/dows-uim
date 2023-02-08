@@ -48,11 +48,17 @@ public class UserFamilyVo {
     @ApiModelProperty("户主姓名")
     private String householderName;
 
+    @ApiModelProperty("成员姓名")
+    private String memberName;
+
     @ApiModelProperty("身份证号")
     private String idNo;
 
     @ApiModelProperty("手机号")
     private String phone;
+
+    @ApiModelProperty("性别")
+    private String gender;
 
     @ApiModelProperty("手机号")
     private String domicile;

@@ -191,14 +191,14 @@ public class UserFamilyBiz implements UserFamilyApi {
         Set<String> familyIds = new HashSet<>();
         if (StringUtils.isNotEmpty(userFamilyDTO.getNameNoPhoneAddress())) {
             List<UserInstance> userInstancesList = userInstanceService.lambdaQuery()
-                    .select(UserInstance::getUserId)
+                    .select(UserInstance::getId)
                     .and(StringUtils.isNotEmpty(userFamilyDTO.getNameNoPhoneAddress()), t -> t.like(UserInstance::getName, userFamilyDTO.getNameNoPhoneAddress())
                             .or().like(UserInstance::getIdNo, userFamilyDTO.getNameNoPhoneAddress())
                             .or().like(UserInstance::getPhone, userFamilyDTO.getNameNoPhoneAddress()))
                     .list();
             if (userInstancesList != null && userInstancesList.size() > 0) {
                 userInstancesList.forEach(userInstance -> {
-                    userIds.add(userInstance.getUserId());
+                    userIds.add(userInstance.getId().toString());
                 });
             }
             if (userIds.size() == 0) {
@@ -209,7 +209,7 @@ public class UserFamilyBiz implements UserFamilyApi {
         if (StringUtils.isNotEmpty(userFamilyDTO.getNameNoPhoneAddress())) {
             List<UserDwelling> userDwellingList = userDwellingService.lambdaQuery()
                     .select(UserDwelling::getFamilyId)
-                    .like(StringUtils.isNotEmpty(userFamilyDTO.getNameNoPhoneAddress()),UserDwelling::getAddress,userFamilyDTO.getNameNoPhoneAddress())
+                    .like(StringUtils.isNotEmpty(userFamilyDTO.getNameNoPhoneAddress()), UserDwelling::getAddress, userFamilyDTO.getNameNoPhoneAddress())
                     .list();
             if (userDwellingList != null && userDwellingList.size() > 0) {
                 userDwellingList.forEach(userAddress -> {
@@ -220,13 +220,13 @@ public class UserFamilyBiz implements UserFamilyApi {
                 familyIds.add("fill");
             }
         }
-        //1、获取以户主为主体的家庭信息
+        //3、获取以户主为主体的家庭信息
         LambdaQueryWrapper<UserFamily> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(userFamilyDTO.getParentId()), UserFamily::getParentId, userFamilyDTO.getParentId())
                 .eq(StringUtils.isNotEmpty(userFamilyDTO.getFamilyId()), UserFamily::getFamilyId, userFamilyDTO.getFamilyId())
-                .in(familyIds != null && familyIds.size() > 0,UserFamily::getId,familyIds)
+                .in(familyIds != null && familyIds.size() > 0, UserFamily::getId, familyIds)
                 .eq(StringUtils.isNotEmpty(userFamilyDTO.getUserId()), UserFamily::getUserId, userFamilyDTO.getUserId())
-                .in(userIds != null && userIds.size() > 0,UserFamily::getUserId,userIds)
+                .in(userIds != null && userIds.size() > 0, UserFamily::getUserId, userIds)
                 .eq(StringUtils.isNotEmpty(userFamilyDTO.getMemberId()), UserFamily::getMemberId, userFamilyDTO.getMemberId())
                 .like(StringUtils.isNotEmpty(userFamilyDTO.getRelation()), UserFamily::getRelation, userFamilyDTO.getRelation())
                 .eq(userFamilyDTO.getHouseholder() != null, UserFamily::getHouseholder, userFamilyDTO.getHouseholder())
@@ -236,19 +236,19 @@ public class UserFamilyBiz implements UserFamilyApi {
                 .orderByDesc(UserFamily::getDt);
         Page<UserFamily> page = new Page<>(userFamilyDTO.getPageNo(), userFamilyDTO.getPageSize());
         IPage<UserFamily> familyPage = userFamilyService.page(page, queryWrapper);
-        //2、获取该家庭的户主信息
+        //4、获取该家庭的户主信息
         List<UserFamily> familyList = familyPage.getRecords();
         List<UserFamilyVo> voList = new ArrayList<>();
         IPage<UserFamilyVo> pageVo = new Page<>();
         if (familyList != null && familyList.size() > 0) {
             familyList.forEach(family -> {
-                //2.1、根据户主id获取户主姓名
+                //4.1、根据户主id获取户主姓名
                 UserInstance userInstance = userInstanceService.getById(family.getUserId());
-                //获取户主地址和社区
+                //4.2、获取户主地址和社区
                 UserDwelling userDwelling = userDwellingService.lambdaQuery()
-                        .eq(UserDwelling::getFamilyId,family.getId())
+                        .eq(UserDwelling::getFamilyId, family.getId())
                         .one();
-                //2.3、设置属性
+                //4.3、设置属性
                 UserFamilyVo entity = new UserFamilyVo().builder().build()
                         .setId(family.getId())
                         .setHouseholderName(userInstance.getName())
@@ -258,6 +258,62 @@ public class UserFamilyBiz implements UserFamilyApi {
                 voList.add(entity);
                 // TODO 判断是否存在个人档案或者客户管理相关信息，如果有，则获取所属健管师
 
+            });
+        }
+        pageVo.setRecords(voList);
+        return Response.ok(pageVo);
+    }
+
+    @Override
+    public Response<IPage<UserFamilyVo>> getFamilyMemberList(UserFamilyDTO userFamilyDTO) {
+        //1、根据用户名、身份证号获取对应的userId
+        Set<String> userIds = new HashSet<>();
+        if (StringUtils.isNotEmpty(userFamilyDTO.getNameNoPhoneAddress())) {
+            List<UserInstance> userInstancesList = userInstanceService.lambdaQuery()
+                    .select(UserInstance::getId)
+                    .and(StringUtils.isNotEmpty(userFamilyDTO.getNameNoPhoneAddress()), t -> t.like(UserInstance::getName, userFamilyDTO.getNameNoPhoneAddress())
+                            .or().like(UserInstance::getIdNo, userFamilyDTO.getNameNoPhoneAddress()))
+                    .list();
+            if (userInstancesList != null && userInstancesList.size() > 0) {
+                userInstancesList.forEach(userInstance -> {
+                    userIds.add(userInstance.getId().toString());
+                });
+            }
+            if (userIds.size() == 0) {
+                userIds.add("fill");
+            }
+        }
+        //2、获取家庭成员不包含户主
+        LambdaQueryWrapper<UserFamily> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(userFamilyDTO.getId() != null, UserFamily::getId, userFamilyDTO.getId())
+                .eq(StringUtils.isNotEmpty(userFamilyDTO.getParentId()), UserFamily::getParentId, userFamilyDTO.getParentId())
+                .eq(StringUtils.isNotEmpty(userFamilyDTO.getFamilyId()), UserFamily::getFamilyId, userFamilyDTO.getFamilyId())
+                .eq(StringUtils.isNotEmpty(userFamilyDTO.getUserId()), UserFamily::getUserId, userFamilyDTO.getUserId())
+                .in(userIds != null && userIds.size() > 0, UserFamily::getUserId, userIds)
+                .eq(StringUtils.isNotEmpty(userFamilyDTO.getMemberId()), UserFamily::getMemberId, userFamilyDTO.getMemberId())
+                .like(StringUtils.isNotEmpty(userFamilyDTO.getRelation()), UserFamily::getRelation, userFamilyDTO.getRelation())
+                .eq(userFamilyDTO.getHouseholder() != null, UserFamily::getHouseholder, userFamilyDTO.getHouseholder())
+                .eq(userFamilyDTO.getDt() != null, UserFamily::getDt, userFamilyDTO.getDt())
+                .gt(userFamilyDTO.getStartTime() != null, UserFamily::getDt, userFamilyDTO.getStartTime())
+                .lt(userFamilyDTO.getEndTime() != null, UserFamily::getDt, userFamilyDTO.getEndTime())
+                .orderByDesc(UserFamily::getDt);
+        Page<UserFamily> page = new Page<>(userFamilyDTO.getPageNo(), userFamilyDTO.getPageSize());
+        IPage<UserFamily> familyPage = userFamilyService.page(page, queryWrapper);
+        //4、获取该家庭的户主信息
+        List<UserFamily> familyList = familyPage.getRecords();
+        List<UserFamilyVo> voList = new ArrayList<>();
+        IPage<UserFamilyVo> pageVo = new Page<>();
+        if (familyList != null && familyList.size() > 0) {
+            familyList.forEach(family -> {
+                //4.1、根据户主id获取户主姓名
+                UserInstance userInstance = userInstanceService.getById(family.getUserId());
+                //4.2、设置属性
+                UserFamilyVo entity = new UserFamilyVo().builder().build()
+                        .setId(userInstance.getId())
+                        .setIdNo(userInstance.getIdNo())
+                        .setGender(userInstance.getGender())
+                        .setRelation(family.getRelation());
+                voList.add(entity);
             });
         }
         pageVo.setRecords(voList);
