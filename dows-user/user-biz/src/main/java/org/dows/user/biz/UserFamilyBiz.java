@@ -254,6 +254,8 @@ public class UserFamilyBiz implements UserFamilyApi {
                         .setResidential(userDwelling.getAddress())
                         .setCommunity(userDwelling.getCommunity());
                 voList.add(entity);
+                // TODO 判断是否存在个人档案或者客户管理相关信息，如果有，则获取所属健管师
+
             });
         }
         pageVo.setRecords(voList);

@@ -48,6 +48,66 @@ public class UserFamilyDTO {
     @ApiModelProperty("用户名/身份证号/联系电话/居住地址")
     private String nameNoPhoneAddress;
 
+    @ApiModelProperty("家庭成员姓名")
+    private String name;
+
+    @ApiModelProperty("身份证号")
+    private String idNo;
+
+    @ApiModelProperty("性别")
+    private String gender;
+
+    @ApiModelProperty("婚姻状况")
+    private String married;
+
+    @ApiModelProperty("生日")
+    private String birthday;
+
+    @ApiModelProperty("联系电话")
+    private String phone;
+
+    @ApiModelProperty("职业")
+    private String occupation;
+
+    @ApiModelProperty("教育程度")
+    private String degree;
+
+    @ApiModelProperty("工作单位")
+    private String companyName;
+
+    @ApiModelProperty("居住地址")
+    private String address;
+
+    @ApiModelProperty("家庭电话")
+    private String telephone;
+
+    @ApiModelProperty("所属社区")
+    private String community;
+
+    @ApiModelProperty("居住总面积")
+    private String acreage;
+
+    @ApiModelProperty("邮政编码")
+    private String zipCode;
+
+    @ApiModelProperty("房屋类型")
+    private String houseType;
+
+    @ApiModelProperty("人均居住面积")
+    private String perarea;
+
+    @ApiModelProperty("厨房排风设施")
+    private String exhaustFacility;
+
+    @ApiModelProperty("厨房使用方式")
+    private String kitchen;
+
+    @ApiModelProperty("燃料")
+    private String fuel;
+
+    @ApiModelProperty("饮水")
+    private String water;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("时间戳")
