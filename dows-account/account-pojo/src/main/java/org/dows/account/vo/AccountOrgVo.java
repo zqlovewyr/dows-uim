@@ -71,6 +71,12 @@ public class AccountOrgVo implements Serializable {
     @ApiModelProperty("允许最大成员数")
     private Integer maxNumber;
 
+    @ApiModelProperty("团队负责人名称")
+    private String ownerName;
+
+    @ApiModelProperty("团队描述")
+    private String groupInfoDescr;
+
     @ApiModelProperty(value = "时间戳/创建时间")
     private Date dt;
 
