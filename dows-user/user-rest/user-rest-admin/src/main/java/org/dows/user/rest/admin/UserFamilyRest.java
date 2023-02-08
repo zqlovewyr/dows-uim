@@ -50,6 +50,39 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         return pageList;
     }
 
+    @ApiOperation("新增 用户-家庭-成员")
+    @PostMapping("/createFamilyMember")
+    public Response<String> createFamilyMember(@RequestBody UserFamilyDTO userFamilyDTO) {
+        //1、新增家庭成员实例
+        UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
+        BeanUtils.copyProperties(userFamilyDTO, userInstanceDTO);
+        String userInstanceId = userInstanceApi.insertUserInstance(userInstanceDTO).getData();
+        //2、新增用户家庭
+        userFamilyDTO.setUserId(userInstanceId);
+        String familyId = userFamilyApi.insertUserFamily(userFamilyDTO).getData();
+        //3、新增用户扩展信息
+        UserExtinfoDTO userExtinfoDTO = new UserExtinfoDTO();
+        BeanUtils.copyProperties(userFamilyDTO, userExtinfoDTO);
+        userExtinfoDTO.setUserId(userInstanceId);
+        userExtinfoApi.insertUserExtinfo(userExtinfoDTO);
+        //4、插入用户工作信息
+        UserJobDTO userJobDTO = new UserJobDTO();
+        BeanUtils.copyProperties(userFamilyDTO, userJobDTO);
+        userJobDTO.setUserId(userInstanceId);
+        userJobApi.insertUserJob(userJobDTO);
+        //5、插入用户公司信息
+        UserCompanyDTO userCompanyDTO = new UserCompanyDTO();
+        BeanUtils.copyProperties(userFamilyDTO, userCompanyDTO);
+        userCompanyDTO.setUserId(userInstanceId);
+        userCompanyApi.insertUserCompany(userCompanyDTO);
+        //6、插入用户教育信息
+        UserEducationDTO userEducationDTO = new UserEducationDTO();
+        BeanUtils.copyProperties(userFamilyDTO, userEducationDTO);
+        userEducationDTO.setUserId(userInstanceId);
+        userEducationApi.insertUserEducation(userEducationDTO);
+        return Response.ok(familyId);
+    }
+
     @ApiOperation("查询 用户-家庭-户主-列表")
     @PostMapping("/getFamilyArchivesList")
     public Response<IPage<UserFamilyVo>> getFamilyArchivesList(@RequestBody UserFamilyDTO userFamilyDTO) {

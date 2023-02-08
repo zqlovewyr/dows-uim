@@ -635,9 +635,9 @@ public class AccountGroupBiz implements AccountGroupApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Boolean> deleteAccountGroup(Long id) {
+    public Response<Boolean> deleteAccountGroup(String id) {
         AccountGroup accountGroup = accountGroupService.lambdaQuery()
-                .eq(AccountGroup::getAccountId, id.toString())
+                .eq(AccountGroup::getId, id)
                 .one();
         LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
         groupWrapper.set(AccountGroup::getDeleted, true)
@@ -651,7 +651,7 @@ public class AccountGroupBiz implements AccountGroupApi {
     public void batchDeleteGroups(List<String> ids) {
         for (String id : ids) {
             AccountGroup accountGroup = accountGroupService.lambdaQuery()
-                    .eq(AccountGroup::getAccountId, id)
+                    .eq(AccountGroup::getId, id)
                     .one();
             if(accountGroup == null){
                 throw new AccountException(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);

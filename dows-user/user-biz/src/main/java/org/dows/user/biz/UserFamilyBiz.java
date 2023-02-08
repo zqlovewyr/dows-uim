@@ -292,7 +292,7 @@ public class UserFamilyBiz implements UserFamilyApi {
                 .in(userIds != null && userIds.size() > 0, UserFamily::getUserId, userIds)
                 .eq(StringUtils.isNotEmpty(userFamilyDTO.getMemberId()), UserFamily::getMemberId, userFamilyDTO.getMemberId())
                 .like(StringUtils.isNotEmpty(userFamilyDTO.getRelation()), UserFamily::getRelation, userFamilyDTO.getRelation())
-                .eq(userFamilyDTO.getHouseholder() != null, UserFamily::getHouseholder, userFamilyDTO.getHouseholder())
+                .eq(userFamilyDTO.getHouseholder() != null, UserFamily::getHouseholder, 0)
                 .eq(userFamilyDTO.getDt() != null, UserFamily::getDt, userFamilyDTO.getDt())
                 .gt(userFamilyDTO.getStartTime() != null, UserFamily::getDt, userFamilyDTO.getStartTime())
                 .lt(userFamilyDTO.getEndTime() != null, UserFamily::getDt, userFamilyDTO.getEndTime())
@@ -308,11 +308,12 @@ public class UserFamilyBiz implements UserFamilyApi {
                 //4.1、根据户主id获取户主姓名
                 UserInstance userInstance = userInstanceService.getById(family.getUserId());
                 //4.2、设置属性
-                UserFamilyVo entity = new UserFamilyVo().builder().build()
-                        .setId(userInstance.getId())
-                        .setIdNo(userInstance.getIdNo())
-                        .setGender(userInstance.getGender())
-                        .setRelation(family.getRelation());
+                UserFamilyVo entity = UserFamilyVo.builder()
+                        .memberName(userInstance.getName())
+                        .id(userInstance.getId())
+                        .idNo(userInstance.getIdNo())
+                        .gender(userInstance.getGender())
+                        .relation(family.getRelation()).build();
                 voList.add(entity);
             });
         }

@@ -73,7 +73,7 @@ public class AccountGroupRest implements MybatisCrudRest<AccountGroupForm, Accou
 
     @ApiOperation("删除 账号-组-成员")
     @DeleteMapping("/deleteAccountGroup/{id}")
-    public Response<Boolean> deleteAccountGroup(@PathVariable("id") Long id) {
+    public Response<Boolean> deleteAccountGroup(@PathVariable("id") String id) {
         return accountGroupApi.deleteAccountGroup(id);
     }
 
