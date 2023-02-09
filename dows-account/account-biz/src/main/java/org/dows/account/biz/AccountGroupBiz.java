@@ -20,6 +20,8 @@ import org.dows.account.service.*;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.account.vo.NormalDataVo;
 import org.dows.framework.api.Response;
+import org.dows.rbac.api.RbacRoleApi;
+import org.dows.rbac.vo.RbacRoleVo;
 import org.dows.user.api.api.UserContactApi;
 import org.dows.user.api.api.UserInstanceApi;
 import org.dows.user.api.dto.UserContactDTO;
@@ -50,6 +52,8 @@ public class AccountGroupBiz implements AccountGroupApi {
 
     private final AccountGroupService accountGroupService;
 
+    private final AccountOrgService accountOrgService;
+
     private final AccountRoleService accountRoleService;
 
     private final AccountUserService accountUserService;
@@ -61,6 +65,8 @@ public class AccountGroupBiz implements AccountGroupApi {
     private final AccountInstanceService accountInstanceService;
 
     private final UserContactApi userContactApi;
+
+    private final RbacRoleApi rbacRoleApi;
 
     /**
      * 根据组织ids 查询对应角色
@@ -375,7 +381,7 @@ public class AccountGroupBiz implements AccountGroupApi {
         //3、设置关联关系
         AccountUser accountUser = new AccountUser();
         BeanUtils.copyProperties(accountGroupDTO, accountUser);
-        accountUser.setUserId(userId.toString());
+        accountUser.setUserId(userId);
         accountUser.setAccountId(accountInstance.getId().toString());
         boolean unionFlag = accountUserService.save(accountUser);
         if (unionFlag == false) {
@@ -383,10 +389,30 @@ public class AccountGroupBiz implements AccountGroupApi {
         }
         map.put("unionId", accountUser.getId());
 
+        //4、创建账号与角色关系
+        AccountRole accountRole = new AccountRole();
+        //4.1、根据角色id获取角色信息
+        RbacRoleVo role = rbacRoleApi.getRbacRoleById(accountGroupDTO.getRoleId()).getData();
+        BeanUtils.copyProperties(role, accountRole,new String[]{"id"});
+        //4.2、设置属性
+        accountRole.setRoleId(role.getId().toString());
+        accountRole.setPrincipalType(EnumAccountRolePrincipalType.PERSONAL.getCode());
+        accountRole.setPrincipalId(accountInstance.getId().toString());
+        accountRole.setPrincipalName(accountInstance.getAccountName());
+        boolean roleFlag = accountRoleService.save(accountRole);
+        if (roleFlag == false) {
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_ROLE_UNION_FAIL_EXCEPTION);
+        }
+        map.put("roleId", accountRole.getId());
+
         //4、创建组员实例
         AccountGroup accountGroup = new AccountGroup();
         BeanUtils.copyProperties(accountGroupDTO, accountGroup);
-        accountGroup.setUserId(userId.toString());
+        accountGroup.setUserId(userId);
+        accountGroup.setAccountId(accountInstance.getId().toString());
+        accountGroup.setOrgId(accountGroupDTO.getOrgId());
+        AccountOrg accountOrg = accountOrgService.getById(accountGroupDTO.getOrgId());
+        accountGroup.setOrgName(accountOrg.getOrgName());
         boolean groupFlag = accountGroupService.save(accountGroup);
         if (groupFlag == false) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_GROUP_MEMBER_FAIL_EXCEPTION);

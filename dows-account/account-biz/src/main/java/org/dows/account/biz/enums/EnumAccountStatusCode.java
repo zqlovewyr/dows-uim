@@ -35,7 +35,8 @@ public enum EnumAccountStatusCode implements StatusCode {
     ACCOUNT_GROUP_UPDATE_FAIL_EXCEPTION(400023, "更新组员失败"),
     ACCOUNT_ORG_NOT_EXIST_EXCEPTION(400024, "该组织架构不存在"),
     ACCOUNT_GROUP_NOT_EXIST_EXCEPTION(400025, "该组织架构下不存在组员"),
-    ACCOUNT_GROUP_INFO_NOT_EXIST_EXCEPTION(400026, "该组织不存在");
+    ACCOUNT_GROUP_INFO_NOT_EXIST_EXCEPTION(400026, "该组织不存在"),
+    ACCOUNT_ROLE_UNION_FAIL_EXCEPTION(400027, "创建账号角色关联关系失败");
     final Integer code;
     final String descr;
 }
