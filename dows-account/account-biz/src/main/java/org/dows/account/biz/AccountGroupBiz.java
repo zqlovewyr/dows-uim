@@ -643,17 +643,13 @@ public class AccountGroupBiz implements AccountGroupApi {
         map.put("accountId", accountInstance.getId().toString());
 
         //2、更新用户实例
-        UserInstanceDTO dto = new UserInstanceDTO();
-        dto.setAccountId(accountGroupDTO.getAccountId());
-        dto.setUserId(accountGroupDTO.getUserId());
-        List<UserInstanceVo> instanceList = userInstanceApi.getUserInstanceList(dto).getData();
-        UserInstance model = new UserInstance();
-        if (instanceList != null && instanceList.size() > 0) {
-            BeanUtils.copyProperties(instanceList.get(0), model);
-        }
+        LambdaQueryWrapper<AccountUser> wrapper1 = new LambdaQueryWrapper<>();
+        wrapper1.eq(StringUtils.isNotEmpty(accountGroupDTO.getId()), AccountUser::getAccountId, accountGroupDTO.getId());
+        AccountUser accountUser = accountUserService.getOne(wrapper1);
+        UserInstanceVo instance = userInstanceApi.getUserInstanceById(accountUser.getUserId()).getData();
         UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
-        BeanUtils.copyProperties(model, userInstanceDTO);
-        BeanUtils.copyProperties(accountGroupDTO, userInstanceDTO);
+        BeanUtils.copyProperties(instance, userInstanceDTO);
+        BeanUtils.copyProperties(accountGroupDTO, userInstanceDTO,new String[]{"id"});
         String userId = userInstanceApi.updateUserInstance(userInstanceDTO).getData();
         map.put("userId", userId);
 
@@ -681,6 +677,7 @@ public class AccountGroupBiz implements AccountGroupApi {
             BeanUtils.copyProperties(vo,accountGroup,new String[]{"id"});
             accountGroup.setUserId(userId);
             accountGroup.setAccountId(accountInstance.getId().toString());
+            accountGroup.setAccountName(accountInstance.getAccountName());
             accountGroup.setOrgId(accountGroupDTO.getOrgId());
             AccountOrg accountOrg = accountOrgService.getById(accountGroupDTO.getOrgId());
             accountGroup.setOrgName(accountOrg.getOrgName());
