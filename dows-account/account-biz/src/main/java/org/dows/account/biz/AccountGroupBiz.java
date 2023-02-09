@@ -176,7 +176,29 @@ public class AccountGroupBiz implements AccountGroupApi {
                     accountIds.add(accountRole.getPrincipalId());
                 });
             }
+            if(accountIds.size() == 0){
+                accountIds.add("fill");
+            }
         }
+
+        //1、获取角色名称对应账号Id
+        if (accountGroupDTO.getRoleName() != null) {
+            List<AccountRole> accountRoleList = accountRoleService.lambdaQuery()
+                    .select(AccountRole::getPrincipalId)
+                    .like(AccountRole::getRoleName, accountGroupDTO.getRoleName())
+                    .eq(AccountRole::getPrincipalType, EnumAccountRolePrincipalType.PERSONAL.getCode())
+                    .eq(AccountRole::getDeleted, false)
+                    .list();
+            if (accountRoleList != null && accountRoleList.size() > 0) {
+                accountRoleList.forEach(accountRole -> {
+                    accountIds.add(accountRole.getPrincipalId());
+                });
+            }
+            if(accountIds.size() == 0){
+                accountIds.add("fill");
+            }
+        }
+
         //2、根据团队负责人获取对应组织信息
         Set<String> orgIds = new HashSet<>();
         if (StringUtils.isNotEmpty(accountGroupDTO.getOwnerId())) {
@@ -189,6 +211,25 @@ public class AccountGroupBiz implements AccountGroupApi {
                 groupInfoList.forEach(accountGroupInfo -> {
                     orgIds.add(accountGroupInfo.getOrgId());
                 });
+            }
+            if(orgIds.size() == 0){
+                orgIds.add("fill");
+            }
+        }
+        //2、根据团队负责人名称获取对应组织信息
+        if (StringUtils.isNotEmpty(accountGroupDTO.getOwnerName())) {
+            List<AccountGroupInfo> groupInfoList = accountGroupInfoService.lambdaQuery()
+                    .select(AccountGroupInfo::getOrgId)
+                    .like(AccountGroupInfo::getOwner, accountGroupDTO.getOwnerName())
+                    .eq(AccountGroupInfo::getDeleted, false)
+                    .list();
+            if (groupInfoList != null && groupInfoList.size() > 0) {
+                groupInfoList.forEach(accountGroupInfo -> {
+                    orgIds.add(accountGroupInfo.getOrgId());
+                });
+            }
+            if(orgIds.size() == 0){
+                orgIds.add("fill");
             }
         }
         //3、根据用户信息获取用户Id
@@ -206,6 +247,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                 userContactList.forEach(model -> {
                     UserContact contact = new UserContact();
                     BeanUtils.copyProperties(model, contact);
+                    contact.setId(Long.valueOf(model.getId()));
                     contactList.add(contact);
                 });
             }
@@ -213,6 +255,9 @@ public class AccountGroupBiz implements AccountGroupApi {
                 userContactList.forEach(userContact -> {
                     userIds.add(userContact.getId().toString());
                 });
+            }
+            if(userIds.size() == 0){
+                userIds.add("fill");
             }
         }
         //3.2、根据用户身份证号获取对应用户Id
@@ -225,6 +270,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                 userInstanceList.forEach(model -> {
                     UserInstance instance = new UserInstance();
                     BeanUtils.copyProperties(model, instance);
+                    instance.setId(Long.valueOf(model.getId()));
                     instanceList.add(instance);
                 });
             }
@@ -233,18 +279,22 @@ public class AccountGroupBiz implements AccountGroupApi {
                     userIds.add(userContact.getId().toString());
                 });
             }
+            if(userIds.size() == 0){
+                userIds.add("fill");
+            }
         }
 
         //3.3、根据用户姓名获取对应用户id
-        if (StringUtils.isNotEmpty(accountGroupDTO.getName())) {
+        if (StringUtils.isNotEmpty(accountGroupDTO.getUserName())) {
             UserInstanceDTO dto = new UserInstanceDTO();
-            dto.setIdNo(accountGroupDTO.getName());
+            dto.setName(accountGroupDTO.getUserName());
             List<UserInstanceVo> userInstanceList = userInstanceApi.getUserInstanceList(dto).getData();
             List<UserInstance> instanceList = new ArrayList<>();
             if (userInstanceList != null && userInstanceList.size() > 0) {
                 userInstanceList.forEach(model -> {
                     UserInstance instance = new UserInstance();
                     BeanUtils.copyProperties(model, instance);
+                    instance.setId(Long.valueOf(model.getId()));
                     instanceList.add(instance);
                 });
             }
@@ -252,6 +302,9 @@ public class AccountGroupBiz implements AccountGroupApi {
                 instanceList.forEach(userContact -> {
                     userIds.add(userContact.getId().toString());
                 });
+            }
+            if(userIds.size() == 0){
+                userIds.add("fill");
             }
         }
 

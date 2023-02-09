@@ -133,7 +133,6 @@
 
     </dependencyManagement>
 
-
     <distributionManagement>
         <repository>
             <id>rdc-releases</id>
@@ -144,5 +143,4 @@
             <url>https://packages.aliyun.com/maven/repository/2290151-snapshot-aLhHBl/</url>
         </snapshotRepository>
     </distributionManagement>
-
 </project>
