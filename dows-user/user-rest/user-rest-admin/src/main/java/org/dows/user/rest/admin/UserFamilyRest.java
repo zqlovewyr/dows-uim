@@ -19,6 +19,7 @@ import org.dows.user.service.UserFamilyService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 /**
@@ -92,10 +93,10 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         UserFamilyVo familyVo = new UserFamilyVo();
         //1、获取家庭成员实例
         UserInstanceVo instanceVo = userInstanceApi.getUserInstanceById(id).getData();
-        BeanUtils.copyProperties(instanceVo,familyVo);
+        BeanUtils.copyProperties(instanceVo, familyVo);
         familyVo.setMemberName(instanceVo.getName());
         //2、获取用户家庭信息
-        UserFamilyVo model =  userFamilyApi.getUserFamilyByUserId(instanceVo.getId()).getData();
+        UserFamilyVo model = userFamilyApi.getUserFamilyByUserId(instanceVo.getId()).getData();
         familyVo.setRelation(model.getRelation());
         //3、获取用户扩展信息
         UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(instanceVo.getId()).getData();
@@ -180,7 +181,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
     @DeleteMapping("/batchDeleteFamilyMembers")
     @Transactional(rollbackFor = Exception.class)
     public void batchDeleteFamilyMembers(@RequestParam("ids") List<String> ids) {
-        ids.forEach(id->{
+        ids.forEach(id -> {
             //1、删除家庭成员实例
             userInstanceApi.deleteUserInstanceById(id);
             //2、删除用户家庭
@@ -254,29 +255,29 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
     public Response<UserFamilyVo> getUserFamilyById(@PathVariable("id") String id) {
         UserFamilyVo familyVo = new UserFamilyVo();
         //1、获取用户家庭信息
-        UserFamilyVo model =  userFamilyApi.getUserFamilyById(id).getData();
-        if(!model.getHouseholder()){
+        UserFamilyVo model = userFamilyApi.getUserFamilyById(id).getData();
+        if (!model.getHouseholder()) {
             throw new UserException(EnumUserStatusCode.USER_IS_NOT_HOUSEHOLDER_EXCEPTION);
         }
         //2、获取用户实例
         UserInstanceVo instanceVo = userInstanceApi.getUserInstanceById(model.getUserId()).getData();
-        BeanUtils.copyProperties(instanceVo,familyVo);
+        BeanUtils.copyProperties(instanceVo, familyVo);
         familyVo.setHouseholderName(instanceVo.getName());
         //3、获取用户扩展信息
         UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(model.getUserId()).getData();
-        BeanUtils.copyProperties(extinfoVo,familyVo);
+        BeanUtils.copyProperties(extinfoVo, familyVo);
         //4、获取用户公司信息
         UserCompanyVo companyVo = userCompanyApi.getUserCompanyByUserId(model.getUserId()).getData();
-        BeanUtils.copyProperties(companyVo,familyVo);
+        BeanUtils.copyProperties(companyVo, familyVo);
         //5、获取用户教育信息
         UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(model.getUserId()).getData();
-        BeanUtils.copyProperties(educationVo,familyVo);
+        BeanUtils.copyProperties(educationVo, familyVo);
         //6、获取用户工作信息
         UserJobVo jobVo = userJobApi.getUserJobByUserId(model.getUserId()).getData();
-        BeanUtils.copyProperties(jobVo,familyVo);
+        BeanUtils.copyProperties(jobVo, familyVo);
         //7、获取用户住所信息
         UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByFamilyId(id).getData();
-        BeanUtils.copyProperties(dwellingVo,familyVo);
+        BeanUtils.copyProperties(dwellingVo, familyVo);
         return Response.ok(familyVo);
     }
 
@@ -285,44 +286,44 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
     @Transactional(rollbackFor = Exception.class)
     public void updateUserFamilyById(@RequestBody UserFamilyDTO userFamilyDTO) {
         //1、获取用户家庭信息
-        UserFamilyVo model =  userFamilyApi.getUserFamilyById(userFamilyDTO.getId()).getData();
-        if(!model.getHouseholder()){
+        UserFamilyVo model = userFamilyApi.getUserFamilyById(userFamilyDTO.getId()).getData();
+        if (!model.getHouseholder()) {
             throw new UserException(EnumUserStatusCode.USER_IS_NOT_HOUSEHOLDER_EXCEPTION);
         }
         //2、更新家庭户主实例
         UserInstanceVo instanceVo = userInstanceApi.getUserInstanceById(model.getUserId()).getData();
         UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userInstanceDTO,new String[]{"id"});
+        BeanUtils.copyProperties(userFamilyDTO, userInstanceDTO, new String[]{"id"});
         userInstanceDTO.setId(instanceVo.getId());
         userInstanceApi.updateUserInstance(userInstanceDTO);
         //3、更新用户扩展信息
         UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(model.getUserId()).getData();
         UserExtinfoDTO userExtinfoDTO = new UserExtinfoDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userExtinfoDTO,new String[]{"id"});
+        BeanUtils.copyProperties(userFamilyDTO, userExtinfoDTO, new String[]{"id"});
         userExtinfoDTO.setId(extinfoVo.getId());
         userExtinfoApi.updateUserExtinfoById(userExtinfoDTO);
         //4、更新用户公司信息
         UserCompanyVo companyVo = userCompanyApi.getUserCompanyByUserId(model.getUserId()).getData();
         UserCompanyDTO userCompanyDTO = new UserCompanyDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userCompanyDTO,new String[]{"id"});
+        BeanUtils.copyProperties(userFamilyDTO, userCompanyDTO, new String[]{"id"});
         userCompanyDTO.setId(companyVo.getId());
         userCompanyApi.updateUserCompanyById(userCompanyDTO);
         //5、更新用户教育信息
         UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(model.getUserId()).getData();
         UserEducationDTO userEducationDTO = new UserEducationDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userEducationDTO,new String[]{"id"});
+        BeanUtils.copyProperties(userFamilyDTO, userEducationDTO, new String[]{"id"});
         userEducationDTO.setId(educationVo.getId());
         userEducationApi.updateUserEducationById(userEducationDTO);
         //6、更新用户工作信息
         UserJobVo jobVo = userJobApi.getUserJobByUserId(model.getUserId()).getData();
         UserJobDTO userJobDTO = new UserJobDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userJobDTO,new String[]{"id"});
+        BeanUtils.copyProperties(userFamilyDTO, userJobDTO, new String[]{"id"});
         userJobDTO.setId(jobVo.getId());
         userJobApi.updateUserJobById(userJobDTO);
         //7、更新用户住所信息
         UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByFamilyId(model.getId()).getData();
         UserDwellingDTO userDwellingDTO = new UserDwellingDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userDwellingDTO,new String[]{"id"});
+        BeanUtils.copyProperties(userFamilyDTO, userDwellingDTO, new String[]{"id"});
         userDwellingDTO.setId(dwellingVo.getId());
         userDwellingApi.updateUserDwellingById(userDwellingDTO);
     }
@@ -355,8 +356,30 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
     }
 
     @ApiOperation("批量删除 用户-家庭")
-    @PostMapping("/batchDeleteUserFamilys")
+    @DeleteMapping("/batchDeleteUserFamilys")
     public void batchDeleteUserFamilys(@RequestParam("ids") List<String> ids) {
-        userFamilyApi.batchDeleteUserFamilys(ids);
+        ids.forEach(id -> {
+            //1、删除家庭实例
+            UserFamilyVo familyVo = userFamilyApi.getUserFamilyById(id).getData();
+            userFamilyApi.deleteUserFamilyById(id);
+            //2、删除用户实例
+            UserInstanceVo instanceVo = userInstanceApi.getUserInstanceById(familyVo.getUserId()).getData();
+            userInstanceApi.deleteUserInstanceById(instanceVo.getId());
+            //3、删除用户扩展信息
+            UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(familyVo.getUserId()).getData();
+            userExtinfoApi.deleteUserExtinfoById(extinfoVo.getId());
+            //4、删除用户工作信息
+            UserJobVo jobVo = userJobApi.getUserJobByUserId(familyVo.getUserId()).getData();
+            userJobApi.deleteUserJobById(jobVo.getId());
+            //5、删除用户公司信息
+            UserCompanyVo companyVo = userCompanyApi.getUserCompanyByUserId(familyVo.getUserId()).getData();
+            userCompanyApi.deleteUserCompanyById(companyVo.getId());
+            //6、删除用户教育信息
+            UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(familyVo.getUserId()).getData();
+            userEducationApi.deleteUserEducationById(educationVo.getId());
+            //7、删除用户做所信息
+            UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByFamilyId(familyVo.getId()).getData();
+            userDwellingApi.deleteUserDwellingById(dwellingVo.getId());
+        });
     }
 }
