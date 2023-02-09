@@ -316,6 +316,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                 .eq(accountGroupDTO.getId() != null, AccountGroup::getId, accountGroupDTO.getId())
                 .eq(StringUtils.isNotEmpty(accountGroupDTO.getOrgId()), AccountGroup::getOrgId, accountGroupDTO.getOrgId())
                 .in(orgIds != null && orgIds.size() > 0, AccountGroup::getOrgId, orgIds)
+                .in(userIds != null && userIds.size() > 0, AccountGroup::getUserId, userIds)
                 .like(StringUtils.isNotEmpty(accountGroupDTO.getOrgName()), AccountGroup::getOrgName, accountGroupDTO.getOrgName())
                 .like(StringUtils.isNotEmpty(accountGroupDTO.getAccountName()), AccountGroup::getAccountName, accountGroupDTO.getAccountName())
                 .eq(StringUtils.isNotEmpty(accountGroupDTO.getTenantId()), AccountGroup::getTenantId, accountGroupDTO.getTenantId())

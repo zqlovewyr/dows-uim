@@ -1,9 +1,12 @@
 package org.dows.account.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -103,12 +106,16 @@ public class AccountGroupDTO implements Serializable {
     @ApiModelProperty("是否逻辑删除")
     private Boolean deleted;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "开始时间")
     private Date startTime;
 
     @ApiModelProperty("状态")
     private Integer status;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "结束时间")
     private Date endTime;
 
