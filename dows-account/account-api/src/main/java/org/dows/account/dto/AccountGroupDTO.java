@@ -23,7 +23,7 @@ import java.util.Set;
 @ApiModel(value = "AccountGroupDTO对象", description = "账号-账号组维度信息")
 public class AccountGroupDTO implements Serializable {
     @ApiModelProperty("自增主键ID")
-    private Long id;
+    private String id;
 
     @ApiModelProperty("主键id集合")
     private Set<String> ids;
@@ -33,6 +33,9 @@ public class AccountGroupDTO implements Serializable {
 
     @ApiModelProperty("团队负责人ID")
     private String ownerId;
+
+    @ApiModelProperty("手机号")
+    private String phone;
 
     @ApiModelProperty("组织ID")
     private String orgId;
@@ -96,6 +99,9 @@ public class AccountGroupDTO implements Serializable {
 
     @ApiModelProperty(value = "开始时间")
     private Date startTime;
+
+    @ApiModelProperty("状态")
+    private Integer status;
 
     @ApiModelProperty(value = "结束时间")
     private Date endTime;

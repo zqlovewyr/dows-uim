@@ -37,7 +37,7 @@ public class AccountInstanceVo implements Serializable {
     private String accountName;
 
     @ApiModelProperty(value = "账号密码")
-    private String accountPwd;
+    private String password;
 
     @ApiModelProperty("姓名")
     private String name;
@@ -45,11 +45,17 @@ public class AccountInstanceVo implements Serializable {
     @ApiModelProperty("性别")
     private String gender;
 
+    @ApiModelProperty("所属机构ID")
+    private String orgId;
+
     @ApiModelProperty("所属机构名称")
     private String orgName;
 
     @ApiModelProperty("组别ID")
     private String groupInfoId;
+
+    @ApiModelProperty("角色ID")
+    private String roleId;
 
     @ApiModelProperty("角色名称")
     private String roleName;
@@ -61,7 +67,7 @@ public class AccountInstanceVo implements Serializable {
     private String tenantId;
 
     @ApiModelProperty(value = "状态，锁定/异常等 ")
-    private Integer status;
+    private String status;
 
     @ApiModelProperty(value = "来源, 推广统计用")
     private String source;

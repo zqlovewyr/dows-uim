@@ -298,8 +298,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                 LambdaQueryWrapper<UserInstance> instanceWrapper = new LambdaQueryWrapper<>();
                 UserInstanceDTO dto = new UserInstanceDTO();
                 dto.setId(user.getUserId());
-                UserInstanceVo model = new UserInstanceVo();
-                model = userInstanceApi.getUserInstanceList(dto).getData().get(0);
+                UserInstanceVo model = userInstanceApi.getUserInstanceById(dto.getId()).getData();
                 //复制属性
                 BeanUtils.copyProperties(model, instance);
                 UserContactDTO contactDto = new UserContactDTO();
@@ -636,11 +635,12 @@ public class AccountGroupBiz implements AccountGroupApi {
         //1、更新账号实例
         AccountInstance accountInstance = new AccountInstance();
         BeanUtils.copyProperties(accountGroupDTO, accountInstance);
+        accountInstance.setId(Long.valueOf(accountGroupDTO.getId()));
         boolean accountFlag = accountInstanceService.saveOrUpdate(accountInstance);
         if (accountFlag == false) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_CREATE_FAIL_EXCEPTION);
         }
-        map.put("accountId", accountInstance.getId());
+        map.put("accountId", accountInstance.getId().toString());
 
         //2、更新用户实例
         UserInstanceDTO dto = new UserInstanceDTO();
@@ -656,6 +656,37 @@ public class AccountGroupBiz implements AccountGroupApi {
         BeanUtils.copyProperties(accountGroupDTO, userInstanceDTO);
         String userId = userInstanceApi.updateUserInstance(userInstanceDTO).getData();
         map.put("userId", userId);
+
+        //2、更新账号角色关系
+        LambdaQueryWrapper<AccountRole> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(StringUtils.isNotEmpty(accountGroupDTO.getId()), AccountRole::getPrincipalId, accountGroupDTO.getId());
+        AccountRole accountRole = accountRoleService.getOne(wrapper);
+        if(accountRole != null){
+            RbacRoleVo vo = rbacRoleApi.getRbacRoleById(accountGroupDTO.getRoleId()).getData();
+            BeanUtils.copyProperties(vo,accountRole,new String[]{"id"});
+            accountRole.setRoleId(accountGroupDTO.getRoleId().toString());
+            accountRole.setPrincipalType(EnumAccountRolePrincipalType.PERSONAL.getCode());
+            accountRole.setPrincipalId(accountInstance.getId().toString());
+            accountRole.setPrincipalName(accountInstance.getAccountName());
+            accountRoleService.saveOrUpdate(accountRole);
+            map.put("roleId", accountRole.getId().toString());
+        }
+
+        //3、更新账号机构关系
+        LambdaQueryWrapper<AccountGroup> groupWrapper = new LambdaQueryWrapper<>();
+        groupWrapper.eq(StringUtils.isNotEmpty(accountGroupDTO.getId()), AccountGroup::getAccountId, accountGroupDTO.getId());
+        AccountGroup accountGroup = accountGroupService.getOne(groupWrapper);
+        if(accountGroup != null){
+            AccountOrg vo = accountOrgService.getById(accountGroup.getOrgId());
+            BeanUtils.copyProperties(vo,accountGroup,new String[]{"id"});
+            accountGroup.setUserId(userId);
+            accountGroup.setAccountId(accountInstance.getId().toString());
+            accountGroup.setOrgId(accountGroupDTO.getOrgId());
+            AccountOrg accountOrg = accountOrgService.getById(accountGroupDTO.getOrgId());
+            accountGroup.setOrgName(accountOrg.getOrgName());
+            accountGroupService.saveOrUpdate(accountGroup);
+            map.put("orgId", accountGroup.getId().toString());
+        }
         return Response.ok(map);
     }
 

@@ -812,11 +812,12 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         if (accountInstance == null) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);
         }
-        AccountInstanceVo model = new AccountInstanceVo().builder().build()
-                .setId(Long.valueOf(accountInstance.getId()))
-                .setAccountName(accountInstance.getAccountName())
-                .setAccountPwd(accountInstance.getPassword())
-                .setPhone(accountInstance.getPhone());
+        AccountInstanceVo model = AccountInstanceVo.builder()
+                .id(Long.valueOf(accountInstance.getId()))
+                .accountName(accountInstance.getAccountName())
+                .password(accountInstance.getPassword())
+                .status(accountInstance.getStatus().toString())
+                .phone(accountInstance.getPhone()).build();
         //2、通过账户和用户关联表找到对应的用户ID
         AccountUser accountUser = accountUserService.lambdaQuery()
                 .eq(AccountUser::getAccountId, id)
@@ -830,6 +831,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 .eq(AccountRole::getPrincipalId, id)
                 .one();
         if (accountRole != null) {
+            model.setRoleId(accountRole.getRoleId());
             model.setRoleName(accountRole.getRoleName());
         }
         //5、获取机构实例
@@ -837,6 +839,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 .eq(AccountGroup::getAccountId, id)
                 .one();
         if (accountGroup != null) {
+            model.setOrgId(accountGroup.getOrgId());
             model.setOrgName(accountGroup.getOrgName());
         }
         return Response.ok(model);
