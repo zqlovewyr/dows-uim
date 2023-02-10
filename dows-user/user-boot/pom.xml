@@ -22,6 +22,4 @@
             <artifactId>user-config</artifactId>
         </dependency>
     </dependencies>
-
-
 </project>

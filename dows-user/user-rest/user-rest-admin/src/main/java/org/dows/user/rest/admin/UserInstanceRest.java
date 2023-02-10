@@ -58,8 +58,8 @@ public class UserInstanceRest implements MybatisCrudRest<UserInstanceForm, UserI
 
     @ApiOperation("删除单个 用户-实例")
     @DeleteMapping("/deleteUserInstanceById/{id}")
-    public Response deleteUserInstanceById(@PathVariable("id") Long id) {
-        Response<Boolean> flag = userInstanceApi.deleteUserInstanceById(id.toString());
+    public Response deleteUserInstanceById(@PathVariable("id") String id) {
+        Response<Boolean> flag = userInstanceApi.deleteUserInstanceById(id);
         return Response.ok(flag);
     }
 
