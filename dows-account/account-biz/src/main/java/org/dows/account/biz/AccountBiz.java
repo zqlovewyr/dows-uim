@@ -6,12 +6,17 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountUserApi;
+import org.dows.account.bo.AccountCouponBo;
+import org.dows.account.bo.AccountInstanceTenantBo;
+import org.dows.account.bo.AccountOrderBo;
 import org.dows.account.entity.AccountInstance;
 import org.dows.account.entity.AccountUserInfo;
+import org.dows.account.form.AccountCouponForm;
+import org.dows.account.form.AccountOrderForm;
 import org.dows.account.query.AccountQuery;
 import org.dows.account.service.AccountInstanceService;
 import org.dows.account.service.AccountUserInfoService;
-import org.dows.account.vo.AccountVo;
+import org.dows.account.vo.*;
 import org.dows.framework.api.Response;
 import org.dows.framework.api.exceptions.BaseException;
 import org.springframework.http.HttpStatus;
@@ -19,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -95,5 +101,50 @@ public class AccountBiz implements AccountUserApi {
                 .one();
         BeanUtil.copyProperties(accountUserInfo, accountVo);
         return accountVo;
+    }
+
+    @Override
+    public Map<String, Object> selectAccountIntegralStatistics(String accountId) {
+        return null;
+    }
+
+    @Override
+    public IPage<AccountIntegralVo> selectAccountIntegralPage(String accountId) {
+        return null;
+    }
+
+    @Override
+    public Map<String,Object> selectAccountCouponStatistics(AccountCouponBo accountCouponBo) {
+        return null;
+    }
+
+    @Override
+    public IPage<AccountCouponVo> selectAccountCouponPage(AccountCouponBo accountCouponBo) {
+        return null;
+    }
+
+    @Override
+    public AccountOrderStatisticsVo selectOrderStatistics(AccountOrderBo accountOrderBo) {
+        return null;
+    }
+
+    @Override
+    public IPage<AccountOrderVo> selectOrderInstancePage(AccountOrderBo accountOrderBo) {
+        return null;
+    }
+
+    @Override
+    public Map<String, Object> selectAccountTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo) {
+        return null;
+    }
+
+    @Override
+    public AccountDistributionVo selectAccountDistributionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo) {
+        return null;
+    }
+
+    @Override
+    public AccountConsumptionVo selectAccountConsumptionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo) {
+        return null;
     }
 }
