@@ -49,7 +49,10 @@ public class UserFamilyDTO {
     private String nameNoPhoneAddress;
 
     @ApiModelProperty("家庭成员姓名")
-    private String name;
+    private String memberName;
+
+    @ApiModelProperty("户主姓名")
+    private String householderName;
 
     @ApiModelProperty("身份证号")
     private String idNo;

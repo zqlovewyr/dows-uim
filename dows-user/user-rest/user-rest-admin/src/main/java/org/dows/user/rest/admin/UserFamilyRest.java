@@ -60,6 +60,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         //1、新增家庭成员实例
         UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
         BeanUtils.copyProperties(userFamilyDTO, userInstanceDTO);
+        userInstanceDTO.setName(userFamilyDTO.getMemberName());
         String userInstanceId = userInstanceApi.insertUserInstance(userInstanceDTO).getData();
         //2、新增用户家庭
         userFamilyDTO.setUserId(userInstanceId);
@@ -95,6 +96,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         UserInstanceVo instanceVo = userInstanceApi.getUserInstanceById(id).getData();
         BeanUtils.copyProperties(instanceVo, familyVo);
         familyVo.setMemberName(instanceVo.getName());
+        familyVo.setMemberName(instanceVo.getName());
         //2、获取用户家庭信息
         UserFamilyVo model = userFamilyApi.getUserFamilyByUserId(instanceVo.getId()).getData();
         familyVo.setRelation(model.getRelation());
@@ -121,6 +123,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         //1、更新家庭成员实例
         UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
         BeanUtils.copyProperties(userFamilyDTO, userInstanceDTO);
+        userInstanceDTO.setName(userFamilyDTO.getMemberName());
         userInstanceApi.updateUserInstance(userInstanceDTO).getData();
         //2、更新用户家庭
         UserFamilyVo familyVo = userFamilyApi.getUserFamilyByUserId(userFamilyDTO.getId()).getData();
@@ -216,6 +219,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         //1、新增家庭户主实例
         UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
         BeanUtils.copyProperties(userFamilyDTO, userInstanceDTO);
+        userInstanceDTO.setName(userFamilyDTO.getHouseholderName());
         String userInstanceId = userInstanceApi.insertUserInstance(userInstanceDTO).getData();
         //2、新增用户家庭
         userFamilyDTO.setUserId(userInstanceId);
@@ -295,6 +299,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
         BeanUtils.copyProperties(userFamilyDTO, userInstanceDTO, new String[]{"id"});
         userInstanceDTO.setId(instanceVo.getId());
+        userInstanceDTO.setName(userFamilyDTO.getHouseholderName());
         userInstanceApi.updateUserInstance(userInstanceDTO);
         //3、更新用户扩展信息
         UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(model.getUserId()).getData();
