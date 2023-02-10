@@ -289,6 +289,7 @@ public class UserFamilyBiz implements UserFamilyApi {
 
             });
         }
+        BeanUtils.copyProperties(familyPage, pageVo,new String[]{"records"});
         pageVo.setRecords(voList);
         return Response.ok(pageVo);
     }
@@ -346,6 +347,7 @@ public class UserFamilyBiz implements UserFamilyApi {
                 voList.add(entity);
             });
         }
+        BeanUtils.copyProperties(familyPage, pageVo,new String[]{"records"});
         pageVo.setRecords(voList);
         return Response.ok(pageVo);
     }
