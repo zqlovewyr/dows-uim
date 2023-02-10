@@ -1,4 +1,4 @@
-package org.dows.account.rest.tenant;
+package org.dows.account.rest.admin;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
@@ -26,8 +26,8 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("tenant/user/account")
-public class TenantUserAccountRest {
+@RequestMapping("admin/user/account")
+public class AdminUserAccountRest {
 
     private final AccountBiz accountBiz;
 
