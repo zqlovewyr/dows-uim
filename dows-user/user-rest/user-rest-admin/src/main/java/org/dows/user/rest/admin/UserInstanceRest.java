@@ -68,5 +68,11 @@ public class UserInstanceRest implements MybatisCrudRest<UserInstanceForm, UserI
     public void deleteUserInstances(@RequestParam("ids") List<String> ids) {
         userInstanceApi.deleteUserInstances(ids);
     }
+
+    @ApiOperation("查询 用户-实例 列表(不带分页)")
+    @PostMapping("/getUserInstanceList")
+    public Response<List<UserInstanceVo>> getUserInstanceList(@RequestBody UserInstanceDTO userInstanceDTO) {
+        return userInstanceApi.getUserInstanceListNoPage(userInstanceDTO);
+    }
 }
 

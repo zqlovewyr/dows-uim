@@ -264,7 +264,7 @@ public class AccountGroupBiz implements AccountGroupApi {
         if (StringUtils.isNotEmpty(accountGroupDTO.getIdNo())) {
             UserInstanceDTO dto = new UserInstanceDTO();
             dto.setIdNo(accountGroupDTO.getIdNo());
-            List<UserInstanceVo> userInstanceList = userInstanceApi.getUserInstanceList(dto).getData();
+            List<UserInstanceVo> userInstanceList = userInstanceApi.getUserInstanceFilterList(dto).getData();
             List<UserInstance> instanceList = new ArrayList<>();
             if (userInstanceList != null && userInstanceList.size() > 0) {
                 userInstanceList.forEach(model -> {
@@ -288,7 +288,7 @@ public class AccountGroupBiz implements AccountGroupApi {
         if (StringUtils.isNotEmpty(accountGroupDTO.getUserName())) {
             UserInstanceDTO dto = new UserInstanceDTO();
             dto.setName(accountGroupDTO.getUserName());
-            List<UserInstanceVo> userInstanceList = userInstanceApi.getUserInstanceList(dto).getData();
+            List<UserInstanceVo> userInstanceList = userInstanceApi.getUserInstanceFilterList(dto).getData();
             List<UserInstance> instanceList = new ArrayList<>();
             if (userInstanceList != null && userInstanceList.size() > 0) {
                 userInstanceList.forEach(model -> {

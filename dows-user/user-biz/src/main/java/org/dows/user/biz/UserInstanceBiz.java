@@ -110,7 +110,7 @@ public class UserInstanceBiz implements UserInstanceApi {
     }
 
     @Override
-    public Response<List<UserInstanceVo>> getUserInstanceList(UserInstanceDTO userInstanceDTO) {
+    public Response<List<UserInstanceVo>> getUserInstanceFilterList(UserInstanceDTO userInstanceDTO) {
         List<UserInstance> userInstanceList = userInstanceService.lambdaQuery()
                 .like(StringUtils.isNotEmpty(userInstanceDTO.getName()), UserInstance::getName, userInstanceDTO.getName())
                 .eq(StringUtils.isNotEmpty(userInstanceDTO.getGender()), UserInstance::getGender, userInstanceDTO.getGender())
@@ -156,5 +156,40 @@ public class UserInstanceBiz implements UserInstanceApi {
                     .eq(UserInstance::getId, id);
             userInstanceService.update(instanceWrapper);
         });
+    }
+
+    @Override
+    public Response<List<UserInstanceVo>> getUserInstanceListNoPage(UserInstanceDTO userInstanceDTO) {
+        List<UserInstance> instanceList = userInstanceService.lambdaQuery().in(userInstanceDTO.getUserIds() != null && userInstanceDTO.getUserIds().size() > 0, UserInstance::getUserId, userInstanceDTO.getUserIds())
+                .and(StringUtils.isNotEmpty(userInstanceDTO.getNameNoPhone()), t -> t.like(UserInstance::getName, userInstanceDTO.getNameNoPhone()).or().like(UserInstance::getIdNo, userInstanceDTO.getNameNoPhone()).or().like(UserInstance::getPhone, userInstanceDTO.getNameNoPhone()))
+                .like(StringUtils.isNotEmpty(userInstanceDTO.getName()), UserInstance::getName, userInstanceDTO.getName())
+                .like(StringUtils.isNotEmpty(userInstanceDTO.getIdNo()), UserInstance::getIdNo, userInstanceDTO.getIdNo())
+                .eq(StringUtils.isNotEmpty(userInstanceDTO.getAge()), UserInstance::getAge, userInstanceDTO.getAge())
+                .like(StringUtils.isNotEmpty(userInstanceDTO.getNation()), UserInstance::getNation, userInstanceDTO.getNation())
+                .like(StringUtils.isNotEmpty(userInstanceDTO.getSignOrg()), UserInstance::getSignOrg, userInstanceDTO.getSignOrg())
+                .like(StringUtils.isNotEmpty(userInstanceDTO.getDomicile()), UserInstance::getDomicile, userInstanceDTO.getDomicile())
+                .eq(userInstanceDTO.getBirthday() != null, UserInstance::getBirthday, userInstanceDTO.getBirthday())
+                .gt(userInstanceDTO.getBirthdayStartTime() != null, UserInstance::getBirthday, userInstanceDTO.getBirthdayStartTime())
+                .lt(userInstanceDTO.getBirthdayEndTime() != null, UserInstance::getBirthday, userInstanceDTO.getBirthdayEndTime())
+                .gt(userInstanceDTO.getBirthdayStartTime() != null, UserInstance::getBirthday, userInstanceDTO.getBirthdayStartTime())
+                .lt(userInstanceDTO.getBirthdayEndTime() != null, UserInstance::getBirthday, userInstanceDTO.getBirthdayEndTime())
+                .gt(userInstanceDTO.getUserDate() != null, UserInstance::getDt, userInstanceDTO.getUserDate())
+                .lt(userInstanceDTO.getUserDate() != null, UserInstance::getDt, userInstanceDTO.getUserDate())
+                .eq(userInstanceDTO.getDt() != null, UserInstance::getDt, userInstanceDTO.getDt())
+                .gt(userInstanceDTO.getStartTime() != null, UserInstance::getDt, userInstanceDTO.getStartTime())
+                .lt(userInstanceDTO.getEndTime() != null, UserInstance::getDt, userInstanceDTO.getEndTime())
+                .eq(UserInstance::getDeleted, false)
+                .orderByDesc(UserInstance::getDt).list();
+        //复制属性
+        List<UserInstanceVo> voList = new ArrayList<>();
+        if(instanceList != null && instanceList.size() > 0){
+            instanceList.forEach(instance->{
+                UserInstanceVo vo = new UserInstanceVo();
+                BeanUtils.copyProperties(instance,vo);
+                vo.setId(instance.getId().toString());
+                voList.add(vo);
+            });
+        }
+        return Response.ok(voList);
     }
 }

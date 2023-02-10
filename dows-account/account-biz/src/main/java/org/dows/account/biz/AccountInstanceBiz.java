@@ -529,7 +529,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             dto.setGender(accountInstanceDTO.getGender());
         }
         if (!ReflectUtil.isObjectNull(dto) && dto != null) {
-            List<UserInstanceVo> instanceList = userInstanceApi.getUserInstanceList(dto).getData();
+            List<UserInstanceVo> instanceList = userInstanceApi.getUserInstanceFilterList(dto).getData();
             if (instanceList != null && instanceList.size() > 0) {
                 instanceList.forEach(model -> {
                     AccountUser user = accountUserService.lambdaQuery()
@@ -551,7 +551,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             dtoName.setName(accountInstanceDTO.getAccountNamePhone());
         }
         if (!ReflectUtil.isObjectNull(dtoName) && dtoName != null) {
-            List<UserInstanceVo> instanceList = userInstanceApi.getUserInstanceList(dtoName).getData();
+            List<UserInstanceVo> instanceList = userInstanceApi.getUserInstanceFilterList(dtoName).getData();
             if (instanceList != null && instanceList.size() > 0) {
                 instanceList.forEach(model -> {
                     AccountUser user = accountUserService.lambdaQuery()
@@ -572,7 +572,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             dtoPhone.setPhone(accountInstanceDTO.getAccountNamePhone());
         }
         if (!ReflectUtil.isObjectNull(dtoPhone) && dtoPhone != null) {
-            List<UserInstanceVo> instanceList = userInstanceApi.getUserInstanceList(dtoPhone).getData();
+            List<UserInstanceVo> instanceList = userInstanceApi.getUserInstanceFilterList(dtoPhone).getData();
             if (instanceList != null && instanceList.size() > 0) {
                 instanceList.forEach(model -> {
                     AccountUser user = accountUserService.lambdaQuery()
