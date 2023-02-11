@@ -1,12 +1,14 @@
 package org.dows.account.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.dows.account.bo.AccountInstanceTenantBo;
 import org.dows.account.entity.AccountInstance;
+import org.dows.account.query.AccountCountTenantQuery;
 import org.dows.account.query.AccountInstanceQuery;
-import org.dows.account.query.AccountQuery;
+import org.dows.account.vo.AccountConsumptionVo;
+import org.dows.account.vo.AccountDistributionVo;
 import org.dows.account.vo.AccountInstanceResVo;
 import org.dows.account.vo.AccountInstanceVo;
-import org.dows.account.vo.AccountVo;
 import org.dows.framework.crud.mybatis.MybatisCrudService;
 
 import java.util.List;
@@ -35,5 +37,13 @@ public interface AccountInstanceService extends MybatisCrudService<AccountInstan
      * @return
      */
     IPage<AccountInstanceResVo> getListByPage(IPage<AccountInstanceResVo> page, AccountInstanceQuery accountInstanceQuery);
+
+    Map<String, Object> selectAccountTenantStatistics(AccountCountTenantQuery accountCountTenantQuery);
+
+    List<AccountDistributionVo> selectAccountDistributionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo);
+
+    List<AccountConsumptionVo> selectAccountConsumptionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo);
+
+
 }
 

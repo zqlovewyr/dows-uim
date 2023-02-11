@@ -1,11 +1,8 @@
 package org.dows.account.bo;
 
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
 import lombok.Data;
-import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -26,6 +23,9 @@ public class AccountInstanceTenantBo implements Serializable {
 
     @ApiModelProperty("结束日期")
     private Date endDate;
+
+    @ApiModelProperty(value = "门店ID")
+    private String storeId;
 
     @ApiModelProperty("客户分布类型")
     private Integer distributionType;

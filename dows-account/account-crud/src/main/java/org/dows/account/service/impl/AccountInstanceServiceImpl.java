@@ -4,17 +4,23 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.dows.account.bo.AccountInstanceTenantBo;
 import org.dows.account.entity.AccountInstance;
 import org.dows.account.mapper.AccountInstanceMapper;
+import org.dows.account.query.AccountCountTenantQuery;
 import org.dows.account.query.AccountInstanceQuery;
 import org.dows.account.service.AccountInstanceService;
+import org.dows.account.vo.AccountConsumptionVo;
+import org.dows.account.vo.AccountDistributionVo;
 import org.dows.account.vo.AccountInstanceResVo;
 import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.crud.mybatis.MybatisCrudServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -119,6 +125,49 @@ public class AccountInstanceServiceImpl extends MybatisCrudServiceImpl<AccountIn
             rest = year+"年"+month+"月";
         }
         return rest;
+    }
+
+    @Override
+    public Map<String, Object> selectAccountTenantStatistics(AccountCountTenantQuery accountCountTenantQuery) {
+
+        Integer instanceCount =  accountInstanceMapper.selectAccountInstanceCount(accountCountTenantQuery);
+        Integer consumeCount = accountInstanceMapper.selectAccountInstanceConsumeCount(accountCountTenantQuery);
+        Integer storedCount = accountInstanceMapper.selectAccountInstanceStoredCount(accountCountTenantQuery);
+
+        // 查詢全部客戶
+        accountCountTenantQuery.setStartDate(null);
+        accountCountTenantQuery.setEndDate(null);
+        Integer instanceCountAll =  accountInstanceMapper.selectAccountInstanceCount(accountCountTenantQuery);
+
+        Map<String,Object> param = new HashMap<>();
+        param.put("instanceCountAll",instanceCountAll !=null ? instanceCountAll : 0);
+        param.put("instanceCount",instanceCount !=null ? instanceCount:0);
+        param.put("consumeCount",consumeCount !=null ? consumeCount:0);
+        param.put("storedCount",storedCount !=null ? storedCount:0);
+        return param;
+    }
+
+    @Override
+    public List<AccountDistributionVo> selectAccountDistributionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo) {
+
+        Integer instanceCount =  accountInstanceMapper.selectAccountInstanceCount(AccountCountTenantQuery.builder()
+                .startDate(accountInstanceTenantBo.getStartDate())
+                .endDate(accountInstanceTenantBo.getEndDate())
+                .storeId(accountInstanceTenantBo.getStoreId()).build());
+        List<AccountDistributionVo> vos =  accountInstanceMapper.selectAccountDistributionTenantStatistics(accountInstanceTenantBo);
+        vos.stream().forEach(item ->{
+            if(instanceCount != null){
+                // 计算占比
+                item.setRate(new BigDecimal((float)item.getCount()/instanceCount).setScale(2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).intValue());
+            }
+        });
+
+        return vos;
+    }
+
+    @Override
+    public List<AccountConsumptionVo> selectAccountConsumptionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo) {
+        return null;
     }
 
 }

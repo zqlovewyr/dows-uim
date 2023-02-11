@@ -11,8 +11,7 @@ import org.dows.account.bo.AccountInstanceTenantBo;
 import org.dows.account.bo.AccountOrderBo;
 import org.dows.account.entity.AccountInstance;
 import org.dows.account.entity.AccountUserInfo;
-import org.dows.account.form.AccountCouponForm;
-import org.dows.account.form.AccountOrderForm;
+import org.dows.account.query.AccountCountTenantQuery;
 import org.dows.account.query.AccountQuery;
 import org.dows.account.service.AccountInstanceService;
 import org.dows.account.service.AccountUserInfoService;
@@ -30,6 +29,7 @@ import java.util.Map;
 @Slf4j
 @Service
 public class AccountBiz implements AccountUserApi {
+
     private final AccountUserInfoService accountUserInfoService;
 
     private final AccountInstanceService accountInstanceService;
@@ -135,11 +135,18 @@ public class AccountBiz implements AccountUserApi {
 
     @Override
     public Map<String, Object> selectAccountTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo) {
-        return null;
+        AccountCountTenantQuery accountCountTenantQuery = new AccountCountTenantQuery();
+        accountCountTenantQuery.setEndDate(accountInstanceTenantBo.getEndDate());
+        accountCountTenantQuery.setStartDate(accountInstanceTenantBo.getStartDate());
+        accountCountTenantQuery.setStoreId(accountInstanceTenantBo.getStoreId());
+        return accountInstanceService.selectAccountTenantStatistics(accountCountTenantQuery);
     }
 
     @Override
     public AccountDistributionVo selectAccountDistributionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo) {
+
+
+
         return null;
     }
 

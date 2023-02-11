@@ -5,7 +5,6 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 
 @Data
 public class AccountDistributionVo implements Serializable {
@@ -22,20 +21,8 @@ public class AccountDistributionVo implements Serializable {
     @ApiModelProperty(value = "数量名称")
     private String countStr;
 
-    private List<AccountDistributionListVo> listVos;
-
-    @Data
-    class AccountDistributionListVo{
-        @ApiModelProperty(value = "名称")
-        private String name;
-        @ApiModelProperty(value = "数量")
-        private Integer count;
-        @ApiModelProperty(value = "数量名称")
-        private String countStr;
-
-        @ApiModelProperty(value = "占比")
-        private Integer rate;
-        @ApiModelProperty(value = "人均消费")
-        private BigDecimal amount;
-    }
+    @ApiModelProperty(value = "占比")
+    private Integer rate;
+    @ApiModelProperty(value = "人均消费")
+    private BigDecimal amount;
 }

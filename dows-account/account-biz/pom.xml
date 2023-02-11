@@ -23,10 +23,11 @@
             <groupId>org.dows.cloud</groupId>
             <artifactId>rbac-biz</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.dows.cloud</groupId>-->
-<!--            <artifactId>order-biz</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.dows.saas</groupId>
+            <artifactId>order-api</artifactId>
+            <version>20220701-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>

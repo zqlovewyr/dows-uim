@@ -86,4 +86,144 @@
         </if>
     </select>
 
+    <select id="selectAccountInstanceCount" parameterType="org.dows.account.query.AccountCountTenantQuery" resultType="Integer">
+
+        select COUNT(1) from account_instance
+         <where>
+             <if test="accountCountTenantQuery.storeId != null and accountCountTenantQuery.storeId != ''">
+                 AND store_id = #{accountCountTenantQuery.storeId}
+             </if>
+             <if test="accountCountTenantQuery.startDate != null">
+                 AND DATE(dt) &gt;= #{accountCountTenantQuery.startDate}
+             </if>
+             <if test="accountCountTenantQuery.endDate != null">
+                 AND DATE(dt) &lt;= #{accountCountTenantQuery.endDate}
+             </if>
+         </where>
+    </select>
+
+    <select id="selectAccountInstanceConsumeCount" parameterType="org.dows.account.query.AccountCountTenantQuery" resultType="Integer">
+
+        select COUNT(1) from order_instance
+        <where>
+            <if test="accountCountTenantQuery.storeId != null and accountCountTenantQuery.storeId != ''">
+                AND store_id = #{accountCountTenantQuery.storeId}
+            </if>
+            <if test="accountCountTenantQuery.startDate != null">
+                AND DATE(dt) &gt;= #{accountCountTenantQuery.startDate}
+            </if>
+            <if test="accountCountTenantQuery.endDate != null">
+                AND DATE(dt) &lt;= #{accountCountTenantQuery.endDate}
+            </if>
+            and pay_state = 1 and refund <![CDATA[ <> ]]> 1
+        </where>
+    </select>
+
+
+    <select id="selectAccountInstanceStoredCount" parameterType="org.dows.account.query.AccountCountTenantQuery" resultType="Integer">
+
+        select COUNT(1) from market_instance
+        <where>
+            <if test="accountCountTenantQuery.storeId != null and accountCountTenantQuery.storeId != ''">
+                AND store_id = #{accountCountTenantQuery.storeId}
+            </if>
+            <if test="accountCountTenantQuery.startDate != null">
+                AND DATE(dt) &gt;= #{accountCountTenantQuery.startDate}
+            </if>
+            <if test="accountCountTenantQuery.endDate != null">
+                AND DATE(dt) &lt;= #{accountCountTenantQuery.endDate}
+            </if>
+            and market_state = 1 and market_name_id = '1623954557644095490'
+        </where>
+    </select>
+
+    <select id="selectAccountDistributionTenantStatistics" parameterType="org.dows.account.bo.AccountInstanceTenantBo" resultType="org.dows.account.vo.AccountDistributionVo">
+
+        select
+
+        <if test="accountInstanceTenantBo.distributionType == 1">
+            case sex
+            WHEN 1
+            then '男'
+            WHEN 2
+            then '女'
+            else '未知'
+            end
+        </if>
+        <if test="accountInstanceTenantBo.distributionType == 2">
+            case chronological
+            WHEN '20'
+            then '20后'
+            WHEN '10'
+            then '10后'
+            WHEN '00'
+            then '00后'
+            WHEN '90'
+            then '90后'
+            WHEN '80'
+            then '80后'
+            WHEN '70'
+            then '70后'
+            WHEN '60'
+            then '60后'
+            else '未知'
+            end
+        </if>
+        <if test="accountInstanceTenantBo.distributionType == 3">
+            shengxiao
+        </if>
+        <if test="accountInstanceTenantBo.distributionType == 4">
+            constellation
+        </if>
+        as name,
+        count(1) as count,
+        CAST(AVG( oi.amount ) as decimal(10,2)) as amount
+        from account_user_info ui
+        left join account_instance ai on ui.account_id = ai.account_id
+        left join order_instance oi on oi.account_id = ui.account_id
+        <where>
+            <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
+                AND ai.store_id = #{accountCountTenantQuery.storeId}
+            </if>
+            <if test="accountInstanceTenantBo.startDate != null">
+                AND DATE(ai.create_time) &gt;= #{accountInstanceTenantBo.startDate}
+            </if>
+            <if test="accountInstanceTenantBo.endDate != null">
+                AND DATE(ai.create_time) &lt;= #{accountInstanceTenantBo.endDate}
+            </if>
+            <if test="accountInstanceTenantBo.distributionType == 1">
+                group by sex
+            </if>
+
+            <if test="accountInstanceTenantBo.distributionType == 2">
+                group by chronological
+            </if>
+
+            <if test="accountInstanceTenantBo.distributionType == 3">
+                group by shengxiao
+            </if>
+            <if test="accountInstanceTenantBo.distributionType == 4">
+                group by constellation
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAccountConsumptionTenantStatisticsFrequency" parameterType="org.dows.account.bo.AccountInstanceTenantBo" resultType="org.dows.account.vo.AccountConsumptionVo">
+
+        select COUNT(1) from order_instance
+        <where>
+            <if test="accountCountTenantQuery.storeId != null and accountCountTenantQuery.storeId != ''">
+                AND store_id = #{accountCountTenantQuery.storeId}
+            </if>
+            <if test="accountCountTenantQuery.startDate != null">
+                AND DATE(dt) &gt;= #{accountCountTenantQuery.startDate}
+            </if>
+            <if test="accountCountTenantQuery.endDate != null">
+                AND DATE(dt) &lt;= #{accountCountTenantQuery.endDate}
+            </if>
+            and pay_state = 1 and refund <![CDATA[ <> ]]> 1
+            group by
+        </where>
+    </select>
+
 </mapper>
