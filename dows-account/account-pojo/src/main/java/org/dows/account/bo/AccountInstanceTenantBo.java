@@ -33,5 +33,8 @@ public class AccountInstanceTenantBo implements Serializable {
     @ApiModelProperty("消费能力分析类型")
     private Integer consumptionType;
 
+    @ApiModelProperty("消费频次分析，客户分析后端使用，前端无需传参")
+    private Integer frequencyType;
+
 }
 

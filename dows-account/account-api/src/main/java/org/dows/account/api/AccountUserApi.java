@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dows.account.bo.AccountCouponBo;
 import org.dows.account.bo.AccountInstanceTenantBo;
 import org.dows.account.bo.AccountOrderBo;
-import org.dows.account.form.AccountCouponForm;
-import org.dows.account.form.AccountOrderForm;
 import org.dows.account.vo.*;
 
 import java.util.List;
@@ -93,13 +91,13 @@ public interface AccountUserApi {
      * @param accountInstanceTenantBo
      * @return
      */
-    AccountDistributionVo selectAccountDistributionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo);
+    List<AccountDistributionVo> selectAccountDistributionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo);
 
     /**
      * 租户消费能力分析统计
      * @param accountInstanceTenantBo
      * @return
      */
-    AccountConsumptionVo selectAccountConsumptionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo);
+    List<AccountConsumptionVo> selectAccountConsumptionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo);
 
 }

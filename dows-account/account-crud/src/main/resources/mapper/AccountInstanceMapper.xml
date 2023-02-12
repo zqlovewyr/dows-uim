@@ -142,7 +142,7 @@
         select
 
         <if test="accountInstanceTenantBo.distributionType == 1">
-            case sex
+            case ui.sex
             WHEN 1
             then '男'
             WHEN 2
@@ -151,7 +151,7 @@
             end
         </if>
         <if test="accountInstanceTenantBo.distributionType == 2">
-            case chronological
+            case ui.chronological
             WHEN '20'
             then '20后'
             WHEN '10'
@@ -170,10 +170,10 @@
             end
         </if>
         <if test="accountInstanceTenantBo.distributionType == 3">
-            shengxiao
+            ui.shengxiao
         </if>
         <if test="accountInstanceTenantBo.distributionType == 4">
-            constellation
+            ui.constellation
         </if>
         as name,
         count(1) as count,
@@ -183,47 +183,265 @@
         left join order_instance oi on oi.account_id = ui.account_id
         <where>
             <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
-                AND ai.store_id = #{accountCountTenantQuery.storeId}
+                AND ai.store_id = #{accountInstanceTenantBo.storeId}
             </if>
             <if test="accountInstanceTenantBo.startDate != null">
-                AND DATE(ai.create_time) &gt;= #{accountInstanceTenantBo.startDate}
+                AND DATE(ui.create_time) &gt;= #{accountInstanceTenantBo.startDate}
             </if>
             <if test="accountInstanceTenantBo.endDate != null">
-                AND DATE(ai.create_time) &lt;= #{accountInstanceTenantBo.endDate}
-            </if>
-            <if test="accountInstanceTenantBo.distributionType == 1">
-                group by sex
-            </if>
-
-            <if test="accountInstanceTenantBo.distributionType == 2">
-                group by chronological
-            </if>
-
-            <if test="accountInstanceTenantBo.distributionType == 3">
-                group by shengxiao
-            </if>
-            <if test="accountInstanceTenantBo.distributionType == 4">
-                group by constellation
+                AND DATE(ui.create_time) &lt;= #{accountInstanceTenantBo.endDate}
             </if>
         </where>
+        <if test="accountInstanceTenantBo.distributionType == 1">
+            group by ui.sex
+        </if>
+
+        <if test="accountInstanceTenantBo.distributionType == 2">
+            group by ui.chronological
+        </if>
+
+        <if test="accountInstanceTenantBo.distributionType == 3">
+            group by ui.shengxiao
+        </if>
+        <if test="accountInstanceTenantBo.distributionType == 4">
+            group by ui.constellation
+        </if>
     </select>
 
     <select id="selectAccountConsumptionTenantStatisticsFrequency" parameterType="org.dows.account.bo.AccountInstanceTenantBo" resultType="org.dows.account.vo.AccountConsumptionVo">
 
-        select COUNT(1) from order_instance
-        <where>
-            <if test="accountCountTenantQuery.storeId != null and accountCountTenantQuery.storeId != ''">
-                AND store_id = #{accountCountTenantQuery.storeId}
+        <if test="accountInstanceTenantBo.frequencyType == 1">
+            select
+            '0次' as count,
+            count(1) as preCount
+            from account_instance ai left join order_instance oi on oi.account_id=ai.account_id
+            where oi.account_id is null
+            <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
+                AND ai.store_id = #{accountInstanceTenantBo.storeId}
             </if>
-            <if test="accountCountTenantQuery.startDate != null">
-                AND DATE(dt) &gt;= #{accountCountTenantQuery.startDate}
+            <if test="accountInstanceTenantBo.startDate != null">
+                AND DATE(ai.dt) &gt;= #{accountInstanceTenantBo.startDate}
             </if>
-            <if test="accountCountTenantQuery.endDate != null">
-                AND DATE(dt) &lt;= #{accountCountTenantQuery.endDate}
+            <if test="accountInstanceTenantBo.endDate != null">
+                AND DATE(ai.dt) &lt;= #{accountInstanceTenantBo.endDate}
             </if>
-            and pay_state = 1 and refund <![CDATA[ <> ]]> 1
-            group by
-        </where>
+        </if>
+
+        <if test="accountInstanceTenantBo.frequencyType == 2">
+            select '1-6次' as count, count(1) as preCount from (
+                select account_id from order_instance
+                <where>
+                    <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
+                        AND store_id = #{accountInstanceTenantBo.storeId}
+                    </if>
+                    <if test="accountInstanceTenantBo.startDate != null">
+                        AND DATE(dt) &gt;= #{accountInstanceTenantBo.startDate}
+                    </if>
+                    <if test="accountInstanceTenantBo.endDate != null">
+                        AND DATE(dt) &lt;= #{accountInstanceTenantBo.endDate}
+                    </if>
+                    and pay_state = 1 and refund <![CDATA[ <> ]]> 1
+                    group by account_id HAVING count(account_id) &gt; 0 and count(account_id) &lt; 6
+                </where>
+            ) tab
+        </if>
+        <if test="accountInstanceTenantBo.frequencyType == 3">
+            select '6-12次' as count, count(1) as preCount from (
+            select account_id from order_instance
+            <where>
+                <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
+                    AND store_id = #{accountInstanceTenantBo.storeId}
+                </if>
+                <if test="accountInstanceTenantBo.startDate != null">
+                    AND DATE(dt) &gt;= #{accountInstanceTenantBo.startDate}
+                </if>
+                <if test="accountInstanceTenantBo.endDate != null">
+                    AND DATE(dt) &lt;= #{accountInstanceTenantBo.endDate}
+                </if>
+                and pay_state = 1 and refund <![CDATA[ <> ]]> 1
+                group by account_id HAVING count(account_id) &gt; 5 and count(account_id) &lt; 12
+            </where>
+            ) tab
+        </if>
+        <if test="accountInstanceTenantBo.frequencyType == 4">
+            select '12次以上' as count, count(1) as preCount from (
+            select account_id from order_instance
+            <where>
+                <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
+                    AND store_id = #{accountInstanceTenantBo.storeId}
+                </if>
+                <if test="accountInstanceTenantBo.startDate != null">
+                    AND DATE(dt) &gt;= #{accountInstanceTenantBo.startDate}
+                </if>
+                <if test="accountInstanceTenantBo.endDate != null">
+                    AND DATE(dt) &lt;= #{accountInstanceTenantBo.endDate}
+                </if>
+                and pay_state = 1 and refund <![CDATA[ <> ]]> 1
+                group by account_id HAVING count(account_id) &gt; 12
+            </where>
+            ) tab
+        </if>
+    </select>
+
+    <select id="selectAccountConsumptionTenantStatisticsCapacity" parameterType="org.dows.account.bo.AccountInstanceTenantBo" resultType="org.dows.account.vo.AccountConsumptionVo">
+
+        <if test="accountInstanceTenantBo.frequencyType == 1">
+            select '低消费' as count, count(1) as preCount from (
+            select account_id from order_instance
+            <where>
+                <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
+                    AND store_id = #{accountInstanceTenantBo.storeId}
+                </if>
+                <if test="accountInstanceTenantBo.startDate != null">
+                    AND DATE(dt) &gt;= #{accountInstanceTenantBo.startDate}
+                </if>
+                <if test="accountInstanceTenantBo.endDate != null">
+                    AND DATE(dt) &lt;= #{accountInstanceTenantBo.endDate}
+                </if>
+                and pay_state = 1 and refund <![CDATA[ <> ]]> 1
+                group by account_id HAVING sum(amount) &gt; 0 and sum(amount) &lt; 100
+            </where>
+            ) tab
+        </if>
+
+        <if test="accountInstanceTenantBo.frequencyType == 2">
+            select '中低消费' as count, count(1) as preCount from (
+            select account_id from order_instance
+            <where>
+                <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
+                    AND store_id = #{accountInstanceTenantBo.storeId}
+                </if>
+                <if test="accountInstanceTenantBo.startDate != null">
+                    AND DATE(dt) &gt;= #{accountInstanceTenantBo.startDate}
+                </if>
+                <if test="accountInstanceTenantBo.endDate != null">
+                    AND DATE(dt) &lt;= #{accountInstanceTenantBo.endDate}
+                </if>
+                and pay_state = 1 and refund <![CDATA[ <> ]]> 1
+                group by account_id HAVING sum(amount) &gt; 100 and sum(amount) &lt; 500
+            </where>
+            ) tab
+        </if>
+        <if test="accountInstanceTenantBo.frequencyType == 3">
+            select '中消费' as count, count(1) as preCount from (
+            select account_id from order_instance
+            <where>
+                <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
+                    AND store_id = #{accountInstanceTenantBo.storeId}
+                </if>
+                <if test="accountInstanceTenantBo.startDate != null">
+                    AND DATE(dt) &gt;= #{accountInstanceTenantBo.startDate}
+                </if>
+                <if test="accountInstanceTenantBo.endDate != null">
+                    AND DATE(dt) &lt;= #{accountInstanceTenantBo.endDate}
+                </if>
+                and pay_state = 1 and refund <![CDATA[ <> ]]> 1
+                group by account_id HAVING sum(amount) &gt; 500 and sum(amount) &lt; 1000
+            </where>
+            ) tab
+        </if>
+        <if test="accountInstanceTenantBo.frequencyType == 4">
+            select '高消费' as count, count(1) as preCount from (
+            select account_id from order_instance
+            <where>
+                <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
+                    AND store_id = #{accountInstanceTenantBo.storeId}
+                </if>
+                <if test="accountInstanceTenantBo.startDate != null">
+                    AND DATE(dt) &gt;= #{accountInstanceTenantBo.startDate}
+                </if>
+                <if test="accountInstanceTenantBo.endDate != null">
+                    AND DATE(dt) &lt;= #{accountInstanceTenantBo.endDate}
+                </if>
+                and pay_state = 1 and refund <![CDATA[ <> ]]> 1
+                group by account_id HAVING sum(amount) &gt; 1000
+            </where>
+            ) tab
+        </if>
+    </select>
+
+    <select id="selectAccountConsumptionTenantStatisticsCustomer" parameterType="org.dows.account.bo.AccountInstanceTenantBo" resultType="org.dows.account.vo.AccountConsumptionVo">
+
+        <if test="accountInstanceTenantBo.frequencyType == 1">
+            select '20天' as count, count(1) as preCount from (
+            select
+            ai.account_id
+            from account_instance ai left join order_instance oi on oi.account_id=ai.account_id
+            <where>
+                <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
+                    AND ai.store_id = #{accountInstanceTenantBo.storeId}
+                </if>
+                <if test="accountInstanceTenantBo.startDate != null">
+                    AND DATE(ai.dt) &gt;= #{accountInstanceTenantBo.startDate}
+                </if>
+                <if test="accountInstanceTenantBo.endDate != null">
+                    AND DATE(ai.dt) &lt;= #{accountInstanceTenantBo.endDate}
+                </if>
+                and oi.pay_state = 1 and oi.refund <![CDATA[ <> ]]> 1 and oi.dt &gt;= subdate(#{accountInstanceTenantBo.endDate},20)
+                group by ai.account_id
+            </where>
+            ) tab
+        </if>
+        <if test="accountInstanceTenantBo.frequencyType == 2">
+            select '1个月' as count, count(1) as preCount from (
+            select
+            ai.account_id
+            from account_instance ai left join order_instance oi on oi.account_id=ai.account_id
+            <where>
+                <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
+                    AND ai.store_id = #{accountInstanceTenantBo.storeId}
+                </if>
+                <if test="accountInstanceTenantBo.startDate != null">
+                    AND DATE(ai.dt) &gt;= #{accountInstanceTenantBo.startDate}
+                </if>
+                <if test="accountInstanceTenantBo.endDate != null">
+                    AND DATE(ai.dt) &lt;= #{accountInstanceTenantBo.endDate}
+                </if>
+                and oi.pay_state = 1 and oi.refund <![CDATA[ <> ]]> 1 and oi.dt &gt;= subdate(#{accountInstanceTenantBo.endDate},30)
+                group by ai.account_id
+            </where>
+            ) tab
+        </if>
+        <if test="accountInstanceTenantBo.frequencyType == 3">
+            select '2个月' as count, count(1) as preCount from (
+            select
+            ai.account_id
+            from account_instance ai left join order_instance oi on oi.account_id=ai.account_id
+            <where>
+                <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
+                    AND ai.store_id = #{accountInstanceTenantBo.storeId}
+                </if>
+                <if test="accountInstanceTenantBo.startDate != null">
+                    AND DATE(ai.dt) &gt;= #{accountInstanceTenantBo.startDate}
+                </if>
+                <if test="accountInstanceTenantBo.endDate != null">
+                    AND DATE(ai.dt) &lt;= #{accountInstanceTenantBo.endDate}
+                </if>
+                and oi.pay_state = 1 and oi.refund <![CDATA[ <> ]]> 1 and oi.dt &gt;= subdate(#{accountInstanceTenantBo.endDate},60)
+                group by ai.account_id
+            </where>
+            ) tab
+        </if>
+        <if test="accountInstanceTenantBo.frequencyType == 4">
+            select '3个月' as count, count(1) as preCount from (
+            select
+            ai.account_id
+            from account_instance ai left join order_instance oi on oi.account_id=ai.account_id
+            <where>
+                <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
+                    AND ai.store_id = #{accountInstanceTenantBo.storeId}
+                </if>
+                <if test="accountInstanceTenantBo.startDate != null">
+                    AND DATE(ai.dt) &gt;= #{accountInstanceTenantBo.startDate}
+                </if>
+                <if test="accountInstanceTenantBo.endDate != null">
+                    AND DATE(ai.dt) &lt;= #{accountInstanceTenantBo.endDate}
+                </if>
+                and oi.pay_state = 1 and oi.refund <![CDATA[ <> ]]> 1 and oi.dt &gt;= subdate(#{accountInstanceTenantBo.endDate},90)
+                group by ai.account_id
+            </where>
+            ) tab
+        </if>
     </select>
 
 </mapper>

@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -156,7 +153,7 @@ public class AccountInstanceServiceImpl extends MybatisCrudServiceImpl<AccountIn
                 .storeId(accountInstanceTenantBo.getStoreId()).build());
         List<AccountDistributionVo> vos =  accountInstanceMapper.selectAccountDistributionTenantStatistics(accountInstanceTenantBo);
         vos.stream().forEach(item ->{
-            if(instanceCount != null){
+            if(instanceCount != null && instanceCount != 0){
                 // 计算占比
                 item.setRate(new BigDecimal((float)item.getCount()/instanceCount).setScale(2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).intValue());
             }
@@ -167,7 +164,51 @@ public class AccountInstanceServiceImpl extends MybatisCrudServiceImpl<AccountIn
 
     @Override
     public List<AccountConsumptionVo> selectAccountConsumptionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo) {
-        return null;
+        List<AccountConsumptionVo> vos = new ArrayList<>();
+        if(accountInstanceTenantBo.getConsumptionType() == 1){ // 消费频次分析
+            accountInstanceTenantBo.setFrequencyType(1);
+            List<AccountConsumptionVo> vo = accountInstanceMapper.selectAccountConsumptionTenantStatisticsFrequency(accountInstanceTenantBo);
+            vos.addAll(vo);
+            accountInstanceTenantBo.setFrequencyType(2);
+            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsFrequency(accountInstanceTenantBo));
+            accountInstanceTenantBo.setFrequencyType(3);
+            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsFrequency(accountInstanceTenantBo));
+            accountInstanceTenantBo.setFrequencyType(4);
+            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsFrequency(accountInstanceTenantBo));
+        }
+
+        if(accountInstanceTenantBo.getConsumptionType() == 2){ // 消费能力分析
+            accountInstanceTenantBo.setFrequencyType(1);
+            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsCapacity(accountInstanceTenantBo));
+            accountInstanceTenantBo.setFrequencyType(2);
+            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsCapacity(accountInstanceTenantBo));
+            accountInstanceTenantBo.setFrequencyType(3);
+            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsCapacity(accountInstanceTenantBo));
+            accountInstanceTenantBo.setFrequencyType(4);
+            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsCapacity(accountInstanceTenantBo));
+        }
+        if(accountInstanceTenantBo.getConsumptionType() == 3){ // 客户流失分析
+            accountInstanceTenantBo.setFrequencyType(1);
+            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsCustomer(accountInstanceTenantBo));
+            accountInstanceTenantBo.setFrequencyType(2);
+            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsCustomer(accountInstanceTenantBo));
+            accountInstanceTenantBo.setFrequencyType(3);
+            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsCustomer(accountInstanceTenantBo));
+            accountInstanceTenantBo.setFrequencyType(4);
+            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsCustomer(accountInstanceTenantBo));
+        }
+        Integer instanceCount =  accountInstanceMapper.selectAccountInstanceCount(AccountCountTenantQuery.builder()
+                .startDate(accountInstanceTenantBo.getStartDate())
+                .endDate(accountInstanceTenantBo.getEndDate())
+                .storeId(accountInstanceTenantBo.getStoreId()).build());
+        vos.stream().forEach(item ->{
+            if(instanceCount != null && instanceCount != 0){
+                // 计算占比
+                item.setRate(new BigDecimal((float)item.getPreCount()/instanceCount).setScale(2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).intValue());
+            }
+        });
+
+        return vos;
     }
 
 }

@@ -143,15 +143,12 @@ public class AccountBiz implements AccountUserApi {
     }
 
     @Override
-    public AccountDistributionVo selectAccountDistributionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo) {
-
-
-
-        return null;
+    public List<AccountDistributionVo> selectAccountDistributionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo) {
+        return accountInstanceService.selectAccountDistributionTenantStatistics(accountInstanceTenantBo);
     }
 
     @Override
-    public AccountConsumptionVo selectAccountConsumptionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo) {
-        return null;
+    public List<AccountConsumptionVo> selectAccountConsumptionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo) {
+        return accountInstanceService.selectAccountConsumptionTenantStatistics(accountInstanceTenantBo);
     }
 }

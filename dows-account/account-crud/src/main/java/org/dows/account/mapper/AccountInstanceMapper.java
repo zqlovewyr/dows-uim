@@ -57,10 +57,24 @@ public interface AccountInstanceMapper extends MybatisCrudMapper<AccountInstance
     List<AccountDistributionVo> selectAccountDistributionTenantStatistics(@Param("accountInstanceTenantBo")AccountInstanceTenantBo accountInstanceTenantBo);
 
     /**
-     * 消费能力分布
+     * 消费频次分析
      * @param accountInstanceTenantBo
      * @return
      */
     List<AccountConsumptionVo> selectAccountConsumptionTenantStatisticsFrequency(@Param("accountInstanceTenantBo")AccountInstanceTenantBo accountInstanceTenantBo);
+
+    /**
+     * 消费能力分析
+     * @param accountInstanceTenantBo
+     * @return
+     */
+    List<AccountConsumptionVo> selectAccountConsumptionTenantStatisticsCapacity(@Param("accountInstanceTenantBo")AccountInstanceTenantBo accountInstanceTenantBo);
+    /**
+     * 客户流失分析
+     * @param accountInstanceTenantBo
+     * @return
+     */
+    List<AccountConsumptionVo> selectAccountConsumptionTenantStatisticsCustomer(@Param("accountInstanceTenantBo")AccountInstanceTenantBo accountInstanceTenantBo);
+
 }
 

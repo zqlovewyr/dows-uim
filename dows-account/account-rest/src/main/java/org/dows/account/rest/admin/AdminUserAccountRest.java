@@ -20,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @Api(tags = "B端-API-客户")
@@ -94,7 +95,7 @@ public class AdminUserAccountRest {
     }
 
     @PostMapping("/selectAccountTenantStatistics")
-    @ApiOperation(value = "租户用户统计")
+    @ApiOperation(value = "用户统计")
     public Response<Map<String,Object>> selectAccountTenantStatistics(@RequestBody AccountInstanceTenantForm accountInstanceTenantForm){
         AccountInstanceTenantBo accountInstanceTenantBo = new AccountInstanceTenantBo();
        BeanUtils.copyProperties(accountInstanceTenantForm,accountInstanceTenantBo);
@@ -102,16 +103,16 @@ public class AdminUserAccountRest {
     }
 
     @PostMapping("/selectAccountDistributionTenantStatistics")
-    @ApiOperation(value = "租户客户分布统计")
-    public Response<AccountDistributionVo> selectAccountDistributionTenantStatistics(@RequestBody AccountInstanceTenantForm accountInstanceTenantForm){
+    @ApiOperation(value = "客户分布统计")
+    public Response<List<AccountDistributionVo>> selectAccountDistributionTenantStatistics(@RequestBody AccountInstanceTenantForm accountInstanceTenantForm){
         AccountInstanceTenantBo accountInstanceTenantBo = new AccountInstanceTenantBo();
         BeanUtils.copyProperties(accountInstanceTenantForm,accountInstanceTenantBo);
         return Response.ok(accountBiz.selectAccountDistributionTenantStatistics(accountInstanceTenantBo));
     }
 
     @PostMapping("/selectAccountConsumptionTenantStatistics")
-    @ApiOperation(value = "租户客户分布统计")
-    public Response<AccountConsumptionVo> selectAccountConsumptionTenantStatistics(@RequestBody AccountInstanceTenantForm accountInstanceTenantForm){
+    @ApiOperation(value = "消费能力统计")
+    public Response<List<AccountConsumptionVo>> selectAccountConsumptionTenantStatistics(@RequestBody AccountInstanceTenantForm accountInstanceTenantForm){
         AccountInstanceTenantBo accountInstanceTenantBo = new AccountInstanceTenantBo();
         BeanUtils.copyProperties(accountInstanceTenantForm,accountInstanceTenantBo);
         return Response.ok(accountBiz.selectAccountConsumptionTenantStatistics(accountInstanceTenantBo));

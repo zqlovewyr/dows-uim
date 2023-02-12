@@ -18,11 +18,9 @@ import java.util.Date;
  */
 @SuppressWarnings("serial")
 @Data
-@ToString
-@Builder
 @ApiModel(value = "AccountInstanceBo 表单对象", description = "账号-实例")
 public class AccountInstanceTenantForm implements Serializable {
-    private static final long serialVersionUID = 752274823268208486L;
+    private static final long serialVersionUID = 752274823268208488L;
 
     @ApiModelProperty("开始日期")
     private Date startDate;
@@ -30,10 +28,10 @@ public class AccountInstanceTenantForm implements Serializable {
     @ApiModelProperty("结束日期")
     private Date endDate;
 
-    @ApiModelProperty("客户分布类型")
+    @ApiModelProperty("客户分布类型1、性别2、年度3、生肖4、星座")
     private Integer distributionType;
 
-    @ApiModelProperty("消费能力分析类型")
+    @ApiModelProperty("消费能力分析类型1、消费频次2、消费能力3、客户流失")
     private Integer consumptionType;
 
 }

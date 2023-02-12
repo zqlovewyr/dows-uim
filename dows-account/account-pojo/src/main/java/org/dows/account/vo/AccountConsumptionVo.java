@@ -13,7 +13,7 @@ public class AccountConsumptionVo implements Serializable {
     private Integer consumptionType;
 
     @ApiModelProperty(value = "次数")
-    private Integer count;
+    private String count;
     @ApiModelProperty(value = "人数")
     private Integer preCount;
     @ApiModelProperty(value = "人数Str")
