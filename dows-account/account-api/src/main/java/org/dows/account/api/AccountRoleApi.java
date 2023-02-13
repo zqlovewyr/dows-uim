@@ -23,6 +23,13 @@ public interface AccountRoleApi {
     /**
      * 查看 角色-信息
      *
+     * @param principalId
+     */
+    Response<AccountRoleVo> getAccountRoleByPrincipalId(String principalId);
+
+    /**
+     * 查看 角色-信息
+     *
      * @param id
      */
     Response<AccountRoleVo> getAccountRoleById(Long id);

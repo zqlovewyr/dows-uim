@@ -59,6 +59,13 @@ public interface AccountOrgApi {
     Response<AccountOrgVo> getAccountOrgById(String id);
 
     /**
+     * 查看 机构-实例
+     *
+     * @param pId
+     */
+    Response<AccountOrgVo> getAccountOrgByPId(String pId);
+
+    /**
      * 删除 机构-实例
      *
      * @param id

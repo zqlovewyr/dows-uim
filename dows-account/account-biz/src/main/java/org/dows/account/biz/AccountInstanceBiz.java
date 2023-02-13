@@ -456,17 +456,17 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         }
         //5、编辑jwt加密
         Map<String, Object> claim = new HashMap<>();
-        claim.put("accountId", accountInstance.getAccountId());
+        claim.put("accountId", accountInstance.getId());
         Date expireDate = new Date(System.currentTimeMillis() + 100 * 60 * 60 * 1000);
         String token = JwtUtil.createJWT(claim, expireDate, BaseConstant.PROPERTIES_JWT_KEY);
         Map<String, Object> map = new HashMap<>();
         map.put("token", token);
-        map.put("accountId", accountInstance.getAccountId());
+        map.put("accountId", accountInstance.getId());
         map.put("name", accountInstance.getAccountName());
 
-        //判断用户角色
+        //6、判断用户角色
         LambdaQueryWrapper<AccountRole> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(StringUtils.isNotEmpty(accountInstance.getAccountId()), AccountRole::getPrincipalId, accountInstance.getAccountId());
+        wrapper.eq(StringUtils.isNotEmpty(accountInstance.getId().toString()), AccountRole::getPrincipalId, accountInstance.getId().toString());
         AccountRole accountRole = accountRoleService.getOne(wrapper);
         if (accountRole.getRoleId().equals("0")) {
             map.put("role", "superAdmin");

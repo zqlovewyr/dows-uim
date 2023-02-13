@@ -235,6 +235,19 @@ public class AccountOrgBiz implements AccountOrgApi {
     }
 
     @Override
+    public Response<AccountOrgVo> getAccountOrgByPId(String id) {
+        AccountOrg accountOrg = accountOrgService.lambdaQuery()
+                .eq(AccountOrg::getPid, id)
+                .one();
+        AccountOrgVo vo = new AccountOrgVo();
+        if (accountOrg != null) {
+            BeanUtils.copyProperties(accountOrg, vo);
+            vo.setId(accountOrg.getId().toString());
+        }
+        return Response.ok(vo);
+    }
+
+    @Override
     public Response<AccountOrgVo> getAccountOrgById(String id) {
         AccountOrg model = accountOrgService.getById(Long.valueOf(id));
         AccountOrgVo vo = new AccountOrgVo();

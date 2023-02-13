@@ -9,4 +9,6 @@ public class BaseConstant {
     public static final int WORKER_ID = 1;
     /*用户登录时获取Jwt key的配置项名称*/
     public static final String PROPERTIES_JWT_KEY = "findsoft.token.jwtkey";
+
+    public static final String HEALTH_MANAGEMENT_ENGINEER = "健管师";
 }

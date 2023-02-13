@@ -10,6 +10,7 @@ import org.dows.account.api.AccountRoleApi;
 import org.dows.account.biz.enums.EnumAccountRoleStatusCode;
 import org.dows.account.biz.exception.AccountRoleException;
 import org.dows.account.dto.AccountRoleDTO;
+import org.dows.account.entity.AccountOrg;
 import org.dows.account.entity.AccountRole;
 import org.dows.account.service.AccountRoleService;
 import org.dows.account.vo.AccountRoleVo;
@@ -54,6 +55,17 @@ public class AccountRoleBiz implements AccountRoleApi {
         IPage<AccountRoleVo> pageVo = new Page<>();
         BeanUtils.copyProperties(rolePage, pageVo);
         return Response.ok(pageVo);
+    }
+
+    @Override
+    public Response<AccountRoleVo> getAccountRoleByPrincipalId(String principalId) {
+        AccountRole accountRole = accountRoleService.lambdaQuery()
+                .eq(AccountRole::getPrincipalId, principalId)
+                .one();
+        //复制属性
+        AccountRoleVo vo = new AccountRoleVo();
+        BeanUtils.copyProperties(accountRole, vo);
+        return Response.ok(vo);
     }
 
     @Override
