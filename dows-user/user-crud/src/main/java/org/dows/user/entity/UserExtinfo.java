@@ -50,7 +50,7 @@ public class UserExtinfo implements CrudEntity {
     private String intro;
 
     @ApiModelProperty("婚姻状态[0：未婚，1：已婚]")
-    private Boolean married;
+    private Integer married;
 
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("时间戳")

@@ -37,7 +37,7 @@ public class UserExtinfoVo {
     private String intro;
 
     @ApiModelProperty("婚姻状态[0：未婚，1：已婚]")
-    private Boolean married;
+    private Integer married;
 
     @ApiModelProperty("时间戳")
     private Date dt;

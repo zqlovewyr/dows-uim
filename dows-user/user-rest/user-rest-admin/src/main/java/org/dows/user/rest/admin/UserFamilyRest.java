@@ -263,25 +263,26 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         if (!model.getHouseholder()) {
             throw new UserException(EnumUserStatusCode.USER_IS_NOT_HOUSEHOLDER_EXCEPTION);
         }
+        BeanUtils.copyProperties(model, familyVo);
         //2、获取用户实例
         UserInstanceVo instanceVo = userInstanceApi.getUserInstanceById(model.getUserId()).getData();
-        BeanUtils.copyProperties(instanceVo, familyVo);
+        BeanUtils.copyProperties(instanceVo, familyVo,new String[]{"id","userId"});
         familyVo.setHouseholderName(instanceVo.getName());
         //3、获取用户扩展信息
         UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(model.getUserId()).getData();
-        BeanUtils.copyProperties(extinfoVo, familyVo);
+        BeanUtils.copyProperties(extinfoVo, familyVo,new String[]{"id","userId"});
         //4、获取用户公司信息
         UserCompanyVo companyVo = userCompanyApi.getUserCompanyByUserId(model.getUserId()).getData();
-        BeanUtils.copyProperties(companyVo, familyVo);
+        BeanUtils.copyProperties(companyVo, familyVo,new String[]{"id","userId"});
         //5、获取用户教育信息
         UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(model.getUserId()).getData();
-        BeanUtils.copyProperties(educationVo, familyVo);
+        BeanUtils.copyProperties(educationVo, familyVo,new String[]{"id","userId"});
         //6、获取用户工作信息
         UserJobVo jobVo = userJobApi.getUserJobByUserId(model.getUserId()).getData();
-        BeanUtils.copyProperties(jobVo, familyVo);
+        BeanUtils.copyProperties(jobVo, familyVo,new String[]{"id","userId"});
         //7、获取用户住所信息
         UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByFamilyId(id).getData();
-        BeanUtils.copyProperties(dwellingVo, familyVo);
+        BeanUtils.copyProperties(dwellingVo, familyVo,new String[]{"id","familyId"});
         return Response.ok(familyVo);
     }
 
@@ -330,6 +331,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         UserDwellingDTO userDwellingDTO = new UserDwellingDTO();
         BeanUtils.copyProperties(userFamilyDTO, userDwellingDTO, new String[]{"id"});
         userDwellingDTO.setId(dwellingVo.getId());
+        userDwellingDTO.setFamilyId(userFamilyDTO.getId());
         userDwellingApi.updateUserDwellingById(userDwellingDTO);
     }
 

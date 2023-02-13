@@ -79,7 +79,7 @@ public class UserFamilyVo {
     private Date birthday;
 
     @ApiModelProperty("婚姻状况")
-    private Boolean married;
+    private Integer married;
 
     @ApiModelProperty("居住面积")
     private String acreage;
