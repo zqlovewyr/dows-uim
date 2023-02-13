@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.*;
 import org.dows.account.biz.constant.BaseConstant;
+import org.dows.account.biz.util.DateUtil;
 import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.dto.AccountInstanceDTO;
 import org.dows.account.dto.AccountUserDTO;
@@ -26,7 +27,11 @@ import org.simpleframework.xml.Path;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -122,11 +127,14 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
 
     @ApiOperation("查询 健管师(数量)")
     @PostMapping("/getHMECountList")
-    public Response<Integer> getHMECountList(@RequestBody AccountInstanceDTO accountInstaceDTO, @RequestParam("用户类别") String userType) {
+    public Response<Integer> getHMECountList(@RequestParam String accountId) {
         Integer count = 0;
         //1、根据登录账户的accountId获取用户对应机构,0-超管，1-机构管理员
-        if (userType.equals("0")) {
-            List<AccountInstanceVo> voList = accountInstanceApi.getAccountInstanceList(accountInstaceDTO).getData();
+        AccountRoleVo accountRoleVo = accountRoleApi.getAccountRoleByPrincipalId(accountId).getData();
+        //2、超级管理员
+        if (accountRoleVo.getRoleId().equals("0")) {
+            AccountInstanceDTO dto = new AccountInstanceDTO();
+            List<AccountInstanceVo> voList = accountInstanceApi.getAccountInstanceList(dto).getData();
             if (voList != null && voList.size() > 0) {
                 for (AccountInstanceVo vo : voList) {
                     AccountRoleVo entity = accountRoleApi.getAccountRoleByPrincipalId(vo.getId().toString()).getData();
@@ -137,9 +145,9 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
             }
         }
         //2、机构管理员
-        if (userType.equals("1")) {
+        if (accountRoleVo.getRoleId().equals("1")) {
             //2.1、获取登录账户的机构
-            List<AccountGroupVo> list = accountGroupApi.getAccountGroupList(new AccountGroupDTO().builder().accountId(accountInstaceDTO.getAccountId()).build()).getData();
+            List<AccountGroupVo> list = accountGroupApi.getAccountGroupList(new AccountGroupDTO().builder().accountId(accountId).build()).getData();
             if (list != null && list.size() > 0) {
                 String parentId = list.get(0).getId().toString();
                 AccountOrgVo sonVo = accountOrgApi.getAccountOrgByPId(parentId).getData();
@@ -148,8 +156,8 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
                 List<AccountGroupVo> entityList = accountGroupApi.getAccountGroupList(accountGroupDTO).getData();
                 if (entityList != null && entityList.size() > 0) {
                     for (AccountGroupVo entity : entityList) {
-                        AccountRoleVo accountRoleVo = accountRoleApi.getAccountRoleByPrincipalId(entity.getAccountId().toString()).getData();
-                        if (accountRoleVo.getRoleName() == BaseConstant.HEALTH_MANAGEMENT_ENGINEER) {
+                        AccountRoleVo roleVo = accountRoleApi.getAccountRoleByPrincipalId(entity.getAccountId().toString()).getData();
+                        if (roleVo.getRoleName() == BaseConstant.HEALTH_MANAGEMENT_ENGINEER) {
                             count++;
                         }
                     }
@@ -157,6 +165,134 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
             }
         }
         return Response.ok(count);
+    }
+
+/*    @ApiOperation("查询 健管师（周环比）")
+    @PostMapping("/getHMECountCRList")
+    public Response<Integer> getHMECountCRList(@RequestParam String accountId) {
+        Integer count = 0;
+        //1、根据登录账户的accountId获取用户对应机构,0-超管，1-机构管理员
+        AccountRoleVo accountRoleVo = accountRoleApi.getAccountRoleByPrincipalId(accountId).getData();
+        //2、超级管理员
+        if (accountRoleVo.getRoleId().equals("0")) {
+            AccountInstanceDTO dto = new AccountInstanceDTO();
+            dto.setStartTime();
+            List<AccountInstanceVo> voList = accountInstanceApi.getAccountInstanceList(dto).getData();
+            if (voList != null && voList.size() > 0) {
+                for (AccountInstanceVo vo : voList) {
+                    AccountRoleVo entity = accountRoleApi.getAccountRoleByPrincipalId(vo.getId().toString()).getData();
+                    if (entity.getRoleName() == BaseConstant.HEALTH_MANAGEMENT_ENGINEER) {
+                        count++;
+                    }
+                }
+            }
+        }
+        //2、机构管理员
+        if (accountRoleVo.getRoleId().equals("1")) {
+            //2.1、获取登录账户的机构
+            List<AccountGroupVo> list = accountGroupApi.getAccountGroupList(new AccountGroupDTO().builder().accountId(accountId).build()).getData();
+            if (list != null && list.size() > 0) {
+                String parentId = list.get(0).getId().toString();
+                AccountOrgVo sonVo = accountOrgApi.getAccountOrgByPId(parentId).getData();
+                AccountGroupDTO accountGroupDTO = new AccountGroupDTO();
+                accountGroupDTO.setOrgId(sonVo.getId());
+                List<AccountGroupVo> entityList = accountGroupApi.getAccountGroupList(accountGroupDTO).getData();
+                if (entityList != null && entityList.size() > 0) {
+                    for (AccountGroupVo entity : entityList) {
+                        AccountRoleVo roleVo = accountRoleApi.getAccountRoleByPrincipalId(entity.getAccountId().toString()).getData();
+                        if (roleVo.getRoleName() == BaseConstant.HEALTH_MANAGEMENT_ENGINEER) {
+                            count++;
+                        }
+                    }
+                }
+            }
+        }
+        return Response.ok(count);
+    }*/
+
+    @ApiOperation("查询 健管师（日环比）")
+    @PostMapping("/getHMECountYoYList")
+    public Response<Double> getHMECountYoYList(@RequestParam String accountId) {
+        Integer oldCount = 0;
+        Integer newCount = 0;
+        //1、根据登录账户的accountId获取用户对应机构,0-超管，1-机构管理员
+        AccountRoleVo accountRoleVo = accountRoleApi.getAccountRoleByPrincipalId(accountId).getData();
+        //2、超级管理员
+        if (accountRoleVo.getRoleId().equals("0")) {
+            AccountInstanceDTO oldDTO = new AccountInstanceDTO();
+            //2.1、获取昨天
+            Date oldDay = DateUtil.getYesterday();
+            String oldStartTimeStr = DateUtil.formatDateToString(oldDay) + " 00:00:00";
+            String oldEndTimeStr = DateUtil.formatDateToString(oldDay) + " 23:59:59";
+            oldDTO.setStartTime(DateUtil.formatStringToDate(oldStartTimeStr));
+            oldDTO.setEndTime(DateUtil.formatStringToDate(oldEndTimeStr));
+            List<AccountInstanceVo> oldList = accountInstanceApi.getAccountInstanceList(oldDTO).getData();
+            if (oldList != null && oldList.size() > 0) {
+                for (AccountInstanceVo old : oldList) {
+                    AccountRoleVo entity = accountRoleApi.getAccountRoleByPrincipalId(old.getId().toString()).getData();
+                    if (entity.getRoleName() == BaseConstant.HEALTH_MANAGEMENT_ENGINEER) {
+                        oldCount++;
+                    }
+                }
+            }
+            //2.2、获取今天
+            AccountInstanceDTO newDTO = new AccountInstanceDTO();
+            String newStartTimeStr = DateUtil.formatDateToString(new Date()) + " 00:00:00";
+            newDTO.setStartTime(DateUtil.formatStringToDate(newStartTimeStr));
+            newDTO.setEndTime(new Date());
+            List<AccountInstanceVo> newList = accountInstanceApi.getAccountInstanceList(newDTO).getData();
+            if (newList != null && newList.size() > 0) {
+                for (AccountInstanceVo new1 : newList) {
+                    AccountRoleVo entity = accountRoleApi.getAccountRoleByPrincipalId(new1.getId().toString()).getData();
+                    if (entity.getRoleName() == BaseConstant.HEALTH_MANAGEMENT_ENGINEER) {
+                        newCount++;
+                    }
+                }
+            }
+
+        }
+        //2、机构管理员
+        if (accountRoleVo.getRoleId().equals("1")) {
+            //2.1、获取登录账户的机构
+            List<AccountGroupVo> list = accountGroupApi.getAccountGroupList(new AccountGroupDTO().builder().accountId(accountId).build()).getData();
+            if (list != null && list.size() > 0) {
+                String parentId = list.get(0).getId().toString();
+                AccountOrgVo sonVo = accountOrgApi.getAccountOrgByPId(parentId).getData();
+                //2.1、获取昨天
+                AccountGroupDTO oldAccountGroupDTO = new AccountGroupDTO();
+                oldAccountGroupDTO.setOrgId(sonVo.getId());
+                Date oldDay = DateUtil.getYesterday();
+                String oldStartTimeStr = DateUtil.formatDateToString(oldDay) + " 00:00:00";
+                String oldEndTimeStr = DateUtil.formatDateToString(oldDay) + " 23:59:59";
+                oldAccountGroupDTO.setStartTime(DateUtil.formatStringToDate(oldStartTimeStr));
+                oldAccountGroupDTO.setEndTime(DateUtil.formatStringToDate(oldEndTimeStr));
+                List<AccountGroupVo> oldEntityList = accountGroupApi.getAccountGroupList(oldAccountGroupDTO).getData();
+                if (oldEntityList != null && oldEntityList.size() > 0) {
+                    for (AccountGroupVo entity : oldEntityList) {
+                        AccountRoleVo roleVo = accountRoleApi.getAccountRoleByPrincipalId(entity.getAccountId().toString()).getData();
+                        if (roleVo.getRoleName() == BaseConstant.HEALTH_MANAGEMENT_ENGINEER) {
+                            oldCount++;
+                        }
+                    }
+                }
+                //2、2 获取今天
+                AccountGroupDTO newAccountGroupDTO = new AccountGroupDTO();
+                String newStartTimeStr = DateUtil.formatDateToString(new Date()) + " 00:00:00";
+                newAccountGroupDTO.setStartTime(DateUtil.formatStringToDate(newStartTimeStr));
+                newAccountGroupDTO.setEndTime(new Date());
+                List<AccountGroupVo> newEntityList = accountGroupApi.getAccountGroupList(newAccountGroupDTO).getData();
+                if (newEntityList != null && newEntityList.size() > 0) {
+                    for (AccountGroupVo entity : newEntityList) {
+                        AccountRoleVo roleVo = accountRoleApi.getAccountRoleByPrincipalId(entity.getAccountId().toString()).getData();
+                        if (roleVo.getRoleName() == BaseConstant.HEALTH_MANAGEMENT_ENGINEER) {
+                            newCount++;
+                        }
+                    }
+                }
+            }
+        }
+        double res = new BigDecimal((double) (newCount - oldCount) / oldCount).setScale(2, RoundingMode.HALF_UP).doubleValue();
+        return Response.ok(res);
     }
 }
 

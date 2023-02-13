@@ -96,10 +96,10 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         UserInstanceVo instanceVo = userInstanceApi.getUserInstanceById(id).getData();
         BeanUtils.copyProperties(instanceVo, familyVo);
         familyVo.setMemberName(instanceVo.getName());
-        familyVo.setMemberName(instanceVo.getName());
         //2、获取用户家庭信息
         UserFamilyVo model = userFamilyApi.getUserFamilyByUserId(instanceVo.getId()).getData();
         familyVo.setRelation(model.getRelation());
+        familyVo.setFamilyId(model.getFamilyId());
         //3、获取用户扩展信息
         UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(instanceVo.getId()).getData();
         familyVo.setMarried(extinfoVo.getMarried());
@@ -128,31 +128,31 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         //2、更新用户家庭
         UserFamilyVo familyVo = userFamilyApi.getUserFamilyByUserId(userFamilyDTO.getId()).getData();
         UserFamilyDTO model = new UserFamilyDTO();
-        BeanUtils.copyProperties(userFamilyDTO, model);
+        BeanUtils.copyProperties(userFamilyDTO, model,new String[]{"userId"});
         model.setId(familyVo.getId());
         userFamilyApi.updateUserFamilyById(model);
         //3、新增用户扩展信息
         UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(userFamilyDTO.getId()).getData();
         UserExtinfoDTO userExtinfoDTO = new UserExtinfoDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userExtinfoDTO);
+        BeanUtils.copyProperties(userFamilyDTO, userExtinfoDTO,new String[]{"userId"});
         userExtinfoDTO.setId(extinfoVo.getId());
         userExtinfoApi.updateUserExtinfoById(userExtinfoDTO);
         //4、更新用户工作信息
         UserJobVo jobVo = userJobApi.getUserJobByUserId(userFamilyDTO.getId()).getData();
         UserJobDTO userJobDTO = new UserJobDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userJobDTO);
+        BeanUtils.copyProperties(userFamilyDTO, userJobDTO,new String[]{"userId"});
         userJobDTO.setId(jobVo.getId());
         userJobApi.updateUserJobById(userJobDTO);
         //5、更新用户公司信息
         UserCompanyVo companyVo = userCompanyApi.getUserCompanyByUserId(userFamilyDTO.getId()).getData();
         UserCompanyDTO userCompanyDTO = new UserCompanyDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userCompanyDTO);
+        BeanUtils.copyProperties(userFamilyDTO, userCompanyDTO,new String[]{"userId"});
         userCompanyDTO.setId(companyVo.getId());
         userCompanyApi.updateUserCompanyById(userCompanyDTO);
         //6、更新用户教育信息
         UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(userFamilyDTO.getId()).getData();
         UserEducationDTO userEducationDTO = new UserEducationDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userEducationDTO);
+        BeanUtils.copyProperties(userFamilyDTO, userEducationDTO,new String[]{"userId"});
         userEducationDTO.setId(educationVo.getId());
         userEducationApi.updateUserEducationById(userEducationDTO);
     }

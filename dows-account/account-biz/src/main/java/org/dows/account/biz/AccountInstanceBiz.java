@@ -672,7 +672,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 AccountUser user = accountUserService.lambdaQuery()
                         .eq(AccountUser::getAccountId, model.getId().toString())
                         .one();
-                if (!ReflectUtil.isObjectNull(user)) {
+                if (!ReflectUtil.isObjectNull(user) && user != null) {
                     UserInstanceVo instance = userInstanceApi.getUserInstanceById(user.getUserId()).getData();
                     if (!ReflectUtil.isObjectNull(instance)) {
                         if (StringUtils.isNotEmpty(instance.getName())) {
