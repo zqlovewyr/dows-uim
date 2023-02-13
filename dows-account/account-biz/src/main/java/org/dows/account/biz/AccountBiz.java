@@ -18,6 +18,9 @@ import org.dows.account.service.AccountUserInfoService;
 import org.dows.account.vo.*;
 import org.dows.framework.api.Response;
 import org.dows.framework.api.exceptions.BaseException;
+import org.dows.marketing.MarketCouponBiz;
+import org.dows.marketing.form.MarketCouponQueryForm;
+import org.dows.marketing.form.MarketListCouponVo;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +37,7 @@ public class AccountBiz implements AccountUserApi {
 
     private final AccountInstanceService accountInstanceService;
 
+    private final MarketCouponBiz marketCouponBiz;
 
     public Response getAccuntListPage(AccountQuery accountQuery){
         // TODO 消费金额和最后下单时间排序
@@ -120,7 +124,26 @@ public class AccountBiz implements AccountUserApi {
 
     @Override
     public IPage<AccountCouponVo> selectAccountCouponPage(AccountCouponBo accountCouponBo) {
+
         return null;
+    }
+
+    @Override
+    public List<AccountCouponVo> selectStoreCouponList(AccountCouponBo accountCouponBo) {
+
+        MarketCouponQueryForm marketCouponQueryForm = new MarketCouponQueryForm();
+        marketCouponQueryForm.setStoreId(Long.valueOf(accountCouponBo.getStoreId()));
+        marketCouponQueryForm.setCategoryCode(12001);
+        marketCouponQueryForm.setSize(1000);
+        IPage<MarketListCouponVo> page = marketCouponBiz.getCouponList(marketCouponQueryForm);
+        List<AccountCouponVo> list = new ArrayList<>();
+        page.getRecords().stream().forEach(item ->{
+            AccountCouponVo accountCouponVo = new AccountCouponVo();
+            accountCouponVo.setCouponName(item.getMarketName());
+          //   accountCouponVo.setCouponId(item.get); TODO 优惠券ID
+            list.add(accountCouponVo);
+        });
+        return list;
     }
 
     @Override

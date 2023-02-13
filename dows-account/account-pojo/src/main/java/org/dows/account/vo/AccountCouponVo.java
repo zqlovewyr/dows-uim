@@ -15,6 +15,9 @@ public class AccountCouponVo implements Serializable {
 
     @ApiModelProperty(value = "优惠券名称")
     private String couponName;
+
+    @ApiModelProperty(value = "优惠券ID")
+    private Long couponId;
     @ApiModelProperty(value = "优惠券金额")
     private BigDecimal couponAmount;
     @ApiModelProperty(value = "优惠券描述")
@@ -27,7 +30,7 @@ public class AccountCouponVo implements Serializable {
 
     @ApiModelProperty(value = "优惠券有效期")
     @JsonFormat(pattern = MyConstant.DEFAULT_DATE_FORMAT)
-    private Data couponEndTime;
+    private Date couponEndTime;
 
 
 

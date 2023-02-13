@@ -12,6 +12,11 @@ public class AccountCouponBo {
     @ApiModelProperty(value = "优惠券类型 空为全部 1、已使用2、未使用3、已过期")
     private Integer couponType;
 
+    @ApiModelProperty(value = "门店ID")
+    private String storeId;
+
+    @ApiModelProperty(value = "优惠券ID")
+    private Long id;
 
     @ApiModelProperty(value = "页码,默认为1")
     private Integer current = 1;

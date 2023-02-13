@@ -53,17 +53,24 @@ public interface AccountUserApi {
     IPage<AccountIntegralVo> selectAccountIntegralPage(String accountId);
 
     /**
-     * 优惠券列表页统计
+     * 用户优惠券列表页统计
      * @param accountCouponBo
      * @return
      */
     Map<String,Object> selectAccountCouponStatistics(AccountCouponBo accountCouponBo);
     /**
-     * 优惠券列表
+     * 用户优惠券列表
      * @param accountCouponBo
      * @return
      */
     IPage<AccountCouponVo> selectAccountCouponPage(AccountCouponBo accountCouponBo);
+
+    /**
+     * 门店优惠券列表
+     * @param accountCouponBo
+     * @return
+     */
+    List<AccountCouponVo> selectStoreCouponList(AccountCouponBo accountCouponBo);
 
     /**
      * 他的订单统计

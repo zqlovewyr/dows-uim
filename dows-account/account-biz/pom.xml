@@ -36,6 +36,11 @@
             <groupId>com.alibaba</groupId>
             <artifactId>easyexcel</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.dows.saas</groupId>
+            <artifactId>marketing-biz</artifactId>
+            <version>20220701-SNAPSHOT</version>
+        </dependency>
 <!--        <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>auth-api</artifactId>
