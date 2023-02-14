@@ -72,15 +72,13 @@ public class UserFamilyBiz implements UserFamilyApi {
         List<UserFamilyVo> childrenOfChildSiblingList = new ArrayList<>();
 
         //兄弟姐妹实体类
-        GenealogyDTO mateDTO = new GenealogyDTO();
+        GenealogyDTO siblingDTO = new GenealogyDTO();
         //第一代实体类
         GenealogyDTO firstDTO = new GenealogyDTO();
         List<GenealogyDTO> firstList = new ArrayList<>();
-        List<GenealogyDTO> firstMateList = new ArrayList<>();
         //第二代实体类
         GenealogyDTO secondDTO = new GenealogyDTO();
         List<GenealogyDTO> secondList = new ArrayList<>();
-        List<GenealogyDTO> secondMateList = new ArrayList<>();
         //第三代实体类
         GenealogyDTO thirdDTO = new GenealogyDTO();
         List<GenealogyDTO> thirdList = new ArrayList<>();
@@ -90,7 +88,7 @@ public class UserFamilyBiz implements UserFamilyApi {
         GenealogyDTO genealogyDTO = new GenealogyDTO();
         //1、判断是否为户主
         LambdaQueryWrapper<UserFamily> queryWrapper = new LambdaQueryWrapper<>();
-        UserFamily userFamily = userFamilyService.getOne(queryWrapper.eq(UserFamily::getUserId, userId));
+        UserFamily userFamily = userFamilyService.getOne(queryWrapper.eq(UserFamily::getUserId, userId).eq(UserFamily::getHouseholder, 1));
         if (userFamily == null) {
             throw new UserException(EnumUserStatusCode.USER_IS_NOT_EXIST_EXCEPTION);
         }
@@ -164,23 +162,22 @@ public class UserFamilyBiz implements UserFamilyApi {
                 UserInstance model = userInstanceService.getById(family.getUserId());
                 firstDTO.setName(model.getName());
                 firstDTO.setImageUrl(model.getAvatar());
+                firstList.add(firstDTO);
                 //4.2、判断以爸爸或者妈妈户主的家庭
                 LambdaQueryWrapper<UserFamily> parentWrapper = new LambdaQueryWrapper<>();
                 UserFamily parent = userFamilyService.getOne(parentWrapper.eq(UserFamily::getUserId, family.getUserId()).eq(UserFamily::getHouseholder, 1));
                 //说明是户主
                 if (parent != null) {
-                    //4.3、获取以该户主爸爸的兄弟姐妹
+                    //4.3、获取该户主爸爸妈妈的兄弟姐妹
                     if (parentSiblingList != null && parentSiblingList.size() > 0) {
                         for (UserFamilyVo vo : parentSiblingList) {
                             UserInstance firstModel = userInstanceService.getById(vo.getUserId());
-                            mateDTO.setName(firstModel.getName());
-                            mateDTO.setImageUrl(firstModel.getAvatar());
-                            firstMateList.add(mateDTO);
+                            siblingDTO.setName(firstModel.getName());
+                            siblingDTO.setImageUrl(firstModel.getAvatar());
+                            firstList.add(siblingDTO);
                         }
-                        firstDTO.setMate(firstMateList);
                     }
                 }
-                firstList.add(firstDTO);
             }
         }
 
@@ -189,13 +186,14 @@ public class UserFamilyBiz implements UserFamilyApi {
         UserInstance owner = userInstanceService.getById(userFamily.getUserId());
         secondDTO.setName(owner.getName());
         secondDTO.setImageUrl(owner.getAvatar());
+        secondList.add(secondDTO);
         for (UserFamilyVo family : familyList) {
             if (family.getRelation().equals(BaseConstant.SIBLING)) {
                 //5.1、设置兄弟姐妹属性
                 UserInstance secondModel = userInstanceService.getById(family.getUserId());
-                mateDTO.setName(secondModel.getName());
-                mateDTO.setImageUrl(secondModel.getAvatar());
-                secondMateList.add(mateDTO);
+                siblingDTO.setName(secondModel.getName());
+                siblingDTO.setImageUrl(secondModel.getAvatar());
+                secondList.add(siblingDTO);
             }
             //5.2、获取父母兄弟姐妹的子女
             if (family.getRelation().equals(BaseConstant.PARENT)) {
@@ -207,16 +205,14 @@ public class UserFamilyBiz implements UserFamilyApi {
                         ownerSiblingList = this.getUserFamilyListByFamilyId(sibling1.getFamilyId()).getData().stream().filter(family1 -> family1.getRelation().equals(BaseConstant.CHILDREN)).collect(Collectors.toList());
                         for (UserFamilyVo child : ownerSiblingList) {
                             UserInstance secondModel = userInstanceService.getById(child.getUserId());
-                            mateDTO.setName(secondModel.getName());
-                            mateDTO.setImageUrl(secondModel.getAvatar());
-                            secondMateList.add(mateDTO);
+                            siblingDTO.setName(secondModel.getName());
+                            siblingDTO.setImageUrl(secondModel.getAvatar());
+                            secondList.add(siblingDTO);
                         }
-                        secondDTO.setMate(secondMateList);
                     }
                 }
             }
         }
-        secondList.add(secondDTO);
         firstDTO.setChildren(secondList);
 
         //5、获取自己的下一代及兄弟姐妹的下一代
@@ -252,7 +248,7 @@ public class UserFamilyBiz implements UserFamilyApi {
             LambdaQueryWrapper<UserFamily> siblingWrapper = new LambdaQueryWrapper<>();
             UserFamily sibling = userFamilyService.getOne(siblingWrapper.eq(UserFamily::getUserId, vo.getUserId()).eq(UserFamily::getHouseholder, 1));
             if(sibling != null){
-                childrenOfChildList = this.getUserFamilyListByFamilyId(sibling.getFamilyId()).getData().stream().filter(family1 -> family1.getRelation().equals(BaseConstant.CHILDREN)).collect(Collectors.toList());
+                childrenOfChildList = this.getUserFamilyListByFamilyId(sibling.getFamilyId()).getData().stream().filter(family1 -> StringUtils.isNotEmpty(family1.getRelation()) && family1.getRelation().equals(BaseConstant.CHILDREN)).collect(Collectors.toList());
                 for (UserFamilyVo model : childrenOfChildList) {
                     UserInstance forthModel = userInstanceService.getById(model.getUserId());
                     forthDTO.setName(forthModel.getName());
@@ -266,7 +262,7 @@ public class UserFamilyBiz implements UserFamilyApi {
             LambdaQueryWrapper<UserFamily> siblingWrapper = new LambdaQueryWrapper<>();
             UserFamily sibling = userFamilyService.getOne(siblingWrapper.eq(UserFamily::getUserId, vo.getUserId()).eq(UserFamily::getHouseholder, 1));
             if(sibling != null){
-                childrenOfChildList = this.getUserFamilyListByFamilyId(sibling.getFamilyId()).getData().stream().filter(family1 -> family1.getRelation().equals(BaseConstant.CHILDREN)).collect(Collectors.toList());
+                childrenOfChildList = this.getUserFamilyListByFamilyId(sibling.getFamilyId()).getData().stream().filter(family1 -> StringUtils.isNotEmpty(family1.getRelation()) && family1.getRelation().equals(BaseConstant.CHILDREN)).collect(Collectors.toList());
                 for (UserFamilyVo model : childrenOfChildList) {
                     UserInstance forthModel = userInstanceService.getById(model.getUserId());
                     forthDTO.setName(forthModel.getName());

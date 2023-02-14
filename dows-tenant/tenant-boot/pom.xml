@@ -16,10 +16,10 @@
             <version>20220701-SNAPSHOT</version>
         </dependency>
 
-        <dependency>
+<!--        <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>tenant-config</artifactId>
             <version>20220701-SNAPSHOT</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 </project>

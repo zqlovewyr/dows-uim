@@ -63,7 +63,6 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         //1、校验该身份证号的用户是否已存在
         String userInstanceId = "";
         UserInstanceDTO userInstance = new UserInstanceDTO();
-        userInstance.setName(userFamilyDTO.getHouseholderName());
         userInstance.setIdNo(userFamilyDTO.getIdNo());
         List<UserInstanceVo> userInstanceVos = userInstanceApi.getUserInstanceListNoPage(userInstance).getData();
         if(userInstanceVos != null && userInstanceVos.size() > 0){
@@ -90,25 +89,64 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         userFamilyDTO.setUserId(userInstanceId);
         userFamilyApi.insertUserFamily(userFamilyDTO).getData();
         //3、新增用户扩展信息
-        UserExtinfoDTO userExtinfoDTO = new UserExtinfoDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userExtinfoDTO);
-        userExtinfoDTO.setUserId(userInstanceId);
-        userExtinfoApi.insertUserExtinfo(userExtinfoDTO);
+        UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(userInstanceId).getData();
+        if(extinfoVo != null){
+            UserExtinfoDTO userExtinfoDTO = new UserExtinfoDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userExtinfoDTO);
+            userExtinfoDTO.setUserId(userInstanceId);
+            userExtinfoDTO.setId(extinfoVo.getId());
+            userExtinfoApi.updateUserExtinfoById(userExtinfoDTO);
+        }else {
+            UserExtinfoDTO userExtinfoDTO = new UserExtinfoDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userExtinfoDTO);
+            userExtinfoDTO.setUserId(userInstanceId);
+            userExtinfoApi.insertUserExtinfo(userExtinfoDTO);
+        }
         //4、插入用户工作信息
-        UserJobDTO userJobDTO = new UserJobDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userJobDTO);
-        userJobDTO.setUserId(userInstanceId);
-        userJobApi.insertUserJob(userJobDTO);
+        //4.1、判断是否已经存在该用户工作信息
+        UserJobVo jobVo = userJobApi.getUserJobByUserId(userInstanceId).getData();
+        if(jobVo != null){
+            UserJobDTO userJobDTO = new UserJobDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userJobDTO);
+            userJobDTO.setUserId(userInstanceId);
+            userJobDTO.setId(jobVo.getId());
+            userJobApi.updateUserJobById(userJobDTO);
+        }else {
+            UserJobDTO userJobDTO = new UserJobDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userJobDTO);
+            userJobDTO.setUserId(userInstanceId);
+            userJobApi.insertUserJob(userJobDTO);
+        }
         //5、插入用户公司信息
-        UserCompanyDTO userCompanyDTO = new UserCompanyDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userCompanyDTO);
-        userCompanyDTO.setUserId(userInstanceId);
-        userCompanyApi.insertUserCompany(userCompanyDTO);
+        //5.1、判断是否已经存在该用户公司信息
+        UserCompanyVo companyVo = userCompanyApi.getUserCompanyByUserId(userInstanceId).getData();
+        if(companyVo != null){
+            UserCompanyDTO userCompanyDTO = new UserCompanyDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userCompanyDTO);
+            userCompanyDTO.setUserId(userInstanceId);
+            userCompanyDTO.setId(companyVo.getId());
+            userCompanyApi.updateUserCompanyById(userCompanyDTO);
+        }else {
+            UserCompanyDTO userCompanyDTO = new UserCompanyDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userCompanyDTO);
+            userCompanyDTO.setUserId(userInstanceId);
+            userCompanyApi.insertUserCompany(userCompanyDTO);
+        }
         //6、插入用户教育信息
-        UserEducationDTO userEducationDTO = new UserEducationDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userEducationDTO);
-        userEducationDTO.setUserId(userInstanceId);
-        userEducationApi.insertUserEducation(userEducationDTO);
+        //6.1、判断是否已经存在该用户教育信息
+        UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(userInstanceId).getData();
+        if(educationVo != null){
+            UserEducationDTO userEducationDTO = new UserEducationDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userEducationDTO);
+            userEducationDTO.setUserId(userInstanceId);
+            userEducationDTO.setId(educationVo.getId());
+            userEducationApi.updateUserEducationById(userEducationDTO);
+        }else {
+            UserEducationDTO userEducationDTO = new UserEducationDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userEducationDTO);
+            userEducationDTO.setUserId(userInstanceId);
+            userEducationApi.insertUserEducation(userEducationDTO);
+        }
         return Response.ok(userInstanceId);
     }
 
@@ -243,7 +281,6 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         //1、校验该身份证号的用户是否已存在
         String userInstanceId = "";
         UserInstanceDTO userInstance = new UserInstanceDTO();
-        userInstance.setName(userFamilyDTO.getHouseholderName());
         userInstance.setIdNo(userFamilyDTO.getIdNo());
         List<UserInstanceVo> userInstanceVos = userInstanceApi.getUserInstanceListNoPage(userInstance).getData();
         if(userInstanceVos != null && userInstanceVos.size() > 0){
@@ -265,25 +302,65 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         userFamilyDTO.setUserId(userInstanceId);
         String familyId = userFamilyApi.insertUserFamily(userFamilyDTO).getData();
         //3、新增用户扩展信息
-        UserExtinfoDTO userExtinfoDTO = new UserExtinfoDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userExtinfoDTO);
-        userExtinfoDTO.setUserId(userInstanceId);
-        userExtinfoApi.insertUserExtinfo(userExtinfoDTO);
+        //3.1、判断是否已经存在该用户扩展信息
+        UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(userInstanceId).getData();
+        if(extinfoVo != null){
+            UserExtinfoDTO userExtinfoDTO = new UserExtinfoDTO();
+            BeanUtils.copyProperties(userFamilyDTO, extinfoVo);
+            userExtinfoDTO.setUserId(userInstanceId);
+            userExtinfoDTO.setId(extinfoVo.getId());
+            userExtinfoApi.updateUserExtinfoById(userExtinfoDTO);
+        }else {
+            UserExtinfoDTO userExtinfoDTO = new UserExtinfoDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userExtinfoDTO);
+            userExtinfoDTO.setUserId(userInstanceId);
+            userExtinfoApi.insertUserExtinfo(userExtinfoDTO);
+        }
         //4、插入用户公司信息
-        UserCompanyDTO userCompanyDTO = new UserCompanyDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userCompanyDTO);
-        userCompanyDTO.setUserId(userInstanceId);
-        userCompanyApi.insertUserCompany(userCompanyDTO);
+        //4.1、判断是否已经存在该用户公司信息
+        UserCompanyVo companyVo = userCompanyApi.getUserCompanyByUserId(userInstanceId).getData();
+        if(companyVo != null){
+            UserCompanyDTO userCompanyDTO = new UserCompanyDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userCompanyDTO);
+            userCompanyDTO.setUserId(userInstanceId);
+            userCompanyDTO.setId(companyVo.getId());
+            userCompanyApi.updateUserCompanyById(userCompanyDTO);
+        }else {
+            UserCompanyDTO userCompanyDTO = new UserCompanyDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userCompanyDTO);
+            userCompanyDTO.setUserId(userInstanceId);
+            userCompanyApi.insertUserCompany(userCompanyDTO);
+        }
         //5、插入用户教育信息
-        UserEducationDTO userEducationDTO = new UserEducationDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userEducationDTO);
-        userEducationDTO.setUserId(userInstanceId);
-        userEducationApi.insertUserEducation(userEducationDTO);
+        //5.1、判断是否已经存在该用户教育信息
+        UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(userInstanceId).getData();
+        if(educationVo != null){
+            UserEducationDTO userEducationDTO = new UserEducationDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userEducationDTO);
+            userEducationDTO.setUserId(userInstanceId);
+            userEducationDTO.setId(educationVo.getId());
+            userEducationApi.updateUserEducationById(userEducationDTO);
+        }else {
+            UserEducationDTO userEducationDTO = new UserEducationDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userEducationDTO);
+            userEducationDTO.setUserId(userInstanceId);
+            userEducationApi.insertUserEducation(userEducationDTO);
+        }
         //6、插入用户工作信息
-        UserJobDTO userJobDTO = new UserJobDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userJobDTO);
-        userJobDTO.setUserId(userInstanceId);
-        userJobApi.insertUserJob(userJobDTO);
+        //6.1、判断是否已经存在该用户工作信息
+        UserJobVo jobVo = userJobApi.getUserJobByUserId(userInstanceId).getData();
+        if(jobVo != null){
+            UserJobDTO userJobDTO = new UserJobDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userJobDTO);
+            userJobDTO.setUserId(userInstanceId);
+            userJobDTO.setId(jobVo.getId());
+            userJobApi.updateUserJobById(userJobDTO);
+        }else {
+            UserJobDTO userJobDTO = new UserJobDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userJobDTO);
+            userJobDTO.setUserId(userInstanceId);
+            userJobApi.insertUserJob(userJobDTO);
+        }
         //7、插入用户住所信息
         UserDwellingDTO userDwellingDTO = new UserDwellingDTO();
         BeanUtils.copyProperties(userFamilyDTO, userDwellingDTO);
