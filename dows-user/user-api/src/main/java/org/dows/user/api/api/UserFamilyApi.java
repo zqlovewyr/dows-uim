@@ -2,6 +2,7 @@ package org.dows.user.api.api;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dows.framework.api.Response;
+import org.dows.user.api.dto.GenealogyDTO;
 import org.dows.user.api.dto.UserFamilyDTO;
 import org.dows.user.api.vo.UserFamilyVo;
 import java.util.List;
@@ -18,14 +19,22 @@ public interface UserFamilyApi {
      *
      * @param userId
      */
-    Response<UserFamilyVo> getGenealogyList(String userId);
+    Response<GenealogyDTO> getGenealogyList(String userId);
 
     /**
      * 查询 用户-家庭
      *
      * @param userId
      */
-    Response<UserFamilyVo> getUserFamilyByUserId(String userId);
+    Response<List<UserFamilyVo>> getUserFamilyByUserId(String userId);
+
+    /**
+     * 查询 用户-家庭
+     *
+     * @param userId
+     * @param familyId
+     */
+    Response<UserFamilyVo> getUserFamilyByUserIdAndFamilyId(String userId,String familyId);
 
     /**
      * 查询 用户-家庭
@@ -33,6 +42,13 @@ public interface UserFamilyApi {
      * @param id
      */
     Response<UserFamilyVo> getUserFamilyById(String id);
+
+    /**
+     * 查询 用户-家庭
+     *
+     * @param familyId
+     */
+    Response<List<UserFamilyVo>> getUserFamilyListByFamilyId(String familyId);
 
     /**
      * 新增 用户-家庭

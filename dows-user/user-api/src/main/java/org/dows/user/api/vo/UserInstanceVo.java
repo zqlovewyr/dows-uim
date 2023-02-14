@@ -33,6 +33,9 @@ public class UserInstanceVo {
     @ApiModelProperty("性别")
     private String gender;
 
+    @ApiModelProperty("头像")
+    private String avatar;
+
     @ApiModelProperty("身份证号")
     private String idNo;
 

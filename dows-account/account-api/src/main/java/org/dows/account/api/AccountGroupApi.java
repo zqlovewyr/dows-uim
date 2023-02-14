@@ -77,6 +77,13 @@ public interface AccountGroupApi {
     Response<List<AccountGroupVo>> getAccountGroupList(AccountGroupDTO accountGroupDTO);
 
     /**
+     * 查看 组-成员-列表（不分页）
+     *
+     * @param accountId
+     */
+    Response<AccountGroupVo> getAccountGroupByAccountId(String accountId);
+
+    /**
      * 编辑 账号-组-成员
      *
      * @param accountGroupDTO

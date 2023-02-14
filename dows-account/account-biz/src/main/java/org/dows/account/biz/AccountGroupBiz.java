@@ -18,6 +18,7 @@ import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.entity.*;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountGroupVo;
+import org.dows.account.vo.AccountOrgVo;
 import org.dows.account.vo.NormalDataVo;
 import org.dows.framework.api.Response;
 import org.dows.rbac.api.RbacRoleApi;
@@ -680,6 +681,18 @@ public class AccountGroupBiz implements AccountGroupApi {
             voList.add(vo);
         });
         return Response.ok(voList);
+    }
+
+    @Override
+    public Response<AccountGroupVo> getAccountGroupByAccountId(String accountId) {
+        AccountGroup accountGroup = accountGroupService.lambdaQuery()
+                .eq(AccountGroup::getAccountId, accountId)
+                .one();
+        AccountGroupVo vo = new AccountGroupVo();
+        if (accountGroup != null) {
+            BeanUtils.copyProperties(accountGroup, vo);
+        }
+        return Response.ok(vo);
     }
 
     @Override

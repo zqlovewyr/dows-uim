@@ -39,6 +39,8 @@ public class UserInstanceQuery implements Serializable {
     private String name;
     @ApiModelProperty(value = "性别")
     private Integer sex;
+    @ApiModelProperty("头像")
+    private String avatar;
     @ApiModelProperty(value = "身份证号")
     private String idNo;
     @ApiModelProperty(value = "年龄")

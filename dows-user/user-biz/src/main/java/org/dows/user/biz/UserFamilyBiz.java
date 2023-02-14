@@ -14,9 +14,11 @@ import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
 import org.dows.user.api.api.UserFamilyApi;
 import org.dows.user.api.api.UserInstanceApi;
+import org.dows.user.api.dto.GenealogyDTO;
 import org.dows.user.api.dto.UserFamilyDTO;
 import org.dows.user.api.vo.UserFamilyVo;
 import org.dows.user.api.vo.UserInstanceVo;
+import org.dows.user.constant.BaseConstant;
 import org.dows.user.entity.UserAddress;
 import org.dows.user.entity.UserDwelling;
 import org.dows.user.entity.UserFamily;
@@ -27,6 +29,7 @@ import org.dows.user.service.UserAddressService;
 import org.dows.user.service.UserDwellingService;
 import org.dows.user.service.UserFamilyService;
 import org.dows.user.service.UserInstanceService;
+import org.dows.user.util.ReflectUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,59 +57,257 @@ public class UserFamilyBiz implements UserFamilyApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<UserFamilyVo> getGenealogyList(String userId) {
+    public Response<GenealogyDTO> getGenealogyList(String userId) {
+        //父母兄弟姐妹
+        List<UserFamilyVo> parentSiblingList = new ArrayList<>();
+        //我们的表姐妹
+        List<UserFamilyVo> ownerSiblingList = new ArrayList<>();
+        //子女的表姐妹
+        List<UserFamilyVo> childrenSiblingList = new ArrayList<>();
+        //子女
+        List<UserFamilyVo> childrenList = new ArrayList<>();
+        //子女的子女
+        List<UserFamilyVo> childrenOfChildList = new ArrayList<>();
+        //子女表姐妹的子女
+        List<UserFamilyVo> childrenOfChildSiblingList = new ArrayList<>();
+
+        //兄弟姐妹实体类
+        GenealogyDTO mateDTO = new GenealogyDTO();
+        //第一代实体类
+        GenealogyDTO firstDTO = new GenealogyDTO();
+        List<GenealogyDTO> firstList = new ArrayList<>();
+        List<GenealogyDTO> firstMateList = new ArrayList<>();
+        //第二代实体类
+        GenealogyDTO secondDTO = new GenealogyDTO();
+        List<GenealogyDTO> secondList = new ArrayList<>();
+        List<GenealogyDTO> secondMateList = new ArrayList<>();
+        //第三代实体类
+        GenealogyDTO thirdDTO = new GenealogyDTO();
+        List<GenealogyDTO> thirdList = new ArrayList<>();
+        //第四代实体类
+        GenealogyDTO forthDTO = new GenealogyDTO();
+        List<GenealogyDTO> forthList = new ArrayList<>();
+        GenealogyDTO genealogyDTO = new GenealogyDTO();
         //1、判断是否为户主
         LambdaQueryWrapper<UserFamily> queryWrapper = new LambdaQueryWrapper<>();
-        UserFamily userFamily = userFamilyService.getOne(queryWrapper.eq(UserFamily::getUserId, userId)
-                .eq(UserFamily::getDeleted, false));
+        UserFamily userFamily = userFamilyService.getOne(queryWrapper.eq(UserFamily::getUserId, userId));
         if (userFamily == null) {
             throw new UserException(EnumUserStatusCode.USER_IS_NOT_EXIST_EXCEPTION);
         }
+        //2、以该用户的家庭的爷爷辈,设置根节点
+        List<UserFamilyVo> familyList = this.getUserFamilyListByFamilyId(userFamily.getFamilyId()).getData().stream().filter(user -> StringUtils.isNotEmpty(user.getRelation())).collect(Collectors.toList());
+        if (familyList != null && familyList.size() > 0) {
+            for (UserFamilyVo family : familyList) {
+                if (family.getRelation().equals(BaseConstant.PARENT)) {
+                    //3.1、判断以爸爸或者妈妈户主的家庭
+                    LambdaQueryWrapper<UserFamily> parentWrapper = new LambdaQueryWrapper<>();
+                    UserFamily householder = userFamilyService.getOne(parentWrapper.eq(UserFamily::getUserId, family.getUserId()).eq(UserFamily::getHouseholder, 1));
+                    //3.2 获取以爸爸妈妈为户主的家庭中的父母
+                    if (householder != null) {
+                        //寻找父母的上一辈
+                        LambdaQueryWrapper<UserFamily> grandWrapper = new LambdaQueryWrapper<>();
+                        List<UserFamily> grandList = userFamilyService.list(grandWrapper.eq(UserFamily::getFamilyId, householder.getFamilyId()).eq(UserFamily::getRelation, BaseConstant.PARENT));
+                        if (grandList != null && grandList.size() > 0) {
+                            for (UserFamily grand : grandList) {
+                                if (grand.getHouseholder()) {
+                                    //设置属性
+                                    UserInstance model = userInstanceService.getById(grand.getUserId());
+                                    if (model != null) {
+                                        genealogyDTO.setName(model.getName());
+                                        genealogyDTO.setImageUrl(model.getAvatar());
+                                        genealogyDTO.setClassType("rootNode");
+                                        break;
+                                    }
+                                }
+                            }
+                        } else {
+                            //寻找父母兄弟姐妹的上一辈
+                            LambdaQueryWrapper<UserFamily> siblingWrapper = new LambdaQueryWrapper<>();
+                            List<UserFamily> siblingList = userFamilyService.list(siblingWrapper.eq(UserFamily::getFamilyId, householder.getFamilyId()).eq(UserFamily::getRelation, BaseConstant.SIBLING));
+                            siblingList = siblingList.stream().filter(v -> v.getHouseholder()).collect(Collectors.toList());
+                            if (siblingList != null && siblingList.size() > 0) {
+                                UserFamily sibling = siblingList.get(0);
+                                //获取父母兄弟姐妹的上一辈
+                                parentSiblingList = this.getUserFamilyListByFamilyId(sibling.getFamilyId()).getData().stream().filter(family1 -> family1.getRelation().equals(BaseConstant.PARENT)).collect(Collectors.toList());
+                                List<UserFamilyVo> resultFamilyList = parentSiblingList.stream().filter(result->result.getHouseholder()).collect(Collectors.toList());
+                                if (resultFamilyList != null && resultFamilyList.size() > 0) {
+                                    for (UserFamilyVo siblingGrand : resultFamilyList) {
+                                        if (siblingGrand.getHouseholder()) {
+                                            //设置属性
+                                            UserInstance model = userInstanceService.getById(siblingGrand.getUserId());
+                                            if (model != null) {
+                                                genealogyDTO.setName(model.getName());
+                                                genealogyDTO.setImageUrl(model.getAvatar());
+                                                genealogyDTO.setClassType("rootNode");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
 
-        //2、如果不为户主，找寻对应家庭，进而找到家庭中的户主
-        UserFamily familyHouseholder = new UserFamily();
-        if (userFamily.getHouseholder() == false) {
-            String familyId = userFamily.getFamilyId();
-            familyHouseholder = userFamilyService.getOne(queryWrapper.eq(UserFamily::getFamilyId, familyId)
-                    .eq(UserFamily::getHouseholder, true)
-                    .eq(UserFamily::getDeleted, false));
-        } else {
-            familyHouseholder = userFamily;
+                    }
+                }
+            }
         }
-        UserFamilyDTO householderDTO = new UserFamilyDTO();
-        BeanUtils.copyProperties(familyHouseholder, householderDTO);
+        //如果给根节点赋值成功，则设置虚拟值
+        if (ReflectUtil.isObjectNull(genealogyDTO)) {
+            genealogyDTO.setName("root");
+            genealogyDTO.setImageUrl("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fblog%2F202106%2F05%2F20210605134340_d4521.thumb.1000_0.jpg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1678945665&t=73b3266a98388c2f94c9ec58740ad998");
+            genealogyDTO.setClassType("rootNode");
+        }
+        //3、获取户主的父节点，包括父母和父母的兄弟姐妹作为爷爷节点的子节点
+        for (UserFamilyVo family : familyList) {
+            if (family.getRelation().equals(BaseConstant.PARENT)) {
+                //4.1、设置父母属性
+                UserInstance model = userInstanceService.getById(family.getUserId());
+                firstDTO.setName(model.getName());
+                firstDTO.setImageUrl(model.getAvatar());
+                //4.2、判断以爸爸或者妈妈户主的家庭
+                LambdaQueryWrapper<UserFamily> parentWrapper = new LambdaQueryWrapper<>();
+                UserFamily parent = userFamilyService.getOne(parentWrapper.eq(UserFamily::getUserId, family.getUserId()).eq(UserFamily::getHouseholder, 1));
+                //说明是户主
+                if (parent != null) {
+                    //4.3、获取以该户主爸爸的兄弟姐妹
+                    if (parentSiblingList != null && parentSiblingList.size() > 0) {
+                        for (UserFamilyVo vo : parentSiblingList) {
+                            UserInstance firstModel = userInstanceService.getById(vo.getUserId());
+                            mateDTO.setName(firstModel.getName());
+                            mateDTO.setImageUrl(firstModel.getAvatar());
+                            firstMateList.add(mateDTO);
+                        }
+                        firstDTO.setMate(firstMateList);
+                    }
+                }
+                firstList.add(firstDTO);
+            }
+        }
 
-        //3、获取所有家庭成员
-        List<UserFamily> userFamilyList = userFamilyService.list();
-        List<UserFamilyDTO> userFamilyDTOList = new ArrayList<>();
-        userFamilyList.forEach(user -> {
-            UserFamilyDTO dto = new UserFamilyDTO();
-            BeanUtils.copyProperties(user, dto);
-            userFamilyDTOList.add(dto);
-        });
+        //4、获取自己这一代的兄弟姐妹，作为第二代
+        //设置自己
+        UserInstance owner = userInstanceService.getById(userFamily.getUserId());
+        secondDTO.setName(owner.getName());
+        secondDTO.setImageUrl(owner.getAvatar());
+        for (UserFamilyVo family : familyList) {
+            if (family.getRelation().equals(BaseConstant.SIBLING)) {
+                //5.1、设置兄弟姐妹属性
+                UserInstance secondModel = userInstanceService.getById(family.getUserId());
+                mateDTO.setName(secondModel.getName());
+                mateDTO.setImageUrl(secondModel.getAvatar());
+                secondMateList.add(mateDTO);
+            }
+            //5.2、获取父母兄弟姐妹的子女
+            if (family.getRelation().equals(BaseConstant.PARENT)) {
+                //4.3、获取以该户主的兄弟姐妹，也就是爸爸的兄弟姐妹为户主的家庭的子女
+                for (UserFamilyVo sibling : parentSiblingList) {
+                    LambdaQueryWrapper<UserFamily> siblingWrapper = new LambdaQueryWrapper<>();
+                    UserFamily sibling1 = userFamilyService.getOne(siblingWrapper.eq(UserFamily::getUserId, sibling.getUserId()).eq(UserFamily::getHouseholder, 1));
+                    if (sibling1 != null) {
+                        ownerSiblingList = this.getUserFamilyListByFamilyId(sibling1.getFamilyId()).getData().stream().filter(family1 -> family1.getRelation().equals(BaseConstant.CHILDREN)).collect(Collectors.toList());
+                        for (UserFamilyVo child : ownerSiblingList) {
+                            UserInstance secondModel = userInstanceService.getById(child.getUserId());
+                            mateDTO.setName(secondModel.getName());
+                            mateDTO.setImageUrl(secondModel.getAvatar());
+                            secondMateList.add(mateDTO);
+                        }
+                        secondDTO.setMate(secondMateList);
+                    }
+                }
+            }
+        }
+        secondList.add(secondDTO);
+        firstDTO.setChildren(secondList);
 
-        //4、寻找上三代
-        List<UserFamilyDTO> parentList = createParentList(householderDTO, userFamilyDTOList);
-        householderDTO.setParent(parentList);
+        //5、获取自己的下一代及兄弟姐妹的下一代
+        for (UserFamilyVo family : familyList) {
+            //设置自己子女
+            if (family.getRelation().equals(BaseConstant.CHILDREN)) {
+                UserInstance model = userInstanceService.getById(family.getUserId());
+                childrenList.add(family);
+                thirdDTO.setName(model.getName());
+                thirdDTO.setImageUrl(model.getAvatar());
+                thirdList.add(thirdDTO);
+            }
+            //获取表姐妹的子女
+            for (UserFamilyVo sibling : ownerSiblingList) {
+                LambdaQueryWrapper<UserFamily> siblingWrapper = new LambdaQueryWrapper<>();
+                UserFamily sibling1 = userFamilyService.getOne(siblingWrapper.eq(UserFamily::getUserId, sibling.getUserId()).eq(UserFamily::getHouseholder, 1));
+                if (sibling1 != null) {
+                    childrenSiblingList = this.getUserFamilyListByFamilyId(sibling1.getFamilyId()).getData().stream().filter(family1 -> family1.getRelation().equals(BaseConstant.CHILDREN)).collect(Collectors.toList());
+                    for (UserFamilyVo vo : childrenSiblingList) {
+                        UserInstance thirdModel = userInstanceService.getById(vo.getUserId());
+                        childrenOfChildSiblingList.add(vo);
+                        thirdDTO.setName(thirdModel.getName());
+                        thirdDTO.setImageUrl(thirdModel.getAvatar());
+                        thirdList.add(thirdDTO);
+                    }
+                }
+            }
+        }
+        secondDTO.setChildren(thirdList);
 
-        //5、寻找下三代
-        List<UserFamilyDTO> childList = createChildList(householderDTO, userFamilyDTOList);
-        householderDTO.setParent(childList);
+        //6、获取自己下一代的下一代及其兄弟姐妹
+        for(UserFamilyVo vo : childrenList){
+            LambdaQueryWrapper<UserFamily> siblingWrapper = new LambdaQueryWrapper<>();
+            UserFamily sibling = userFamilyService.getOne(siblingWrapper.eq(UserFamily::getUserId, vo.getUserId()).eq(UserFamily::getHouseholder, 1));
+            if(sibling != null){
+                childrenOfChildList = this.getUserFamilyListByFamilyId(sibling.getFamilyId()).getData().stream().filter(family1 -> family1.getRelation().equals(BaseConstant.CHILDREN)).collect(Collectors.toList());
+                for (UserFamilyVo model : childrenOfChildList) {
+                    UserInstance forthModel = userInstanceService.getById(model.getUserId());
+                    forthDTO.setName(forthModel.getName());
+                    forthDTO.setImageUrl(forthModel.getAvatar());
+                    forthList.add(forthDTO);
+                }
+            }
+        }
 
-        //6、复制属性
-        UserFamilyVo vo = new UserFamilyVo();
-        BeanUtils.copyProperties(householderDTO, vo);
-        return Response.ok(vo);
+        for(UserFamilyVo vo : childrenOfChildSiblingList){
+            LambdaQueryWrapper<UserFamily> siblingWrapper = new LambdaQueryWrapper<>();
+            UserFamily sibling = userFamilyService.getOne(siblingWrapper.eq(UserFamily::getUserId, vo.getUserId()).eq(UserFamily::getHouseholder, 1));
+            if(sibling != null){
+                childrenOfChildList = this.getUserFamilyListByFamilyId(sibling.getFamilyId()).getData().stream().filter(family1 -> family1.getRelation().equals(BaseConstant.CHILDREN)).collect(Collectors.toList());
+                for (UserFamilyVo model : childrenOfChildList) {
+                    UserInstance forthModel = userInstanceService.getById(model.getUserId());
+                    forthDTO.setName(forthModel.getName());
+                    forthDTO.setImageUrl(forthModel.getAvatar());
+                    forthList.add(forthDTO);
+                }
+            }
+        }
+        thirdDTO.setChildren(forthList);
+        genealogyDTO.setChildren(firstList);
+        return Response.ok(genealogyDTO);
+
     }
 
     @Override
-    public Response<UserFamilyVo> getUserFamilyByUserId(String userId) {
+    public Response<List<UserFamilyVo>> getUserFamilyByUserId(String userId) {
         LambdaQueryWrapper<UserFamily> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserFamily::getUserId, userId);
+        List<UserFamily> userFamilyList = userFamilyService.list(queryWrapper);
+        //复制属性
+        List<UserFamilyVo> voList = new ArrayList<>();
+        if (userFamilyList != null && userFamilyList.size() > 0) {
+            userFamilyList.forEach(userFamily -> {
+                UserFamilyVo vo = new UserFamilyVo();
+                BeanUtils.copyProperties(userFamily, vo);
+                vo.setId(userFamily.getId().toString());
+                voList.add(vo);
+            });
+        }
+        return Response.ok(voList);
+    }
+
+    @Override
+    public Response<UserFamilyVo> getUserFamilyByUserIdAndFamilyId(String userId, String familyId) {
+        LambdaQueryWrapper<UserFamily> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserFamily::getUserId, userId);
+        queryWrapper.eq(UserFamily::getFamilyId, familyId);
         UserFamily userFamily = userFamilyService.getOne(queryWrapper);
         //复制属性
         UserFamilyVo vo = new UserFamilyVo();
-        if (userFamily != null) {
+        if(userFamily != null){
             BeanUtils.copyProperties(userFamily, vo);
             vo.setId(userFamily.getId().toString());
         }
@@ -127,13 +328,31 @@ public class UserFamilyBiz implements UserFamilyApi {
         return Response.ok(vo);
     }
 
+    @Override
+    public Response<List<UserFamilyVo>> getUserFamilyListByFamilyId(String familyId) {
+        LambdaQueryWrapper<UserFamily> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserFamily::getFamilyId, familyId);
+        List<UserFamily> userFamilyList = userFamilyService.list(queryWrapper);
+        //复制属性
+        List<UserFamilyVo> voList = new ArrayList<>();
+        if (userFamilyList != null && userFamilyList.size() > 0) {
+            userFamilyList.forEach(family -> {
+                UserFamilyVo vo = new UserFamilyVo();
+                BeanUtils.copyProperties(family, vo);
+                vo.setId(family.getId().toString());
+                voList.add(vo);
+            });
+        }
+        return Response.ok(voList);
+    }
+
     /**
      * 递归获取
      * 根据当前户主，获取上三代
      */
     private static List<UserFamilyDTO> createParentList(UserFamilyDTO familyHouseholder, List<UserFamilyDTO> list) {
         Integer num = 0;
-        List<UserFamilyDTO> dtoList = list.stream().filter(model -> familyHouseholder.getParentId().equals(model.getUserId())).collect(Collectors.toList());
+        List<UserFamilyDTO> dtoList = list.stream().filter(model -> familyHouseholder.getRelation().equals(model.getUserId())).collect(Collectors.toList());
         if (dtoList.size() > 0) {
             if (num < 3) {
                 //找到上一层对应关系
@@ -157,7 +376,7 @@ public class UserFamilyBiz implements UserFamilyApi {
             if (num < 3) {
                 //找到上一层对应关系
                 dtoList.forEach(model -> {
-                    model.setChildren(createParentList(model, list));
+                    model.setChildren(createChildList(model, list));
                 });
                 num++;
             }
@@ -175,7 +394,9 @@ public class UserFamilyBiz implements UserFamilyApi {
     public Response<String> insertUserFamily(UserFamilyDTO userFamilyDTO) {
         UserFamily model = new UserFamily();
         BeanUtils.copyProperties(userFamilyDTO, model);
-        model.setFamilyId(IdWorker.getIdStr());
+        if(StringUtils.isEmpty(userFamilyDTO.getFamilyId())){
+            model.setFamilyId(IdWorker.getIdStr());
+        }
         boolean flag = userFamilyService.save(model);
         if (flag == false) {
             throw new UserException(EnumUserStatusCode.USER_FAMILY_CREATE_FAIL_EXCEPTION);
@@ -290,7 +511,7 @@ public class UserFamilyBiz implements UserFamilyApi {
 
             });
         }
-        BeanUtils.copyProperties(familyPage, pageVo,new String[]{"records"});
+        BeanUtils.copyProperties(familyPage, pageVo, new String[]{"records"});
         pageVo.setRecords(voList);
         return Response.ok(pageVo);
     }
@@ -337,18 +558,21 @@ public class UserFamilyBiz implements UserFamilyApi {
         if (familyList != null && familyList.size() > 0) {
             familyList.forEach(family -> {
                 //4.1、根据户主id获取户主姓名
-                UserInstance userInstance = userInstanceService.getById(family.getUserId());
-                //4.2、设置属性
-                UserFamilyVo entity = UserFamilyVo.builder()
-                        .memberName(userInstance.getName())
-                        .id(userInstance.getId().toString())
-                        .idNo(userInstance.getIdNo())
-                        .gender(userInstance.getGender())
-                        .relation(family.getRelation()).build();
-                voList.add(entity);
+                UserInstance userInstance = userInstanceService.getById(Long.valueOf(family.getUserId()));
+                if(userInstance != null) {
+                    //4.2、设置属性
+                    UserFamilyVo entity = UserFamilyVo.builder()
+                            .memberName(userInstance.getName())
+                            .id(userInstance.getId().toString())
+                            .familyId(family.getFamilyId())
+                            .idNo(userInstance.getIdNo())
+                            .gender(userInstance.getGender())
+                            .relation(family.getRelation()).build();
+                    voList.add(entity);
+                }
             });
         }
-        BeanUtils.copyProperties(familyPage, pageVo,new String[]{"records"});
+        BeanUtils.copyProperties(familyPage, pageVo, new String[]{"records"});
         pageVo.setRecords(voList);
         return Response.ok(pageVo);
     }

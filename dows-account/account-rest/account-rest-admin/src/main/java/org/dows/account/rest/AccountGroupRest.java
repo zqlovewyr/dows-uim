@@ -53,11 +53,11 @@ public class AccountGroupRest implements MybatisCrudRest<AccountGroupForm, Accou
         return accountGroupApi.customAccountGroupList(accountGroupDTO);
     }
 
-    @ApiOperation("查询年龄段占比 组-成员")
+/*    @ApiOperation("查询年龄段占比 组-成员")
     @PostMapping("/getAgeRateList")
     public Response<List<NormalDataVo>> getAgeRateList(@RequestBody AccountGroupDTO accountGroupDTO) {
         return accountGroupApi.getAgeRateList(accountGroupDTO);
-    }
+    }*/
 
     @ApiOperation("查询 账号-组-成员 列表(不带分页)")
     @PostMapping("/getAccountGroupList")

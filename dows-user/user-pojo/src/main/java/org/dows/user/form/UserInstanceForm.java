@@ -53,5 +53,8 @@ public class UserInstanceForm implements Serializable {
 
     @ApiModelProperty("性别")
     private String gender;
+
+    @ApiModelProperty("头像")
+    private String avatar;
 }
 

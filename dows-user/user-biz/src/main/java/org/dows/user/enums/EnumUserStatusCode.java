@@ -29,7 +29,9 @@ public enum EnumUserStatusCode implements StatusCode {
     USER_COMPANY_IS_NOT_EXIST_EXCEPTION(500017, "该用户公司信息不存在"),
     USER_EDUCATION_IS_NOT_EXIST_EXCEPTION(500017, "该用户公司信息不存在"),
     USER_IS_NOT_HOUSEHOLDER_EXCEPTION(500018, "该用户不是户主"),
-    USER_DWELLING_UPDATE_FAIL_EXCEPTION(500019, "更新住所失败");
+    USER_DWELLING_UPDATE_FAIL_EXCEPTION(500019, "更新住所失败"),
+    USER_PARENT_IS_NOT_EXIST_EXCEPTION(500020, "该用户父辈不存在"),
+    FAMILY_USER_EXIST_EXCEPTION(500021, "该家庭已存在该用户，请不要重复创建");
     final Integer code;
     final String descr;
 }

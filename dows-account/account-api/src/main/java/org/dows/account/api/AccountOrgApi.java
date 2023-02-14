@@ -63,7 +63,7 @@ public interface AccountOrgApi {
      *
      * @param pId
      */
-    Response<AccountOrgVo> getAccountOrgByPId(String pId);
+    Response<List<AccountOrgVo>> getAccountOrgByPId(String pId);
 
     /**
      * 删除 机构-实例

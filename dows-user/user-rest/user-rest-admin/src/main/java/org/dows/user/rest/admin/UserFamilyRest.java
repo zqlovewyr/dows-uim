@@ -16,10 +16,12 @@ import org.dows.user.enums.EnumUserStatusCode;
 import org.dows.user.exception.UserException;
 import org.dows.user.form.UserFamilyForm;
 import org.dows.user.service.UserFamilyService;
+import org.dows.user.util.ReflectUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.channels.AcceptPendingException;
 import java.util.List;
 
 /**
@@ -42,8 +44,8 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
 
     @ApiOperation("查询 家庭-族谱")
     @GetMapping("/getGenealogyList/{id}")
-    public Response<UserFamilyVo> getGenealogyList(@PathVariable("id") Long id) {
-        Response<UserFamilyVo> vo = userFamilyApi.getGenealogyList(id.toString());
+    public Response<GenealogyDTO> getGenealogyList(@PathVariable("id") String id) {
+        Response<GenealogyDTO> vo = userFamilyApi.getGenealogyList(id);
         return vo;
     }
 
@@ -56,15 +58,37 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
 
     @ApiOperation("新增 用户-家庭-成员")
     @PostMapping("/createFamilyMember")
+    @Transactional(rollbackFor = Exception.class)
     public Response<String> createFamilyMember(@RequestBody UserFamilyDTO userFamilyDTO) {
-        //1、新增家庭成员实例
-        UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userInstanceDTO);
-        userInstanceDTO.setName(userFamilyDTO.getMemberName());
-        String userInstanceId = userInstanceApi.insertUserInstance(userInstanceDTO).getData();
+        //1、校验该身份证号的用户是否已存在
+        String userInstanceId = "";
+        UserInstanceDTO userInstance = new UserInstanceDTO();
+        userInstance.setName(userFamilyDTO.getHouseholderName());
+        userInstance.setIdNo(userFamilyDTO.getIdNo());
+        List<UserInstanceVo> userInstanceVos = userInstanceApi.getUserInstanceListNoPage(userInstance).getData();
+        if(userInstanceVos != null && userInstanceVos.size() > 0){
+            UserInstanceVo vo = userInstanceVos.get(0);
+            //1.1、更新家庭成员实例
+            UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userInstanceDTO);
+            userInstanceDTO.setName(userFamilyDTO.getMemberName());
+            userInstanceDTO.setId(vo.getId());
+            userInstanceId = userInstanceApi.updateUserInstance(userInstanceDTO).getData();
+        }else{
+            //1.2、新增家庭成员实例
+            UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userInstanceDTO);
+            userInstanceDTO.setName(userFamilyDTO.getMemberName());
+            userInstanceId = userInstanceApi.insertUserInstance(userInstanceDTO).getData();
+        }
         //2、新增用户家庭
+        //2.1、判断家庭中是否已存在该成员
+        UserFamilyVo userFamilyVo = userFamilyApi.getUserFamilyByUserIdAndFamilyId(userInstanceId,userFamilyDTO.getFamilyId()).getData();
+        if(userFamilyVo != null && !ReflectUtil.isObjectNull(userFamilyVo)){
+            throw new UserException(EnumUserStatusCode.FAMILY_USER_EXIST_EXCEPTION);
+        }
         userFamilyDTO.setUserId(userInstanceId);
-        String familyId = userFamilyApi.insertUserFamily(userFamilyDTO).getData();
+        userFamilyApi.insertUserFamily(userFamilyDTO).getData();
         //3、新增用户扩展信息
         UserExtinfoDTO userExtinfoDTO = new UserExtinfoDTO();
         BeanUtils.copyProperties(userFamilyDTO, userExtinfoDTO);
@@ -89,15 +113,15 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
     }
 
     @ApiOperation("查询 用户-家庭-成员")
-    @GetMapping("/getFamilyMemberById/{id}")
-    public Response<UserFamilyVo> getFamilyMemberById(@PathVariable("id") String id) {
+    @GetMapping("/getFamilyMemberById/{id}/{familyId}")
+    public Response<UserFamilyVo> getFamilyMemberById(@PathVariable("id") String id,@PathVariable("familyId") String familyId) {
         UserFamilyVo familyVo = new UserFamilyVo();
         //1、获取家庭成员实例
         UserInstanceVo instanceVo = userInstanceApi.getUserInstanceById(id).getData();
         BeanUtils.copyProperties(instanceVo, familyVo);
         familyVo.setMemberName(instanceVo.getName());
         //2、获取用户家庭信息
-        UserFamilyVo model = userFamilyApi.getUserFamilyByUserId(instanceVo.getId()).getData();
+        UserFamilyVo model = userFamilyApi.getUserFamilyByUserIdAndFamilyId(instanceVo.getId(),familyId).getData();
         familyVo.setRelation(model.getRelation());
         familyVo.setFamilyId(model.getFamilyId());
         //3、获取用户扩展信息
@@ -126,7 +150,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         userInstanceDTO.setName(userFamilyDTO.getMemberName());
         userInstanceApi.updateUserInstance(userInstanceDTO).getData();
         //2、更新用户家庭
-        UserFamilyVo familyVo = userFamilyApi.getUserFamilyByUserId(userFamilyDTO.getId()).getData();
+        UserFamilyVo familyVo = userFamilyApi.getUserFamilyByUserIdAndFamilyId(userFamilyDTO.getId(),userFamilyDTO.getFamilyId()).getData();
         UserFamilyDTO model = new UserFamilyDTO();
         BeanUtils.copyProperties(userFamilyDTO, model,new String[]{"userId"});
         model.setId(familyVo.getId());
@@ -158,13 +182,13 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
     }
 
     @ApiOperation("删除 用户-家庭-成员")
-    @DeleteMapping("/deleteFamilyMemberById/{id}")
+    @DeleteMapping("/deleteFamilyMemberById/{id}/{familyId}")
     @Transactional(rollbackFor = Exception.class)
-    public void deleteFamilyMemberById(@PathVariable("id") String id) {
+    public void deleteFamilyMemberById(@PathVariable("id") String id,@PathVariable("familyId") String familyId) {
         //1、删除家庭成员实例
         userInstanceApi.deleteUserInstanceById(id);
         //2、删除用户家庭
-        UserFamilyVo familyVo = userFamilyApi.getUserFamilyByUserId(id).getData();
+        UserFamilyVo familyVo = userFamilyApi.getUserFamilyByUserIdAndFamilyId(id,familyId).getData();
         userFamilyApi.deleteUserFamilyById(familyVo.getId());
         //3、删除用户扩展信息
         UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(id).getData();
@@ -183,12 +207,12 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
     @ApiOperation("批量删除 用户-家庭-成员")
     @DeleteMapping("/batchDeleteFamilyMembers")
     @Transactional(rollbackFor = Exception.class)
-    public void batchDeleteFamilyMembers(@RequestParam("ids") List<String> ids) {
+    public void batchDeleteFamilyMembers(@RequestParam("ids") List<String> ids,@RequestParam("familyId") String familyId) {
         ids.forEach(id -> {
             //1、删除家庭成员实例
             userInstanceApi.deleteUserInstanceById(id);
             //2、删除用户家庭
-            UserFamilyVo familyVo = userFamilyApi.getUserFamilyByUserId(id).getData();
+            UserFamilyVo familyVo = userFamilyApi.getUserFamilyByUserIdAndFamilyId(id,familyId).getData();
             userFamilyApi.deleteUserFamilyById(familyVo.getId());
             //3、删除用户扩展信息
             UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(id).getData();
@@ -216,11 +240,27 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
     @PostMapping("/insertUserFamily")
     @Transactional(rollbackFor = Exception.class)
     public Response<String> insertUserFamily(@RequestBody UserFamilyDTO userFamilyDTO) {
-        //1、新增家庭户主实例
-        UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userInstanceDTO);
-        userInstanceDTO.setName(userFamilyDTO.getHouseholderName());
-        String userInstanceId = userInstanceApi.insertUserInstance(userInstanceDTO).getData();
+        //1、校验该身份证号的用户是否已存在
+        String userInstanceId = "";
+        UserInstanceDTO userInstance = new UserInstanceDTO();
+        userInstance.setName(userFamilyDTO.getHouseholderName());
+        userInstance.setIdNo(userFamilyDTO.getIdNo());
+        List<UserInstanceVo> userInstanceVos = userInstanceApi.getUserInstanceListNoPage(userInstance).getData();
+        if(userInstanceVos != null && userInstanceVos.size() > 0){
+            UserInstanceVo vo = userInstanceVos.get(0);
+            //1.1、更新家庭户主实例
+            UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userInstanceDTO);
+            userInstanceDTO.setName(userFamilyDTO.getHouseholderName());
+            userInstanceDTO.setId(vo.getId());
+            userInstanceId = userInstanceApi.updateUserInstance(userInstanceDTO).getData();
+        }else{
+            //1.2、新增家庭户主实例
+            UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userInstanceDTO);
+            userInstanceDTO.setName(userFamilyDTO.getHouseholderName());
+            userInstanceId = userInstanceApi.insertUserInstance(userInstanceDTO).getData();
+        }
         //2、新增用户家庭
         userFamilyDTO.setUserId(userInstanceId);
         String familyId = userFamilyApi.insertUserFamily(userFamilyDTO).getData();

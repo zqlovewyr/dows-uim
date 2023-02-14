@@ -235,16 +235,20 @@ public class AccountOrgBiz implements AccountOrgApi {
     }
 
     @Override
-    public Response<AccountOrgVo> getAccountOrgByPId(String id) {
-        AccountOrg accountOrg = accountOrgService.lambdaQuery()
+    public Response<List<AccountOrgVo>> getAccountOrgByPId(String id) {
+        List<AccountOrgVo> voList = new ArrayList<>();
+        List<AccountOrg> accountOrgList = accountOrgService.lambdaQuery()
                 .eq(AccountOrg::getPid, id)
-                .one();
-        AccountOrgVo vo = new AccountOrgVo();
-        if (accountOrg != null) {
-            BeanUtils.copyProperties(accountOrg, vo);
-            vo.setId(accountOrg.getId().toString());
+                .list();
+        if (accountOrgList != null && accountOrgList.size() > 0) {
+            accountOrgList.forEach(accountOrg->{
+                AccountOrgVo vo = new AccountOrgVo();
+                BeanUtils.copyProperties(accountOrg, vo);
+                vo.setId(accountOrg.getId().toString());
+                voList.add(vo);
+            });
         }
-        return Response.ok(vo);
+        return Response.ok(voList);
     }
 
     @Override
