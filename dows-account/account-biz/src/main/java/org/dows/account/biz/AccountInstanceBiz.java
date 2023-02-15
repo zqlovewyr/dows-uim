@@ -506,6 +506,7 @@ public class AccountInstanceBiz {
                             .builder()
                             .accountId(accountIdentifier.getAccountId())
                             .tentantId(accountInstanceDTO.getTenantId())
+                            .appId(accountInstanceDTO.getAppId())
                             .build()
             );
             // 账号与用户详情关系
@@ -533,7 +534,7 @@ public class AccountInstanceBiz {
                                 .orgName(accountOrg.getOrgName())
                                 .accountId(accountInstance.getAccountId())
                                 .accountName(accountInstance.getAccountName())
-                                // .appId(accountInstanceDTO.getAppId())
+                                .appId(accountInstanceDTO.getAppId())
                                 .build()
                 );
             }

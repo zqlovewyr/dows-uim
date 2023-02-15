@@ -62,8 +62,8 @@ public class AccountUserResForm implements Serializable {
     @ApiModelProperty("入职时间")
     private Date entryTime;
 
-    @ApiModelProperty("用户类型1：管理账号 2：普通用户")
-    private Integer userType;
+    @ApiModelProperty("账号区分：1、总控端2、总部端、3、门店端APP4、小程序用户")
+    private Integer accountType;
 
 
     @ApiModelProperty("用户状态 1为启用 0为禁用")
@@ -71,6 +71,11 @@ public class AccountUserResForm implements Serializable {
 
     @ApiModelProperty("租户ID")
     private String tenantId;
+
+    @ApiModelProperty("应用ID")
+    private String appId;
+    @ApiModelProperty("生日")
+    private Date birthday;
 
 
 }
