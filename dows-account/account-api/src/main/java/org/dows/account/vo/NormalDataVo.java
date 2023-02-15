@@ -17,6 +17,8 @@ public class NormalDataVo implements Serializable {
     private List<Object> dataList; //数据
     private Long count;    //数量
     private String per;       //百分比
+    private String QOQ;     //环比
+    private String YOY;     //同比
 
     public NormalDataVo(String name, List<Object> dataList) {
         this.name = name;
@@ -32,5 +34,11 @@ public class NormalDataVo implements Serializable {
     public NormalDataVo(String name, Long count) {
         this.name = name;
         this.count = count;
+    }
+
+    public NormalDataVo(String name, String per,String QOQ) {
+        this.name = name;
+        this.per = per;
+        this.QOQ = QOQ;
     }
 }

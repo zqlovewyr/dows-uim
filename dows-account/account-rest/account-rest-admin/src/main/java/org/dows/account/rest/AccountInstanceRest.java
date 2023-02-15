@@ -182,8 +182,8 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
         if (accountRoleVo.getRoleId().equals("0")) {
             AccountInstanceDTO oldDTO = new AccountInstanceDTO();
             //2.1、获取上周周一到周天
-            String oldStartTimeStr = DateUtil.getLastMonday(); //上周一
-            String oldEndTimeStr = DateUtil.getLastSunday(); //上周日
+            String oldStartTimeStr = DateUtil.getLastMonday(new Date(),-1); //上周一
+            String oldEndTimeStr = DateUtil.getLastSunday(new Date(),1); //上周日
             oldDTO.setStartTime(DateUtil.formatStringToDate(oldStartTimeStr));
             oldDTO.setEndTime(DateUtil.formatStringToDate(oldEndTimeStr));
             List<AccountInstanceVo> oldList = accountInstanceApi.getAccountInstanceList(oldDTO).getData();
@@ -225,8 +225,8 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
                         AccountGroupDTO oldAccountGroupDTO = new AccountGroupDTO();
                         oldAccountGroupDTO.setOrgId(sonVo.getId());
                         //2.2、获取上周周一到周日
-                        String oldStartTimeStr = DateUtil.getLastMonday(); //上周一
-                        String oldEndTimeStr = DateUtil.getLastSunday(); //上周日
+                        String oldStartTimeStr = DateUtil.getLastMonday(new Date(),-1); //上周一
+                        String oldEndTimeStr = DateUtil.getLastSunday(new Date(),1); //上周日
                         oldAccountGroupDTO.setStartTime(DateUtil.formatStringToDate(oldStartTimeStr));
                         oldAccountGroupDTO.setEndTime(DateUtil.formatStringToDate(oldEndTimeStr));
                         List<AccountGroupVo> oldEntityList = accountGroupApi.getAccountGroupList(oldAccountGroupDTO).getData();
@@ -242,8 +242,8 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
                         //2.2、获取去年上周周一到周日
                         AccountGroupDTO newAccountGroupDTO = new AccountGroupDTO();
                         newAccountGroupDTO.setOrgId(sonVo.getId());
-                        String newStartTimeStr = DateUtil.getLastMonday(); //上周一
-                        String newEndTimeStr = DateUtil.getLastSunday(); //上周日
+                        String newStartTimeStr = DateUtil.getLastMonday(new Date(),-1); //上周一
+                        String newEndTimeStr = DateUtil.getLastSunday(new Date(),1); //上周日
                         newAccountGroupDTO.setStartTime(DateUtil.formatStringToDate(newStartTimeStr));
                         newAccountGroupDTO.setEndTime(DateUtil.formatStringToDate(newEndTimeStr));
                         List<AccountGroupVo> newEntityList = accountGroupApi.getAccountGroupList(oldAccountGroupDTO).getData();

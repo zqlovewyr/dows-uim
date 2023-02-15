@@ -1,5 +1,7 @@
 package org.dows.account.biz.util;
 
+import org.apache.commons.lang3.time.DateUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,25 +40,24 @@ public class DateUtil {
         return date;
     }
 
-    //4、获取上周周一
-    public static String getLastMonday() {
+    //4、获取以前的周一
+    public static String getLastMonday(Date date,Integer count) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Calendar calendar = Calendar.getInstance();
-        // 设置周一为第一天
-        calendar.setFirstDayOfWeek(Calendar.MONDAY);
-        // 日期减去7天
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        return sdf.format(calendar.getTime()) + " 00:00:00";
+        Date a = DateUtils.addDays(date, -1);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(a);
+        cal.add(Calendar.WEEK_OF_YEAR, count);// 一周
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        return sdf.format(cal.getTime()) + " 00:00:00";
     }
 
-    //5、获取上周周日
-    public static String getLastSunday() {
+    //5、获取以前的周日
+    public static String getLastSunday(Date date,Integer count) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date a = DateUtils.addDays(date, -1);
         Calendar calendar = Calendar.getInstance();
-        // 设置周一为第一天
-        calendar.setFirstDayOfWeek(Calendar.MONDAY);
-        // 日期减去7天
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        calendar.setTime(a);
+        calendar.set(Calendar.DAY_OF_WEEK, count);;
         return sdf.format(calendar.getTime()) + " 23:59:59";
     }
 

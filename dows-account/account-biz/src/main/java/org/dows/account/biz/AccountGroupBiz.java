@@ -177,7 +177,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                     accountIds.add(accountRole.getPrincipalId());
                 });
             }
-            if(accountIds.size() == 0){
+            if (accountIds.size() == 0) {
                 accountIds.add("fill");
             }
         }
@@ -195,7 +195,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                     accountIds.add(accountRole.getPrincipalId());
                 });
             }
-            if(accountIds.size() == 0){
+            if (accountIds.size() == 0) {
                 accountIds.add("fill");
             }
         }
@@ -213,7 +213,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                     orgIds.add(accountGroupInfo.getOrgId());
                 });
             }
-            if(orgIds.size() == 0){
+            if (orgIds.size() == 0) {
                 orgIds.add("fill");
             }
         }
@@ -229,7 +229,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                     orgIds.add(accountGroupInfo.getOrgId());
                 });
             }
-            if(orgIds.size() == 0){
+            if (orgIds.size() == 0) {
                 orgIds.add("fill");
             }
         }
@@ -257,7 +257,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                     userIds.add(userContact.getId().toString());
                 });
             }
-            if(userIds.size() == 0){
+            if (userIds.size() == 0) {
                 userIds.add("fill");
             }
         }
@@ -280,7 +280,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                     userIds.add(userContact.getId().toString());
                 });
             }
-            if(userIds.size() == 0){
+            if (userIds.size() == 0) {
                 userIds.add("fill");
             }
         }
@@ -304,7 +304,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                     userIds.add(userContact.getId().toString());
                 });
             }
-            if(userIds.size() == 0){
+            if (userIds.size() == 0) {
                 userIds.add("fill");
             }
         }
@@ -447,7 +447,7 @@ public class AccountGroupBiz implements AccountGroupApi {
         AccountRole accountRole = new AccountRole();
         //4.1、根据角色id获取角色信息
         RbacRoleVo role = rbacRoleApi.getRbacRoleById(accountGroupDTO.getRoleId()).getData();
-        BeanUtils.copyProperties(role, accountRole,new String[]{"id"});
+        BeanUtils.copyProperties(role, accountRole, new String[]{"id"});
         //4.2、设置属性
         accountRole.setRoleId(role.getId().toString());
         accountRole.setPrincipalType(EnumAccountRolePrincipalType.PERSONAL.getCode());
@@ -696,6 +696,22 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     @Override
+    public Response<List<AccountGroupVo>> getAccountGroupByOrgId(String orgId) {
+        List<AccountGroup> accountGroupList = accountGroupService.lambdaQuery()
+                .eq(AccountGroup::getOrgId, orgId)
+                .list();
+        List<AccountGroupVo> voList = new ArrayList<>();
+        if (accountGroupList != null && accountGroupList.size() > 0) {
+            accountGroupList.forEach(accountGroup -> {
+                AccountGroupVo vo = new AccountGroupVo();
+                BeanUtils.copyProperties(accountGroup, vo);
+                voList.add(vo);
+            });
+        }
+        return Response.ok(voList);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Response<Map<String, Object>> updateAccountGroupById(AccountGroupDTO accountGroupDTO) {
         Map<String, Object> map = new HashMap<>();
@@ -716,7 +732,7 @@ public class AccountGroupBiz implements AccountGroupApi {
         UserInstanceVo instance = userInstanceApi.getUserInstanceById(accountUser.getUserId()).getData();
         UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
         BeanUtils.copyProperties(instance, userInstanceDTO);
-        BeanUtils.copyProperties(accountGroupDTO, userInstanceDTO,new String[]{"id"});
+        BeanUtils.copyProperties(accountGroupDTO, userInstanceDTO, new String[]{"id"});
         String userId = userInstanceApi.updateUserInstance(userInstanceDTO).getData();
         map.put("userId", userId);
 
@@ -724,9 +740,9 @@ public class AccountGroupBiz implements AccountGroupApi {
         LambdaQueryWrapper<AccountRole> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(StringUtils.isNotEmpty(accountGroupDTO.getId()), AccountRole::getPrincipalId, accountGroupDTO.getId());
         AccountRole accountRole = accountRoleService.getOne(wrapper);
-        if(accountRole != null){
+        if (accountRole != null) {
             RbacRoleVo vo = rbacRoleApi.getRbacRoleById(accountGroupDTO.getRoleId()).getData();
-            BeanUtils.copyProperties(vo,accountRole,new String[]{"id"});
+            BeanUtils.copyProperties(vo, accountRole, new String[]{"id"});
             accountRole.setRoleId(accountGroupDTO.getRoleId().toString());
             accountRole.setPrincipalType(EnumAccountRolePrincipalType.PERSONAL.getCode());
             accountRole.setPrincipalId(accountInstance.getId().toString());
@@ -739,9 +755,9 @@ public class AccountGroupBiz implements AccountGroupApi {
         LambdaQueryWrapper<AccountGroup> groupWrapper = new LambdaQueryWrapper<>();
         groupWrapper.eq(StringUtils.isNotEmpty(accountGroupDTO.getId()), AccountGroup::getAccountId, accountGroupDTO.getId());
         AccountGroup accountGroup = accountGroupService.getOne(groupWrapper);
-        if(accountGroup != null){
+        if (accountGroup != null) {
             AccountOrg vo = accountOrgService.getById(accountGroup.getOrgId());
-            BeanUtils.copyProperties(vo,accountGroup,new String[]{"id"});
+            BeanUtils.copyProperties(vo, accountGroup, new String[]{"id"});
             accountGroup.setUserId(userId);
             accountGroup.setAccountId(accountInstance.getId().toString());
             accountGroup.setAccountName(accountInstance.getAccountName());
@@ -774,13 +790,13 @@ public class AccountGroupBiz implements AccountGroupApi {
             AccountGroup accountGroup = accountGroupService.lambdaQuery()
                     .eq(AccountGroup::getId, id)
                     .one();
-            if(accountGroup == null){
+            if (accountGroup == null) {
                 throw new AccountException(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);
             }
             LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
             groupWrapper.set(AccountGroup::getDeleted, true)
                     .eq(AccountGroup::getId, Long.valueOf(id));
-           accountGroupService.update(groupWrapper);
+            accountGroupService.update(groupWrapper);
         }
     }
 }
