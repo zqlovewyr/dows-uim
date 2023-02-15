@@ -40,13 +40,15 @@ public class AccountUserInfo implements CrudEntity {
 
     private Integer sex;
 
-    private LocalDate birthday;
+    private Date birthday;
 
-    private LocalDateTime createTime;
+    private Date createTime;
 
     private String clientNo;
 
+    private String province;
     private String city;
+    private String district;
 
     private String job;
 
@@ -57,6 +59,12 @@ public class AccountUserInfo implements CrudEntity {
     private String nation;
 
     private Date entryTime;
+
+    // 年代分布 60、70、80
+    private String chronological;
+    private String shengxiao;
+    // 星座
+    private String constellation;
 
     @JsonIgnore
     @TableLogic

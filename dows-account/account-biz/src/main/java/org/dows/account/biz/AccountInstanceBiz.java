@@ -1,5 +1,7 @@
 package org.dows.account.biz;
 
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.listener.ReadListener;
@@ -407,6 +409,11 @@ public class AccountInstanceBiz {
 
          // 建立与组织关系
         AccountOrg accountOrg = null;
+        // 年代分布 60、70、80
+        String chronological = null;
+        String shengxiao = null;
+        // 星座
+        String constellation = null;
         if (StringUtils.isNoneBlank(accountInstanceDTO.getOrgId())) {
             accountOrg = accountOrgService.lambdaQuery()
                     .select(AccountOrg::getOrgId, AccountOrg::getOrgName)
@@ -419,6 +426,12 @@ public class AccountInstanceBiz {
         /* runsix:4.save accountIdentifier */
         // id是否为空 如果不为空说明是修改
         AccountInstance accountInstance = null;
+        if(accountInstanceDTO.getBirthday() != null){
+            String birthdayYear = DateUtil.format(accountInstanceDTO.getBirthday(), DatePattern.NORM_DATE_PATTERN);
+            chronological =  AccountUtil.getChronological(Integer.getInteger(birthdayYear.split("-")[0]));
+            constellation = AccountUtil.getConstellation(Integer.getInteger(birthdayYear.split("-")[1]),Integer.getInteger(birthdayYear.split("-")[2]));
+            shengxiao = AccountUtil.getChronological(Integer.getInteger(birthdayYear.split("-")[0]));
+        }
         if(accountInstanceDTO.getId() != null){
 
             accountIdentifierService.lambdaUpdate()
@@ -444,6 +457,10 @@ public class AccountInstanceBiz {
                     .set(AccountUserInfo::getName,accountInstanceDTO.getName())
                     .set(AccountUserInfo::getJob,accountInstanceDTO.getJob())
                     .set(AccountUserInfo::getEntryTime,accountInstanceDTO.getEntryTime())
+                    .set(AccountUserInfo::getBirthday,accountInstanceDTO.getBirthday())
+                    .set(AccountUserInfo::getShengxiao,shengxiao)
+                    .set(AccountUserInfo::getChronological,chronological)
+                    .set(AccountUserInfo::getConstellation,constellation)
                     .eq(AccountUserInfo::getAccountId,accountInstanceDTO.getAccountId())
                     .update();
 
@@ -473,7 +490,7 @@ public class AccountInstanceBiz {
              注意：总部端可以申请子账号，及员工账号，员工账号无法登录后台，可以根据前端上送密码区分，有密码则是子账号，无密码则门店端APP员工账号
              */
             //  TODO
-            accountInstance.setAccountType(2);
+            accountInstance.setAccountType(accountInstanceDTO.getAccountType());
             accountInstanceService.save(accountInstance);
             // 账号与租户关系
             accountTenantService.save(
@@ -492,6 +509,7 @@ public class AccountInstanceBiz {
                             .build()
             );
             // 账号与用户详情关系
+
             accountUserInfoService.save(
                     AccountUserInfo
                             .builder()
@@ -501,6 +519,10 @@ public class AccountInstanceBiz {
                             .job(accountInstanceDTO.getJob())
                             .name(accountInstanceDTO.getName())
                             .entryTime(accountInstanceDTO.getEntryTime())
+                            .birthday(accountInstanceDTO.getBirthday())
+                            .shengxiao(shengxiao)
+                            .chronological(chronological)
+                            .constellation(constellation)
                             .build()
             );
             if (Objects.nonNull(accountOrg)) {

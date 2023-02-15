@@ -75,7 +75,7 @@ public class AccountBiz implements AccountUserApi {
         }
         accountInstance.stream().forEach(item ->{
             AccountVo accountVo = new AccountVo();
-            BeanUtil.copyProperties(accountInstance, accountVo);
+            BeanUtil.copyProperties(item, accountVo);
             AccountUserInfo accountUserInfo = accountUserInfoService.lambdaQuery()
                     .eq(AccountUserInfo::getAccountId, accountVo.getAccountId())
                     .one();
@@ -153,6 +153,7 @@ public class AccountBiz implements AccountUserApi {
 
     @Override
     public IPage<AccountOrderVo> selectOrderInstancePage(AccountOrderBo accountOrderBo) {
+
         return null;
     }
 

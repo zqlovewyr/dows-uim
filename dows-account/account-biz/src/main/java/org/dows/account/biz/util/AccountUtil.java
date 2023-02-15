@@ -16,6 +16,13 @@ import org.dows.account.biz.dto.TreeAccountOrgDTO;
  * @author runsix
  */
 public interface AccountUtil {
+
+    final static int[] dayArr = new int[] { 20, 19, 21, 20, 21, 22, 23,
+            23, 23, 24, 23, 22 };
+    final static String[] constellationArr = new String[] { "摩羯座",
+            "水瓶座", "双鱼座", "白羊座", "金牛座", "双子座", "巨蟹座", "狮子座", "处女座", "天秤座",
+            "天蝎座", "射手座", "摩羯座" };
+
     /* runsix:static validate AccountInstanceDTO */
     static AccountInstanceDTO validateAndTrimAccountInstanceDTO(AccountInstanceDTO accountInstanceDTO) {
         if (Objects.isNull(accountInstanceDTO)) {
@@ -83,5 +90,83 @@ public interface AccountUtil {
     }
 
     static void validateAccountGroupDTO(AccountOrgGroupDTO groupDTO) {
+    }
+
+
+
+    /**
+     * 根据出生日期计算属相和星座
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        int month = 7;
+        int day = 28;
+        System.out.println("星座为：" + getConstellation(month, day));
+        System.out.println("属相为:" + getYear(1994));
+
+    }
+
+    /**
+     * 获取几零后
+     * @param year
+     * @return
+     */
+    public static String getChronological(int year) {
+        String str = String.valueOf(year).substring(2,3);
+        if(year < 2000){
+            Integer integer= Integer.getInteger(str);
+            if(integer>50&&integer<60){
+                return "50后";
+            }
+            if(integer>60&&integer<70){
+                return "60后";
+            }
+            if(integer>70&&integer<80){
+                return "70后";
+            }
+            if(integer>80&&integer<90){
+                return "80后";
+            }
+            if(integer>90&&integer<100){
+                return "90后";
+            }
+        }else {
+            Integer integer= Integer.getInteger(str);
+            if(integer==0||(integer>1 && integer<10)){
+                return "00后";
+            }
+            if(integer>10&&integer<20){
+                return "10后";
+            }
+        }
+        return "未知";
+    }
+    /**
+     * Java通过生日计算星座
+     *
+     * @param month
+     * @param day
+     * @return
+     */
+    public static String getConstellation(int month, int day) {
+        return day < dayArr[month - 1] ? constellationArr[month - 1]
+                : constellationArr[month];
+    }
+
+    /**
+     * 通过生日计算属相
+     *
+     * @param year
+     * @return
+     */
+    public static String getYear(int year) {
+        if (year < 1900) {
+            return "未知";
+        }
+        int start = 1900;
+        String[] years = new String[] { "鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊",
+                "猴", "鸡", "狗", "猪" };
+        return years[(year - start) % years.length];
     }
 }
