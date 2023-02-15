@@ -35,7 +35,7 @@ public class TenantAccountInstanceRest {
     @GetMapping(value = "/page")
     @ApiOperation(value = "分页获取用户基础信息")
     public Response<IPage<AccountInstanceResVo>> pageList(AccountInstanceQuery accountInstanceQuery){
-        return accountInstanceBiz.getAccountInstanceListPage(accountInstanceQuery);
+        return Response.ok(accountInstanceBiz.getAccountInstanceListPage(accountInstanceQuery));
     }
 
     @PostMapping(value = "/saveOrUpdate")
@@ -56,15 +56,15 @@ public class TenantAccountInstanceRest {
     @ApiOperation(value = "根据数据id获取详情")
     public Response<AccountInstanceResVo> getInfo(
             @ApiParam(required = true, value = "id") @PathVariable("id") Long id){
-        return accountInstanceBiz.getAccountInstanceInfo(id);
+        return Response.ok(accountInstanceBiz.getAccountInstanceInfo(id));
     }
     @DeleteMapping(
             path = {"/{id}"}
     )
     @ApiOperation(value = "删除用户数据")
-    public Response<AccountInstanceResVo> deleteById(
+    public Response<Boolean> deleteById(
             @ApiParam(required = true, value = "id") @PathVariable("id") Long id){
-        return accountInstanceBiz.deleteById(id);
+        return Response.ok(accountInstanceBiz.deleteById(id));
     }
 }
 

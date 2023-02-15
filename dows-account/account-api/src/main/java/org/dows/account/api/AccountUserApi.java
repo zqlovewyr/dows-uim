@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dows.account.bo.AccountCouponBo;
 import org.dows.account.bo.AccountInstanceTenantBo;
 import org.dows.account.bo.AccountOrderBo;
+import org.dows.account.bo.IffSettingBo;
 import org.dows.account.vo.*;
 
 import java.util.List;
@@ -106,5 +107,19 @@ public interface AccountUserApi {
      * @return
      */
     List<AccountConsumptionVo> selectAccountConsumptionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo);
+
+    /**
+     * 查询规则配置
+     * @param iffSettingBo
+     * @return
+     */
+    List<IffSettingVo> selectIffSettingList(IffSettingBo iffSettingBo,Integer ruleNum);
+
+    /**
+     * 批量新增规则配置
+     * @param iffSettingBos
+     * @return
+     */
+    Boolean saveIffSettingList(List<IffSettingBo> iffSettingBos,String storeId,Integer ruleNum);
 
 }

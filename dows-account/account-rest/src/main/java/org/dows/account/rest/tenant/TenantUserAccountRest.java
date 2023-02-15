@@ -10,9 +10,11 @@ import org.dows.account.biz.AccountBiz;
 import org.dows.account.bo.AccountCouponBo;
 import org.dows.account.bo.AccountInstanceTenantBo;
 import org.dows.account.bo.AccountOrderBo;
+import org.dows.account.bo.IffSettingBo;
 import org.dows.account.form.AccountCouponForm;
 import org.dows.account.form.AccountInstanceTenantForm;
 import org.dows.account.form.AccountOrderForm;
+import org.dows.account.form.IffSettingForm;
 import org.dows.account.query.AccountQuery;
 import org.dows.account.vo.*;
 import org.dows.framework.api.Response;
@@ -20,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -115,6 +118,30 @@ public class TenantUserAccountRest {
     public Response<List<AccountConsumptionVo>> selectAccountConsumptionTenantStatistics(@RequestBody AccountInstanceTenantForm accountInstanceTenantForm){
         AccountInstanceTenantBo accountInstanceTenantBo = new AccountInstanceTenantBo();
         BeanUtils.copyProperties(accountInstanceTenantForm,accountInstanceTenantBo);
+        accountInstanceTenantBo.setStoreId("1"); // TODO
         return Response.ok(accountBiz.selectAccountConsumptionTenantStatistics(accountInstanceTenantBo));
+    }
+
+    @PostMapping("/selectIffSettingList")
+    @ApiOperation(value = "设置消费能力金额-查询")
+    public Response<List<IffSettingVo>> selectIffSettingList(@RequestBody IffSettingForm iffSettingForm){
+        IffSettingBo iffSettingBo = new IffSettingBo();
+        BeanUtils.copyProperties(iffSettingForm,iffSettingBo);
+        iffSettingBo.setStoreId("1");
+        return Response.ok(accountBiz.selectIffSettingList(iffSettingBo,100001));
+    }
+
+    @PostMapping("/saveIffSettingList")
+    @ApiOperation(value = "设置消费能力金额-新增")
+    public Response<Boolean> saveIffSettingList(@RequestBody List<IffSettingForm> iffSettingForms){
+        List<IffSettingBo> iffSettingBos = new ArrayList<>();
+        iffSettingForms.stream().forEach(item ->{
+            IffSettingBo iffSettingBo = new IffSettingBo();
+            BeanUtils.copyProperties(item,iffSettingBo);
+            iffSettingBo.setStoreId("1");
+            iffSettingBos.add(iffSettingBo);
+        });
+        // TODO
+        return Response.ok(accountBiz.saveIffSettingList(iffSettingBos,"1",100001));
     }
 }

@@ -1,15 +1,18 @@
 package org.dows.account.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.dows.account.bo.AccountInstanceTenantBo;
 import org.dows.account.entity.AccountInstance;
+import org.dows.account.entity.IffSetting;
 import org.dows.account.mapper.AccountInstanceMapper;
 import org.dows.account.query.AccountCountTenantQuery;
 import org.dows.account.query.AccountInstanceQuery;
 import org.dows.account.service.AccountInstanceService;
+import org.dows.account.service.IffSettingService;
 import org.dows.account.vo.AccountConsumptionVo;
 import org.dows.account.vo.AccountDistributionVo;
 import org.dows.account.vo.AccountInstanceResVo;
@@ -32,6 +35,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class AccountInstanceServiceImpl extends MybatisCrudServiceImpl<AccountInstanceMapper, AccountInstance> implements AccountInstanceService {
 
+    private final IffSettingService iffSettingService;
     private final AccountInstanceMapper accountInstanceMapper;
     @Override
     public List<AccountInstanceVo> getAccountInstanceByUserNameAndTenantId(Map<String, Object> param) {
@@ -156,6 +160,8 @@ public class AccountInstanceServiceImpl extends MybatisCrudServiceImpl<AccountIn
             if(instanceCount != null && instanceCount != 0){
                 // 计算占比
                 item.setRate(new BigDecimal((float)item.getCount()/instanceCount).setScale(2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).intValue());
+            }else{
+                item.setRate(0);
             }
         });
 
@@ -178,24 +184,36 @@ public class AccountInstanceServiceImpl extends MybatisCrudServiceImpl<AccountIn
         }
 
         if(accountInstanceTenantBo.getConsumptionType() == 2){ // 消费能力分析
-            accountInstanceTenantBo.setFrequencyType(1);
-            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsCapacity(accountInstanceTenantBo));
-            accountInstanceTenantBo.setFrequencyType(2);
-            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsCapacity(accountInstanceTenantBo));
-            accountInstanceTenantBo.setFrequencyType(3);
-            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsCapacity(accountInstanceTenantBo));
-            accountInstanceTenantBo.setFrequencyType(4);
-            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsCapacity(accountInstanceTenantBo));
+
+            List<IffSetting> list = iffSettingService.lambdaQuery()
+                    .select(IffSetting::getContent,IffSetting::getTitle)
+                    .eq(IffSetting::getStoreId,accountInstanceTenantBo.getStoreId())
+                    .eq(IffSetting::getRuleNum,100001).list();
+            if(CollectionUtil.isEmpty(list)){
+                return new ArrayList<>();
+            }
+            list.stream().forEach(item ->{
+                accountInstanceTenantBo.setFrequencyStartCount(Integer.valueOf(item.getContent().split(",")[0]));
+                accountInstanceTenantBo.setFrequencyEndCount(Integer.valueOf(item.getContent().split(",")[1]));
+                AccountConsumptionVo vo = accountInstanceMapper.selectAccountConsumptionTenantStatisticsCapacity(accountInstanceTenantBo);
+                vo.setCount(item.getTitle());
+                vos.add(vo);
+            });
+
         }
         if(accountInstanceTenantBo.getConsumptionType() == 3){ // 客户流失分析
-            accountInstanceTenantBo.setFrequencyType(1);
-            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsCustomer(accountInstanceTenantBo));
-            accountInstanceTenantBo.setFrequencyType(2);
-            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsCustomer(accountInstanceTenantBo));
-            accountInstanceTenantBo.setFrequencyType(3);
-            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsCustomer(accountInstanceTenantBo));
-            accountInstanceTenantBo.setFrequencyType(4);
-            vos.addAll(accountInstanceMapper.selectAccountConsumptionTenantStatisticsCustomer(accountInstanceTenantBo));
+
+            List<IffSetting> list = iffSettingService.lambdaQuery()
+                    .select(IffSetting::getContent,IffSetting::getTitle)
+                    .eq(IffSetting::getStoreId,accountInstanceTenantBo.getStoreId())
+                    .eq(IffSetting::getRuleNum,100002).list();
+
+            list.stream().forEach(item ->{
+                accountInstanceTenantBo.setDistributionCount(Integer.valueOf(item.getContent()));
+                AccountConsumptionVo vo = accountInstanceMapper.selectAccountConsumptionTenantStatisticsCustomer(accountInstanceTenantBo);
+                vo.setCount(item.getTitle());
+                vos.add(vo);
+            });
         }
         Integer instanceCount =  accountInstanceMapper.selectAccountInstanceCount(AccountCountTenantQuery.builder()
                 .startDate(accountInstanceTenantBo.getStartDate())
@@ -205,6 +223,8 @@ public class AccountInstanceServiceImpl extends MybatisCrudServiceImpl<AccountIn
             if(instanceCount != null && instanceCount != 0){
                 // 计算占比
                 item.setRate(new BigDecimal((float)item.getPreCount()/instanceCount).setScale(2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).intValue());
+            }else{
+                item.setRate(0);
             }
         });
 

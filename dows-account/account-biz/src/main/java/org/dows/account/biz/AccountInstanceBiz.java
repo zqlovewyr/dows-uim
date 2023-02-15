@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.dows.account.api.AccountInstanceApi;
 import org.dows.account.biz.dto.AccountInstanceDTO;
 import org.dows.account.biz.dto.AccountInstanceResDTO;
 import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
@@ -23,7 +24,6 @@ import org.dows.account.query.AccountInstanceQuery;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountInstanceResVo;
 import org.dows.account.vo.AccountInstanceVo;
-import org.dows.framework.api.Response;
 import org.dows.rbac.biz.enums.EnumRbacStatusCode;
 import org.dows.rbac.biz.exception.RbacException;
 import org.dows.rbac.entity.RbacRole;
@@ -50,7 +50,7 @@ import static org.dows.account.biz.util.AccountUtil.getKeyOfkIdentifierAppIdV;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AccountInstanceBiz {
+public class AccountInstanceBiz implements AccountInstanceApi {
     private final AccountInstanceService accountInstanceService;
     private final AccountIdentifierService accountIdentifierService;
     private final RbacRoleService rbacRoleService;
@@ -62,20 +62,20 @@ public class AccountInstanceBiz {
     private final AccountUserService accountUserService;
     private final AccountUserInfoService accountUserInfoService;
 
-    public Response getAccountInstanceListPage(AccountInstanceQuery query){
+    public IPage<AccountInstanceResVo> getAccountInstanceListPage(AccountInstanceQuery query){
 
         Page<AccountInstanceResVo> page = new Page<>(query.getOffset(), query.getSize());
         IPage<AccountInstanceResVo> listByPage = accountInstanceService.getListByPage(page,query);
-        return Response.ok(listByPage);
+        return listByPage;
     }
-    public Response getAccountInstanceInfo(Long id){
+    public AccountInstanceResVo getAccountInstanceInfo(Long id){
         AccountInstanceQuery query = new AccountInstanceQuery();
         Page<AccountInstanceResVo> page = new Page<>(query.getOffset(), query.getSize());
         query.setId(id);
         IPage<AccountInstanceResVo> listByPage = accountInstanceService.getListByPage(page,query);
-        return Response.ok(listByPage.getRecords().get(0));
+        return listByPage.getRecords().get(0);
     }
-    public Response deleteById(Long id){
+    public Boolean deleteById(Long id){
 
         AccountInstance accountInstance = accountInstanceService.lambdaQuery().select(AccountInstance::getAccountId).eq(AccountInstance::getId,id).oneOpt().orElseThrow(() -> {
             throw new OrgException("删除失败，数据不存在");
@@ -93,9 +93,7 @@ public class AccountInstanceBiz {
         accountUserInfoService.removeByMap(columnMap);
         accountUserService.removeByMap(columnMap);
         accountTenantService.removeByMap(columnMap);
-
-        accountInstanceService.removeById(id);
-        return Response.ok();
+        return  accountInstanceService.removeById(id);
     }
     /**
      * runsix method process

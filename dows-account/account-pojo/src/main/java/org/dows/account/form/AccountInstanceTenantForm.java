@@ -18,7 +18,7 @@ import java.util.Date;
  */
 @SuppressWarnings("serial")
 @Data
-@ApiModel(value = "AccountInstanceBo 表单对象", description = "账号-实例")
+@ApiModel(value = "AccountInstanceTenantForm 表单对象", description = "账号-实例")
 public class AccountInstanceTenantForm implements Serializable {
     private static final long serialVersionUID = 752274823268208488L;
 

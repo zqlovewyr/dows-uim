@@ -2,6 +2,7 @@ package org.dows.account.biz;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,12 +10,15 @@ import org.dows.account.api.AccountUserApi;
 import org.dows.account.bo.AccountCouponBo;
 import org.dows.account.bo.AccountInstanceTenantBo;
 import org.dows.account.bo.AccountOrderBo;
+import org.dows.account.bo.IffSettingBo;
 import org.dows.account.entity.AccountInstance;
 import org.dows.account.entity.AccountUserInfo;
+import org.dows.account.entity.IffSetting;
 import org.dows.account.query.AccountCountTenantQuery;
 import org.dows.account.query.AccountQuery;
 import org.dows.account.service.AccountInstanceService;
 import org.dows.account.service.AccountUserInfoService;
+import org.dows.account.service.IffSettingService;
 import org.dows.account.vo.*;
 import org.dows.framework.api.Response;
 import org.dows.framework.api.exceptions.BaseException;
@@ -23,10 +27,9 @@ import org.dows.marketing.form.MarketCouponQueryForm;
 import org.dows.marketing.form.MarketListCouponVo;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -36,6 +39,8 @@ public class AccountBiz implements AccountUserApi {
     private final AccountUserInfoService accountUserInfoService;
 
     private final AccountInstanceService accountInstanceService;
+
+    private final IffSettingService iffSettingService;
 
     private final MarketCouponBiz marketCouponBiz;
 
@@ -174,5 +179,41 @@ public class AccountBiz implements AccountUserApi {
     @Override
     public List<AccountConsumptionVo> selectAccountConsumptionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo) {
         return accountInstanceService.selectAccountConsumptionTenantStatistics(accountInstanceTenantBo);
+    }
+
+    @Override
+    public List<IffSettingVo> selectIffSettingList(IffSettingBo iffSettingBo,Integer ruleNum) {
+        List<IffSettingVo> vos = new ArrayList<>();
+        List<IffSetting> iffSettings = iffSettingService.lambdaQuery()
+                .select(IffSetting::getId,IffSetting::getContent,IffSetting::getTitle)
+                .eq(IffSetting::getStoreId,iffSettingBo.getStoreId())
+                .eq(IffSetting::getRuleNum,ruleNum) // 规则编号
+                .list();
+        iffSettings.stream().forEach(item ->{
+            IffSettingVo vo = new IffSettingVo();
+            BeanUtil.copyProperties(item,vo);
+            vos.add(vo);
+        });
+        return vos;
+    }
+
+    @Override
+    @Transactional
+    public Boolean saveIffSettingList(List<IffSettingBo> iffSettingBos,String storeId,Integer ruleNum) {
+
+        Map<String, Object> columnMap = new HashMap<>();
+        columnMap.put("store_id",storeId);
+        columnMap.put("rule_num",ruleNum);
+        iffSettingService.removeByMap(columnMap);
+        List<IffSetting> iffSettings = new ArrayList<>();
+        iffSettingBos.stream().forEach(item ->{
+            IffSetting setting = new IffSetting();
+            BeanUtil.copyProperties(item,setting);
+            setting.setId(IdWorker.getIdStr());
+            setting.setCreateTime(new Date());
+            setting.setRuleNum(ruleNum);
+            iffSettings.add(setting);
+        });
+        return iffSettingService.saveBatch(iffSettings);
     }
 }

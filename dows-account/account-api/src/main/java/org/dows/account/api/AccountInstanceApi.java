@@ -1,6 +1,8 @@
 package org.dows.account.api;
 
-import org.dows.framework.api.Response;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.dows.account.query.AccountInstanceQuery;
+import org.dows.account.vo.AccountInstanceResVo;
 
 /**
  * 账号-实例维度信息(AccountInstance)Api接口
@@ -10,5 +12,25 @@ import org.dows.framework.api.Response;
  */
 public interface AccountInstanceApi {
 
+    /**
+     * 分页查询
+     * @param query
+     * @return
+     */
+    IPage<AccountInstanceResVo> getAccountInstanceListPage(AccountInstanceQuery query);
+
+    /**
+     * 根据id查询
+     * @param id
+     * @return
+     */
+    AccountInstanceResVo getAccountInstanceInfo(Long id);
+
+    /**
+     * 根据id删除
+     * @param id
+     * @return
+     */
+    Boolean deleteById(Long id);
 
 }
