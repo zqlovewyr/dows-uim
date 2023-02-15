@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dows.account.api.dto.AccountMerchantApi;
+import org.dows.account.api.AccountMerchantApi;
 import org.dows.account.biz.AccountInstanceBiz;
 import org.dows.account.biz.dto.AccountInstanceResDTO;
 import org.dows.account.form.AccountUserResForm;
