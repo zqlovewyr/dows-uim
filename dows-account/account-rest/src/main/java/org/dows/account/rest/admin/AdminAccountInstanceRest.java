@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dows.account.api.dto.AccountMerchantApi;
 import org.dows.account.biz.AccountInstanceBiz;
 import org.dows.account.biz.dto.AccountInstanceResDTO;
 import org.dows.account.form.AccountUserResForm;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("admin/account")
-public class AdminAccountInstanceRest {
+public class AdminAccountInstanceRest implements AccountMerchantApi {
 
     private final AccountInstanceBiz accountInstanceBiz;
 
@@ -65,6 +66,19 @@ public class AdminAccountInstanceRest {
     public Response<Boolean> deleteById(
             @ApiParam(required = true, value = "id") @PathVariable("id") Long id){
         return Response.ok(accountInstanceBiz.deleteById(id));
+    }
+
+    @Override
+    public Response saveAccountUser(AccountUserResForm usersForm) {
+        try {
+            AccountInstanceResDTO accountInstanceResDTO = new AccountInstanceResDTO();
+            BeanUtils.copyProperties(usersForm,accountInstanceResDTO);
+            accountInstanceBiz.saveOrUpdateAccountInstance(accountInstanceResDTO);
+            return Response.ok();
+
+        } catch (Exception e) {
+            return Response.fail(e.toString());
+        }
     }
 }
 
