@@ -90,7 +90,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         userFamilyApi.insertUserFamily(userFamilyDTO).getData();
         //3、新增用户扩展信息
         UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(userInstanceId).getData();
-        if(extinfoVo != null){
+        if(extinfoVo != null && !ReflectUtil.isObjectNull(extinfoVo)){
             UserExtinfoDTO userExtinfoDTO = new UserExtinfoDTO();
             BeanUtils.copyProperties(userFamilyDTO, userExtinfoDTO);
             userExtinfoDTO.setUserId(userInstanceId);
@@ -105,7 +105,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         //4、插入用户工作信息
         //4.1、判断是否已经存在该用户工作信息
         UserJobVo jobVo = userJobApi.getUserJobByUserId(userInstanceId).getData();
-        if(jobVo != null){
+        if(jobVo != null && !ReflectUtil.isObjectNull(jobVo)){
             UserJobDTO userJobDTO = new UserJobDTO();
             BeanUtils.copyProperties(userFamilyDTO, userJobDTO);
             userJobDTO.setUserId(userInstanceId);
@@ -120,7 +120,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         //5、插入用户公司信息
         //5.1、判断是否已经存在该用户公司信息
         UserCompanyVo companyVo = userCompanyApi.getUserCompanyByUserId(userInstanceId).getData();
-        if(companyVo != null){
+        if(companyVo != null && !ReflectUtil.isObjectNull(companyVo)){
             UserCompanyDTO userCompanyDTO = new UserCompanyDTO();
             BeanUtils.copyProperties(userFamilyDTO, userCompanyDTO);
             userCompanyDTO.setUserId(userInstanceId);
@@ -135,7 +135,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         //6、插入用户教育信息
         //6.1、判断是否已经存在该用户教育信息
         UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(userInstanceId).getData();
-        if(educationVo != null){
+        if(educationVo != null && !ReflectUtil.isObjectNull(educationVo)){
             UserEducationDTO userEducationDTO = new UserEducationDTO();
             BeanUtils.copyProperties(userFamilyDTO, userEducationDTO);
             userEducationDTO.setUserId(userInstanceId);
@@ -304,9 +304,9 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         //3、新增用户扩展信息
         //3.1、判断是否已经存在该用户扩展信息
         UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(userInstanceId).getData();
-        if(extinfoVo != null){
+        if(extinfoVo != null && !ReflectUtil.isObjectNull(extinfoVo)){
             UserExtinfoDTO userExtinfoDTO = new UserExtinfoDTO();
-            BeanUtils.copyProperties(userFamilyDTO, extinfoVo);
+            BeanUtils.copyProperties(userFamilyDTO, userExtinfoDTO);
             userExtinfoDTO.setUserId(userInstanceId);
             userExtinfoDTO.setId(extinfoVo.getId());
             userExtinfoApi.updateUserExtinfoById(userExtinfoDTO);
@@ -319,7 +319,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         //4、插入用户公司信息
         //4.1、判断是否已经存在该用户公司信息
         UserCompanyVo companyVo = userCompanyApi.getUserCompanyByUserId(userInstanceId).getData();
-        if(companyVo != null){
+        if(companyVo != null && !ReflectUtil.isObjectNull(companyVo)){
             UserCompanyDTO userCompanyDTO = new UserCompanyDTO();
             BeanUtils.copyProperties(userFamilyDTO, userCompanyDTO);
             userCompanyDTO.setUserId(userInstanceId);
@@ -334,7 +334,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         //5、插入用户教育信息
         //5.1、判断是否已经存在该用户教育信息
         UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(userInstanceId).getData();
-        if(educationVo != null){
+        if(educationVo != null && !ReflectUtil.isObjectNull(educationVo)){
             UserEducationDTO userEducationDTO = new UserEducationDTO();
             BeanUtils.copyProperties(userFamilyDTO, userEducationDTO);
             userEducationDTO.setUserId(userInstanceId);
@@ -349,7 +349,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         //6、插入用户工作信息
         //6.1、判断是否已经存在该用户工作信息
         UserJobVo jobVo = userJobApi.getUserJobByUserId(userInstanceId).getData();
-        if(jobVo != null){
+        if(jobVo != null && !ReflectUtil.isObjectNull(jobVo)){
             UserJobDTO userJobDTO = new UserJobDTO();
             BeanUtils.copyProperties(userFamilyDTO, userJobDTO);
             userJobDTO.setUserId(userInstanceId);

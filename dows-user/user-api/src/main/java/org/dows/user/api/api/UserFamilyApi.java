@@ -17,9 +17,9 @@ public interface UserFamilyApi {
     /**
      * 查询 族谱关系
      *
-     * @param userId
+     * @param id
      */
-    Response<GenealogyDTO> getGenealogyList(String userId);
+    Response<GenealogyDTO> getGenealogyList(String id);
 
     /**
      * 查询 用户-家庭

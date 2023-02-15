@@ -22,6 +22,7 @@ public class GenealogyDTO {
     String name;
     String imageUrl;
     String classType;
+    String gender;
     List<GenealogyDTO> mate;
     List<GenealogyDTO> children;
 }
