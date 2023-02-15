@@ -13,6 +13,7 @@ import org.dows.account.biz.dto.AccountInstanceResDTO;
 import org.dows.account.form.AccountUserResForm;
 import org.dows.account.query.AccountInstanceQuery;
 import org.dows.account.vo.AccountInstanceResVo;
+import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -69,12 +70,11 @@ public class AdminAccountInstanceRest implements AccountMerchantApi {
     }
 
     @Override
-    public Response saveAccountUser(AccountUserResForm usersForm) {
+    public Response<AccountInstanceVo> saveAccountUser(AccountUserResForm usersForm) {
         try {
             AccountInstanceResDTO accountInstanceResDTO = new AccountInstanceResDTO();
             BeanUtils.copyProperties(usersForm,accountInstanceResDTO);
-            accountInstanceBiz.saveOrUpdateAccountInstance(accountInstanceResDTO);
-            return Response.ok();
+            return Response.ok(accountInstanceBiz.saveOrUpdateAccountInstance(accountInstanceResDTO));
 
         } catch (Exception e) {
             return Response.fail(e.toString());

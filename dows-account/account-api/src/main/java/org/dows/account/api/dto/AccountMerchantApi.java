@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.dows.account.form.AccountUserResForm;
 import org.dows.account.query.AccountInstanceQuery;
 import org.dows.account.vo.AccountInstanceResVo;
+import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,6 @@ public interface AccountMerchantApi {
 
     @PostMapping(value = "/saveAccountUser")
     @ApiOperation("保存用户")
-    Response saveAccountUser(@RequestBody AccountUserResForm usersForm);
+    Response<AccountInstanceVo> saveAccountUser(@RequestBody AccountUserResForm usersForm);
 
 }
