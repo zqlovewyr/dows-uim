@@ -113,9 +113,9 @@ public interface AccountUtil {
      * @return
      */
     public static String getChronological(int year) {
-        String str = String.valueOf(year).substring(2,3);
+        String str = String.valueOf(year).substring(2,4);
         if(year < 2000){
-            Integer integer= Integer.getInteger(str);
+            Integer integer= Integer.valueOf(str);
             if(integer>50&&integer<60){
                 return "50后";
             }
@@ -132,7 +132,7 @@ public interface AccountUtil {
                 return "90后";
             }
         }else {
-            Integer integer= Integer.getInteger(str);
+            Integer integer= Integer.valueOf(str);
             if(integer==0||(integer>1 && integer<10)){
                 return "00后";
             }

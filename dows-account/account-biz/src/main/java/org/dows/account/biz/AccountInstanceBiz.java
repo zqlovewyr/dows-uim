@@ -428,9 +428,9 @@ public class AccountInstanceBiz {
         AccountInstance accountInstance = null;
         if(accountInstanceDTO.getBirthday() != null){
             String birthdayYear = DateUtil.format(accountInstanceDTO.getBirthday(), DatePattern.NORM_DATE_PATTERN);
-            chronological =  AccountUtil.getChronological(Integer.getInteger(birthdayYear.split("-")[0]));
-            constellation = AccountUtil.getConstellation(Integer.getInteger(birthdayYear.split("-")[1]),Integer.getInteger(birthdayYear.split("-")[2]));
-            shengxiao = AccountUtil.getChronological(Integer.getInteger(birthdayYear.split("-")[0]));
+            chronological =  AccountUtil.getChronological(Integer.valueOf(birthdayYear.split("-")[0]));
+            constellation = AccountUtil.getConstellation(Integer.valueOf(birthdayYear.split("-")[1]),Integer.valueOf(birthdayYear.split("-")[2]));
+            shengxiao = AccountUtil.getYear(Integer.valueOf(birthdayYear.split("-")[0]));
         }
         if(accountInstanceDTO.getId() != null){
 
@@ -475,6 +475,7 @@ public class AccountInstanceBiz {
         }else{
             AccountIdentifier accountIdentifier = new AccountIdentifier();
             BeanUtils.copyProperties(accountInstanceDTO, accountIdentifier);
+            accountInstanceDTO.setTenantId(UUID.randomUUID().toString().replace("-",""));
             accountIdentifier.setIdentifier(accountInstanceDTO.getIdCard());
             accountIdentifier.setAccountId(IdWorker.getIdStr());
             accountIdentifierService.save(accountIdentifier);
