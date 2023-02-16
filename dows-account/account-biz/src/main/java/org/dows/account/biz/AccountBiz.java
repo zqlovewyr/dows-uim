@@ -59,7 +59,7 @@ public class AccountBiz implements AccountUserApi {
                 .eq(AccountInstance::getAccountId, accountId)
                 .one();
         if (accountInstance == null) {
-            throw new BaseException(HttpStatus.BAD_REQUEST.value(), "账号不存在");
+            return null;
         }
         BeanUtil.copyProperties(accountInstance, accountVo);
         AccountUserInfo accountUserInfo = accountUserInfoService.lambdaQuery()
@@ -76,7 +76,7 @@ public class AccountBiz implements AccountUserApi {
                 .in(AccountInstance::getAccountId, accountIds)
                 .list();
         if (accountInstance.isEmpty()) {
-            throw new BaseException(HttpStatus.BAD_REQUEST.value(), "未查询到账号！");
+            return null;
         }
         accountInstance.stream().forEach(item ->{
             AccountVo accountVo = new AccountVo();
