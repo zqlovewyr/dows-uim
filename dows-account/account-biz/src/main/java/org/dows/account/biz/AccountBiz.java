@@ -25,6 +25,13 @@ import org.dows.framework.api.exceptions.BaseException;
 import org.dows.marketing.MarketCouponBiz;
 import org.dows.marketing.form.MarketCouponQueryForm;
 import org.dows.marketing.form.MarketListCouponVo;
+import org.dows.order.api.OrderInstanceBizApiService;
+import org.dows.order.form.OrderTaPageForm;
+import org.dows.order.form.OrderTaTypeForm;
+import org.dows.order.vo.OrderTaPackVo;
+import org.dows.order.vo.OrderTaTableVo;
+import org.dows.order.vo.OrderTaTakeOutVo;
+import org.dows.order.vo.OrderTaVo;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +50,8 @@ public class AccountBiz implements AccountUserApi {
     private final IffSettingService iffSettingService;
 
     private final MarketCouponBiz marketCouponBiz;
+
+    private final OrderInstanceBizApiService orderInstanceBizApiService;
 
     public Response getAccuntListPage(AccountQuery accountQuery){
         // TODO 消费金额和最后下单时间排序
@@ -152,15 +161,25 @@ public class AccountBiz implements AccountUserApi {
     }
 
     @Override
-    public AccountOrderStatisticsVo selectOrderStatistics(AccountOrderBo accountOrderBo) {
-        return null;
+    public OrderTaVo selectOrderStatistics(OrderTaTypeForm typeForm) {
+        return orderInstanceBizApiService.getTaOrderStat(typeForm);
     }
 
     @Override
-    public IPage<AccountOrderVo> selectOrderInstancePage(AccountOrderBo accountOrderBo) {
-
-        return null;
+    public List<OrderTaTableVo> getTaOrderTablePage(OrderTaPageForm pageForm) {
+        return orderInstanceBizApiService.getTaOrderTablePage(pageForm);
     }
+
+    @Override
+    public List<OrderTaPackVo> getTaOrderPackPage(OrderTaPageForm pageForm) {
+        return orderInstanceBizApiService.getTaOrderPackPage(pageForm);
+    }
+
+    @Override
+    public List<OrderTaTakeOutVo> getTaOrderTakeOutPage(OrderTaPageForm pageForm) {
+        return orderInstanceBizApiService.getTaOrderTakeOutPage(pageForm);
+    }
+
 
     @Override
     public Map<String, Object> selectAccountTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo) {

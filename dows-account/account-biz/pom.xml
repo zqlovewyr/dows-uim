@@ -41,6 +41,16 @@
             <artifactId>marketing-biz</artifactId>
             <version>20220701-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.dows.saas</groupId>
+            <artifactId>order-api</artifactId>
+            <version>20220701-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.dows.saas</groupId>
+            <artifactId>order-pojo</artifactId>
+            <version>20220701-SNAPSHOT</version>
+        </dependency>
 <!--        <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>auth-api</artifactId>

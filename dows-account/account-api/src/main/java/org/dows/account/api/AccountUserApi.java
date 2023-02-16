@@ -6,6 +6,12 @@ import org.dows.account.bo.AccountInstanceTenantBo;
 import org.dows.account.bo.AccountOrderBo;
 import org.dows.account.bo.IffSettingBo;
 import org.dows.account.vo.*;
+import org.dows.order.form.OrderTaPageForm;
+import org.dows.order.form.OrderTaTypeForm;
+import org.dows.order.vo.OrderTaPackVo;
+import org.dows.order.vo.OrderTaTableVo;
+import org.dows.order.vo.OrderTaTakeOutVo;
+import org.dows.order.vo.OrderTaVo;
 
 import java.util.List;
 import java.util.Map;
@@ -75,17 +81,28 @@ public interface AccountUserApi {
 
     /**
      * 他的订单统计
-     * @param accountOrderBo
+     * @param typeForm
      * @return
      */
-    AccountOrderStatisticsVo selectOrderStatistics(AccountOrderBo accountOrderBo);
+    OrderTaVo selectOrderStatistics(OrderTaTypeForm typeForm);
 
     /**
-     * 我的订单分页列表
-     * @param accountOrderBo
+     * Ta订单 堂食列表
      * @return
      */
-    IPage<AccountOrderVo> selectOrderInstancePage(AccountOrderBo accountOrderBo);
+    List<OrderTaTableVo> getTaOrderTablePage(OrderTaPageForm pageForm);
+
+    /**
+     * Ta订单 打包列表
+     * @return
+     */
+    List<OrderTaPackVo> getTaOrderPackPage(OrderTaPageForm pageForm);
+
+    /**
+     * Ta订单 外卖列表
+     * @return
+     */
+    List<OrderTaTakeOutVo> getTaOrderTakeOutPage(OrderTaPageForm pageForm);
 
     /**
      * 租户用户统计

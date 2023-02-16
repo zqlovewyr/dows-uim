@@ -16,6 +16,12 @@ import org.dows.account.form.AccountOrderForm;
 import org.dows.account.query.AccountQuery;
 import org.dows.account.vo.*;
 import org.dows.framework.api.Response;
+import org.dows.order.form.OrderTaPageForm;
+import org.dows.order.form.OrderTaTypeForm;
+import org.dows.order.vo.OrderTaPackVo;
+import org.dows.order.vo.OrderTaTableVo;
+import org.dows.order.vo.OrderTaTakeOutVo;
+import org.dows.order.vo.OrderTaVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,18 +58,26 @@ public class AdminUserAccountRest {
 
     @PostMapping("/selectOrderStatistics")
     @ApiOperation(value = "用户订单量统计")
-    public Response<AccountOrderStatisticsVo> selectOrderStatistics(@RequestBody AccountOrderForm accountOrderForm){
-        AccountOrderBo accountOrderBo = new AccountOrderBo();
-        BeanUtils.copyProperties(accountOrderForm,accountOrderBo);
-        return Response.ok(accountBiz.selectOrderStatistics(accountOrderBo));
+    public Response<OrderTaVo> selectOrderStatistics(@RequestBody OrderTaTypeForm orderTaTypeForm){
+        return Response.ok(accountBiz.selectOrderStatistics(orderTaTypeForm));
     }
 
-    @PostMapping("/selectOrderInstancePage")
-    @ApiOperation(value = "用户分页订单列表")
-    public Response<IPage<AccountOrderVo>> selectOrderInstancePage(@RequestBody AccountOrderForm accountOrderForm){
-        AccountOrderBo accountOrderBo = new AccountOrderBo();
-        BeanUtils.copyProperties(accountOrderForm,accountOrderBo);
-        return Response.ok(accountBiz.selectOrderInstancePage(accountOrderBo));
+    @PostMapping("/getTaOrderTablePage")
+    @ApiOperation(value = "Ta订单 堂食列表")
+    public Response<List<OrderTaTableVo>> getTaOrderTablePage(@RequestBody OrderTaPageForm orderTaPageForm){
+        return Response.ok(accountBiz.getTaOrderTablePage(orderTaPageForm));
+    }
+
+    @PostMapping("/getTaOrderPackPage")
+    @ApiOperation(value = "Ta订单 打包列表")
+    public Response<List<OrderTaPackVo>> getTaOrderPackPage(@RequestBody OrderTaPageForm orderTaPageForm){
+        return Response.ok(accountBiz.getTaOrderPackPage(orderTaPageForm));
+    }
+
+    @PostMapping("/getTaOrderTakeOutPage")
+    @ApiOperation(value = "Ta订单 外卖列表")
+    public Response<List<OrderTaTakeOutVo>> getTaOrderTakeOutPage(@RequestBody OrderTaPageForm orderTaPageForm){
+        return Response.ok(accountBiz.getTaOrderTakeOutPage(orderTaPageForm));
     }
 
     @PostMapping("/selectAccountCouponPage")

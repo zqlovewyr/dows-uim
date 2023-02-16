@@ -19,6 +19,11 @@
             <groupId>org.dows.cloud</groupId>
             <artifactId>account-pojo</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.dows.saas</groupId>
+            <artifactId>order-pojo</artifactId>
+            <version>20220701-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>
