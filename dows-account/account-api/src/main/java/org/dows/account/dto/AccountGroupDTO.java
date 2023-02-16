@@ -34,6 +34,9 @@ public class AccountGroupDTO implements Serializable {
     @ApiModelProperty("成员角色ID")
     private Long roleId;
 
+    @ApiModelProperty("映射账户ID")
+    private String mappingId;
+
     @ApiModelProperty("成员角色名称")
     private String roleName;
 

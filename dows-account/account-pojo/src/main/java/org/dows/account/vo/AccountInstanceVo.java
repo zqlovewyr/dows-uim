@@ -40,7 +40,7 @@ public class AccountInstanceVo implements Serializable {
     private String password;
 
     @ApiModelProperty("姓名")
-    private String name;
+    private String userName;
 
     @ApiModelProperty("性别")
     private String gender;

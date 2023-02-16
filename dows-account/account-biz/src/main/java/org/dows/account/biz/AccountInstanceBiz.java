@@ -678,7 +678,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     UserInstanceVo instance = userInstanceApi.getUserInstanceById(user.getUserId()).getData();
                     if (!ReflectUtil.isObjectNull(instance)) {
                         if (StringUtils.isNotEmpty(instance.getName())) {
-                            vo.setName(instance.getName());
+                            vo.setUserName(instance.getName());
                         }
                         if (StringUtils.isNotEmpty(instance.getGender())) {
                             vo.setGender(instance.getGender());
@@ -826,6 +826,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 .one();
         if (accountUser != null) {
             UserInstanceVo vo = userInstanceApi.getUserInstanceById(accountUser.getUserId()).getData();
+            model.setUserName(vo.getName());
             BeanUtils.copyProperties(vo, model);
         }
         //4、获取角色实例

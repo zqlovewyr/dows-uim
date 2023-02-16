@@ -233,6 +233,10 @@ public class AccountGroupBiz implements AccountGroupApi {
                 orgIds.add("fill");
             }
         }
+
+        if(accountGroupDTO.getOrgIds() != null && accountGroupDTO.getOrgIds().size() > 0){
+            orgIds.addAll(accountGroupDTO.getOrgIds());
+        }
         //3、根据用户信息获取用户Id
         //3.1、根据用户电话获取对应用户Id
         Set<String> userIds = new HashSet<>();
@@ -429,6 +433,7 @@ public class AccountGroupBiz implements AccountGroupApi {
         //2、创建用户实例
         UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
         BeanUtils.copyProperties(accountGroupDTO, userInstanceDTO);
+        userInstanceDTO.setName(accountGroupDTO.getUserName());
         String userId = userInstanceApi.insertUserInstance(userInstanceDTO).getData();
         map.put("userId", userId);
 
