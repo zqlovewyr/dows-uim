@@ -15,4 +15,8 @@ public class BaseConstant {
     public static final String SIBLING = "兄弟姐妹";
     /*子女*/
     public static final String CHILDREN = "子女";
+    /*档案类别-家庭*/
+    public static final String FAMILY = "家庭";
+    /*档案类别-个人*/
+    public static final String PERSONAL = "个人";
 }

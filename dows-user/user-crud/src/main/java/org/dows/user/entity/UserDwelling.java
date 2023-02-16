@@ -35,8 +35,11 @@ public class UserDwelling implements CrudEntity {
     @ApiModelProperty("主键")
     private Long id;
 
-    @ApiModelProperty("家庭ID")
-    private String familyId;
+    @ApiModelProperty("主体ID")
+    private String principalId;
+
+    @ApiModelProperty("主体类型")
+    private String principalType;
 
     @ApiModelProperty("家庭电话")
     private String telephone;

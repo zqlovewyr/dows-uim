@@ -43,9 +43,9 @@ public class UserDwellingBiz implements UserDwellingApi {
     }
 
     @Override
-    public Response<UserDwellingVo> getUserDwellingByFamilyId(String familyId) {
+    public Response<UserDwellingVo> getUserDwellingByPrincipalId(String principalId) {
         LambdaQueryWrapper<UserDwelling> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(UserDwelling::getFamilyId, familyId);
+        queryWrapper.eq(UserDwelling::getPrincipalId, principalId);
         UserDwelling userDwelling = userDwellingService.getOne(queryWrapper);
         //复制属性
         UserDwellingVo vo = new UserDwellingVo();

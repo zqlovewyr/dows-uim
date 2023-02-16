@@ -10,6 +10,7 @@ import org.dows.framework.crud.mybatis.MybatisCrudRest;
 import org.dows.user.api.api.*;
 import org.dows.user.api.dto.*;
 import org.dows.user.api.vo.*;
+import org.dows.user.constant.BaseConstant;
 import org.dows.user.entity.UserFamily;
 import org.dows.user.entity.UserInstance;
 import org.dows.user.enums.EnumUserStatusCode;
@@ -364,10 +365,21 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
             userJobApi.insertUserJob(userJobDTO);
         }
         //7、插入用户住所信息
-        UserDwellingDTO userDwellingDTO = new UserDwellingDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userDwellingDTO);
-        userDwellingDTO.setFamilyId(familyId);
-        userDwellingApi.insertUserDwelling(userDwellingDTO);
+        UserDwellingVo userDwellingVo = userDwellingApi.getUserDwellingByPrincipalId(familyId).getData();
+        if (userDwellingVo != null && !ReflectUtil.isObjectNull(userDwellingVo)) {
+            UserDwellingDTO userDwellingDTO = new UserDwellingDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userDwellingDTO);
+            userDwellingDTO.setPrincipalId(familyId);
+            userDwellingDTO.setPrincipalType(BaseConstant.FAMILY);
+            userDwellingDTO.setId(userDwellingVo.getId());
+            userDwellingApi.updateUserDwellingById(userDwellingDTO);
+        } else {
+            UserDwellingDTO userDwellingDTO = new UserDwellingDTO();
+            BeanUtils.copyProperties(userFamilyDTO, userDwellingDTO);
+            userDwellingDTO.setPrincipalId(familyId);
+            userDwellingDTO.setPrincipalType(BaseConstant.FAMILY);
+            userDwellingApi.insertUserDwelling(userDwellingDTO);
+        }
         //8、插入用户住址
         UserAddressVo addressVo = userAddressApi.getUserAddressByUserId(userInstanceId).getData();
         if (addressVo != null && !ReflectUtil.isObjectNull(addressVo)) {
@@ -414,7 +426,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         UserJobVo jobVo = userJobApi.getUserJobByUserId(model.getUserId()).getData();
         BeanUtils.copyProperties(jobVo, familyVo, new String[]{"id", "userId"});
         //7、获取用户住所信息
-        UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByFamilyId(id).getData();
+        UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByPrincipalId(id).getData();
         BeanUtils.copyProperties(dwellingVo, familyVo, new String[]{"id", "familyId"});
         //8、获取用户地址信息
         UserAddressVo addressVo = userAddressApi.getUserAddressByUserId(model.getUserId()).getData();
@@ -463,11 +475,11 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         userJobDTO.setId(jobVo.getId());
         userJobApi.updateUserJobById(userJobDTO);
         //7、更新用户住所信息
-        UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByFamilyId(model.getId()).getData();
+        UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByPrincipalId(model.getId()).getData();
         UserDwellingDTO userDwellingDTO = new UserDwellingDTO();
         BeanUtils.copyProperties(userFamilyDTO, userDwellingDTO, new String[]{"id"});
         userDwellingDTO.setId(dwellingVo.getId());
-        userDwellingDTO.setFamilyId(userFamilyDTO.getId());
+        userDwellingDTO.setPrincipalId(userFamilyDTO.getId());
         userDwellingApi.updateUserDwellingById(userDwellingDTO);
         //8、更新用户地址信息
         UserAddressVo addressVo = userAddressApi.getUserAddressByUserId(model.getUserId()).getData();
@@ -500,7 +512,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
         UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(familyVo.getUserId()).getData();
         userEducationApi.deleteUserEducationById(educationVo.getId());
         //7、删除用户做所信息
-        UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByFamilyId(familyVo.getId()).getData();
+        UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByPrincipalId(familyVo.getId()).getData();
         userDwellingApi.deleteUserDwellingById(dwellingVo.getId());
         //8、删除用户地址信息
         UserAddressVo addressVo = userAddressApi.getUserAddressByUserId(familyVo.getUserId()).getData();
@@ -530,7 +542,7 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
             UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(familyVo.getUserId()).getData();
             userEducationApi.deleteUserEducationById(educationVo.getId());
             //7、删除用户做所信息
-            UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByFamilyId(familyVo.getId()).getData();
+            UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByPrincipalId(familyVo.getId()).getData();
             userDwellingApi.deleteUserDwellingById(dwellingVo.getId());
             //8、删除用户地址信息
             UserAddressVo addressVo = userAddressApi.getUserAddressByUserId(familyVo.getUserId()).getData();

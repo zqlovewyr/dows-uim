@@ -22,9 +22,9 @@ public interface UserDwellingApi {
     /**
      * 查询 用户-住所信息
      *
-     * @param familyId
+     * @param principalId
      */
-    Response<UserDwellingVo> getUserDwellingByFamilyId(String familyId);
+    Response<UserDwellingVo> getUserDwellingByPrincipalId(String principalId);
 
     /**
      * 编辑 用户-家住所信息

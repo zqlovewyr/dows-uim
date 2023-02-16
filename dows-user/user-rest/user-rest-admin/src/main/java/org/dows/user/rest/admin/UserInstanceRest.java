@@ -11,7 +11,10 @@ import org.dows.framework.crud.mybatis.MybatisCrudRest;
 import org.dows.user.api.api.*;
 import org.dows.user.api.dto.*;
 import org.dows.user.api.vo.*;
+import org.dows.user.constant.BaseConstant;
 import org.dows.user.entity.UserInstance;
+import org.dows.user.enums.EnumUserStatusCode;
+import org.dows.user.exception.UserException;
 import org.dows.user.service.UserInstanceService;
 import org.dows.user.form.UserInstanceForm;
 import org.dows.user.util.ReflectUtil;
@@ -94,7 +97,7 @@ public class UserInstanceRest implements MybatisCrudRest<UserInstanceForm, UserI
         return userInstanceApi.getUserInstanceListNoPage(userInstanceDTO);
     }
 
-    @ApiOperation("新增 个人-用户-档案")
+    @ApiOperation("新增 个人-档案-基本信息")
     @PostMapping("/insertUserProfile")
     @Transactional(rollbackFor = Exception.class)
     public Response<String> insertUserProfile(@RequestBody UserProfileDTO userProfileDTO) {
@@ -177,9 +180,21 @@ public class UserInstanceRest implements MybatisCrudRest<UserInstanceForm, UserI
             userJobApi.insertUserJob(userJobDTO);
         }
         //6、插入用户住所信息
-        UserDwellingDTO userDwellingDTO = new UserDwellingDTO();
-        BeanUtils.copyProperties(userProfileDTO, userDwellingDTO);
-        userDwellingApi.insertUserDwelling(userDwellingDTO);
+        UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByPrincipalId(userInstanceId).getData();
+        if (dwellingVo != null && !ReflectUtil.isObjectNull(dwellingVo)) {
+            UserDwellingDTO userDwellingDTO = new UserDwellingDTO();
+            BeanUtils.copyProperties(userProfileDTO, userDwellingDTO);
+            userDwellingDTO.setPrincipalId(userInstanceId);
+            userDwellingDTO.setPrincipalType(BaseConstant.PERSONAL);
+            userDwellingDTO.setId(dwellingVo.getId());
+            userDwellingApi.updateUserDwellingById(userDwellingDTO);
+        } else {
+            UserDwellingDTO userDwellingDTO = new UserDwellingDTO();
+            BeanUtils.copyProperties(userProfileDTO, userDwellingDTO);
+            userDwellingDTO.setPrincipalId(userInstanceId);
+            userDwellingDTO.setPrincipalType(BaseConstant.PERSONAL);
+            userDwellingApi.insertUserDwelling(userDwellingDTO);
+        }
         //7、插入用户住址
         UserAddressVo addressVo = userAddressApi.getUserAddressByUserId(userInstanceId).getData();
         if (addressVo != null && !ReflectUtil.isObjectNull(addressVo)) {
@@ -209,6 +224,85 @@ public class UserInstanceRest implements MybatisCrudRest<UserInstanceForm, UserI
             userContactApi.insertUserContact(userContactDTO);
         }
         return Response.ok(userInstanceId);
+    }
+
+/*    @ApiOperation("编辑 个人-档案-基本信息")
+    @PostMapping("/updateUserProfileById")
+    @Transactional(rollbackFor = Exception.class)
+    public void updateUserFamilyById(@RequestBody UserProfileDTO userProfileDTO) {
+        //2、更新家庭户主实例
+        UserInstanceVo instanceVo = userInstanceApi.getUserInstanceById(model.getUserId()).getData();
+        UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
+        BeanUtils.copyProperties(userFamilyDTO, userInstanceDTO, new String[]{"id"});
+        userInstanceDTO.setId(instanceVo.getId());
+        userInstanceDTO.setName(userFamilyDTO.getHouseholderName());
+        userInstanceApi.updateUserInstance(userInstanceDTO);
+        //3、更新用户扩展信息
+        UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(model.getUserId()).getData();
+        UserExtinfoDTO userExtinfoDTO = new UserExtinfoDTO();
+        BeanUtils.copyProperties(userFamilyDTO, userExtinfoDTO, new String[]{"id"});
+        userExtinfoDTO.setId(extinfoVo.getId());
+        userExtinfoApi.updateUserExtinfoById(userExtinfoDTO);
+        //4、更新用户公司信息
+        UserCompanyVo companyVo = userCompanyApi.getUserCompanyByUserId(model.getUserId()).getData();
+        UserCompanyDTO userCompanyDTO = new UserCompanyDTO();
+        BeanUtils.copyProperties(userFamilyDTO, userCompanyDTO, new String[]{"id"});
+        userCompanyDTO.setId(companyVo.getId());
+        userCompanyApi.updateUserCompanyById(userCompanyDTO);
+        //5、更新用户教育信息
+        UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(model.getUserId()).getData();
+        UserEducationDTO userEducationDTO = new UserEducationDTO();
+        BeanUtils.copyProperties(userFamilyDTO, userEducationDTO, new String[]{"id"});
+        userEducationDTO.setId(educationVo.getId());
+        userEducationApi.updateUserEducationById(userEducationDTO);
+        //6、更新用户工作信息
+        UserJobVo jobVo = userJobApi.getUserJobByUserId(model.getUserId()).getData();
+        UserJobDTO userJobDTO = new UserJobDTO();
+        BeanUtils.copyProperties(userFamilyDTO, userJobDTO, new String[]{"id"});
+        userJobDTO.setId(jobVo.getId());
+        userJobApi.updateUserJobById(userJobDTO);
+        //7、更新用户住所信息
+        UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByPrincipalId(model.getId()).getData();
+        UserDwellingDTO userDwellingDTO = new UserDwellingDTO();
+        BeanUtils.copyProperties(userFamilyDTO, userDwellingDTO, new String[]{"id"});
+        userDwellingDTO.setId(dwellingVo.getId());
+        userDwellingDTO.setFamilyId(userFamilyDTO.getId());
+        userDwellingApi.updateUserDwellingById(userDwellingDTO);
+        //8、更新用户地址信息
+        UserAddressVo addressVo = userAddressApi.getUserAddressByUserId(model.getUserId()).getData();
+        UserAddressDTO userAddressDTO = new UserAddressDTO();
+        BeanUtils.copyProperties(userFamilyDTO, userAddressDTO, new String[]{"id"});
+        userAddressDTO.setId(addressVo.getId());
+        userAddressApi.updateUserAddressById(userAddressDTO);
+    }*/
+
+    @ApiOperation("查看 个人-档案-基本信息")
+    @GetMapping("/getUserProfileById/{id}")
+    @Transactional(rollbackFor = Exception.class)
+    public Response<UserProfileVo> getUserProfileById(@PathVariable("id") String id) {
+        UserProfileVo vo = new UserProfileVo();
+        //1、获取用户实例
+        UserInstanceVo instanceVo = userInstanceApi.getUserInstanceById(id).getData();
+        BeanUtils.copyProperties(instanceVo, vo, new String[]{"id", "userId"});
+        //2、获取用户扩展信息
+        UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(id).getData();
+        BeanUtils.copyProperties(extinfoVo, vo, new String[]{"id", "userId"});
+        //3、获取用户公司信息
+        UserCompanyVo companyVo = userCompanyApi.getUserCompanyByUserId(id).getData();
+        BeanUtils.copyProperties(companyVo, vo, new String[]{"id", "userId"});
+        //5、获取用户教育信息
+        UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(id).getData();
+        BeanUtils.copyProperties(educationVo, vo, new String[]{"id", "userId"});
+        //6、获取用户工作信息
+        UserJobVo jobVo = userJobApi.getUserJobByUserId(id).getData();
+        BeanUtils.copyProperties(jobVo, vo, new String[]{"id", "userId"});
+        //7、获取用户住所信息
+        UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByPrincipalId(id).getData();
+        BeanUtils.copyProperties(dwellingVo, vo, new String[]{"id", "familyId"});
+        //8、获取用户地址信息
+        UserAddressVo addressVo = userAddressApi.getUserAddressByUserId(id).getData();
+        BeanUtils.copyProperties(addressVo, vo, new String[]{"id", "userId"});
+        return Response.ok(vo);
     }
 }
 
