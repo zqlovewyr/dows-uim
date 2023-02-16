@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
+import org.dows.user.api.api.UserAddressApi;
 import org.dows.user.api.api.UserFamilyApi;
 import org.dows.user.api.api.UserInstanceApi;
 import org.dows.user.api.dto.GenealogyDTO;
@@ -54,6 +55,8 @@ public class UserFamilyBiz implements UserFamilyApi {
     private final UserInstanceService userInstanceService;
 
     private final UserDwellingService userDwellingService;
+
+    private final UserAddressService userAddressService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -432,17 +435,17 @@ public class UserFamilyBiz implements UserFamilyApi {
         }
         //2、根据居住地址获取对应的userId
         if (StringUtils.isNotEmpty(userFamilyDTO.getNameNoPhoneAddress())) {
-            List<UserDwelling> userDwellingList = userDwellingService.lambdaQuery()
-                    .select(UserDwelling::getFamilyId)
-                    .like(StringUtils.isNotEmpty(userFamilyDTO.getNameNoPhoneAddress()), UserDwelling::getAddress, userFamilyDTO.getNameNoPhoneAddress())
+            List<UserAddress> userAddressList = userAddressService.lambdaQuery()
+                    .select(UserAddress::getUserId)
+                    .like(StringUtils.isNotEmpty(userFamilyDTO.getNameNoPhoneAddress()), UserAddress::getUserId, userFamilyDTO.getNameNoPhoneAddress())
                     .list();
-            if (userDwellingList != null && userDwellingList.size() > 0) {
-                userDwellingList.forEach(userAddress -> {
-                    familyIds.add(userAddress.getFamilyId());
+            if (userAddressList != null && userAddressList.size() > 0) {
+                userAddressList.forEach(userAddress -> {
+                    userIds.add(userAddress.getUserId());
                 });
             }
-            if (familyIds.size() == 0) {
-                familyIds.add("fill");
+            if (userIds.size() == 0) {
+                userIds.add("fill");
             }
         }
         //3、获取以户主为主体的家庭信息
@@ -469,17 +472,21 @@ public class UserFamilyBiz implements UserFamilyApi {
             familyList.forEach(family -> {
                 //4.1、根据户主id获取户主姓名
                 UserInstance userInstance = userInstanceService.getById(family.getUserId());
-                //4.2、获取户主地址和社区
+                //4.2、获取户主社区
                 UserDwelling userDwelling = userDwellingService.lambdaQuery()
                         .eq(UserDwelling::getFamilyId, family.getId())
                         .one();
-                //4.3、设置属性
+                //4.3、获取户主地址
+                UserAddress userAddress = userAddressService.lambdaQuery()
+                        .eq(UserAddress::getUserId, family.getUserId())
+                        .one();
+                //4.4、设置属性
                 UserFamilyVo entity = new UserFamilyVo().builder().build()
                         .setId(family.getId().toString())
                         .setFamilyId(family.getFamilyId())
                         .setHouseholderName(userInstance.getName())
                         .setIdNo(userInstance.getIdNo())
-                        .setResidential(userDwelling.getAddress())
+                        .setResidential(userAddress.getAddress())
                         .setCommunity(userDwelling.getCommunity());
                 voList.add(entity);
                 // TODO 判断是否存在个人档案或者客户管理相关信息，如果有，则获取所属健管师

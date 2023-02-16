@@ -27,9 +27,6 @@ public class UserDwellingVo {
     @ApiModelProperty("家庭ID")
     private String familyId;
 
-    @ApiModelProperty("地址")
-    private String address;
-
     @ApiModelProperty("家庭电话")
     private String telephone;
 

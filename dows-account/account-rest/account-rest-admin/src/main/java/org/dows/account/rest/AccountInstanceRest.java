@@ -1,6 +1,7 @@
 package org.dows.account.rest;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -138,8 +139,10 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
             if (voList != null && voList.size() > 0) {
                 for (AccountInstanceVo vo : voList) {
                     AccountRoleVo entity = accountRoleApi.getAccountRoleByPrincipalId(vo.getId().toString()).getData();
-                    if (entity.getRoleName() == BaseConstant.HEALTH_MANAGEMENT_ENGINEER) {
-                        count++;
+                    if(StringUtils.isNotEmpty(entity.getRoleName())) {
+                        if (entity.getRoleName().equals(BaseConstant.HEALTH_MANAGEMENT_ENGINEER)) {
+                            count++;
+                        }
                     }
                 }
             }
@@ -159,7 +162,7 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
                         if (entityList != null && entityList.size() > 0) {
                             for (AccountGroupVo entity : entityList) {
                                 AccountRoleVo roleVo = accountRoleApi.getAccountRoleByPrincipalId(entity.getAccountId().toString()).getData();
-                                if (roleVo.getRoleName() == BaseConstant.HEALTH_MANAGEMENT_ENGINEER) {
+                                if (roleVo.getRoleName().equals(BaseConstant.HEALTH_MANAGEMENT_ENGINEER)) {
                                     count++;
                                 }
                             }

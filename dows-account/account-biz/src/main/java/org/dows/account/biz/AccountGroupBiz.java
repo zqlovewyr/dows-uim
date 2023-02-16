@@ -738,6 +738,7 @@ public class AccountGroupBiz implements AccountGroupApi {
         UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
         BeanUtils.copyProperties(instance, userInstanceDTO);
         BeanUtils.copyProperties(accountGroupDTO, userInstanceDTO, new String[]{"id"});
+        userInstanceDTO.setName(accountGroupDTO.getUserName());
         String userId = userInstanceApi.updateUserInstance(userInstanceDTO).getData();
         map.put("userId", userId);
 

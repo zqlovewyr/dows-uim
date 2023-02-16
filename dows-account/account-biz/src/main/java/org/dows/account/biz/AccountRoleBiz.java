@@ -64,7 +64,9 @@ public class AccountRoleBiz implements AccountRoleApi {
                 .one();
         //复制属性
         AccountRoleVo vo = new AccountRoleVo();
-        BeanUtils.copyProperties(accountRole, vo);
+        if (accountRole != null) {
+            BeanUtils.copyProperties(accountRole, vo);
+        }
         return Response.ok(vo);
     }
 
@@ -89,9 +91,9 @@ public class AccountRoleBiz implements AccountRoleApi {
     @Override
     public Response<Long> authAccountRole(AccountRoleDTO accountRoleDTO) {
         AccountRole role = new AccountRole();
-        BeanUtils.copyProperties(accountRoleDTO,role);
+        BeanUtils.copyProperties(accountRoleDTO, role);
         boolean flag = accountRoleService.save(role);
-        if(flag == false){
+        if (flag == false) {
             throw new AccountRoleException(EnumAccountRoleStatusCode.ACCOUNT_ROLE_AUTH_FAIl_EXCEPTION);
         }
         return Response.ok(role.getId());
