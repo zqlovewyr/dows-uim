@@ -23,7 +23,7 @@ import java.util.Date;
 @ApiModel(value = "UserContactDTO对象", description = "用户-联系方式")
 public class UserContactDTO {
     @ApiModelProperty("主键")
-    private Long id;
+    private String id;
 
     @ApiModelProperty("用户ID")
     private String userId;
