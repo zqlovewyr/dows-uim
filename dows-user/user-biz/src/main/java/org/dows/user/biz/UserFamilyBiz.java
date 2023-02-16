@@ -108,7 +108,7 @@ public class UserFamilyBiz implements UserFamilyApi {
                                     //设置属性
                                     UserInstance model = userInstanceService.getById(grand.getUserId());
                                     if (model != null) {
-                                        genealogyDTO = GenealogyDTO.builder().name(model.getName()).imageUrl(model.getAvatar()).classType("rootNode").gender(model.getGender()).build();
+                                        genealogyDTO = GenealogyDTO.builder().id(model.getId().toString()).name(model.getName()).imageUrl(model.getAvatar()).classType("rootNode").gender(model.getGender()).build();
                                         break;
                                     }
                                 }
@@ -129,7 +129,7 @@ public class UserFamilyBiz implements UserFamilyApi {
                                             //设置属性
                                             UserInstance model = userInstanceService.getById(siblingGrand.getUserId());
                                             if (model != null) {
-                                                genealogyDTO = GenealogyDTO.builder().name(model.getName()).imageUrl(model.getAvatar()).classType("rootNode").gender(model.getGender()).build();
+                                                genealogyDTO = GenealogyDTO.builder().id(model.getId().toString()).name(model.getName()).imageUrl(model.getAvatar()).classType("rootNode").gender(model.getGender()).build();
                                                 break;
                                             }
                                         }
@@ -151,7 +151,7 @@ public class UserFamilyBiz implements UserFamilyApi {
             if (family.getRelation().equals(BaseConstant.PARENT)) {
                 //4.1、设置父母属性
                 UserInstance model = userInstanceService.getById(family.getUserId());
-                firstDTO = GenealogyDTO.builder().name(model.getName()).imageUrl(model.getAvatar()).gender(model.getGender()).build();
+                firstDTO = GenealogyDTO.builder().id(model.getId().toString()).name(model.getName()).imageUrl(model.getAvatar()).gender(model.getGender()).build();
                 firstList.add(firstDTO);
                 //4.2、判断以爸爸或者妈妈户主的家庭
                 LambdaQueryWrapper<UserFamily> parentWrapper = new LambdaQueryWrapper<>();
@@ -162,7 +162,7 @@ public class UserFamilyBiz implements UserFamilyApi {
                     if (parentSiblingList != null && parentSiblingList.size() > 0) {
                         for (UserFamilyVo vo : parentSiblingList) {
                             UserInstance firstModel = userInstanceService.getById(vo.getUserId());
-                            firstList.add(GenealogyDTO.builder().name(firstModel.getName()).imageUrl(firstModel.getAvatar()).gender(firstModel.getGender()).build());
+                            firstList.add(GenealogyDTO.builder().id(firstModel.getId().toString()).name(firstModel.getName()).imageUrl(firstModel.getAvatar()).gender(firstModel.getGender()).build());
                         }
                     }
                 }
@@ -172,13 +172,13 @@ public class UserFamilyBiz implements UserFamilyApi {
         //4、获取自己这一代的兄弟姐妹，作为第二代
         //设置自己
         UserInstance owner = userInstanceService.getById(userFamily.getUserId());
-        secondDTO = GenealogyDTO.builder().name(owner.getName()).imageUrl(owner.getAvatar()).gender(owner.getGender()).build();
+        secondDTO = GenealogyDTO.builder().id(owner.getId().toString()).name(owner.getName()).imageUrl(owner.getAvatar()).gender(owner.getGender()).build();
         secondList.add(secondDTO);
         for (UserFamilyVo family : familyList) {
             if (family.getRelation().equals(BaseConstant.SIBLING)) {
                 //5.1、设置兄弟姐妹属性
                 UserInstance secondModel = userInstanceService.getById(family.getUserId());
-                secondList.add(GenealogyDTO.builder().name(secondModel.getName()).imageUrl(secondModel.getAvatar()).gender(secondModel.getGender()).build());
+                secondList.add(GenealogyDTO.builder().id(secondModel.getId().toString()).name(secondModel.getName()).imageUrl(secondModel.getAvatar()).gender(secondModel.getGender()).build());
             }
             //5.2、获取父母兄弟姐妹的子女
             if (family.getRelation().equals(BaseConstant.PARENT)) {
@@ -190,7 +190,7 @@ public class UserFamilyBiz implements UserFamilyApi {
                         ownerSiblingList = this.getUserFamilyListByFamilyId(sibling1.getFamilyId()).getData().stream().filter(family1 -> family1.getRelation().equals(BaseConstant.CHILDREN)).collect(Collectors.toList());
                         for (UserFamilyVo child : ownerSiblingList) {
                             UserInstance secondModel = userInstanceService.getById(child.getUserId());
-                            secondList.add(GenealogyDTO.builder().name(secondModel.getName()).imageUrl(secondModel.getAvatar()).gender(secondModel.getGender()).build());
+                            secondList.add(GenealogyDTO.builder().id(secondModel.getId().toString()).name(secondModel.getName()).imageUrl(secondModel.getAvatar()).gender(secondModel.getGender()).build());
                         }
                     }
                 }
@@ -204,7 +204,7 @@ public class UserFamilyBiz implements UserFamilyApi {
             if (family.getRelation().equals(BaseConstant.CHILDREN)) {
                 UserInstance model = userInstanceService.getById(family.getUserId());
                 childrenList.add(family);
-                thirdDTO = GenealogyDTO.builder().name(model.getName()).imageUrl(model.getAvatar()).gender(model.getGender()).build();
+                thirdDTO = GenealogyDTO.builder().id(model.getId().toString()).name(model.getName()).imageUrl(model.getAvatar()).gender(model.getGender()).build();
                 thirdList.add(thirdDTO);
             }
             //获取表姐妹的子女
@@ -216,7 +216,7 @@ public class UserFamilyBiz implements UserFamilyApi {
                     for (UserFamilyVo vo : childrenSiblingList) {
                         UserInstance thirdModel = userInstanceService.getById(vo.getUserId());
                         childrenOfChildSiblingList.add(vo);
-                        thirdDTO = GenealogyDTO.builder().name(thirdModel.getName()).imageUrl(thirdModel.getAvatar()).gender(thirdModel.getGender()).build();
+                        thirdDTO = GenealogyDTO.builder().id(thirdModel.getId().toString()).name(thirdModel.getName()).imageUrl(thirdModel.getAvatar()).gender(thirdModel.getGender()).build();
                         thirdList.add(thirdDTO);
                     }
                 }
@@ -232,7 +232,7 @@ public class UserFamilyBiz implements UserFamilyApi {
                 childrenOfChildList = this.getUserFamilyListByFamilyId(sibling.getFamilyId()).getData().stream().filter(family1 -> StringUtils.isNotEmpty(family1.getRelation()) && family1.getRelation().equals(BaseConstant.CHILDREN)).collect(Collectors.toList());
                 for (UserFamilyVo model : childrenOfChildList) {
                     UserInstance forthModel = userInstanceService.getById(model.getUserId());
-                    forthDTO = GenealogyDTO.builder().name(forthModel.getName()).imageUrl(forthModel.getAvatar()).gender(forthModel.getGender()).build();
+                    forthDTO = GenealogyDTO.builder().id(forthModel.getId().toString()).name(forthModel.getName()).imageUrl(forthModel.getAvatar()).gender(forthModel.getGender()).build();
                     forthList.add(forthDTO);
                 }
             }
@@ -245,7 +245,7 @@ public class UserFamilyBiz implements UserFamilyApi {
                 childrenOfChildList = this.getUserFamilyListByFamilyId(sibling.getFamilyId()).getData().stream().filter(family1 -> StringUtils.isNotEmpty(family1.getRelation()) && family1.getRelation().equals(BaseConstant.CHILDREN)).collect(Collectors.toList());
                 for (UserFamilyVo model : childrenOfChildList) {
                     UserInstance forthModel = userInstanceService.getById(model.getUserId());
-                    forthDTO = GenealogyDTO.builder().name(forthModel.getName()).imageUrl(forthModel.getAvatar()).gender(forthModel.getGender()).build();
+                    forthDTO = GenealogyDTO.builder().id(forthModel.getId().toString()).name(forthModel.getName()).imageUrl(forthModel.getAvatar()).gender(forthModel.getGender()).build();
                     forthList.add(forthDTO);
                 }
             }

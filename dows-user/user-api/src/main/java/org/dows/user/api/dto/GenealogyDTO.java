@@ -19,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @ApiModel(value = "GenealogyDTO对象", description = "族谱")
 public class GenealogyDTO {
+    String id;
     String name;
     String imageUrl;
     String classType;

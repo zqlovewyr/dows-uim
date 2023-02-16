@@ -34,6 +34,9 @@ public class UserInstanceDTO {
     @ApiModelProperty("账户ID")
     private String accountId;
 
+    @ApiModelProperty("映射账户ID")
+    private String mappingId;
+
     @ApiModelProperty("组织ID")
     private String groupId;
 
@@ -74,6 +77,9 @@ public class UserInstanceDTO {
 
     @ApiModelProperty("租户ID")
     private String tenantId;
+
+    @ApiModelProperty("应用ID")
+    private String appId;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")

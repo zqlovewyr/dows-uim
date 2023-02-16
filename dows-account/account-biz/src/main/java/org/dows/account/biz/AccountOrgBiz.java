@@ -102,7 +102,7 @@ public class AccountOrgBiz implements AccountOrgApi {
                 .eq(AccountOrg::getOrgCode, accountOrgDTO.getOrgCode())
                 .one();
         if (accountOrg != null) {
-            throw new AccountException(EnumAccountStatusCode.ORG_NOT_EXIST_EXCEPTION);
+            throw new AccountException(EnumAccountStatusCode.ORG_EXIST_EXCEPTION);
         }
         //2、创建组织
         AccountOrg model = new AccountOrg();
@@ -169,6 +169,9 @@ public class AccountOrgBiz implements AccountOrgApi {
                     ids.add(accountGroupInfo.getOrgId());
                 });
             }
+        }
+        if(accountOrgDTO.getIds() != null && accountOrgDTO.getIds().size() > 0){
+            ids.addAll(accountOrgDTO.getIds());
         }
 
         LambdaQueryWrapper<AccountOrg> queryWrapper = new LambdaQueryWrapper<>();

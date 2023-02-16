@@ -27,6 +27,9 @@ public class AccountOrgGroupDTO {
     @ApiModelProperty("主键ID")
     private String id;
 
+    @ApiModelProperty("映射账户ID")
+    private String mappingId;
+
     @ApiModelProperty("组织架构父ID")
     private Integer pId;
 

@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @author runsix
@@ -22,6 +23,7 @@ import java.util.Date;
 public class AccountInstanceDTO implements Serializable {
     private static final long serialVersionUID = 4496765086642042824L;
     private String id;
+    private String mappingId;
     private String appId;
     private String tenantId;
     /* runsix:field 'identifier' is in class AccountIdentifier. */
@@ -33,6 +35,7 @@ public class AccountInstanceDTO implements Serializable {
     /* runsix:field 'accountOrgId' is field 'orgId' in class AccountOrg */
     private String accountOrgOrgId;
     private String accountId;
+    private Set<String> accountIds;
 //    @ExcelProperty(value = "用户姓名")
     private String accountName;
     private String password;

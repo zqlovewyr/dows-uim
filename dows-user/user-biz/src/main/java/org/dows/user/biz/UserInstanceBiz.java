@@ -45,7 +45,9 @@ public class UserInstanceBiz implements UserInstanceApi {
     @Transactional(rollbackFor = Exception.class)
     public Response<IPage<UserInstanceVo>> userInstanceUnionList(UserInstanceDTO userInstanceDTO) {
         LambdaQueryWrapper<UserInstance> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.in(userInstanceDTO.getUserIds() != null && userInstanceDTO.getUserIds().size() > 0, UserInstance::getUserId, userInstanceDTO.getUserIds())
+        queryWrapper
+                .in(userInstanceDTO.getIds() != null && userInstanceDTO.getIds().size() > 0, UserInstance::getId, userInstanceDTO.getIds())
+                .in(userInstanceDTO.getUserIds() != null && userInstanceDTO.getUserIds().size() > 0, UserInstance::getUserId, userInstanceDTO.getUserIds())
                 .and(StringUtils.isNotEmpty(userInstanceDTO.getNameNoPhone()), t -> t.like(UserInstance::getName, userInstanceDTO.getNameNoPhone()).or().like(UserInstance::getIdNo, userInstanceDTO.getNameNoPhone()).or().like(UserInstance::getPhone, userInstanceDTO.getNameNoPhone()))
                 .like(StringUtils.isNotEmpty(userInstanceDTO.getName()), UserInstance::getName, userInstanceDTO.getName())
                 .like(StringUtils.isNotEmpty(userInstanceDTO.getIdNo()), UserInstance::getIdNo, userInstanceDTO.getIdNo())

@@ -25,6 +25,12 @@ public class AccountOrgDTO {
     @ApiModelProperty(value = "主键Id")
     private String id;
 
+    @ApiModelProperty("映射账户ID")
+    private String mappingId;
+
+    @ApiModelProperty("主键ID集合")
+    private Set<String> ids;
+
     @ApiModelProperty(value = "父ID(父级组织ID)")
     private Long pid;
 

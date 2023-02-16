@@ -176,7 +176,6 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         AccountOrg accountOrg = null;
         if (StringUtils.isNotBlank(accountInstanceDTO.getAccountOrgOrgId())) {
             accountOrg = accountOrgService.lambdaQuery()
-                    .select(AccountOrg::getId, AccountOrg::getId)
                     .eq(AccountOrg::getId, Long.valueOf(accountInstanceDTO.getAccountOrgOrgId()))
                     .oneOpt()
                     .orElseThrow(() -> {
@@ -461,7 +460,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         String token = JwtUtil.createJWT(claim, expireDate, BaseConstant.PROPERTIES_JWT_KEY);
         Map<String, Object> map = new HashMap<>();
         map.put("token", token);
-        map.put("accountId", accountInstance.getId());
+        map.put("accountId", accountInstance.getId().toString());
         map.put("name", accountInstance.getAccountName());
 
         //6、判断用户角色
@@ -644,6 +643,9 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     accountIds.add("fill");
                 }
             });
+        }
+        if(accountInstanceDTO.getAccountIds() != null && accountInstanceDTO.getAccountIds().size() > 0){
+            accountIds.addAll(accountInstanceDTO.getAccountIds());
         }
 
         //6、查询列表
