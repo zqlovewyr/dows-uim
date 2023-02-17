@@ -474,7 +474,7 @@ public class UserFamilyBiz implements UserFamilyApi {
                 UserInstance userInstance = userInstanceService.getById(family.getUserId());
                 //4.2、获取户主社区
                 UserDwelling userDwelling = userDwellingService.lambdaQuery()
-                        .eq(UserDwelling::getFamilyId, family.getId())
+                        .eq(UserDwelling::getPrincipalId, family.getId())
                         .one();
                 //4.3、获取户主地址
                 UserAddress userAddress = userAddressService.lambdaQuery()

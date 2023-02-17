@@ -226,55 +226,60 @@ public class UserInstanceRest implements MybatisCrudRest<UserInstanceForm, UserI
         return Response.ok(userInstanceId);
     }
 
-/*    @ApiOperation("编辑 个人-档案-基本信息")
+    @ApiOperation("编辑 个人-档案-基本信息")
     @PostMapping("/updateUserProfileById")
     @Transactional(rollbackFor = Exception.class)
     public void updateUserFamilyById(@RequestBody UserProfileDTO userProfileDTO) {
-        //2、更新家庭户主实例
-        UserInstanceVo instanceVo = userInstanceApi.getUserInstanceById(model.getUserId()).getData();
+        //1、更新家庭户主实例
+        UserInstanceVo instanceVo = userInstanceApi.getUserInstanceById(userProfileDTO.getId()).getData();
         UserInstanceDTO userInstanceDTO = new UserInstanceDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userInstanceDTO, new String[]{"id"});
+        BeanUtils.copyProperties(userProfileDTO, userInstanceDTO, new String[]{"id"});
         userInstanceDTO.setId(instanceVo.getId());
-        userInstanceDTO.setName(userFamilyDTO.getHouseholderName());
         userInstanceApi.updateUserInstance(userInstanceDTO);
-        //3、更新用户扩展信息
-        UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(model.getUserId()).getData();
+        //2、更新用户扩展信息
+        UserExtinfoVo extinfoVo = userExtinfoApi.getUserExtinfoByUserId(userProfileDTO.getId()).getData();
         UserExtinfoDTO userExtinfoDTO = new UserExtinfoDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userExtinfoDTO, new String[]{"id"});
+        BeanUtils.copyProperties(userProfileDTO, userExtinfoDTO, new String[]{"id"});
         userExtinfoDTO.setId(extinfoVo.getId());
         userExtinfoApi.updateUserExtinfoById(userExtinfoDTO);
-        //4、更新用户公司信息
-        UserCompanyVo companyVo = userCompanyApi.getUserCompanyByUserId(model.getUserId()).getData();
+        //3、更新用户公司信息
+        UserCompanyVo companyVo = userCompanyApi.getUserCompanyByUserId(userProfileDTO.getId()).getData();
         UserCompanyDTO userCompanyDTO = new UserCompanyDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userCompanyDTO, new String[]{"id"});
+        BeanUtils.copyProperties(userProfileDTO, userCompanyDTO, new String[]{"id"});
         userCompanyDTO.setId(companyVo.getId());
         userCompanyApi.updateUserCompanyById(userCompanyDTO);
-        //5、更新用户教育信息
-        UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(model.getUserId()).getData();
+        //4、更新用户教育信息
+        UserEducationVo educationVo = userEducationApi.getUserEducationByUserId(userProfileDTO.getId()).getData();
         UserEducationDTO userEducationDTO = new UserEducationDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userEducationDTO, new String[]{"id"});
+        BeanUtils.copyProperties(userProfileDTO, userEducationDTO, new String[]{"id"});
         userEducationDTO.setId(educationVo.getId());
         userEducationApi.updateUserEducationById(userEducationDTO);
-        //6、更新用户工作信息
-        UserJobVo jobVo = userJobApi.getUserJobByUserId(model.getUserId()).getData();
+        //5、更新用户工作信息
+        UserJobVo jobVo = userJobApi.getUserJobByUserId(userProfileDTO.getId()).getData();
         UserJobDTO userJobDTO = new UserJobDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userJobDTO, new String[]{"id"});
+        BeanUtils.copyProperties(userProfileDTO, userJobDTO, new String[]{"id"});
         userJobDTO.setId(jobVo.getId());
         userJobApi.updateUserJobById(userJobDTO);
-        //7、更新用户住所信息
-        UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByPrincipalId(model.getId()).getData();
+        //6、更新用户住所信息
+        UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByPrincipalId(userProfileDTO.getId()).getData();
         UserDwellingDTO userDwellingDTO = new UserDwellingDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userDwellingDTO, new String[]{"id"});
+        BeanUtils.copyProperties(userProfileDTO, userDwellingDTO, new String[]{"id"});
         userDwellingDTO.setId(dwellingVo.getId());
-        userDwellingDTO.setFamilyId(userFamilyDTO.getId());
+        userDwellingDTO.setPrincipalId(userProfileDTO.getId());
         userDwellingApi.updateUserDwellingById(userDwellingDTO);
-        //8、更新用户地址信息
-        UserAddressVo addressVo = userAddressApi.getUserAddressByUserId(model.getUserId()).getData();
+        //7、更新用户地址信息
+        UserAddressVo addressVo = userAddressApi.getUserAddressByUserId(userProfileDTO.getId()).getData();
         UserAddressDTO userAddressDTO = new UserAddressDTO();
-        BeanUtils.copyProperties(userFamilyDTO, userAddressDTO, new String[]{"id"});
+        BeanUtils.copyProperties(userProfileDTO, userAddressDTO, new String[]{"id"});
         userAddressDTO.setId(addressVo.getId());
         userAddressApi.updateUserAddressById(userAddressDTO);
-    }*/
+        //8、更新用户联系人信息
+        UserContactVo contactVo = userContactApi.getUserContactByUserId(userProfileDTO.getId()).getData();
+        UserContactDTO userContactDTO = new UserContactDTO();
+        BeanUtils.copyProperties(userProfileDTO, userContactDTO, new String[]{"id"});
+        userContactDTO.setId(contactVo.getId());
+        userContactApi.updateUserContactById(userContactDTO);
+    }
 
     @ApiOperation("查看 个人-档案-基本信息")
     @GetMapping("/getUserProfileById/{id}")
@@ -298,7 +303,7 @@ public class UserInstanceRest implements MybatisCrudRest<UserInstanceForm, UserI
         BeanUtils.copyProperties(jobVo, vo, new String[]{"id", "userId"});
         //7、获取用户住所信息
         UserDwellingVo dwellingVo = userDwellingApi.getUserDwellingByPrincipalId(id).getData();
-        BeanUtils.copyProperties(dwellingVo, vo, new String[]{"id", "familyId"});
+        BeanUtils.copyProperties(dwellingVo, vo, new String[]{"id", "principalId"});
         //8、获取用户地址信息
         UserAddressVo addressVo = userAddressApi.getUserAddressByUserId(id).getData();
         BeanUtils.copyProperties(addressVo, vo, new String[]{"id", "userId"});

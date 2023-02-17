@@ -23,6 +23,8 @@ import java.util.List;
 @NoArgsConstructor
 @ApiModel(value = "UserProfileDTO对象", description = "用户-档案信息")
 public class UserProfileDTO {
+    @ApiModelProperty("主键ID")
+    private String id;
 
     @ApiModelProperty("姓名")
     private String name;

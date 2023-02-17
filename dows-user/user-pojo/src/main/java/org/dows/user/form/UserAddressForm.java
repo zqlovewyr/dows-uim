@@ -71,9 +71,6 @@ public class UserAddressForm implements Serializable {
     @ApiModelProperty("区县编码")
     private String districtNo;
 
-    @ApiModelProperty("城市编号")
-    private String cascadeAddressId;
-
     @ApiModelProperty("区县名称")
     private String districtName;
 

@@ -74,9 +74,6 @@ public class UserAddressDTO {
     @ApiModelProperty("区县名称")
     private String districtName;
 
-    @ApiModelProperty("城市编号")
-    private String cascadeAddressId;
-
     @ApiModelProperty("邮编")
     private String zipCode;
 
