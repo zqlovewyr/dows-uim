@@ -44,4 +44,11 @@ public interface UserContactApi {
      * @param userContactDTO
      */
     Response<String> updateUserContactById(UserContactDTO userContactDTO);
+
+    /**
+     * 删除单个 用户-联系人信息
+     *
+     * @param id
+     */
+    Response<Boolean> deleteUserContactById(String id);
 }

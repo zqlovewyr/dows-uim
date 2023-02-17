@@ -1,7 +1,9 @@
 package org.dows.user.biz;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.framework.api.Response;
@@ -10,6 +12,7 @@ import org.dows.user.api.dto.UserContactDTO;
 import org.dows.user.api.vo.UserContactVo;
 import org.dows.user.api.vo.UserJobVo;
 import org.dows.user.entity.UserAddress;
+import org.dows.user.entity.UserCompany;
 import org.dows.user.entity.UserContact;
 import org.dows.user.entity.UserJob;
 import org.dows.user.enums.EnumUserStatusCode;
@@ -89,5 +92,19 @@ public class UserContactBiz implements UserContactApi {
             throw new UserException(EnumUserStatusCode.USER_CONTACT_UPDATE_FAIL_EXCEPTION);
         }
         return Response.ok(userContact.getId().toString());
+    }
+
+    @Override
+    public Response<Boolean> deleteUserContactById(String id) {
+        //1、获取对应数据
+        UserContact userContact = userContactService.getById(id);
+        if (userContact == null) {
+            throw new UserException(EnumUserStatusCode.USER_CONTACT_IS_NOT_EXIST_EXCEPTION);
+        }
+        //1、删除用户联系人关系
+        LambdaUpdateWrapper<UserContact> contactWrapper = Wrappers.lambdaUpdate(UserContact.class);
+        contactWrapper.set(UserContact::getDeleted, true)
+                .eq(UserContact::getId, id);
+        return Response.ok(userContactService.update(contactWrapper));
     }
 }

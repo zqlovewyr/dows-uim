@@ -38,6 +38,9 @@ public class UserExtinfoDTO {
     @ApiModelProperty("婚姻状态[0：未婚，1：已婚]")
     private Integer married;
 
+    @ApiModelProperty("医疗费用支付方式")
+    private String medicalPay;
+
     @ApiModelProperty("时间戳")
     private Date dt;
 

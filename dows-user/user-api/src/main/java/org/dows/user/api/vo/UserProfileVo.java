@@ -44,7 +44,7 @@ public class UserProfileVo {
     private String degree;
 
     @ApiModelProperty("婚姻与否")
-    private String married;
+    private Integer married;
 
     @ApiModelProperty("工作单位")
     private String companyName;
@@ -100,6 +100,9 @@ public class UserProfileVo {
     @ApiModelProperty("医疗费用支付方式")
     private String medicalPay;
 
-    @ApiModelProperty("地区级联id")
-    private String cascadeAddressId;
+    @ApiModelProperty("常住类型")
+    private String occupancyType;
+
+    @ApiModelProperty("档案主体ID")
+    private String principalId;
 }

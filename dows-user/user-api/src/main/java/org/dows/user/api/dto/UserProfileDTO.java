@@ -1,14 +1,9 @@
 package org.dows.user.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author Administrator
@@ -51,7 +46,7 @@ public class UserProfileDTO {
     private String degree;
 
     @ApiModelProperty("婚姻与否")
-    private String married;
+    private Integer married;
 
     @ApiModelProperty("工作单位")
     private String companyName;
@@ -107,6 +102,12 @@ public class UserProfileDTO {
     @ApiModelProperty("医疗费用支付方式")
     private String medicalPay;
 
-    @ApiModelProperty("地区级联id")
-    private String cascadeAddressId;
+    @ApiModelProperty("常住类型")
+    private String occupancyType;
+
+    @ApiModelProperty("账户ID")
+    private String accountId;
+
+    @ApiModelProperty("账户名称")
+    private String accountName;
 }

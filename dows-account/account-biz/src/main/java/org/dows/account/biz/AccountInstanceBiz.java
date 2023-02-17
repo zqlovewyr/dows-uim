@@ -189,6 +189,14 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         if (StringUtils.isNotEmpty(accountInstanceDTO.getPassword())) {
             accountInstance.setPassword("123456");
         }
+        // 判断是否已存在该账户，并且不能创建为superadmin的超管
+        if(accountInstance.getAccountName().contains("super")){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_SUPER_NOT_ALLOW_EXCEPTION);
+        }
+        AccountInstance model = accountInstanceService.lambdaQuery().eq(AccountInstance::getAccountName,accountInstance.getAccountName()).one();
+        if(model != null){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_EXIST_EXCEPTION);
+        }
         accountInstanceService.save(accountInstance);
 
         /* runsix:4.save accountIdentifier */
@@ -456,6 +464,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         //5、编辑jwt加密
         Map<String, Object> claim = new HashMap<>();
         claim.put("accountId", accountInstance.getId());
+        claim.put("accountName",accountInstance.getAccountName());
         Date expireDate = new Date(System.currentTimeMillis() + 100 * 60 * 60 * 1000);
         String token = JwtUtil.createJWT(claim, expireDate, BaseConstant.PROPERTIES_JWT_KEY);
         Map<String, Object> map = new HashMap<>();
@@ -468,7 +477,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         wrapper.eq(StringUtils.isNotEmpty(accountInstance.getId().toString()), AccountRole::getPrincipalId, accountInstance.getId().toString());
         AccountRole accountRole = accountRoleService.getOne(wrapper);
         if (accountRole.getRoleId().equals("0")) {
-            map.put("role", "superAdmin");
+            map.put("role", "superadmin");
         } else if (accountRole.getRoleId().equals("1")) {
             map.put("role", "admin");
         } else if (accountRole.getRoleId().equals("2")) {

@@ -13,6 +13,7 @@ import org.dows.account.api.AccountGroupApi;
 import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
 import org.dows.account.biz.util.RangeUtil;
+import org.dows.account.biz.util.ReflectUtil;
 import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.entity.*;
@@ -424,6 +425,14 @@ public class AccountGroupBiz implements AccountGroupApi {
         //1、创建账号实例
         AccountInstance accountInstance = new AccountInstance();
         BeanUtils.copyProperties(accountGroupDTO, accountInstance);
+        //1.1、判断是否已存在该账户，并且不能创建为superadmin的超管
+        if(accountInstance.getAccountName().contains("super")){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_SUPER_NOT_ALLOW_EXCEPTION);
+        }
+        AccountInstance model = accountInstanceService.lambdaQuery().eq(AccountInstance::getAccountName,accountInstance.getAccountName()).one();
+        if(model != null){
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_EXIST_EXCEPTION);
+        }
         boolean accountFlag = accountInstanceService.saveOrUpdate(accountInstance);
         if (accountFlag == false) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_CREATE_FAIL_EXCEPTION);

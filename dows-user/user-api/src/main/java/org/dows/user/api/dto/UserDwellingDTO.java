@@ -44,6 +44,9 @@ public class UserDwellingDTO {
     @ApiModelProperty("房屋类型")
     private String houseType;
 
+    @ApiModelProperty("常住类型")
+    private String occupancyType;
+
     @ApiModelProperty("燃料")
     private String fuel;
 
