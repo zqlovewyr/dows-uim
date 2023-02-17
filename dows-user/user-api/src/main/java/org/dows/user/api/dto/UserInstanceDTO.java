@@ -34,9 +34,6 @@ public class UserInstanceDTO {
     @ApiModelProperty("账户ID")
     private String accountId;
 
-    @ApiModelProperty("映射账户ID")
-    private String mappingId;
-
     @ApiModelProperty("组织ID")
     private String groupId;
 

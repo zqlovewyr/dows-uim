@@ -448,6 +448,9 @@ public class UserFamilyBiz implements UserFamilyApi {
                 userIds.add("fill");
             }
         }
+        if(userFamilyDTO.getIds() != null && userFamilyDTO.getIds().size() > 0){
+            familyIds.addAll(userFamilyDTO.getIds());
+        }
         //3、获取以户主为主体的家庭信息
         LambdaQueryWrapper<UserFamily> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(userFamilyDTO.getParentId()), UserFamily::getParentId, userFamilyDTO.getParentId())

@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Administrator
@@ -27,11 +28,17 @@ public class UserFamilyDTO {
     @ApiModelProperty("主键")
     private String id;
 
+    @ApiModelProperty("主键集合")
+    private Set<String> ids;
+
     @ApiModelProperty("父ID")
     private String parentId;
 
     @ApiModelProperty("家庭ID")
     private String familyId;
+
+    @ApiModelProperty("健管师ID")
+    private String accountId;
 
     @ApiModelProperty("用户ID")
     private String userId;
