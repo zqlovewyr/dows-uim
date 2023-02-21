@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.util.Date;
+
 /**
  * @author Administrator
  * @date 2023/1/30 16:56
@@ -29,7 +31,7 @@ public class UserProfileVo {
     private String gender;
 
     @ApiModelProperty("出生日期")
-    private String birthday;
+    private Date birthday;
 
     @ApiModelProperty("民族")
     private String nation;

@@ -13,9 +13,11 @@ import org.dows.rbac.biz.util.RsRbacRoleUtil;
 import org.dows.rbac.entity.RbacRole;
 import org.dows.rbac.service.RbacRoleService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,7 +80,16 @@ public class RbacRoleBiz implements RbacRoleApi {
         Page<RbacRole> page = new Page<>(rbacRoleDTO.getPageNo(), rbacRoleDTO.getPageSize());
         IPage<RbacRole> rolePage = rbacRoleService.page(page, queryWrapper);
         IPage<RbacRoleVo> pageVo = new Page<>();
-        BeanUtils.copyProperties(rolePage, pageVo);
+        //复制属性
+        List<RbacRoleVo> voList = new ArrayList<>();
+        List<RbacRole> roleList = rolePage.getRecords();
+        roleList.forEach(role->{
+            RbacRoleVo vo = new RbacRoleVo();
+            BeanUtils.copyProperties(role,vo);
+            voList.add(vo);
+        });
+        BeanUtils.copyProperties(rolePage, pageVo,new String[]{"records"});
+        pageVo.setRecords(voList);
         return Response.ok(pageVo);
     }
 

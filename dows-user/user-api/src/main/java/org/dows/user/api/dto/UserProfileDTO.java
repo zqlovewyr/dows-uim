@@ -1,9 +1,13 @@
 package org.dows.user.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 /**
  * @author Administrator
@@ -30,8 +34,10 @@ public class UserProfileDTO {
     @ApiModelProperty("性别")
     private String gender;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("出生日期")
-    private String birthday;
+    private Date birthday;
 
     @ApiModelProperty("民族")
     private String nation;

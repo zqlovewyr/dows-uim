@@ -19,6 +19,7 @@ public class NormalDataVo implements Serializable {
     private String per;       //百分比
     private String QOQ;     //环比
     private String YOY;     //同比
+    private String flag;    //标志
 
     public NormalDataVo(String name, List<Object> dataList) {
         this.name = name;

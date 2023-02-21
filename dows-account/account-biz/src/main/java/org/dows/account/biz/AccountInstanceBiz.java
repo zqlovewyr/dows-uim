@@ -827,8 +827,13 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 .id(Long.valueOf(accountInstance.getId()))
                 .accountName(accountInstance.getAccountName())
                 .password(accountInstance.getPassword())
-                .status(accountInstance.getStatus().toString())
-                .phone(accountInstance.getPhone()).build();
+                .build();
+        if(StringUtils.isNotEmpty(accountInstance.getPhone())){
+            model.setPhone(accountInstance.getPhone());
+        }
+        if(accountInstance.getStatus() != null){
+            model.setStatus(accountInstance.getStatus().toString());
+        }
         //2、通过账户和用户关联表找到对应的用户ID
         AccountUser accountUser = accountUserService.lambdaQuery()
                 .eq(AccountUser::getAccountId, id)
