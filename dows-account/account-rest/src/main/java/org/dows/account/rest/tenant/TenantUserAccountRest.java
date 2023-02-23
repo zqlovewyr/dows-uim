@@ -156,4 +156,26 @@ public class TenantUserAccountRest {
         // TODO
         return Response.ok(accountBiz.saveIffSettingList(iffSettingBos,"1",100001));
     }
+    @PostMapping("/selectIffSettingConsumeList")
+    @ApiOperation(value = "未设置消费天数-查询")
+    public Response<List<IffSettingVo>> selectIffSettingConsumeList(@RequestBody IffSettingForm iffSettingForm){
+        IffSettingBo iffSettingBo = new IffSettingBo();
+        BeanUtils.copyProperties(iffSettingForm,iffSettingBo);
+        iffSettingBo.setStoreId("1");
+        return Response.ok(accountBiz.selectIffSettingList(iffSettingBo,100002));
+    }
+
+    @PostMapping("/saveIffSettingConsumeList")
+    @ApiOperation(value = "未设置消费天数-新增")
+    public Response<Boolean> saveIffSettingConsumeList(@RequestBody List<IffSettingForm> iffSettingForms){
+        List<IffSettingBo> iffSettingBos = new ArrayList<>();
+        iffSettingForms.stream().forEach(item ->{
+            IffSettingBo iffSettingBo = new IffSettingBo();
+            BeanUtils.copyProperties(item,iffSettingBo);
+            iffSettingBo.setStoreId("1");
+            iffSettingBos.add(iffSettingBo);
+        });
+        // TODO
+        return Response.ok(accountBiz.saveIffSettingList(iffSettingBos,"1",100002));
+    }
 }

@@ -36,7 +36,7 @@ public interface AccountUserApi {
      * @param accountIds
      * @return
      */
-    List<AccountVo> getInfoByAccountIds(String[] accountIds);
+    List<AccountVo> getInfoByAccountIds(List<String> accountIds);
 
     /**
      * 根据账号名称及类型查询

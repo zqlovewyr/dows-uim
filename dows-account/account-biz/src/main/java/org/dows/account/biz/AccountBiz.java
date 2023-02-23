@@ -79,7 +79,7 @@ public class AccountBiz implements AccountUserApi {
     }
 
     @Override
-    public List<AccountVo> getInfoByAccountIds(String[] accountIds){
+    public List<AccountVo> getInfoByAccountIds(List<String> accountIds){
         List<AccountVo> accountVos = new ArrayList<>();
         List<AccountInstance> accountInstance = accountInstanceService.lambdaQuery()
                 .in(AccountInstance::getAccountId, accountIds)
