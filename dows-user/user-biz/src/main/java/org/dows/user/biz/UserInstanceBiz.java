@@ -65,8 +65,26 @@ public class UserInstanceBiz implements UserInstanceApi {
                 .eq(userInstanceDTO.getDt() != null, UserInstance::getDt, userInstanceDTO.getDt())
                 .gt(userInstanceDTO.getStartTime() != null, UserInstance::getDt, userInstanceDTO.getStartTime())
                 .lt(userInstanceDTO.getEndTime() != null, UserInstance::getDt, userInstanceDTO.getEndTime())
-                .eq(UserInstance::getDeleted, false)
-                .orderByDesc(UserInstance::getDt);
+                .eq(UserInstance::getDeleted, false);
+        //判断按什么排序,如果不按名称排序，则按默认的创建时间排序
+        if (StringUtils.isNotEmpty(userInstanceDTO.getUserNameType())) {
+            if (userInstanceDTO.getUserNameType().equals("down")) {
+                queryWrapper.orderByDesc(UserInstance::getName);
+            }
+            if (userInstanceDTO.getUserNameType().equals("up")) {
+                queryWrapper.orderByAsc(UserInstance::getName);
+            }
+        }
+        if (StringUtils.isNotEmpty(userInstanceDTO.getDtType())) {
+            if (userInstanceDTO.getDtType().equals("down")) {
+                queryWrapper.orderByDesc(UserInstance::getDt);
+            }
+            if (userInstanceDTO.getDtType().equals("up")) {
+                queryWrapper.orderByAsc(UserInstance::getDt);
+            }
+        } else {
+            queryWrapper.orderByDesc(UserInstance::getDt);
+        }
         Page<UserInstance> page = new Page<>(userInstanceDTO.getPageNo(), userInstanceDTO.getPageSize());
         IPage<UserInstance> userList = userInstanceService.page(page, queryWrapper);
         //复制属性
@@ -184,10 +202,10 @@ public class UserInstanceBiz implements UserInstanceApi {
                 .orderByDesc(UserInstance::getDt).list();
         //复制属性
         List<UserInstanceVo> voList = new ArrayList<>();
-        if(instanceList != null && instanceList.size() > 0){
-            instanceList.forEach(instance->{
+        if (instanceList != null && instanceList.size() > 0) {
+            instanceList.forEach(instance -> {
                 UserInstanceVo vo = new UserInstanceVo();
-                BeanUtils.copyProperties(instance,vo);
+                BeanUtils.copyProperties(instance, vo);
                 vo.setId(instance.getId().toString());
                 voList.add(vo);
             });

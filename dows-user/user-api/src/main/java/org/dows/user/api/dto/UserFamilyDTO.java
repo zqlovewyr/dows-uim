@@ -147,4 +147,10 @@ public class UserFamilyDTO {
     @ApiModelProperty(value = "分页大小")
     private Integer pageSize;
 
+    @ApiModelProperty("户主排序方式")
+    private String householderNameType;
+
+    @ApiModelProperty("社区排序方式")
+    private String communityType;
+
 }

@@ -113,4 +113,10 @@ public class UserInstanceDTO {
     @ApiModelProperty("ID集合")
     private Set<String> ids;
 
+    @ApiModelProperty("客户名称排序方式")
+    private String userNameType;
+
+    @ApiModelProperty("创建时间排序方式")
+    private String dtType;
+
 }
