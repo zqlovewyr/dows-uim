@@ -73,5 +73,8 @@ public class UserInstanceVo implements Serializable {
     @ApiModelProperty(value = "时间戳")
     private Date dt;
 
+    @ApiModelProperty(value = "档案主体ID")
+    private String principalId;
+
 }
 
