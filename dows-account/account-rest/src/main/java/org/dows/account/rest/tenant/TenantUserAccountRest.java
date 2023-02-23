@@ -16,6 +16,10 @@ import org.dows.account.form.IffSettingForm;
 import org.dows.account.query.AccountQuery;
 import org.dows.account.vo.*;
 import org.dows.framework.api.Response;
+import org.dows.marketing.form.MarketCouponForm;
+import org.dows.marketing.form.MarketCouponQueryForm;
+import org.dows.marketing.form.MarketListCouponVo;
+import org.dows.marketing.form.SentCouponForm;
 import org.dows.order.form.OrderTaPageForm;
 import org.dows.order.form.OrderTaTypeForm;
 import org.dows.order.vo.OrderTaPackVo;
@@ -83,12 +87,20 @@ public class TenantUserAccountRest {
 
     @PostMapping("/selectAccountCouponPage")
     @ApiOperation(value = "用户分页优惠券列表")
-    public Response<IPage<AccountCouponVo>> selectAccountCouponPage(@RequestBody AccountCouponForm accountCouponForm){
-        AccountCouponBo accountCouponBo = new AccountCouponBo();
-        BeanUtils.copyProperties(accountCouponForm,accountCouponBo);
-        return Response.ok(accountBiz.selectAccountCouponPage(accountCouponBo));
+    public Response<IPage<MarketListCouponVo>> selectAccountCouponPage(@RequestBody MarketCouponQueryForm accountCouponForm){
+        return Response.ok(accountBiz.getCouponList(accountCouponForm));
     }
 
+    @PostMapping("/addOrUpdateCoupon")
+    @ApiOperation(value = "新增优惠券")
+    public Response<Boolean> addOrUpdateCoupon(@RequestBody MarketCouponForm marketCouponForm){
+        return Response.ok(accountBiz.addOrUpdateCoupon(marketCouponForm));
+    }
+    @PostMapping("/senCoupon")
+    @ApiOperation(value = "向用户发优惠券")
+    public Response<Boolean> senCoupon(@RequestBody SentCouponForm sentCouponForm){
+        return Response.ok(accountBiz.senCoupon(sentCouponForm));
+    }
     @PostMapping("/selectAccountCouponStatistics")
     @ApiOperation(value = "优惠券列表页统计")
     public Response<Map<String,Object>> selectAccountCouponStatistics(@RequestBody AccountCouponForm accountCouponForm){

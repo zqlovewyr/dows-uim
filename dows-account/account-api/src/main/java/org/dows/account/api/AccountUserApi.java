@@ -3,9 +3,12 @@ package org.dows.account.api;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dows.account.bo.AccountCouponBo;
 import org.dows.account.bo.AccountInstanceTenantBo;
-import org.dows.account.bo.AccountOrderBo;
 import org.dows.account.bo.IffSettingBo;
 import org.dows.account.vo.*;
+import org.dows.marketing.form.MarketCouponForm;
+import org.dows.marketing.form.MarketCouponQueryForm;
+import org.dows.marketing.form.MarketListCouponVo;
+import org.dows.marketing.form.SentCouponForm;
 import org.dows.order.form.OrderTaPageForm;
 import org.dows.order.form.OrderTaTypeForm;
 import org.dows.order.vo.OrderTaPackVo;
@@ -78,6 +81,12 @@ public interface AccountUserApi {
      * @return
      */
     List<AccountCouponVo> selectStoreCouponList(AccountCouponBo accountCouponBo);
+
+    Boolean addOrUpdateCoupon(MarketCouponForm couponForm);
+
+    Boolean senCoupon(SentCouponForm sentCoupon);
+
+    IPage<MarketListCouponVo> getCouponList(MarketCouponQueryForm queryForm);
 
     /**
      * 他的订单统计

@@ -4,12 +4,10 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountUserApi;
 import org.dows.account.bo.AccountCouponBo;
 import org.dows.account.bo.AccountInstanceTenantBo;
-import org.dows.account.bo.AccountOrderBo;
 import org.dows.account.bo.IffSettingBo;
 import org.dows.account.entity.AccountInstance;
 import org.dows.account.entity.AccountUserInfo;
@@ -23,8 +21,10 @@ import org.dows.account.vo.*;
 import org.dows.framework.api.Response;
 import org.dows.framework.api.exceptions.BaseException;
 import org.dows.marketing.MarketCouponBiz;
+import org.dows.marketing.form.MarketCouponForm;
 import org.dows.marketing.form.MarketCouponQueryForm;
 import org.dows.marketing.form.MarketListCouponVo;
+import org.dows.marketing.form.SentCouponForm;
 import org.dows.order.api.OrderInstanceBizApiService;
 import org.dows.order.form.OrderTaPageForm;
 import org.dows.order.form.OrderTaTypeForm;
@@ -32,26 +32,30 @@ import org.dows.order.vo.OrderTaPackVo;
 import org.dows.order.vo.OrderTaTableVo;
 import org.dows.order.vo.OrderTaTakeOutVo;
 import org.dows.order.vo.OrderTaVo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-@RequiredArgsConstructor
 @Slf4j
 @Service
 public class AccountBiz implements AccountUserApi {
+    @Autowired
+    private AccountUserInfoService accountUserInfoService;
+    @Autowired
+    private AccountInstanceService accountInstanceService;
 
-    private final AccountUserInfoService accountUserInfoService;
+    @Autowired
+    private IffSettingService iffSettingService;
+    @Autowired
+    private MarketCouponBiz marketCouponBiz;
 
-    private final AccountInstanceService accountInstanceService;
-
-    private final IffSettingService iffSettingService;
-
-    private final MarketCouponBiz marketCouponBiz;
-
-    private final OrderInstanceBizApiService orderInstanceBizApiService;
+    @Lazy
+    @Autowired
+    private OrderInstanceBizApiService orderInstanceBizApiService;
 
     public Response getAccuntListPage(AccountQuery accountQuery){
         // TODO 消费金额和最后下单时间排序
@@ -159,6 +163,22 @@ public class AccountBiz implements AccountUserApi {
         });
         return list;
     }
+
+    @Override
+    public Boolean addOrUpdateCoupon(MarketCouponForm couponForm) {
+        return marketCouponBiz.addOrUpdateCoupon(couponForm);
+    }
+
+    @Override
+    public Boolean senCoupon(SentCouponForm sentCoupon) {
+        return marketCouponBiz.senCoupon(sentCoupon);
+    }
+
+    @Override
+    public IPage<MarketListCouponVo> getCouponList(MarketCouponQueryForm queryForm) {
+        return marketCouponBiz.getCouponList(queryForm);
+    }
+
 
     @Override
     public OrderTaVo selectOrderStatistics(OrderTaTypeForm typeForm) {
