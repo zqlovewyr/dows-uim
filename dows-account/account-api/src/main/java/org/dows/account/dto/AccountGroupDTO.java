@@ -131,6 +131,12 @@ public class AccountGroupDTO implements Serializable {
     @ApiModelProperty("上次就诊时间")
     private Date examineTime;
 
+    @ApiModelProperty(value = "用户名称排序方式")
+    private String userNameType;
+
+    @ApiModelProperty(value = "创建时间排序方式")
+    private String dtType;
+
     @ApiModelProperty("建档时间")
     private Date recordTime;
 

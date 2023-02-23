@@ -235,7 +235,7 @@ public class AccountGroupBiz implements AccountGroupApi {
             }
         }
 
-        if(accountGroupDTO.getOrgIds() != null && accountGroupDTO.getOrgIds().size() > 0){
+        if (accountGroupDTO.getOrgIds() != null && accountGroupDTO.getOrgIds().size() > 0) {
             orgIds.addAll(accountGroupDTO.getOrgIds());
         }
         //3、根据用户信息获取用户Id
@@ -329,8 +329,18 @@ public class AccountGroupBiz implements AccountGroupApi {
                 .eq(accountGroupDTO.getDt() != null, AccountGroup::getDt, accountGroupDTO.getDt())
                 .gt(accountGroupDTO.getStartTime() != null, AccountGroup::getDt, accountGroupDTO.getStartTime())
                 .lt(accountGroupDTO.getEndTime() != null, AccountGroup::getDt, accountGroupDTO.getEndTime())
-                .eq(AccountGroup::getDeleted, false)
-                .orderByDesc(AccountGroup::getDt);
+                .eq(AccountGroup::getDeleted, false);
+        //判断按什么排序,如果不按名称和编码排序，则按默认的创建时间排序
+        if (StringUtils.isNotEmpty(accountGroupDTO.getDtType())) {
+            if (accountGroupDTO.getDtType().equals("down")) {
+                queryWrapper.orderByDesc(AccountGroup::getDt);
+            }
+            if (accountGroupDTO.getDtType().equals("up")) {
+                queryWrapper.orderByAsc(AccountGroup::getDt);
+            }
+        } else {
+            queryWrapper.orderByDesc(AccountGroup::getDt);
+        }
         Page<AccountGroup> page = new Page<>(accountGroupDTO.getPageNo(), accountGroupDTO.getPageSize());
         IPage<AccountGroup> groupPage = accountGroupService.page(page, queryWrapper);
         //5、获取成员名称
@@ -426,11 +436,11 @@ public class AccountGroupBiz implements AccountGroupApi {
         AccountInstance accountInstance = new AccountInstance();
         BeanUtils.copyProperties(accountGroupDTO, accountInstance);
         //1.1、判断是否已存在该账户，并且不能创建为superadmin的超管
-        if(accountInstance.getAccountName().contains("super")){
+        if (accountInstance.getAccountName().contains("super")) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_SUPER_NOT_ALLOW_EXCEPTION);
         }
-        AccountInstance model = accountInstanceService.lambdaQuery().eq(AccountInstance::getAccountName,accountInstance.getAccountName()).one();
-        if(model != null){
+        AccountInstance model = accountInstanceService.lambdaQuery().eq(AccountInstance::getAccountName, accountInstance.getAccountName()).one();
+        if (model != null) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_EXIST_EXCEPTION);
         }
         boolean accountFlag = accountInstanceService.saveOrUpdate(accountInstance);

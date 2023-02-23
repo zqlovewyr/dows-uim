@@ -98,6 +98,9 @@ public class AccountOrgDTO {
     @ApiModelProperty("机构编码排序方式")
     private String orgCodeType;
 
+    @ApiModelProperty("创建时间排序方式")
+    private String dtType;
+
     @ApiModelProperty(value = "页数")
     private Integer pageNo;
 

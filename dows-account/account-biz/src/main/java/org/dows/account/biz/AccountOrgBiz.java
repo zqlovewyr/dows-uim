@@ -207,7 +207,14 @@ public class AccountOrgBiz implements AccountOrgApi {
             if (accountOrgDTO.getOrgNameType().equals("up")) {
                 queryWrapper.orderByAsc(AccountOrg::getOrgName);
             }
-        } else {
+        } else if (StringUtils.isNotEmpty(accountOrgDTO.getDtType())) {
+            if (accountOrgDTO.getDtType().equals("down")) {
+                queryWrapper.orderByDesc(AccountOrg::getDt);
+            }
+            if (accountOrgDTO.getDtType().equals("up")) {
+                queryWrapper.orderByAsc(AccountOrg::getDt);
+            }
+        } else{
             queryWrapper.orderByDesc(AccountOrg::getDt);
         }
         Page<AccountOrg> page = new Page<>(accountOrgDTO.getPageNo(), accountOrgDTO.getPageSize());
