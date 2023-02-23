@@ -92,6 +92,12 @@ public class AccountOrgDTO {
     @ApiModelProperty("创建时间")
     private Date dt;
 
+    @ApiModelProperty("机构名称排序方式")
+    private String orgNameType;
+
+    @ApiModelProperty("机构编码排序方式")
+    private String orgCodeType;
+
     @ApiModelProperty(value = "页数")
     private Integer pageNo;
 

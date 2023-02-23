@@ -27,6 +27,7 @@ import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountOrgService;
 import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
+import org.dows.user.entity.UserInstance;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -170,13 +171,12 @@ public class AccountOrgBiz implements AccountOrgApi {
                 });
             }
         }
-        if(accountOrgDTO.getIds() != null && accountOrgDTO.getIds().size() > 0){
+        if (accountOrgDTO.getIds() != null && accountOrgDTO.getIds().size() > 0) {
             ids.addAll(accountOrgDTO.getIds());
         }
 
         LambdaQueryWrapper<AccountOrg> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper
-                .in(ids != null && ids.size() > 0, AccountOrg::getId, ids)
+        queryWrapper.in(ids != null && ids.size() > 0, AccountOrg::getId, ids)
                 .eq(accountOrgDTO.getPid() != null, AccountOrg::getPid, accountOrgDTO.getPid())
                 .like(StringUtils.isNotEmpty(accountOrgDTO.getOrgId()), AccountOrg::getOrgId, accountOrgDTO.getOrgId())
                 .like(StringUtils.isNotEmpty(accountOrgDTO.getOrgName()), AccountOrg::getOrgName, accountOrgDTO.getOrgName())
@@ -191,8 +191,25 @@ public class AccountOrgBiz implements AccountOrgApi {
                 .eq(accountOrgDTO.getStatus() != null, AccountOrg::getStatus, accountOrgDTO.getStatus())
                 .eq(accountOrgDTO.getDt() != null, AccountOrg::getDt, accountOrgDTO.getDt())
                 .gt(accountOrgDTO.getStartTime() != null, AccountOrg::getDt, accountOrgDTO.getStartTime())
-                .lt(accountOrgDTO.getEndTime() != null, AccountOrg::getDt, accountOrgDTO.getEndTime())
-                .orderByDesc(AccountOrg::getDt);
+                .lt(accountOrgDTO.getEndTime() != null, AccountOrg::getDt, accountOrgDTO.getEndTime());
+        //判断按什么排序,如果不按名称和编码排序，则按默认的创建时间排序
+        if (StringUtils.isNotEmpty(accountOrgDTO.getOrgCodeType())) {
+            if (accountOrgDTO.getOrgCodeType().equals("down")) {
+                queryWrapper.orderByDesc(AccountOrg::getOrgCode);
+            }
+            if (accountOrgDTO.getOrgCodeType().equals("up")) {
+                queryWrapper.orderByAsc(AccountOrg::getOrgCode);
+            }
+        } else if (StringUtils.isNotEmpty(accountOrgDTO.getOrgNameType())) {
+            if (accountOrgDTO.getOrgNameType().equals("down")) {
+                queryWrapper.orderByDesc(AccountOrg::getOrgName);
+            }
+            if (accountOrgDTO.getOrgNameType().equals("up")) {
+                queryWrapper.orderByAsc(AccountOrg::getOrgName);
+            }
+        } else {
+            queryWrapper.orderByDesc(AccountOrg::getDt);
+        }
         Page<AccountOrg> page = new Page<>(accountOrgDTO.getPageNo(), accountOrgDTO.getPageSize());
         IPage<AccountOrg> orgList = accountOrgService.page(page, queryWrapper);
         //复制属性
@@ -244,7 +261,7 @@ public class AccountOrgBiz implements AccountOrgApi {
                 .eq(AccountOrg::getPid, id)
                 .list();
         if (accountOrgList != null && accountOrgList.size() > 0) {
-            accountOrgList.forEach(accountOrg->{
+            accountOrgList.forEach(accountOrg -> {
                 AccountOrgVo vo = new AccountOrgVo();
                 BeanUtils.copyProperties(accountOrg, vo);
                 vo.setId(accountOrg.getId().toString());
@@ -287,13 +304,13 @@ public class AccountOrgBiz implements AccountOrgApi {
                 .eq(AccountGroup::getOrgId, id)
                 .list();
         if (accountGroupList != null && accountGroupList.size() > 0) {
-                LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
-                groupWrapper.set(AccountGroup::getDeleted, true)
-                        .eq(AccountGroup::getOrgId, id);
-                boolean flag2 = accountGroupService.update(groupWrapper);
-                if (!flag2) {
-                    throw new AccountException(EnumAccountStatusCode.ACCOUNT_GROUP_UPDATE_FAIL_EXCEPTION);
-                }
+            LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
+            groupWrapper.set(AccountGroup::getDeleted, true)
+                    .eq(AccountGroup::getOrgId, id);
+            boolean flag2 = accountGroupService.update(groupWrapper);
+            if (!flag2) {
+                throw new AccountException(EnumAccountStatusCode.ACCOUNT_GROUP_UPDATE_FAIL_EXCEPTION);
+            }
         }
         //3、删除组织信息
         AccountGroupInfo accountGroupInfo = accountGroupInfoService.lambdaQuery()
