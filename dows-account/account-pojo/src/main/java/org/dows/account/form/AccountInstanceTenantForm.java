@@ -34,5 +34,21 @@ public class AccountInstanceTenantForm implements Serializable {
     @ApiModelProperty("消费能力分析类型1、消费频次2、消费能力3、客户流失")
     private Integer consumptionType;
 
+
+    @ApiModelProperty(value = "门店名称")
+    private String storeName;
+    @ApiModelProperty(value = "区域")
+    private String district;
+    @ApiModelProperty(value = "品牌")
+    private Integer storeBrand;
+
+    @ApiModelProperty(value = "门店类型")
+    private Integer storeType;
+
+    @ApiModelProperty(value = "门店模式")
+    private Integer storePattern;
+    @ApiModelProperty(value = "订单类型")
+    private Integer orderType;
+
 }
 

@@ -45,5 +45,20 @@ public class AccountInstanceTenantBo implements Serializable {
     @ApiModelProperty("设置消费能力金额开始，前端无需传参")
     private Integer frequencyEndCount;
 
+    @ApiModelProperty(value = "门店名称")
+    private String storeName;
+    @ApiModelProperty(value = "区域")
+    private String district;
+    @ApiModelProperty(value = "品牌")
+    private Integer storeBrand;
+
+    @ApiModelProperty(value = "门店类型")
+    private Integer storeType;
+
+    @ApiModelProperty(value = "门店模式")
+    private Integer storePattern;
+    @ApiModelProperty(value = "订单类型")
+    private Integer orderType;
+
 }
 

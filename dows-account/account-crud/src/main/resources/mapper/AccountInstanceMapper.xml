@@ -88,52 +88,121 @@
 
     <select id="selectAccountInstanceCount" parameterType="org.dows.account.query.AccountCountTenantQuery" resultType="Integer">
 
-        select COUNT(1) from account_instance
+        select COUNT(1) from account_instance ai
+        left join order_instance oi on oi.account_id = ai.account_id
+        left join store_instance si on si.store_id = ai.store_id
          <where>
+             <if test="accountCountTenantQuery.storeName != null and accountCountTenantQuery.storeName != ''">
+                 AND si.store_name =  like concat('%',#{accountCountTenantQuery.storeName},'%')
+             </if>
+             <if test="accountCountTenantQuery.storeBrand != null">
+                 AND si.store_brand =  #{accountCountTenantQuery.storeBrand}
+             </if>
+
+             <if test="accountCountTenantQuery.storeType != null">
+                 AND si.store_type =  #{accountCountTenantQuery.storeType}
+             </if>
+             <if test="accountCountTenantQuery.storePattern != null">
+                 AND si.store_pattern =  #{accountCountTenantQuery.storePattern}
+             </if>
+
+             <if test="accountCountTenantQuery.district != null and accountCountTenantQuery.district != ''">
+                 AND si.district =  #{accountCountTenantQuery.district}
+             </if>
+
+             <if test="accountCountTenantQuery.orderType != null">
+                 AND oi.type =  #{accountCountTenantQuery.orderType}
+             </if>
              <if test="accountCountTenantQuery.storeId != null and accountCountTenantQuery.storeId != ''">
-                 AND store_id = #{accountCountTenantQuery.storeId}
+                 AND ai.store_id = #{accountCountTenantQuery.storeId}
              </if>
              <if test="accountCountTenantQuery.startDate != null">
-                 AND DATE(dt) &gt;= #{accountCountTenantQuery.startDate}
+                 AND DATE(ai.dt) &gt;= #{accountCountTenantQuery.startDate}
              </if>
              <if test="accountCountTenantQuery.endDate != null">
-                 AND DATE(dt) &lt;= #{accountCountTenantQuery.endDate}
+                 AND DATE(ai.dt) &lt;= #{accountCountTenantQuery.endDate}
              </if>
          </where>
     </select>
 
     <select id="selectAccountInstanceConsumeCount" parameterType="org.dows.account.query.AccountCountTenantQuery" resultType="Integer">
 
-        select COUNT(1) from order_instance
+        select COUNT(1) from order_instance oi
+        left join account_instance ai on oi.account_id=ai.account_id
+        left join store_instance si on si.store_id = ai.store_id
         <where>
+            <if test="accountCountTenantQuery.storeName != null and accountCountTenantQuery.storeName != ''">
+                AND si.store_name =  like concat('%',#{accountCountTenantQuery.storeName},'%')
+            </if>
+            <if test="accountCountTenantQuery.storeBrand != null">
+                AND si.store_brand =  #{accountCountTenantQuery.storeBrand}
+            </if>
+
+            <if test="accountCountTenantQuery.storeType != null">
+                AND si.store_type =  #{accountCountTenantQuery.storeType}
+            </if>
+            <if test="accountCountTenantQuery.storePattern != null">
+                AND si.store_pattern =  #{accountCountTenantQuery.storePattern}
+            </if>
+
+            <if test="accountCountTenantQuery.district != null and accountCountTenantQuery.district != ''">
+                AND si.district =  #{accountCountTenantQuery.district}
+            </if>
+
+            <if test="accountCountTenantQuery.orderType != null">
+                AND oi.type =  #{accountCountTenantQuery.orderType}
+            </if>
             <if test="accountCountTenantQuery.storeId != null and accountCountTenantQuery.storeId != ''">
-                AND store_id = #{accountCountTenantQuery.storeId}
+                AND oi.store_id = #{accountCountTenantQuery.storeId}
             </if>
             <if test="accountCountTenantQuery.startDate != null">
-                AND DATE(dt) &gt;= #{accountCountTenantQuery.startDate}
+                AND DATE(oi.dt) &gt;= #{accountCountTenantQuery.startDate}
             </if>
             <if test="accountCountTenantQuery.endDate != null">
-                AND DATE(dt) &lt;= #{accountCountTenantQuery.endDate}
+                AND DATE(oi.dt) &lt;= #{accountCountTenantQuery.endDate}
             </if>
-            and pay_state = 1 and refund <![CDATA[ <> ]]> 1
+            and oi.pay_state = 1 and oi.refund <![CDATA[ <> ]]> 1
         </where>
     </select>
 
 
     <select id="selectAccountInstanceStoredCount" parameterType="org.dows.account.query.AccountCountTenantQuery" resultType="Integer">
 
-        select COUNT(1) from market_instance
+        select COUNT(1) from market_instance ma
+        left join order_instance oi on oi.account_id = ma.account_id
+        left join store_instance si on si.store_id = ma.store_id
         <where>
+            <if test="accountCountTenantQuery.storeName != null and accountCountTenantQuery.storeName != ''">
+                AND si.store_name =  like concat('%',#{accountCountTenantQuery.storeName},'%')
+            </if>
+            <if test="accountCountTenantQuery.storeBrand != null">
+                AND si.store_brand =  #{accountCountTenantQuery.storeBrand}
+            </if>
+
+            <if test="accountCountTenantQuery.storeType != null">
+                AND si.store_type =  #{accountCountTenantQuery.storeType}
+            </if>
+            <if test="accountCountTenantQuery.storePattern != null">
+                AND si.store_pattern =  #{accountCountTenantQuery.storePattern}
+            </if>
+
+            <if test="accountCountTenantQuery.district != null and accountCountTenantQuery.district != ''">
+                AND si.district =  #{accountCountTenantQuery.district}
+            </if>
+
+            <if test="accountCountTenantQuery.orderType != null">
+                AND oi.type =  #{accountCountTenantQuery.orderType}
+            </if>
             <if test="accountCountTenantQuery.storeId != null and accountCountTenantQuery.storeId != ''">
-                AND store_id = #{accountCountTenantQuery.storeId}
+                AND ma.store_id = #{accountCountTenantQuery.storeId}
             </if>
             <if test="accountCountTenantQuery.startDate != null">
-                AND DATE(dt) &gt;= #{accountCountTenantQuery.startDate}
+                AND DATE(ma.dt) &gt;= #{accountCountTenantQuery.startDate}
             </if>
             <if test="accountCountTenantQuery.endDate != null">
-                AND DATE(dt) &lt;= #{accountCountTenantQuery.endDate}
+                AND DATE(ma.dt) &lt;= #{accountCountTenantQuery.endDate}
             </if>
-            and market_state = 1 and market_name_id = '1623954557644095490'
+            and ma.market_state = 1 and ma.market_name_id = '1623954557644095490'
         </where>
     </select>
 
@@ -181,7 +250,31 @@
         from account_user_info ui
         left join account_instance ai on ui.account_id = ai.account_id
         left join order_instance oi on oi.account_id = ui.account_id
+        left join store_instance si on si.store_id = ai.store_id
         <where>
+
+            <if test="accountInstanceTenantBo.storeName != null and accountInstanceTenantBo.storeName != ''">
+                AND si.store_name =  like concat('%',#{accountInstanceTenantBo.storeName},'%')
+            </if>
+            <if test="accountInstanceTenantBo.storeBrand != null">
+                AND si.store_brand =  #{accountInstanceTenantBo.storeBrand}
+            </if>
+
+            <if test="accountInstanceTenantBo.storeType != null">
+                AND si.store_type =  #{accountInstanceTenantBo.storeType}
+            </if>
+            <if test="accountInstanceTenantBo.storePattern != null">
+                AND si.store_pattern =  #{accountInstanceTenantBo.storePattern}
+            </if>
+
+            <if test="accountInstanceTenantBo.district != null and accountInstanceTenantBo.district != ''">
+                AND si.district =  #{accountInstanceTenantBo.district}
+            </if>
+
+            <if test="accountInstanceTenantBo.orderType != null">
+                AND oi.type =  #{accountInstanceTenantBo.orderType}
+            </if>
+
             <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
                 AND ai.store_id = #{accountInstanceTenantBo.storeId}
             </if>
@@ -214,8 +307,31 @@
             select
             '0次' as count,
             count(1) as preCount
-            from account_instance ai left join order_instance oi on oi.account_id=ai.account_id
+            from account_instance ai
+            left join order_instance oi on oi.account_id=ai.account_id
+            left join store_instance si on si.store_id = ai.store_id
             where oi.account_id is null
+            <if test="accountInstanceTenantBo.storeName != null and accountInstanceTenantBo.storeName != ''">
+                AND si.store_name =  like concat('%',#{accountInstanceTenantBo.storeName},'%')
+            </if>
+            <if test="accountInstanceTenantBo.storeBrand != null">
+                AND si.store_brand =  #{accountInstanceTenantBo.storeBrand}
+            </if>
+
+            <if test="accountInstanceTenantBo.storeType != null">
+                AND si.store_type =  #{accountInstanceTenantBo.storeType}
+            </if>
+            <if test="accountInstanceTenantBo.storePattern != null">
+                AND si.store_pattern =  #{accountInstanceTenantBo.storePattern}
+            </if>
+
+            <if test="accountInstanceTenantBo.district != null and accountInstanceTenantBo.district != ''">
+                AND si.district =  #{accountInstanceTenantBo.district}
+            </if>
+
+            <if test="accountInstanceTenantBo.orderType != null">
+                AND oi.type =  #{accountInstanceTenantBo.orderType}
+            </if>
             <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
                 AND ai.store_id = #{accountInstanceTenantBo.storeId}
             </if>
@@ -229,55 +345,124 @@
 
         <if test="accountInstanceTenantBo.frequencyType == 2">
             select '1-6次' as count, count(1) as preCount from (
-                select account_id from order_instance
+                select account_id from order_instance oi
+                left join account_instance ai on oi.account_id=ai.account_id
+                left join store_instance si on si.store_id = ai.store_id
                 <where>
+                    <if test="accountInstanceTenantBo.storeName != null and accountInstanceTenantBo.storeName != ''">
+                        AND si.store_name =  like concat('%',#{accountInstanceTenantBo.storeName},'%')
+                    </if>
+                    <if test="accountInstanceTenantBo.storeBrand != null">
+                        AND si.store_brand =  #{accountInstanceTenantBo.storeBrand}
+                    </if>
+
+                    <if test="accountInstanceTenantBo.storeType != null">
+                        AND si.store_type =  #{accountInstanceTenantBo.storeType}
+                    </if>
+                    <if test="accountInstanceTenantBo.storePattern != null">
+                        AND si.store_pattern =  #{accountInstanceTenantBo.storePattern}
+                    </if>
+
+                    <if test="accountInstanceTenantBo.district != null and accountInstanceTenantBo.district != ''">
+                        AND si.district =  #{accountInstanceTenantBo.district}
+                    </if>
+
+                    <if test="accountInstanceTenantBo.orderType != null">
+                        AND oi.type =  #{accountInstanceTenantBo.orderType}
+                    </if>
                     <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
-                        AND store_id = #{accountInstanceTenantBo.storeId}
+                        AND oi.store_id = #{accountInstanceTenantBo.storeId}
                     </if>
                     <if test="accountInstanceTenantBo.startDate != null">
-                        AND DATE(dt) &gt;= #{accountInstanceTenantBo.startDate}
+                        AND DATE(oi.dt) &gt;= #{accountInstanceTenantBo.startDate}
                     </if>
                     <if test="accountInstanceTenantBo.endDate != null">
-                        AND DATE(dt) &lt;= #{accountInstanceTenantBo.endDate}
+                        AND DATE(oi.dt) &lt;= #{accountInstanceTenantBo.endDate}
                     </if>
-                    and pay_state = 1 and refund <![CDATA[ <> ]]> 1
-                    group by account_id HAVING count(account_id) &gt; 0 and count(account_id) &lt; 6
+                    and oi.pay_state = 1 and oi.refund <![CDATA[ <> ]]> 1
+                    group by oi.account_id HAVING count(oi.account_id) &gt; 0 and count(oi.account_id) &lt; 6
                 </where>
             ) tab
         </if>
         <if test="accountInstanceTenantBo.frequencyType == 3">
             select '6-12次' as count, count(1) as preCount from (
-            select account_id from order_instance
+            select account_id from order_instance oi
+            left join account_instance ai on oi.account_id=ai.account_id
+            left join store_instance si on si.store_id = ai.store_id
             <where>
+                <if test="accountInstanceTenantBo.storeName != null and accountInstanceTenantBo.storeName != ''">
+                    AND si.store_name =  like concat('%',#{accountInstanceTenantBo.storeName},'%')
+                </if>
+                <if test="accountInstanceTenantBo.storeBrand != null">
+                    AND si.store_brand =  #{accountInstanceTenantBo.storeBrand}
+                </if>
+
+                <if test="accountInstanceTenantBo.storeType != null">
+                    AND si.store_type =  #{accountInstanceTenantBo.storeType}
+                </if>
+                <if test="accountInstanceTenantBo.storePattern != null">
+                    AND si.store_pattern =  #{accountInstanceTenantBo.storePattern}
+                </if>
+
+                <if test="accountInstanceTenantBo.district != null and accountInstanceTenantBo.district != ''">
+                    AND si.district =  #{accountInstanceTenantBo.district}
+                </if>
+
+                <if test="accountInstanceTenantBo.orderType != null">
+                    AND oi.type =  #{accountInstanceTenantBo.orderType}
+                </if>
                 <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
-                    AND store_id = #{accountInstanceTenantBo.storeId}
+                    AND oi.store_id = #{accountInstanceTenantBo.storeId}
                 </if>
                 <if test="accountInstanceTenantBo.startDate != null">
-                    AND DATE(dt) &gt;= #{accountInstanceTenantBo.startDate}
+                    AND DATE(oi.dt) &gt;= #{accountInstanceTenantBo.startDate}
                 </if>
                 <if test="accountInstanceTenantBo.endDate != null">
-                    AND DATE(dt) &lt;= #{accountInstanceTenantBo.endDate}
+                    AND DATE(oi.dt) &lt;= #{accountInstanceTenantBo.endDate}
                 </if>
-                and pay_state = 1 and refund <![CDATA[ <> ]]> 1
-                group by account_id HAVING count(account_id) &gt; 5 and count(account_id) &lt; 12
+                and oi.pay_state = 1 and oi.refund <![CDATA[ <> ]]> 1
+                group by oi.account_id HAVING count(oi.account_id) &gt; 5 and count(oi.account_id) &lt; 12
             </where>
             ) tab
         </if>
         <if test="accountInstanceTenantBo.frequencyType == 4">
             select '12次以上' as count, count(1) as preCount from (
-            select account_id from order_instance
+            select account_id from order_instance oi
+            left join account_instance ai on oi.account_id=ai.account_id
+            left join store_instance si on si.store_id = ai.store_id
             <where>
+                <if test="accountInstanceTenantBo.storeName != null and accountInstanceTenantBo.storeName != ''">
+                    AND si.store_name =  like concat('%',#{accountInstanceTenantBo.storeName},'%')
+                </if>
+                <if test="accountInstanceTenantBo.storeBrand != null">
+                    AND si.store_brand =  #{accountInstanceTenantBo.storeBrand}
+                </if>
+
+                <if test="accountInstanceTenantBo.storeType != null">
+                    AND si.store_type =  #{accountInstanceTenantBo.storeType}
+                </if>
+                <if test="accountInstanceTenantBo.storePattern != null">
+                    AND si.store_pattern =  #{accountInstanceTenantBo.storePattern}
+                </if>
+
+                <if test="accountInstanceTenantBo.district != null and accountInstanceTenantBo.district != ''">
+                    AND si.district =  #{accountInstanceTenantBo.district}
+                </if>
+
+                <if test="accountInstanceTenantBo.orderType != null">
+                    AND oi.type =  #{accountInstanceTenantBo.orderType}
+                </if>
                 <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
-                    AND store_id = #{accountInstanceTenantBo.storeId}
+                    AND oi.store_id = #{accountInstanceTenantBo.storeId}
                 </if>
                 <if test="accountInstanceTenantBo.startDate != null">
-                    AND DATE(dt) &gt;= #{accountInstanceTenantBo.startDate}
+                    AND DATE(oi.dt) &gt;= #{accountInstanceTenantBo.startDate}
                 </if>
                 <if test="accountInstanceTenantBo.endDate != null">
-                    AND DATE(dt) &lt;= #{accountInstanceTenantBo.endDate}
+                    AND DATE(oi.dt) &lt;= #{accountInstanceTenantBo.endDate}
                 </if>
-                and pay_state = 1 and refund <![CDATA[ <> ]]> 1
-                group by account_id HAVING count(account_id) &gt; 12
+                and oi.pay_state = 1 and oi.refund <![CDATA[ <> ]]> 1
+                group by oi.account_id HAVING count(oi.account_id) &gt; 12
             </where>
             ) tab
         </if>
@@ -286,8 +471,32 @@
     <select id="selectAccountConsumptionTenantStatisticsCapacity" parameterType="org.dows.account.bo.AccountInstanceTenantBo" resultType="org.dows.account.vo.AccountConsumptionVo">
 
             select count(1) as preCount from (
-            select account_id from order_instance oi left join iff_setting itt on oi.store_id = itt.store_id
+            select account_id from order_instance oi
+            left join iff_setting itt on oi.store_id = itt.store_id
+            left join account_instance ai on oi.account_id=ai.account_id
+            left join store_instance si on si.store_id = ai.store_id
             <where>
+                <if test="accountInstanceTenantBo.storeName != null and accountInstanceTenantBo.storeName != ''">
+                    AND si.store_name =  like concat('%',#{accountInstanceTenantBo.storeName},'%')
+                </if>
+                <if test="accountInstanceTenantBo.storeBrand != null">
+                    AND si.store_brand =  #{accountInstanceTenantBo.storeBrand}
+                </if>
+
+                <if test="accountInstanceTenantBo.storeType != null">
+                    AND si.store_type =  #{accountInstanceTenantBo.storeType}
+                </if>
+                <if test="accountInstanceTenantBo.storePattern != null">
+                    AND si.store_pattern =  #{accountInstanceTenantBo.storePattern}
+                </if>
+
+                <if test="accountInstanceTenantBo.district != null and accountInstanceTenantBo.district != ''">
+                    AND si.district =  #{accountInstanceTenantBo.district}
+                </if>
+
+                <if test="accountInstanceTenantBo.orderType != null">
+                    AND oi.type =  #{accountInstanceTenantBo.orderType}
+                </if>
                 <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
                     AND oi.store_id = #{accountInstanceTenantBo.storeId}
                 </if>
@@ -309,8 +518,31 @@
         select count(1) as preCount from (
         select
         ai.account_id
-        from account_instance ai left join order_instance oi on oi.account_id=ai.account_id
+        from account_instance ai
+        left join order_instance oi on oi.account_id=ai.account_id
+        left join store_instance si on si.store_id = ai.store_id
         <where>
+            <if test="accountInstanceTenantBo.storeName != null and accountInstanceTenantBo.storeName != ''">
+                AND si.store_name =  like concat('%',#{accountInstanceTenantBo.storeName},'%')
+            </if>
+            <if test="accountInstanceTenantBo.storeBrand != null">
+                AND si.store_brand =  #{accountInstanceTenantBo.storeBrand}
+            </if>
+
+            <if test="accountInstanceTenantBo.storeType != null">
+                AND si.store_type =  #{accountInstanceTenantBo.storeType}
+            </if>
+            <if test="accountInstanceTenantBo.storePattern != null">
+                AND si.store_pattern =  #{accountInstanceTenantBo.storePattern}
+            </if>
+
+            <if test="accountInstanceTenantBo.district != null and accountInstanceTenantBo.district != ''">
+                AND si.district =  #{accountInstanceTenantBo.district}
+            </if>
+
+            <if test="accountInstanceTenantBo.orderType != null">
+                AND oi.type =  #{accountInstanceTenantBo.orderType}
+            </if>
             <if test="accountInstanceTenantBo.storeId != null and accountInstanceTenantBo.storeId != ''">
                 AND ai.store_id = #{accountInstanceTenantBo.storeId}
             </if>

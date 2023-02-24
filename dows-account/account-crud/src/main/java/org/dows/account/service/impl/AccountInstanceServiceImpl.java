@@ -138,6 +138,14 @@ public class AccountInstanceServiceImpl extends MybatisCrudServiceImpl<AccountIn
         // 查詢全部客戶
         accountCountTenantQuery.setStartDate(null);
         accountCountTenantQuery.setEndDate(null);
+
+        accountCountTenantQuery.setStoreName(null);
+       //  accountCountTenantQuery.setStoreId(null);
+        accountCountTenantQuery.setDistrict(null);
+        accountCountTenantQuery.setStoreBrand(null);
+        accountCountTenantQuery.setStoreType(null);
+        accountCountTenantQuery.setStorePattern(null);
+        accountCountTenantQuery.setOrderType(null);
         Integer instanceCountAll =  accountInstanceMapper.selectAccountInstanceCount(accountCountTenantQuery);
 
         Map<String,Object> param = new HashMap<>();

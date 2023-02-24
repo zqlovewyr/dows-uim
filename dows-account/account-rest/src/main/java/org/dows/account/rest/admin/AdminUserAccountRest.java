@@ -29,7 +29,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
-@Api(tags = "B端-API-客户")
+@Api(tags = "总部端-API-客户")
 @Slf4j
 @RequiredArgsConstructor
 @RestController

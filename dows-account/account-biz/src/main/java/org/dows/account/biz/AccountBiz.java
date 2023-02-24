@@ -32,6 +32,7 @@ import org.dows.order.vo.OrderTaPackVo;
 import org.dows.order.vo.OrderTaTableVo;
 import org.dows.order.vo.OrderTaTakeOutVo;
 import org.dows.order.vo.OrderTaVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -204,9 +205,7 @@ public class AccountBiz implements AccountUserApi {
     @Override
     public Map<String, Object> selectAccountTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo) {
         AccountCountTenantQuery accountCountTenantQuery = new AccountCountTenantQuery();
-        accountCountTenantQuery.setEndDate(accountInstanceTenantBo.getEndDate());
-        accountCountTenantQuery.setStartDate(accountInstanceTenantBo.getStartDate());
-        accountCountTenantQuery.setStoreId(accountInstanceTenantBo.getStoreId());
+        BeanUtils.copyProperties(accountInstanceTenantBo,accountCountTenantQuery);
         return accountInstanceService.selectAccountTenantStatistics(accountCountTenantQuery);
     }
 
