@@ -10,6 +10,8 @@ import org.dows.account.biz.AccountBiz;
 import org.dows.account.query.AccountQuery;
 import org.dows.account.vo.AccountVo;
 import org.dows.framework.api.Response;
+import org.dows.marketing.form.MarketCouponQueryForm;
+import org.dows.marketing.form.MarketListCouponVo;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -39,5 +41,11 @@ public class AccountRest {
     public Response<AccountVo> getInfo(
             @ApiParam(required = true, value = "账号id") @PathVariable("accountId") String accountId){
         return Response.ok(accountBiz.getInfoByAccountId(accountId));
+    }
+
+    @PostMapping("/selectAccountCouponPage")
+    @ApiOperation(value = "用户分页优惠券列表")
+    public Response<IPage<MarketListCouponVo>> selectAccountCouponPage(@RequestBody MarketCouponQueryForm accountCouponForm){
+        return Response.ok(accountBiz.getCouponList(accountCouponForm));
     }
 }
