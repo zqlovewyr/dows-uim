@@ -7,7 +7,7 @@ import lombok.Data;
 public class AccountCouponForm {
 
     @ApiModelProperty(value = "账户ID")
-    private Integer accountId;
+    private String accountId;
 
     @ApiModelProperty(value = "优惠券类型 空为全部 1、已使用2、未使用3、已过期")
     private Integer couponType;
