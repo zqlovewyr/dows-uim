@@ -81,9 +81,6 @@ public class UserCompany implements CrudEntity {
     @ApiModelProperty("逻辑删除")
     private Boolean deleted;
 
-    @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty("时间戳")
-    private Date dt;
 
 }
 
