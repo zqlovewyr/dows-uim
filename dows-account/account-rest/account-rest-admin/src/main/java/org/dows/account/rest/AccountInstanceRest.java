@@ -68,8 +68,8 @@ public class AccountInstanceRest implements MybatisCrudRest<AccountInstanceForm,
 
     @ApiOperation("编辑 账号-实例")
     @PutMapping("/updateAccountInstanceById")
-    public void updateAccountInstanceById(@RequestBody AccountInstanceDTO accountInstanceDTO) {
-        accountInstanceApi.updateAccountInstanceById(accountInstanceDTO);
+    public Response updateAccountInstanceById(@RequestBody AccountInstanceDTO accountInstanceDTO) {
+        return accountInstanceApi.updateAccountInstanceById(accountInstanceDTO);
     }
 
     @ApiOperation("查看 账号-实例")

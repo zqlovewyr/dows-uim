@@ -732,7 +732,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateAccountInstanceById(AccountInstanceDTO accountInstanceDTO) {
+    public Response updateAccountInstanceById(AccountInstanceDTO accountInstanceDTO) {
         //1、修改账号-实例
         AccountInstance account = new AccountInstance();
         account.setPhone(accountInstanceDTO.getPhone());
@@ -740,7 +740,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         account.setId(Long.valueOf(accountInstanceDTO.getId()));
         boolean flag1 = accountInstanceService.updateById(account);
         if (flag1 == false) {
-            throw new AccountException(EnumAccountStatusCode.ACCOUNT_UPDATE_FAIL_EXCEPTION);
+            return Response.fail(EnumAccountStatusCode.ACCOUNT_UPDATE_FAIL_EXCEPTION);
         }
         //2、通过账号ID找到用户ID
         AccountUser accountUser = accountUserService.lambdaQuery()
@@ -751,7 +751,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         user.setName(accountInstanceDTO.getUserName());
         user.setGender(accountInstanceDTO.getGender());
         user.setId(accountUser.getUserId());
-        userInstanceApi.updateUserInstance(user).getData();
+        return userInstanceApi.updateUserInstance(user);
     }
 
     @Override

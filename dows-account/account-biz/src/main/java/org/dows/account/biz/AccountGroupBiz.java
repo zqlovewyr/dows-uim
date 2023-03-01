@@ -809,19 +809,23 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void batchDeleteGroups(List<String> ids) {
+    public Response batchDeleteGroups(List<String> ids) {
+        Integer count = 0;
         for (String id : ids) {
             AccountGroup accountGroup = accountGroupService.lambdaQuery()
                     .eq(AccountGroup::getId, id)
                     .one();
             if (accountGroup == null) {
-                throw new AccountException(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);
+                return Response.ok(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);
             }
             LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
             groupWrapper.set(AccountGroup::getDeleted, true)
                     .eq(AccountGroup::getId, Long.valueOf(id));
-            accountGroupService.update(groupWrapper);
+            boolean flag = accountGroupService.update(groupWrapper);
+            if (flag) {
+                count++;
+            }
         }
+        return Response.ok(count);
     }
 }

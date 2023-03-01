@@ -109,5 +109,5 @@ public interface AccountGroupApi {
      *
      * @param ids
      */
-    void batchDeleteGroups(List<String> ids);
+    Response batchDeleteGroups(List<String> ids);
 }

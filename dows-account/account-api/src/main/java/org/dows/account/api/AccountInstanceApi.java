@@ -55,7 +55,7 @@ public interface AccountInstanceApi {
      *
      * @param accountInstanceDTO
      */
-    void updateAccountInstanceById(AccountInstanceDTO accountInstanceDTO);
+    Response updateAccountInstanceById(AccountInstanceDTO accountInstanceDTO);
 
     /**
      * 查询 账户-实例-列表(不带分页)
