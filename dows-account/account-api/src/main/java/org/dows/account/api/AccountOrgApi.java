@@ -77,5 +77,5 @@ public interface AccountOrgApi {
      *
      * @param ids
      */
-    void batchDeleteAccountOrgs(List<String> ids);
+    Response batchDeleteAccountOrgs(List<String> ids);
 }

@@ -212,7 +212,7 @@ public class AccountOrgBiz implements AccountOrgApi {
             if (accountOrgDTO.getDtType().equals("up")) {
                 queryWrapper.orderByAsc(AccountOrg::getDt);
             }
-        } else{
+        } else {
             queryWrapper.orderByDesc(AccountOrg::getDt);
         }
         Page<AccountOrg> page = new Page<>(accountOrgDTO.getPageNo(), accountOrgDTO.getPageSize());
@@ -334,7 +334,8 @@ public class AccountOrgBiz implements AccountOrgApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void batchDeleteAccountOrgs(List<String> ids) {
+    public Response batchDeleteAccountOrgs(List<String> ids) {
+        Integer count = 0;
         if (ids != null && ids.size() > 0) {
             for (String id : ids) {
                 //1、删除组织架构
@@ -342,26 +343,26 @@ public class AccountOrgBiz implements AccountOrgApi {
                         .eq(AccountOrg::getId, id)
                         .one();
                 if (accountOrg == null) {
-                    throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_NOT_EXIST_EXCEPTION);
+                    return Response.fail(EnumAccountStatusCode.ACCOUNT_ORG_NOT_EXIST_EXCEPTION);
                 }
                 LambdaUpdateWrapper<AccountOrg> orgWrapper = Wrappers.lambdaUpdate(AccountOrg.class);
                 orgWrapper.set(AccountOrg::getDeleted, true)
                         .eq(AccountOrg::getId, id);
                 boolean flag1 = accountOrgService.update(orgWrapper);
                 if (!flag1) {
-                    throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_UPDATE_FAIL_EXCEPTION);
+                    return Response.fail(EnumAccountStatusCode.ACCOUNT_ORG_UPDATE_FAIL_EXCEPTION);
                 }
                 //2、如果有成员，删除成员信息
-                AccountGroup accountGroup = accountGroupService.lambdaQuery()
+                List<AccountGroup> accountGroupList = accountGroupService.lambdaQuery()
                         .eq(AccountGroup::getOrgId, id)
-                        .one();
-                if (accountGroup != null) {
+                        .list();
+                if (accountGroupList != null && accountGroupList.size() > 0) {
                     LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
                     groupWrapper.set(AccountGroup::getDeleted, true)
                             .eq(AccountGroup::getOrgId, id);
                     boolean flag2 = accountGroupService.update(groupWrapper);
                     if (!flag2) {
-                        throw new AccountException(EnumAccountStatusCode.ACCOUNT_GROUP_UPDATE_FAIL_EXCEPTION);
+                        return Response.ok(EnumAccountStatusCode.ACCOUNT_GROUP_UPDATE_FAIL_EXCEPTION);
                     }
                 }
                 //3、删除组织信息
@@ -374,10 +375,12 @@ public class AccountOrgBiz implements AccountOrgApi {
                             .eq(AccountGroupInfo::getOrgId, id);
                     boolean flag3 = accountGroupInfoService.update(infoWrapper);
                     if (!flag3) {
-                        throw new AccountException(EnumAccountStatusCode.ACCOUNT_GROUP_INFO_NOT_EXIST_EXCEPTION);
+                        return Response.fail(EnumAccountStatusCode.ACCOUNT_GROUP_INFO_NOT_EXIST_EXCEPTION);
                     }
                 }
+                count++;
             }
         }
+        return Response.ok(count);
     }
 }
