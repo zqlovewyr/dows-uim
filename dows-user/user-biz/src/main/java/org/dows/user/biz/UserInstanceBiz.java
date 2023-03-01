@@ -91,11 +91,11 @@ public class UserInstanceBiz implements UserInstanceApi {
         //复制属性
         IPage<UserInstanceVo> pageVo = new Page<>();
         List<UserInstanceVo> resultList = new ArrayList<>();
-        BeanUtils.copyProperties(userPage, pageVo,new String[]{"records"});
-        if(voList != null && voList.size() > 0){
-            voList.forEach(instance->{
+        BeanUtils.copyProperties(userPage, pageVo, new String[]{"records"});
+        if (voList != null && voList.size() > 0) {
+            voList.forEach(instance -> {
                 UserInstanceVo vo = new UserInstanceVo();
-                BeanUtils.copyProperties(instance,vo);
+                BeanUtils.copyProperties(instance, vo);
                 vo.setId(instance.getId().toString());
                 resultList.add(vo);
             });
@@ -174,19 +174,24 @@ public class UserInstanceBiz implements UserInstanceApi {
     }
 
     @Override
-    public void deleteUserInstances(List<String> ids) {
-        ids.forEach(id -> {
+    public Response deleteUserInstances(List<String> ids) {
+        Integer count = 0;
+        for (String id : ids) {
             //1、获取对应数据
             UserInstance userInstance = userInstanceService.getById(id);
             if (userInstance == null) {
-                throw new UserException(EnumUserStatusCode.USER_IS_NOT_EXIST_EXCEPTION);
+                return Response.fail(EnumUserStatusCode.USER_IS_NOT_EXIST_EXCEPTION);
             }
             //1、删除组织架构
             LambdaUpdateWrapper<UserInstance> instanceWrapper = Wrappers.lambdaUpdate(UserInstance.class);
             instanceWrapper.set(UserInstance::getDeleted, true)
                     .eq(UserInstance::getId, id);
-            userInstanceService.update(instanceWrapper);
-        });
+            boolean flag = userInstanceService.update(instanceWrapper);
+            if (flag) {
+                count++;
+            }
+        }
+        return Response.ok(count);
     }
 
     @Override

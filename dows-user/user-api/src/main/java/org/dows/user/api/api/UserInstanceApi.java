@@ -60,7 +60,7 @@ public interface UserInstanceApi {
      *
      * @param ids
      */
-    void deleteUserInstances(List<String> ids);
+    Response deleteUserInstances(List<String> ids);
 
     /**
      * 查询 用户-实例 列表(不带分页)
