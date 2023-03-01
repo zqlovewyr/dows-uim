@@ -28,7 +28,7 @@ public interface AccountOrgApi {
      * @param accountOrgDTO single accountOrgDTO
      * @return AccountOrgVo
      */
-    Response<Long> createAccountOrg(AccountOrgDTO accountOrgDTO);
+    Response createAccountOrg(AccountOrgDTO accountOrgDTO);
 
 
     IPage<AccountOrgVo> teacherPageAccountOrg(String accountId, String appId, Integer pageNo, Integer pageSize);

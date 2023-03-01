@@ -42,7 +42,7 @@ public interface AccountGroupInfoApi {
      *
      * @param accountGroupInfoDTO
      */
-    void updateAccountGroupInfo(AccountGroupInfoDTO accountGroupInfoDTO);
+    Response updateAccountGroupInfo(AccountGroupInfoDTO accountGroupInfoDTO);
 
     /**
      * 查看 账号-组-实例

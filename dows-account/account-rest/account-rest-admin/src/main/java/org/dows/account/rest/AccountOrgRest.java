@@ -73,7 +73,7 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
         if(StringUtils.isNotEmpty(accountOrgGroupDTO.getOrgDescr())){
             org.setDescr(accountOrgGroupDTO.getOrgDescr());
         }
-        Long orgId = accountOrgApi.createAccountOrg(org).getData();
+        Long orgId = (Long) accountOrgApi.createAccountOrg(org).getData();
         //2、创建一个默认管理员
         AccountInstanceDTO instance = new AccountInstanceDTO();
         BeanUtils.copyProperties(accountOrgGroupDTO, instance, new String[]{"id"});
@@ -115,7 +115,7 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
         if(StringUtils.isNotEmpty(accountOrgGroupDTO.getOrgDescr())){
             org.setDescr(accountOrgGroupDTO.getOrgDescr());
         }
-        Long orgId = accountOrgApi.createAccountOrg(org).getData();
+        Long orgId = (Long) accountOrgApi.createAccountOrg(org).getData();
         //2、创建机构对应组
         AccountGroupInfoDTO info = new AccountGroupInfoDTO();
         BeanUtils.copyProperties(accountOrgGroupDTO, info, new String[]{"id"});

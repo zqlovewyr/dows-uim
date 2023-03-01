@@ -20,14 +20,12 @@ import org.dows.account.dto.AccountOrgDTO;
 import org.dows.account.dto.TreeAccountOrgDTO;
 import org.dows.account.entity.AccountGroup;
 import org.dows.account.entity.AccountGroupInfo;
-import org.dows.account.entity.AccountInstance;
 import org.dows.account.entity.AccountOrg;
 import org.dows.account.service.AccountGroupInfoService;
 import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountOrgService;
 import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
-import org.dows.user.entity.UserInstance;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,7 +94,7 @@ public class AccountOrgBiz implements AccountOrgApi {
      * @return AccountOrgVo
      */
     @Transactional(rollbackFor = Exception.class)
-    public Response<Long> createAccountOrg(@RequestBody AccountOrgDTO accountOrgDTO) {
+    public Response createAccountOrg(@RequestBody AccountOrgDTO accountOrgDTO) {
         //1、 校验该组织是否已存在
         AccountOrg accountOrg = accountOrgService.lambdaQuery()
                 .eq(AccountOrg::getOrgName, accountOrgDTO.getOrgName())
@@ -111,7 +109,7 @@ public class AccountOrgBiz implements AccountOrgApi {
         model.setOrgId(String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID)));
         boolean flag = accountOrgService.save(model);
         if (flag == false) {
-            throw new AccountException(EnumAccountStatusCode.ORG_CREATE_FAIL_EXCEPTION);
+            return Response.fail(EnumAccountStatusCode.ORG_CREATE_FAIL_EXCEPTION);
         }
         return Response.ok(model.getId());
     }

@@ -436,30 +436,30 @@ public class AccountInstanceBiz implements AccountInstanceApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<Map<String, Object>> login(AccountInstanceDTO accountInstanceDTO) {
+    public Response login(AccountInstanceDTO accountInstanceDTO) {
         //1、获取账户是否存在
         LambdaQueryWrapper<AccountInstance> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(accountInstanceDTO.getAccountName()), AccountInstance::getAccountName, accountInstanceDTO.getAccountName())
                 .eq(StringUtils.isNotEmpty(accountInstanceDTO.getPassword()), AccountInstance::getPassword, accountInstanceDTO.getPassword());
         AccountInstance accountInstance = accountInstanceService.getOne(queryWrapper);
         if (accountInstance == null) {
-            throw new AccountException(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);
+            return Response.fail(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);
         }
         //2、判断账户状态
         if (accountInstance.getStatus() == AccountConstant.STATUS_N) {
-            throw new AccountException(EnumAccountStatusCode.ACCOUNT_STATUS_INVALID_EXCEPTION);
+            return Response.fail(EnumAccountStatusCode.ACCOUNT_STATUS_INVALID_EXCEPTION);
         }
         //3、判断账户是否在有效期内
         if (accountInstance.getIndate() != null && accountInstance.getExpdate() != null) {
             //判断当前登录时间是否有效期内
             Date now = new Date();
             if (accountInstance.getIndate().getTime() >= now.getTime() || accountInstance.getExpdate().getTime() <= now.getTime()) {
-                throw new AccountException(EnumAccountStatusCode.ACCOUNT_NOT_IN_VALIDITY_EXCEPTION);
+                return Response.fail(EnumAccountStatusCode.ACCOUNT_NOT_IN_VALIDITY_EXCEPTION);
             }
         }
         //4、使用RSA解密
         if (!accountInstance.getPassword().equals(accountInstanceDTO.getPassword())) {
-            throw new AccountException(EnumAccountStatusCode.ACCOUNT_PASSWORD_NOT_MATCH_EXCEPTION);
+            return Response.fail(EnumAccountStatusCode.ACCOUNT_PASSWORD_NOT_MATCH_EXCEPTION);
         }
         //5、编辑jwt加密
         Map<String, Object> claim = new HashMap<>();

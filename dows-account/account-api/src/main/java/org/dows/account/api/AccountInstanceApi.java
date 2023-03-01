@@ -41,7 +41,7 @@ public interface AccountInstanceApi {
      *
      * @param accountInstanceDTO
      */
-    Response<Map<String, Object>> login(AccountInstanceDTO accountInstanceDTO);
+    Response login(AccountInstanceDTO accountInstanceDTO);
 
     /**
      * 查询 账号-实例-列表

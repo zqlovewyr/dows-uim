@@ -170,21 +170,21 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      * @param accountGroupInfoDTO
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void updateAccountGroupInfo(AccountGroupInfoDTO accountGroupInfoDTO) {
+    public Response updateAccountGroupInfo(AccountGroupInfoDTO accountGroupInfoDTO) {
         //1、更新组-实例表
         LambdaQueryWrapper<AccountGroupInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AccountGroupInfo::getOrgId, accountGroupInfoDTO.getOrgId().toString());
         AccountGroupInfo groupInfo = accountGroupInfoService.getOne(queryWrapper);
         if (groupInfo == null) {
-            throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_IS_NOT_EXIST);
+            return Response.fail(EnumAccountStatusCode.ACCOUNT_ORG_IS_NOT_EXIST);
         }
         //1.1、设置组实例属性
         BeanUtils.copyProperties(accountGroupInfoDTO, groupInfo, new String[]{"id"});
         boolean flagInfo = accountGroupInfoService.updateById(groupInfo);
         if (flagInfo == false) {
-            throw new AccountException(EnumAccountStatusCode.GROUP_INFO_CREATE_FAIL_EXCEPTION);
+            return Response.fail(EnumAccountStatusCode.GROUP_INFO_CREATE_FAIL_EXCEPTION);
         }
+        return Response.ok(true);
     }
 
     /**

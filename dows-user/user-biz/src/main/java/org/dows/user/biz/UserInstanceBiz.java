@@ -86,10 +86,21 @@ public class UserInstanceBiz implements UserInstanceApi {
             queryWrapper.orderByDesc(UserInstance::getDt);
         }
         Page<UserInstance> page = new Page<>(userInstanceDTO.getPageNo(), userInstanceDTO.getPageSize());
-        IPage<UserInstance> userList = userInstanceService.page(page, queryWrapper);
+        IPage<UserInstance> userPage = userInstanceService.page(page, queryWrapper);
+        List<UserInstance> voList = userPage.getRecords();
         //复制属性
         IPage<UserInstanceVo> pageVo = new Page<>();
-        BeanUtils.copyProperties(userList, pageVo);
+        List<UserInstanceVo> resultList = new ArrayList<>();
+        BeanUtils.copyProperties(userPage, pageVo,new String[]{"records"});
+        if(voList != null && voList.size() > 0){
+            voList.forEach(instance->{
+                UserInstanceVo vo = new UserInstanceVo();
+                BeanUtils.copyProperties(instance,vo);
+                vo.setId(instance.getId().toString());
+                resultList.add(vo);
+            });
+        }
+        pageVo.setRecords(resultList);
         return Response.ok(pageVo);
     }
 
