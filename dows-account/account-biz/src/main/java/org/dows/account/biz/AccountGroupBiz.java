@@ -816,7 +816,7 @@ public class AccountGroupBiz implements AccountGroupApi {
                     .eq(AccountGroup::getId, id)
                     .one();
             if (accountGroup == null) {
-                return Response.ok(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);
+                return Response.fail(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);
             }
             LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
             groupWrapper.set(AccountGroup::getDeleted, true)
