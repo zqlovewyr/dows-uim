@@ -1,5 +1,6 @@
 package org.dows.account.biz;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -78,6 +79,7 @@ public class AccountGroupBiz implements AccountGroupApi {
      * @param roleCode      指定rbacRoleCode
      * @return 返回每个组织下对应rbacRoleCode的AccountGroupList
      */
+    @DS("uim")
     public Map<String, List<AccountGroup>> mapAccountGroupByRole(List<String> accountOrgIds, String roleCode) {
         if (CollectionUtils.isEmpty(accountOrgIds)) {
             return Collections.emptyMap();
@@ -114,6 +116,7 @@ public class AccountGroupBiz implements AccountGroupApi {
      * @param accountGroupDTOs account-groups
      */
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<Boolean> batchInsertGroup(List<AccountGroupDTO> accountGroupDTOs) {
         AtomicBoolean flag = new AtomicBoolean(true);
         if (CollectionUtils.isEmpty(accountGroupDTOs)) {
@@ -163,6 +166,7 @@ public class AccountGroupBiz implements AccountGroupApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<IPage<AccountGroupVo>> customAccountGroupList(AccountGroupDTO accountGroupDTO) {
         //1、获取角色对应账号Id
         Set<String> accountIds = new HashSet<>();
@@ -430,6 +434,7 @@ public class AccountGroupBiz implements AccountGroupApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<Map<String, Object>> insertOrUpdateAccountGroup(AccountGroupDTO accountGroupDTO) {
         Map<String, Object> map = new HashMap<>();
         //1、创建账号实例
@@ -501,19 +506,8 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     @Override
-    // TODO 2023/01/12
-    public Response<Object> downloadExcelTemplate(HttpServletResponse response) {
-        return null;
-    }
-
-    @Override
-    // TODO 2023/01/12
-    public Response<Object> uploadAccountGroup(MultipartFile file) {
-        return null;
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<Object> batchDeleteGroupMembers(List<AccountGroupDTO> accountGroupDTOs) {
         if (CollectionUtils.isEmpty(accountGroupDTOs)) {
             return Response.ok(false);
@@ -528,6 +522,7 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     @Override
+    @DS("uim")
     public Response<List<NormalDataVo>> getAgeRateList(AccountGroupDTO accountGroupDTO) {
         List<NormalDataVo> dataList = new ArrayList<>();
         //1、获取客户列表
@@ -670,6 +665,7 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     @Override
+    @DS("uim")
     public Response<List<AccountGroupVo>> getAccountGroupList(AccountGroupDTO accountGroupDTO) {
         List<AccountGroup> groupList = accountGroupService.lambdaQuery()
                 .like(StringUtils.isNotEmpty(accountGroupDTO.getOrgId()), AccountGroup::getOrgId, accountGroupDTO.getOrgId())
@@ -708,6 +704,7 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     @Override
+    @DS("uim")
     public Response<AccountGroupVo> getAccountGroupByAccountId(String accountId) {
         AccountGroup accountGroup = accountGroupService.lambdaQuery()
                 .eq(AccountGroup::getAccountId, accountId)
@@ -720,6 +717,7 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     @Override
+    @DS("uim")
     public Response<List<AccountGroupVo>> getAccountGroupByOrgId(String orgId) {
         List<AccountGroup> accountGroupList = accountGroupService.lambdaQuery()
                 .eq(AccountGroup::getOrgId, orgId)
@@ -737,6 +735,7 @@ public class AccountGroupBiz implements AccountGroupApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<Map<String, Object>> updateAccountGroupById(AccountGroupDTO accountGroupDTO) {
         Map<String, Object> map = new HashMap<>();
         //1、更新账号实例
@@ -797,6 +796,7 @@ public class AccountGroupBiz implements AccountGroupApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<Boolean> deleteAccountGroup(String id) {
         AccountGroup accountGroup = accountGroupService.lambdaQuery()
                 .eq(AccountGroup::getId, id)
@@ -809,6 +809,7 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     @Override
+    @DS("uim")
     public Response batchDeleteGroups(List<String> ids) {
         Integer count = 0;
         for (String id : ids) {

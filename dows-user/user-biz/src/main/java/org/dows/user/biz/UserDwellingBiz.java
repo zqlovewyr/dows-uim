@@ -1,5 +1,6 @@
 package org.dows.user.biz;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -32,6 +33,7 @@ public class UserDwellingBiz implements UserDwellingApi {
     private final UserDwellingService userDwellingService;
 
     @Override
+    @DS("uim")
     public Response<String> insertUserDwelling(UserDwellingDTO userDwellingnDTO) {
         UserDwelling userDwelling = new UserDwelling();
         BeanUtils.copyProperties(userDwellingnDTO, userDwelling);
@@ -43,6 +45,7 @@ public class UserDwellingBiz implements UserDwellingApi {
     }
 
     @Override
+    @DS("uim")
     public Response<UserDwellingVo> getUserDwellingByPrincipalId(String principalId) {
         LambdaQueryWrapper<UserDwelling> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserDwelling::getPrincipalId, principalId);
@@ -57,6 +60,7 @@ public class UserDwellingBiz implements UserDwellingApi {
     }
 
     @Override
+    @DS("uim")
     public Response<String> updateUserDwellingById(UserDwellingDTO userDwellingDTO) {
         UserDwelling userDwelling = new UserDwelling();
         BeanUtils.copyProperties(userDwellingDTO, userDwelling);
@@ -69,6 +73,7 @@ public class UserDwellingBiz implements UserDwellingApi {
     }
 
     @Override
+    @DS("uim")
     public Response<Boolean> deleteUserDwellingById(String id) {
         //1、获取对应数据
         UserDwelling userDwelling = userDwellingService.getById(id);

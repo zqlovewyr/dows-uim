@@ -24,6 +24,12 @@
             <groupId>org.dows.framework</groupId>
             <artifactId>crud-mybatis</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+            <version>3.5.0</version>
+        </dependency>
     </dependencies>
 
 </project>

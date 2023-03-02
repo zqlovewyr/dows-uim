@@ -4,6 +4,8 @@ spring:
 #    type: com.zaxxer.hikari.HikariDataSource
     #    schema: classpath:form-schema.sql
     #    data: classpath:form-data.sql
+    dynamic:
+      enabled: false
     hikari:
       connection-timeout: 60000
       minimum-idle: 5
@@ -52,6 +54,8 @@ spring:
     activate:
       on-profile: dev
   datasource:
+    dynamic:
+      enabled: false
     account:
       type: com.zaxxer.hikari.HikariDataSource
       driverClassName: com.mysql.cj.jdbc.Driver

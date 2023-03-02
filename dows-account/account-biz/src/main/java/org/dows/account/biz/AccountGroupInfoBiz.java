@@ -1,5 +1,6 @@
 package org.dows.account.biz;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -55,6 +56,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<IPage<AccountGroupInfoVo>> customAccountGroupInfoList(AccountGroupInfoDTO accountGroupInfoDTO) {
         LambdaQueryWrapper<AccountGroupInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(accountGroupInfoDTO.getOrgId()), AccountGroupInfo::getOrgId, accountGroupInfoDTO.getOrgId())
@@ -103,6 +105,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<Long> insertAccountGroupInfo(AccountGroupInfoDTO accountGroupInfoDTO) {
         //1、判断该组是否存在
         AccountGroupInfo groupInfo = accountGroupInfoService.lambdaQuery()
@@ -131,6 +134,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<Boolean> batchInsertAccountGroupInfo(List<AccountOrgGroupDTO> accountOrgGroupDTOs) {
         AtomicBoolean flag = new AtomicBoolean(true);
         //1、插入组织架构表
@@ -170,6 +174,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      * @param accountGroupInfoDTO
      */
     @Override
+    @DS("uim")
     public Response updateAccountGroupInfo(AccountGroupInfoDTO accountGroupInfoDTO) {
         //1、更新组-实例表
         LambdaQueryWrapper<AccountGroupInfo> queryWrapper = new LambdaQueryWrapper<>();
@@ -194,6 +199,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<AccountGroupInfoVo> getAccountGroupInfoById(Long id) {
         AccountGroupInfo groupInfo = accountGroupInfoService.getById(id);
         //复制属性
@@ -215,6 +221,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<AccountGroupInfoVo> getAccountGroupInfoByOrgId(String orgId) {
         LambdaQueryWrapper<AccountGroupInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AccountGroupInfo::getOrgId, orgId);
@@ -239,6 +246,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<Boolean> deleteAccountGroupInfoById(String id) {
         //1、获取对应数据
         AccountGroupInfo groupInfo = accountGroupInfoService.getById(id);
@@ -273,6 +281,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<Boolean> batchDeleteGroupInfos(List<String> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return Response.ok(false);

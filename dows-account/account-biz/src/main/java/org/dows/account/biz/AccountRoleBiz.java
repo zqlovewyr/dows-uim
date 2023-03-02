@@ -1,5 +1,6 @@
 package org.dows.account.biz;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -37,6 +38,7 @@ public class AccountRoleBiz implements AccountRoleApi {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<IPage<AccountRoleVo>> customAccountRoleList(AccountRoleDTO accountRoleDTO) {
         LambdaQueryWrapper<AccountRole> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StringUtils.isNotEmpty(accountRoleDTO.getRoleId()), AccountRole::getRoleId, accountRoleDTO.getRoleId())
@@ -58,6 +60,7 @@ public class AccountRoleBiz implements AccountRoleApi {
     }
 
     @Override
+    @DS("uim")
     public Response<AccountRoleVo> getAccountRoleByPrincipalId(String principalId) {
         AccountRole accountRole = accountRoleService.lambdaQuery()
                 .eq(AccountRole::getPrincipalId, principalId)
@@ -72,6 +75,7 @@ public class AccountRoleBiz implements AccountRoleApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<AccountRoleVo> getAccountRoleById(Long id) {
         AccountRole accountRole = accountRoleService.getById(id);
         //复制属性
@@ -82,6 +86,7 @@ public class AccountRoleBiz implements AccountRoleApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<Boolean> updateAccountRoleById(AccountRoleDTO accountRoleDTO) {
         AccountRole role = new AccountRole();
         BeanUtils.copyProperties(accountRoleDTO, role);
@@ -89,6 +94,7 @@ public class AccountRoleBiz implements AccountRoleApi {
     }
 
     @Override
+    @DS("uim")
     public Response<Long> authAccountRole(AccountRoleDTO accountRoleDTO) {
         AccountRole role = new AccountRole();
         BeanUtils.copyProperties(accountRoleDTO, role);

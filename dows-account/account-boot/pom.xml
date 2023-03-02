@@ -14,9 +14,9 @@
             <groupId>org.dows.cloud</groupId>
             <artifactId>account-biz</artifactId>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>account-config</artifactId>
-        </dependency>
+        </dependency>-->
     </dependencies>
 </project>

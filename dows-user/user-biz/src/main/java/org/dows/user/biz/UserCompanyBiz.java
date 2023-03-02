@@ -1,5 +1,6 @@
 package org.dows.user.biz;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 public class UserCompanyBiz implements UserCompanyApi {
     private final UserCompanyService userCompanyService;
     @Override
+    @DS("uim")
     public Response<String> insertUserCompany(UserCompanyDTO userCompanyDTO) {
         UserCompany userCompany = new UserCompany();
         BeanUtils.copyProperties(userCompanyDTO, userCompany);
@@ -38,6 +40,7 @@ public class UserCompanyBiz implements UserCompanyApi {
     }
 
     @Override
+    @DS("uim")
     public Response<UserCompanyVo> getUserCompanyByUserId(String userId) {
         LambdaQueryWrapper<UserCompany> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserCompany::getUserId, userId);
@@ -52,6 +55,7 @@ public class UserCompanyBiz implements UserCompanyApi {
     }
 
     @Override
+    @DS("uim")
     public Response<String> updateUserCompanyById(UserCompanyDTO userCompanyDTO) {
         UserCompany userCompany = new UserCompany();
         BeanUtils.copyProperties(userCompanyDTO, userCompany);
@@ -64,6 +68,7 @@ public class UserCompanyBiz implements UserCompanyApi {
     }
 
     @Override
+    @DS("uim")
     public Response<Boolean> deleteUserCompanyById(String id) {
         //1、获取对应数据
         UserCompany userCompany = userCompanyService.getById(id);

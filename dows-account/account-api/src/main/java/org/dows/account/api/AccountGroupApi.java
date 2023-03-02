@@ -40,21 +40,6 @@ public interface AccountGroupApi {
     Response<Map<String,Object>> insertOrUpdateAccountGroup(AccountGroupDTO accountGroupDTO);
 
     /**
-     * 获取 下载模板
-     *
-     * @param response
-     */
-    Response<Object> downloadExcelTemplate(HttpServletResponse response);
-
-    /**
-     *
-     * 导入成员
-     *
-     * @param file
-     */
-    Response<Object> uploadAccountGroup(MultipartFile file);
-
-    /**
      * 批量删除 组-成员
      *
      * @param accountGroupDTOs

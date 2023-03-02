@@ -1,5 +1,6 @@
 package org.dows.rbac.biz;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 public class RbacRoleBiz implements RbacRoleApi {
     private final RbacRoleService rbacRoleService;
 
+    @DS("uim")
     public Response<RbacRoleVo> getById(String id) {
         return Response.ok(RsRbacRoleUtil.rbacRole2VO(
                 rbacRoleService.lambdaQuery()
@@ -40,6 +42,7 @@ public class RbacRoleBiz implements RbacRoleApi {
         );
     }
 
+    @DS("uim")
     public Response<List<RbacRoleVo>> getByIdList(List<String> idList) {
         return Response.ok(rbacRoleService.lambdaQuery()
                 .in(RbacRole::getId, idList)
@@ -48,6 +51,7 @@ public class RbacRoleBiz implements RbacRoleApi {
     }
 
     @Override
+    @DS("uim")
     public Response<List<RbacRoleVo>> getByIdListAndAppId(List<String> rbacRoleIdList, String appid) {
         return null;
     }
@@ -62,6 +66,7 @@ public class RbacRoleBiz implements RbacRoleApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<IPage<RbacRoleVo>> customRbacRoleList(RbacRoleDTO rbacRoleDTO) {
         LambdaQueryWrapper<RbacRole> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(rbacRoleDTO.getRolePid() != null, RbacRole::getPid, rbacRoleDTO.getRolePid())
@@ -95,6 +100,7 @@ public class RbacRoleBiz implements RbacRoleApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<RbacRoleVo> getRbacRoleById(long id) {
         RbacRole rbacRole = rbacRoleService.getById(id);
         //复制属性
@@ -105,6 +111,7 @@ public class RbacRoleBiz implements RbacRoleApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<Boolean> updateRbacRoleById(RbacRoleDTO rbacRoleDTO) {
         RbacRole role = new RbacRole();
         BeanUtils.copyProperties(rbacRoleDTO, role);

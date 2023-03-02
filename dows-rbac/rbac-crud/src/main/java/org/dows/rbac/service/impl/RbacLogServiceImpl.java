@@ -1,5 +1,6 @@
 package org.dows.rbac.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import org.dows.framework.crud.mybatis.MybatisCrudServiceImpl;
 import org.dows.rbac.mapper.RbacLogMapper;
 import org.dows.rbac.entity.RbacLog;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
  * @author lait.zhang
  * @since 2022-11-24 11:49:45
  */
+@DS("uim")
 @Service("rbacLogService")
 public class RbacLogServiceImpl extends MybatisCrudServiceImpl<RbacLogMapper, RbacLog> implements RbacLogService {
 

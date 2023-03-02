@@ -11,6 +11,17 @@ import org.dows.framework.api.Response;
  * @since 2021-09-10 15:41:36
  */
 public interface AccountUserApi {
-
+    /**
+     * 插入 账号与用户关系
+     *
+     * @param accountUserDTO
+     */
     Response<Long> createAccountUser(AccountUserDTO accountUserDTO);
+
+    /**
+     * 插入 账号与用户关系
+     *
+     * @param accountId
+     */
+    Response getUserByAccountId(String accountId);
 }

@@ -1,5 +1,6 @@
 package org.dows.account.biz;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -50,6 +51,7 @@ public class AccountOrgBiz implements AccountOrgApi {
      * @param treeAccountOrgDto recursion TreeDto
      */
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public void createTreeAccountOrg(TreeAccountOrgDTO treeAccountOrgDto) {
         // step1:check static rule
         AccountUtil.validateAccountOrgDTO(treeAccountOrgDto);
@@ -68,6 +70,7 @@ public class AccountOrgBiz implements AccountOrgApi {
      * @param array tree array
      * @param pId   current parent Id
      */
+    @DS("uim")
     private void toArrayTree(List<TreeAccountOrgDTO> array, long pId) {
         if (CollectionUtils.isEmpty(array)) {
             return;
@@ -94,6 +97,7 @@ public class AccountOrgBiz implements AccountOrgApi {
      * @return AccountOrgVo
      */
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response createAccountOrg(@RequestBody AccountOrgDTO accountOrgDTO) {
         //1、 校验该组织是否已存在
         AccountOrg accountOrg = accountOrgService.lambdaQuery()
@@ -114,6 +118,7 @@ public class AccountOrgBiz implements AccountOrgApi {
         return Response.ok(model.getId());
     }
 
+    @DS("uim")
     public IPage<AccountOrgVo> teacherPageAccountOrg(String accountId, String appId, Integer pageNo, Integer pageSize) {
         // list account_group
         List<AccountGroup> accountGroupList = accountGroupService.lambdaQuery()
@@ -140,6 +145,7 @@ public class AccountOrgBiz implements AccountOrgApi {
         return voPage;
     }
 
+    @DS("uim")
     public IPage<AccountOrgVo> adminPageAccountOrg(String appId, Integer pageNo, Integer pageSize) {
         // TODO 只获取root节点，以及root节点的教师
         LambdaQueryWrapper<AccountOrg> queryWrapper = new LambdaQueryWrapper<AccountOrg>()
@@ -155,6 +161,7 @@ public class AccountOrgBiz implements AccountOrgApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<IPage<AccountOrgVo>> customAccountOrgList(AccountOrgDTO accountOrgDTO) {
         //1、如果存在团队负责人,筛选出团队负责人对应的机构
         Set<String> ids = new HashSet<>();
@@ -249,6 +256,7 @@ public class AccountOrgBiz implements AccountOrgApi {
     }
 
     @Override
+    @DS("uim")
     public void updateAccountOrgById(AccountOrgDTO accountOrgDTO) {
         AccountOrg accountOrg = new AccountOrg();
         BeanUtils.copyProperties(accountOrgDTO, accountOrg);
@@ -260,6 +268,7 @@ public class AccountOrgBiz implements AccountOrgApi {
     }
 
     @Override
+    @DS("uim")
     public Response<List<AccountOrgVo>> getAccountOrgByPId(String id) {
         List<AccountOrgVo> voList = new ArrayList<>();
         List<AccountOrg> accountOrgList = accountOrgService.lambdaQuery()
@@ -277,6 +286,7 @@ public class AccountOrgBiz implements AccountOrgApi {
     }
 
     @Override
+    @DS("uim")
     public Response<AccountOrgVo> getAccountOrgById(String id) {
         AccountOrg model = accountOrgService.getById(Long.valueOf(id));
         AccountOrgVo vo = new AccountOrgVo();
@@ -289,6 +299,7 @@ public class AccountOrgBiz implements AccountOrgApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public void deleteAccountOrgById(String id) {
         //1、删除组织架构
         AccountOrg accountOrg = accountOrgService.lambdaQuery()
@@ -334,6 +345,7 @@ public class AccountOrgBiz implements AccountOrgApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response batchDeleteAccountOrgs(List<String> ids) {
         Integer count = 0;
         if (ids != null && ids.size() > 0) {

@@ -1,5 +1,6 @@
 package org.dows.user.biz;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 public class UserExtinfoBiz implements UserExtinfoApi {
     private final UserExtinfoService userExtinfoService;
     @Override
+    @DS("uim")
     public Response<String> insertUserExtinfo(UserExtinfoDTO userExtinfoDTO) {
         UserExtinfo userExtinfo = new UserExtinfo();
         BeanUtils.copyProperties(userExtinfoDTO, userExtinfo);
@@ -38,6 +40,7 @@ public class UserExtinfoBiz implements UserExtinfoApi {
     }
 
     @Override
+    @DS("uim")
     public Response<UserExtinfoVo> getUserExtinfoByUserId(String userId) {
         LambdaQueryWrapper<UserExtinfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserExtinfo::getUserId, userId);
@@ -52,6 +55,7 @@ public class UserExtinfoBiz implements UserExtinfoApi {
     }
 
     @Override
+    @DS("uim")
     public Response<String> updateUserExtinfoById(UserExtinfoDTO userExtinfoDTO) {
         UserExtinfo userExtinfo = new UserExtinfo();
         BeanUtils.copyProperties(userExtinfoDTO, userExtinfo);
@@ -64,6 +68,7 @@ public class UserExtinfoBiz implements UserExtinfoApi {
     }
 
     @Override
+    @DS("uim")
     public Response<Boolean> deleteUserExtinfoById(String id) {
         //1、获取对应数据
         UserExtinfo userExtinfo = userExtinfoService.getById(id);

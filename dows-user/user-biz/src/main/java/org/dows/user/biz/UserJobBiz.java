@@ -1,5 +1,6 @@
 package org.dows.user.biz;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 public class UserJobBiz implements UserJobApi {
     private final UserJobService userJobService;
     @Override
+    @DS("uim")
     public Response<String> insertUserJob(UserJobDTO userJobDTO) {
         UserJob userJob = new UserJob();
         BeanUtils.copyProperties(userJobDTO, userJob);
@@ -38,6 +40,7 @@ public class UserJobBiz implements UserJobApi {
     }
 
     @Override
+    @DS("uim")
     public Response<UserJobVo> getUserJobByUserId(String userId) {
         LambdaQueryWrapper<UserJob> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserJob::getUserId, userId);
@@ -52,6 +55,7 @@ public class UserJobBiz implements UserJobApi {
     }
 
     @Override
+    @DS("uim")
     public Response<String> updateUserJobById(UserJobDTO userJobDTO) {
         UserJob userJob = new UserJob();
         BeanUtils.copyProperties(userJobDTO, userJob);
@@ -64,6 +68,7 @@ public class UserJobBiz implements UserJobApi {
     }
 
     @Override
+    @DS("uim")
     public Response<Boolean> deleteUserJobById(String id) {
         //1、获取对应数据
         UserJob userJob = userJobService.getById(id);

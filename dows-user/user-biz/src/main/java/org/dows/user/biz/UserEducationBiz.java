@@ -1,5 +1,6 @@
 package org.dows.user.biz;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -29,6 +30,7 @@ public class UserEducationBiz implements UserEducationApi {
     private final UserEducationService userEducationService;
 
     @Override
+    @DS("uim")
     public Response<String> insertUserEducation(UserEducationDTO userEducationDTO) {
         UserEducation userEducation = new UserEducation();
         BeanUtils.copyProperties(userEducationDTO, userEducation);
@@ -40,6 +42,7 @@ public class UserEducationBiz implements UserEducationApi {
     }
 
     @Override
+    @DS("uim")
     public Response<UserEducationVo> getUserEducationByUserId(String userId) {
         LambdaQueryWrapper<UserEducation> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserEducation::getUserId, userId);
@@ -54,6 +57,7 @@ public class UserEducationBiz implements UserEducationApi {
     }
 
     @Override
+    @DS("uim")
     public Response<String> updateUserEducationById(UserEducationDTO userEducationDTO) {
         UserEducation userEducation = new UserEducation();
         BeanUtils.copyProperties(userEducationDTO, userEducation);
@@ -66,6 +70,7 @@ public class UserEducationBiz implements UserEducationApi {
     }
 
     @Override
+    @DS("uim")
     public Response<Boolean> deleteUserEducationById(String id) {
         //1、获取对应数据
         UserEducation userEducation = userEducationService.getById(id);

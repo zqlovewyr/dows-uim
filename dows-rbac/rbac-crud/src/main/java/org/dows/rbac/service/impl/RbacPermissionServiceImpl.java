@@ -1,5 +1,6 @@
 package org.dows.rbac.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import org.dows.framework.crud.mybatis.MybatisCrudServiceImpl;
 import org.dows.rbac.mapper.RbacPermissionMapper;
 import org.dows.rbac.entity.RbacPermission;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
  * @author lait.zhang
  * @since 2022-11-24 11:49:47
  */
+@DS("uim")
 @Service("rbacPermissionService")
 public class RbacPermissionServiceImpl extends MybatisCrudServiceImpl<RbacPermissionMapper, RbacPermission> implements RbacPermissionService {
 

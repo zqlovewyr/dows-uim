@@ -1,5 +1,6 @@
 package org.dows.account.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import org.dows.framework.crud.mybatis.MybatisCrudServiceImpl;
 import org.dows.account.mapper.AccountIdentifierMapper;
 import org.dows.account.entity.AccountIdentifier;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
  * @author lait.zhang
  * @since 2022-11-24 14:23:53
  */
+@DS("uim")
 @Service("accountIdentifierService")
 public class AccountIdentifierServiceImpl extends MybatisCrudServiceImpl<AccountIdentifierMapper, AccountIdentifier> implements AccountIdentifierService {
 

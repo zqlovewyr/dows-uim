@@ -1,5 +1,6 @@
 package org.dows.user.biz;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -35,6 +36,7 @@ public class UserContactBiz implements UserContactApi {
     private final UserContactService userContactService;
 
     @Override
+    @DS("uim")
     public Response<String> insertUserContact(UserContactDTO userContactDTO) {
         UserContact userContact = new UserContact();
         BeanUtils.copyProperties(userContactDTO, userContact);
@@ -46,6 +48,7 @@ public class UserContactBiz implements UserContactApi {
     }
 
     @Override
+    @DS("uim")
     public Response<List<UserContactVo>> getUserContactList(UserContactDTO userContactDTO) {
         List<UserContact> userContactList = userContactService.lambdaQuery()
                 .like(StringUtils.isNotEmpty(userContactDTO.getUserId()), UserContact::getUserId, userContactDTO.getUserId())
@@ -69,6 +72,7 @@ public class UserContactBiz implements UserContactApi {
     }
 
     @Override
+    @DS("uim")
     public Response<UserContactVo> getUserContactByUserId(String userId) {
         LambdaQueryWrapper<UserContact> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserContact::getUserId, userId);
@@ -83,6 +87,7 @@ public class UserContactBiz implements UserContactApi {
     }
 
     @Override
+    @DS("uim")
     public Response<String> updateUserContactById(UserContactDTO userContactDTO) {
         UserContact userContact = new UserContact();
         BeanUtils.copyProperties(userContactDTO, userContact);
@@ -95,6 +100,7 @@ public class UserContactBiz implements UserContactApi {
     }
 
     @Override
+    @DS("uim")
     public Response<Boolean> deleteUserContactById(String id) {
         //1、获取对应数据
         UserContact userContact = userContactService.getById(id);

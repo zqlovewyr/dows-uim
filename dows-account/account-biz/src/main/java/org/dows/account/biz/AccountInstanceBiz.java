@@ -3,6 +3,7 @@ package org.dows.account.biz;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.listener.ReadListener;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -80,6 +81,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
      * 8.convert entity to vo and return
      */
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<AccountInstanceVo> createAccountInstance1(AccountInstanceDTO accountInstanceDTO) {
         accountInstanceDTO = AccountUtil.validateAndTrimAccountInstanceDTO(accountInstanceDTO);
         /* runsix:1.check whether accountIdentifier queried by appId & identifier exist */
@@ -155,6 +157,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     }
 
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<AccountInstanceVo> createAccountInstance(AccountInstanceDTO accountInstanceDTO) {
         accountInstanceDTO = AccountUtil.validateAndTrimAccountInstanceDTO(accountInstanceDTO);
         /* runsix:1.check whether accountIdentifier queried by appId & identifier exist */
@@ -244,6 +247,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         return Response.ok(accountInstanceVo);
     }
 
+    @DS("uim")
     public Response<List<AccountInstanceDTO>> getAccountInstanceDTOListByFile(MultipartFile file, String appId, Long rbacRoleId, String accountOrgOrgId, String password, String avatar, String source, String phone) {
         InputStream inputStream;
         try {
@@ -298,6 +302,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
      * 8.batch save accountGroup if orgId exist
      */
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public void batchCreateAccountInstance(List<AccountInstanceDTO> accountInstanceDTOList) {
         accountInstanceDTOList.parallelStream().forEach(AccountUtil::validateAndTrimAccountInstanceDTO);
         /* runsix:1.check whether input appId & identifier duplicated */
@@ -428,6 +433,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         accountGroupService.saveBatch(accountGroupList);
     }
 
+    @DS("uim")
     public void batchRegister(MultipartFile file, String appId, Long rbacRoleId, String accountOrgOrgId, String password, String avatar, String source, String phone) {
         Response<List<AccountInstanceDTO>> accountInstanceDTOListByFile = getAccountInstanceDTOListByFile(
                 file, appId, rbacRoleId, accountOrgOrgId, password, avatar, source, phone);
@@ -436,6 +442,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response login(AccountInstanceDTO accountInstanceDTO) {
         //1、获取账户是否存在
         LambdaQueryWrapper<AccountInstance> queryWrapper = new LambdaQueryWrapper<>();
@@ -488,6 +495,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response<IPage<AccountInstanceVo>> customAccountInstanceList(AccountInstanceDTO accountInstanceDTO) {
         //1.1、获取角色Id获取对应账号Id
         Set<String> accountIds = new HashSet<>();
@@ -732,6 +740,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DS("uim")
     public Response updateAccountInstanceById(AccountInstanceDTO accountInstanceDTO) {
         //1、修改账号-实例
         AccountInstance account = new AccountInstance();
@@ -755,6 +764,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     }
 
     @Override
+    @DS("uim")
     public Response<List<AccountInstanceVo>> getAccountInstanceList(AccountInstanceDTO accountInstanceDTO) {
         List<AccountInstance> voList = accountInstanceService.lambdaQuery()
                 .like(StringUtils.isNotEmpty(accountInstanceDTO.getAccountId()), AccountInstance::getAccountId, accountInstanceDTO.getAccountId())
@@ -780,6 +790,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     }
 
     @Override
+    @DS("uim")
     public Response<Boolean> deleteAccountInstanceById(Long id) {
         LambdaUpdateWrapper<AccountInstance> instanceWrapper = Wrappers.lambdaUpdate(AccountInstance.class);
         instanceWrapper.set(AccountInstance::getDeleted, true)
@@ -789,6 +800,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     }
 
     @Override
+    @DS("uim")
     public void batchDeleteAccountInstances(List<String> ids) {
         ids.forEach(id -> {
             LambdaUpdateWrapper<AccountInstance> instanceWrapper = Wrappers.lambdaUpdate(AccountInstance.class);
@@ -799,6 +811,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     }
 
     @Override
+    @DS("uim")
     public Response<Boolean> resetPwd(AccountInstanceDTO accountInstanceDTO) {
         //1、获取对应账户名的账户
         AccountInstance accountInstance = accountInstanceService.lambdaQuery()
@@ -815,6 +828,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     }
 
     @Override
+    @DS("uim")
     public Response<AccountInstanceVo> getAccountInstanceById(String id) {
         //1、获取账户实例
         AccountInstance accountInstance = accountInstanceService.lambdaQuery()

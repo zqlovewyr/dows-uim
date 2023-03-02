@@ -1,5 +1,6 @@
 package org.dows.account.biz;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountTenantApi;
@@ -23,6 +24,7 @@ public class AccountTenantBiz implements AccountTenantApi {
     private AccountTenantService accountTenantService;
 
     @Override
+    @DS("uim")
     public Response<String> createAccountTenant(AccountTenantDTO accountTenantDTO) {
         AccountTenant accountTenant = new AccountTenant();
         BeanUtils.copyProperties(accountTenantDTO,accountTenant);

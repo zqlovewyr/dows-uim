@@ -1,5 +1,6 @@
 package org.dows.tenant.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import org.dows.framework.crud.mybatis.MybatisCrudServiceImpl;
 import org.dows.tenant.mapper.TenantInstanceMapper;
 import org.dows.tenant.entity.TenantInstance;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
  * @author lait
  * @since 2023-01-08 16:35:30
  */
+@DS("uim")
 @Service("tenantInstanceService")
 public class TenantInstanceServiceImpl extends MybatisCrudServiceImpl<TenantInstanceMapper, TenantInstance> implements TenantInstanceService {
 
