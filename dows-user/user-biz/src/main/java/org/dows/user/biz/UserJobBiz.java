@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 @Service
+@DS("uim")
 public class UserJobBiz implements UserJobApi {
     private final UserJobService userJobService;
     @Override

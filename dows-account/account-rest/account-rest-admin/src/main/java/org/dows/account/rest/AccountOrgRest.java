@@ -65,7 +65,6 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
 
     @ApiOperation("保存 机构-实例 同时创建机构和组及成员")
     @PostMapping("/insertAccountOrg")
-    @Transactional(rollbackFor = Exception.class)
     public void insertAccountOrg(@RequestBody AccountOrgGroupDTO accountOrgGroupDTO) {
         //1、创建机构
         AccountOrgDTO org = new AccountOrgDTO();
@@ -107,7 +106,6 @@ public class AccountOrgRest implements MybatisCrudRest<AccountOrgForm, AccountOr
 
     @ApiOperation("保存 团队-实例（不建立管理员）")
     @PostMapping("/insertAccountOrgNotAdmin")
-    @Transactional(rollbackFor = Exception.class)
     public void insertAccountOrgNotAdmin(@RequestBody AccountOrgGroupDTO accountOrgGroupDTO) {
         //1、创建机构
         AccountOrgDTO org = new AccountOrgDTO();

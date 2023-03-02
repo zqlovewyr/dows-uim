@@ -34,6 +34,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Service
+@DS("uim")
 public class UserContactBiz implements UserContactApi {
 
     private final UserContactService userContactService;

@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 @Service
+@DS("uim")
 public class UserAddressBiz implements UserAddressApi {
 
     private final UserAddressService userAddressService;

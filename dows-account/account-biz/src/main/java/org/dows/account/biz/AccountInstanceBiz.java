@@ -59,6 +59,7 @@ import static org.dows.account.biz.util.AccountUtil.getKeyOfkIdentifierAppIdV;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@DS("uim")
 public class AccountInstanceBiz implements AccountInstanceApi {
     private final AccountInstanceService accountInstanceService;
     private final AccountUserService accountUserService;

@@ -27,6 +27,7 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@DS("uim")
 public class AccountUserBiz implements AccountUserApi {
     private final AccountUserService accountUserService;
 

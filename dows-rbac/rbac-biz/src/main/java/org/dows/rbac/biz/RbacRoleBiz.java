@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
  */
 @RequiredArgsConstructor
 @Service
+@DS("uim")
 public class RbacRoleBiz implements RbacRoleApi {
     private final RbacRoleService rbacRoleService;
 

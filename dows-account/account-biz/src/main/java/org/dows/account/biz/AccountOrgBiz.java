@@ -39,6 +39,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 @Service
+@DS("uim")
 public class AccountOrgBiz implements AccountOrgApi {
 
     private final AccountOrgService accountOrgService;

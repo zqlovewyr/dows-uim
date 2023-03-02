@@ -41,6 +41,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @RequiredArgsConstructor
 @Slf4j
 @Service
+@DS("uim")
 public class AccountGroupInfoBiz implements AccountGroupInfoApi {
 
     private final AccountGroupInfoService accountGroupInfoService;

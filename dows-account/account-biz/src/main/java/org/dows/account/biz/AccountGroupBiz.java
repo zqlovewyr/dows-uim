@@ -52,6 +52,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 @Service
+@DS("uim")
 public class AccountGroupBiz implements AccountGroupApi {
 
     private final AccountGroupService accountGroupService;

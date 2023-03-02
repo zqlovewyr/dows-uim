@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 @Service
+@DS("uim")
 public class AccountRoleBiz implements AccountRoleApi {
 
     private final AccountRoleService accountRoleService;

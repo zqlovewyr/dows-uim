@@ -61,7 +61,6 @@ public class UserFamilyRest implements MybatisCrudRest<UserFamilyForm, UserFamil
 
     @ApiOperation("新增 用户-家庭-成员")
     @PostMapping("/createFamilyMember")
-    @Transactional(rollbackFor = Exception.class)
     public Response<String> createFamilyMember(@RequestBody UserFamilyDTO userFamilyDTO) {
         //1、校验该身份证号的用户是否已存在
         String userInstanceId = "";

@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 @Service
+@DS("uim")
 public class UserExtinfoBiz implements UserExtinfoApi {
     private final UserExtinfoService userExtinfoService;
     @Override
