@@ -34,6 +34,7 @@ import org.dows.user.service.UserInstanceService;
 import org.dows.user.util.ReflectUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -60,8 +61,6 @@ public class UserFamilyBiz implements UserFamilyApi {
     private final UserAddressService userAddressService;
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    @DS("uim")
     public Response<GenealogyDTO> getGenealogyList(String id) {
         //父母兄弟姐妹
         List<UserFamilyVo> parentSiblingList = new ArrayList<>();
@@ -262,7 +261,6 @@ public class UserFamilyBiz implements UserFamilyApi {
     }
 
     @Override
-    @DS("uim")
     public Response<List<UserFamilyVo>> getUserFamilyByUserId(String userId) {
         LambdaQueryWrapper<UserFamily> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserFamily::getUserId, userId);
@@ -281,7 +279,6 @@ public class UserFamilyBiz implements UserFamilyApi {
     }
 
     @Override
-    @DS("uim")
     public Response<UserFamilyVo> getUserFamilyByUserIdAndFamilyId(String userId, String familyId) {
         LambdaQueryWrapper<UserFamily> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserFamily::getUserId, userId);
@@ -297,7 +294,6 @@ public class UserFamilyBiz implements UserFamilyApi {
     }
 
     @Override
-    @DS("uim")
     public Response<UserFamilyVo> getUserFamilyById(String id) {
         LambdaQueryWrapper<UserFamily> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserFamily::getId, Long.valueOf(id));
@@ -312,7 +308,6 @@ public class UserFamilyBiz implements UserFamilyApi {
     }
 
     @Override
-    @DS("uim")
     public Response<List<UserFamilyVo>> getUserFamilyListByFamilyId(String familyId) {
         LambdaQueryWrapper<UserFamily> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserFamily::getFamilyId, familyId);
@@ -334,7 +329,6 @@ public class UserFamilyBiz implements UserFamilyApi {
      * 递归获取
      * 根据当前户主，获取上三代
      */
-    @DS("uim")
     private static List<UserFamilyDTO> createParentList(UserFamilyDTO familyHouseholder, List<UserFamilyDTO> list) {
         Integer num = 0;
         List<UserFamilyDTO> dtoList = list.stream().filter(model -> familyHouseholder.getRelation().equals(model.getUserId())).collect(Collectors.toList());
@@ -354,7 +348,6 @@ public class UserFamilyBiz implements UserFamilyApi {
      * 递归获取
      * 根据当前户主，获取下三代
      */
-    @DS("uim")
     private static List<UserFamilyDTO> createChildList(UserFamilyDTO familyHouseholder, List<UserFamilyDTO> list) {
         Integer num = 0;
         List<UserFamilyDTO> dtoList = list.stream().filter(model -> familyHouseholder.getUserId().equals(model.getParentId())).collect(Collectors.toList());
@@ -376,8 +369,7 @@ public class UserFamilyBiz implements UserFamilyApi {
      * @param userFamilyDTO
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> insertUserFamily(UserFamilyDTO userFamilyDTO) {
         UserFamily model = new UserFamily();
         BeanUtils.copyProperties(userFamilyDTO, model);
@@ -398,8 +390,7 @@ public class UserFamilyBiz implements UserFamilyApi {
      * @param userFamilyDTO
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> updateUserFamilyById(UserFamilyDTO userFamilyDTO) {
         UserFamily userFamily = new UserFamily();
         BeanUtils.copyProperties(userFamilyDTO, userFamily);
@@ -412,8 +403,7 @@ public class UserFamilyBiz implements UserFamilyApi {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public void batchDeleteUserFamilys(List<String> ids) {
         ids.forEach(id -> {
             LambdaUpdateWrapper<UserFamily> familyWrapper = Wrappers.lambdaUpdate(UserFamily.class);
@@ -424,7 +414,6 @@ public class UserFamilyBiz implements UserFamilyApi {
     }
 
     @Override
-    @DS("uim")
     public Response<IPage<UserFamilyVo>> getFamilyArchivesList(UserFamilyDTO userFamilyDTO) {
         //1、根据用户名、身份证号、手机号获取对应的userId
         Set<String> userIds = new HashSet<>();
@@ -514,7 +503,6 @@ public class UserFamilyBiz implements UserFamilyApi {
     }
 
     @Override
-    @DS("uim")
     public Response<IPage<UserFamilyVo>> getFamilyMemberList(UserFamilyDTO userFamilyDTO) {
         //1、根据用户名、身份证号获取对应的userId
         Set<String> userIds = new HashSet<>();
@@ -576,7 +564,7 @@ public class UserFamilyBiz implements UserFamilyApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteUserFamilyById(String id) {
         //1、获取对应数据
         UserFamily userFamily = userFamilyService.getById(id);

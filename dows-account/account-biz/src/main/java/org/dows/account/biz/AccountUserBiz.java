@@ -15,6 +15,8 @@ import org.dows.account.service.*;
 import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -29,7 +31,7 @@ public class AccountUserBiz implements AccountUserApi {
     private final AccountUserService accountUserService;
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Long> createAccountUser(AccountUserDTO accountUserDTO) {
         //1、 校验该账户对应的用户是否已存在
         AccountUser accountUser = accountUserService.lambdaQuery()
@@ -50,7 +52,6 @@ public class AccountUserBiz implements AccountUserApi {
     }
 
     @Override
-    @DS("uim")
     public Response getUserByAccountId(String accountId) {
         AccountUser accountUser = accountUserService.lambdaQuery()
                 .eq(AccountUser::getAccountId, accountId)

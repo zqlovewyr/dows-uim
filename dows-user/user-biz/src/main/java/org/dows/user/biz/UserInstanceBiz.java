@@ -21,6 +21,7 @@ import org.dows.user.service.UserInstanceService;
 import org.dows.user.util.IDUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -43,8 +44,6 @@ public class UserInstanceBiz implements UserInstanceApi {
      * @return Response<IPage < UserInstanceVo>>
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    @DS("uim")
     public Response<IPage<UserInstanceVo>> userInstanceUnionList(UserInstanceDTO userInstanceDTO) {
         LambdaQueryWrapper<UserInstance> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
@@ -107,7 +106,7 @@ public class UserInstanceBiz implements UserInstanceApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> insertUserInstance(UserInstanceDTO userInstanceDTO) {
         UserInstance userInstance = new UserInstance();
         BeanUtils.copyProperties(userInstanceDTO, userInstance);
@@ -120,7 +119,7 @@ public class UserInstanceBiz implements UserInstanceApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> updateUserInstance(UserInstanceDTO userInstanceDTO) {
         UserInstance userInstance = new UserInstance();
         BeanUtils.copyProperties(userInstanceDTO, userInstance);
@@ -133,7 +132,6 @@ public class UserInstanceBiz implements UserInstanceApi {
     }
 
     @Override
-    @DS("uim")
     public Response<UserInstanceVo> getUserInstanceById(String id) {
         UserInstance userInstance = userInstanceService.getById(Long.valueOf(id));
         //复制属性
@@ -146,7 +144,6 @@ public class UserInstanceBiz implements UserInstanceApi {
     }
 
     @Override
-    @DS("uim")
     public Response<List<UserInstanceVo>> getUserInstanceFilterList(UserInstanceDTO userInstanceDTO) {
         List<UserInstance> userInstanceList = userInstanceService.lambdaQuery()
                 .like(StringUtils.isNotEmpty(userInstanceDTO.getName()), UserInstance::getName, userInstanceDTO.getName())
@@ -166,7 +163,7 @@ public class UserInstanceBiz implements UserInstanceApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteUserInstanceById(String id) {
         //1、获取对应数据
         UserInstance userInstance = userInstanceService.getById(id);
@@ -181,7 +178,7 @@ public class UserInstanceBiz implements UserInstanceApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response deleteUserInstances(List<String> ids) {
         Integer count = 0;
         for (String id : ids) {
@@ -203,7 +200,6 @@ public class UserInstanceBiz implements UserInstanceApi {
     }
 
     @Override
-    @DS("uim")
     public Response<List<UserInstanceVo>> getUserInstanceListNoPage(UserInstanceDTO userInstanceDTO) {
         List<UserInstance> instanceList = userInstanceService.lambdaQuery().in(userInstanceDTO.getUserIds() != null && userInstanceDTO.getUserIds().size() > 0, UserInstance::getUserId, userInstanceDTO.getUserIds())
                 .and(StringUtils.isNotEmpty(userInstanceDTO.getNameNoPhone()), t -> t.like(UserInstance::getName, userInstanceDTO.getNameNoPhone()).or().like(UserInstance::getIdNo, userInstanceDTO.getNameNoPhone()).or().like(UserInstance::getPhone, userInstanceDTO.getNameNoPhone()))

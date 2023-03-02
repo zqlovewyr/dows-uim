@@ -17,6 +17,8 @@ import org.dows.user.exception.UserException;
 import org.dows.user.service.UserCompanyService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Administrator
@@ -28,7 +30,7 @@ import org.springframework.stereotype.Service;
 public class UserCompanyBiz implements UserCompanyApi {
     private final UserCompanyService userCompanyService;
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> insertUserCompany(UserCompanyDTO userCompanyDTO) {
         UserCompany userCompany = new UserCompany();
         BeanUtils.copyProperties(userCompanyDTO, userCompany);
@@ -40,7 +42,6 @@ public class UserCompanyBiz implements UserCompanyApi {
     }
 
     @Override
-    @DS("uim")
     public Response<UserCompanyVo> getUserCompanyByUserId(String userId) {
         LambdaQueryWrapper<UserCompany> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserCompany::getUserId, userId);
@@ -55,7 +56,7 @@ public class UserCompanyBiz implements UserCompanyApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> updateUserCompanyById(UserCompanyDTO userCompanyDTO) {
         UserCompany userCompany = new UserCompany();
         BeanUtils.copyProperties(userCompanyDTO, userCompany);
@@ -68,7 +69,7 @@ public class UserCompanyBiz implements UserCompanyApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteUserCompanyById(String id) {
         //1、获取对应数据
         UserCompany userCompany = userCompanyService.getById(id);

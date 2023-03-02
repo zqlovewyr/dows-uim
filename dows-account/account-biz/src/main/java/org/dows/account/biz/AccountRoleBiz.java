@@ -18,6 +18,7 @@ import org.dows.account.vo.AccountRoleVo;
 import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -37,8 +38,6 @@ public class AccountRoleBiz implements AccountRoleApi {
      * @param accountRoleDTO
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    @DS("uim")
     public Response<IPage<AccountRoleVo>> customAccountRoleList(AccountRoleDTO accountRoleDTO) {
         LambdaQueryWrapper<AccountRole> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StringUtils.isNotEmpty(accountRoleDTO.getRoleId()), AccountRole::getRoleId, accountRoleDTO.getRoleId())
@@ -60,7 +59,6 @@ public class AccountRoleBiz implements AccountRoleApi {
     }
 
     @Override
-    @DS("uim")
     public Response<AccountRoleVo> getAccountRoleByPrincipalId(String principalId) {
         AccountRole accountRole = accountRoleService.lambdaQuery()
                 .eq(AccountRole::getPrincipalId, principalId)
@@ -74,8 +72,6 @@ public class AccountRoleBiz implements AccountRoleApi {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    @DS("uim")
     public Response<AccountRoleVo> getAccountRoleById(Long id) {
         AccountRole accountRole = accountRoleService.getById(id);
         //复制属性
@@ -85,8 +81,7 @@ public class AccountRoleBiz implements AccountRoleApi {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> updateAccountRoleById(AccountRoleDTO accountRoleDTO) {
         AccountRole role = new AccountRole();
         BeanUtils.copyProperties(accountRoleDTO, role);
@@ -94,7 +89,6 @@ public class AccountRoleBiz implements AccountRoleApi {
     }
 
     @Override
-    @DS("uim")
     public Response<Long> authAccountRole(AccountRoleDTO accountRoleDTO) {
         AccountRole role = new AccountRole();
         BeanUtils.copyProperties(accountRoleDTO, role);

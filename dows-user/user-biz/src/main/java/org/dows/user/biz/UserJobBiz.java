@@ -17,6 +17,8 @@ import org.dows.user.exception.UserException;
 import org.dows.user.service.UserJobService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Administrator
@@ -28,7 +30,7 @@ import org.springframework.stereotype.Service;
 public class UserJobBiz implements UserJobApi {
     private final UserJobService userJobService;
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> insertUserJob(UserJobDTO userJobDTO) {
         UserJob userJob = new UserJob();
         BeanUtils.copyProperties(userJobDTO, userJob);
@@ -40,7 +42,6 @@ public class UserJobBiz implements UserJobApi {
     }
 
     @Override
-    @DS("uim")
     public Response<UserJobVo> getUserJobByUserId(String userId) {
         LambdaQueryWrapper<UserJob> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserJob::getUserId, userId);
@@ -55,7 +56,7 @@ public class UserJobBiz implements UserJobApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> updateUserJobById(UserJobDTO userJobDTO) {
         UserJob userJob = new UserJob();
         BeanUtils.copyProperties(userJobDTO, userJob);
@@ -68,7 +69,7 @@ public class UserJobBiz implements UserJobApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteUserJobById(String id) {
         //1、获取对应数据
         UserJob userJob = userJobService.getById(id);

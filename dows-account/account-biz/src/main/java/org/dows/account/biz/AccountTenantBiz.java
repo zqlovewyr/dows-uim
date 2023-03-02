@@ -12,6 +12,8 @@ import org.dows.account.service.AccountTenantService;
 import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Administrator
@@ -24,7 +26,7 @@ public class AccountTenantBiz implements AccountTenantApi {
     private AccountTenantService accountTenantService;
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> createAccountTenant(AccountTenantDTO accountTenantDTO) {
         AccountTenant accountTenant = new AccountTenant();
         BeanUtils.copyProperties(accountTenantDTO,accountTenant);

@@ -18,6 +18,8 @@ import org.dows.user.exception.UserException;
 import org.dows.user.service.UserEducationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Administrator
@@ -30,7 +32,7 @@ public class UserEducationBiz implements UserEducationApi {
     private final UserEducationService userEducationService;
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> insertUserEducation(UserEducationDTO userEducationDTO) {
         UserEducation userEducation = new UserEducation();
         BeanUtils.copyProperties(userEducationDTO, userEducation);
@@ -42,7 +44,6 @@ public class UserEducationBiz implements UserEducationApi {
     }
 
     @Override
-    @DS("uim")
     public Response<UserEducationVo> getUserEducationByUserId(String userId) {
         LambdaQueryWrapper<UserEducation> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserEducation::getUserId, userId);
@@ -57,7 +58,7 @@ public class UserEducationBiz implements UserEducationApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> updateUserEducationById(UserEducationDTO userEducationDTO) {
         UserEducation userEducation = new UserEducation();
         BeanUtils.copyProperties(userEducationDTO, userEducation);
@@ -70,7 +71,7 @@ public class UserEducationBiz implements UserEducationApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteUserEducationById(String id) {
         //1、获取对应数据
         UserEducation userEducation = userEducationService.getById(id);

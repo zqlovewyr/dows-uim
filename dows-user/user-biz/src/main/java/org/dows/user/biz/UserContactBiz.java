@@ -21,6 +21,9 @@ import org.dows.user.exception.UserException;
 import org.dows.user.service.UserContactService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +39,7 @@ public class UserContactBiz implements UserContactApi {
     private final UserContactService userContactService;
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> insertUserContact(UserContactDTO userContactDTO) {
         UserContact userContact = new UserContact();
         BeanUtils.copyProperties(userContactDTO, userContact);
@@ -48,7 +51,6 @@ public class UserContactBiz implements UserContactApi {
     }
 
     @Override
-    @DS("uim")
     public Response<List<UserContactVo>> getUserContactList(UserContactDTO userContactDTO) {
         List<UserContact> userContactList = userContactService.lambdaQuery()
                 .like(StringUtils.isNotEmpty(userContactDTO.getUserId()), UserContact::getUserId, userContactDTO.getUserId())
@@ -72,7 +74,6 @@ public class UserContactBiz implements UserContactApi {
     }
 
     @Override
-    @DS("uim")
     public Response<UserContactVo> getUserContactByUserId(String userId) {
         LambdaQueryWrapper<UserContact> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserContact::getUserId, userId);
@@ -87,7 +88,7 @@ public class UserContactBiz implements UserContactApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> updateUserContactById(UserContactDTO userContactDTO) {
         UserContact userContact = new UserContact();
         BeanUtils.copyProperties(userContactDTO, userContact);
@@ -100,7 +101,7 @@ public class UserContactBiz implements UserContactApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteUserContactById(String id) {
         //1、获取对应数据
         UserContact userContact = userContactService.getById(id);

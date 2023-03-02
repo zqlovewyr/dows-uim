@@ -20,6 +20,8 @@ import org.dows.user.service.UserDwellingService;
 import org.dows.user.service.UserEducationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Administrator
@@ -33,7 +35,7 @@ public class UserDwellingBiz implements UserDwellingApi {
     private final UserDwellingService userDwellingService;
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> insertUserDwelling(UserDwellingDTO userDwellingnDTO) {
         UserDwelling userDwelling = new UserDwelling();
         BeanUtils.copyProperties(userDwellingnDTO, userDwelling);
@@ -45,7 +47,6 @@ public class UserDwellingBiz implements UserDwellingApi {
     }
 
     @Override
-    @DS("uim")
     public Response<UserDwellingVo> getUserDwellingByPrincipalId(String principalId) {
         LambdaQueryWrapper<UserDwelling> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserDwelling::getPrincipalId, principalId);
@@ -60,7 +61,7 @@ public class UserDwellingBiz implements UserDwellingApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> updateUserDwellingById(UserDwellingDTO userDwellingDTO) {
         UserDwelling userDwelling = new UserDwelling();
         BeanUtils.copyProperties(userDwellingDTO, userDwelling);
@@ -73,7 +74,7 @@ public class UserDwellingBiz implements UserDwellingApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteUserDwellingById(String id) {
         //1、获取对应数据
         UserDwelling userDwelling = userDwellingService.getById(id);

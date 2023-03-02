@@ -19,6 +19,8 @@ import org.dows.user.service.UserAddressService;
 import org.dows.user.service.UserDwellingService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Administrator
@@ -32,7 +34,7 @@ public class UserAddressBiz implements UserAddressApi {
     private final UserAddressService userAddressService;
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> insertUserAddress(UserAddressDTO userAddressDTO) {
         UserAddress userAddress = new UserAddress();
         BeanUtils.copyProperties(userAddressDTO, userAddress);
@@ -44,7 +46,6 @@ public class UserAddressBiz implements UserAddressApi {
     }
 
     @Override
-    @DS("uim")
     public Response<UserAddressVo> getUserAddressByUserId(String userId) {
         LambdaQueryWrapper<UserAddress> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserAddress::getUserId, userId);
@@ -59,7 +60,7 @@ public class UserAddressBiz implements UserAddressApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> updateUserAddressById(UserAddressDTO userAddressDTO) {
         UserAddress userAddress = new UserAddress();
         BeanUtils.copyProperties(userAddressDTO, userAddress);
@@ -72,7 +73,7 @@ public class UserAddressBiz implements UserAddressApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteUserAddressById(String id) {
         boolean flag = false;
         //1、获取对应数据

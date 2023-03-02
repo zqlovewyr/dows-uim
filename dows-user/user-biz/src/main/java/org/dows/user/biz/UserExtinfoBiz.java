@@ -17,6 +17,8 @@ import org.dows.user.exception.UserException;
 import org.dows.user.service.UserExtinfoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Administrator
@@ -28,7 +30,7 @@ import org.springframework.stereotype.Service;
 public class UserExtinfoBiz implements UserExtinfoApi {
     private final UserExtinfoService userExtinfoService;
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> insertUserExtinfo(UserExtinfoDTO userExtinfoDTO) {
         UserExtinfo userExtinfo = new UserExtinfo();
         BeanUtils.copyProperties(userExtinfoDTO, userExtinfo);
@@ -40,7 +42,6 @@ public class UserExtinfoBiz implements UserExtinfoApi {
     }
 
     @Override
-    @DS("uim")
     public Response<UserExtinfoVo> getUserExtinfoByUserId(String userId) {
         LambdaQueryWrapper<UserExtinfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserExtinfo::getUserId, userId);
@@ -55,7 +56,7 @@ public class UserExtinfoBiz implements UserExtinfoApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> updateUserExtinfoById(UserExtinfoDTO userExtinfoDTO) {
         UserExtinfo userExtinfo = new UserExtinfo();
         BeanUtils.copyProperties(userExtinfoDTO, userExtinfo);
@@ -68,7 +69,7 @@ public class UserExtinfoBiz implements UserExtinfoApi {
     }
 
     @Override
-    @DS("uim")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteUserExtinfoById(String id) {
         //1、获取对应数据
         UserExtinfo userExtinfo = userExtinfoService.getById(id);
