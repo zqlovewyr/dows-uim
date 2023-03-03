@@ -66,11 +66,16 @@ public interface AccountOrgApi {
     Response<List<AccountOrgVo>> getAccountOrgByPId(String pId);
 
     /**
-     * 删除 机构-实例
+     * 删除 机构-实例及成员
      *
      * @param id
      */
     void deleteAccountOrgById(String id);
+
+    /**
+     * 删除 机构-实例 不删除成员
+     */
+    void deleteAccountOrgByIdNotMember(String id);
 
     /**
      * 批量删除 组织架构
@@ -78,4 +83,9 @@ public interface AccountOrgApi {
      * @param ids
      */
     Response batchDeleteAccountOrgs(List<String> ids);
+
+    /**
+     * 批量删除 机构-实例 不删除成员
+     */
+    Response batchDeleteAccountOrgsIdNotMembers(List<String> ids);
 }

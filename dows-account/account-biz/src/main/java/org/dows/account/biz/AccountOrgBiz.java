@@ -337,6 +337,79 @@ public class AccountOrgBiz implements AccountOrgApi {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    public void deleteAccountOrgByIdNotMember(String id) {
+        //1、删除组织架构
+        AccountOrg accountOrg = accountOrgService.lambdaQuery()
+                .eq(AccountOrg::getId, Long.valueOf(id))
+                .one();
+        if (accountOrg == null) {
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_NOT_EXIST_EXCEPTION);
+        }
+        LambdaUpdateWrapper<AccountOrg> orgWrapper = Wrappers.lambdaUpdate(AccountOrg.class);
+        orgWrapper.set(AccountOrg::getDeleted, true)
+                .eq(AccountOrg::getId, Long.valueOf(id));
+        boolean flag1 = accountOrgService.update(orgWrapper);
+        if (!flag1) {
+            throw new AccountException(EnumAccountStatusCode.ACCOUNT_ORG_UPDATE_FAIL_EXCEPTION);
+        }
+        //2、删除组织信息
+        AccountGroupInfo accountGroupInfo = accountGroupInfoService.lambdaQuery()
+                .eq(AccountGroupInfo::getOrgId, id)
+                .one();
+        if (accountGroupInfo != null) {
+            LambdaUpdateWrapper<AccountGroupInfo> infoWrapper = Wrappers.lambdaUpdate(AccountGroupInfo.class);
+            infoWrapper.set(AccountGroupInfo::getDeleted, true)
+                    .eq(AccountGroupInfo::getOrgId, id);
+            boolean flag3 = accountGroupInfoService.update(infoWrapper);
+            if (!flag3) {
+                throw new AccountException(EnumAccountStatusCode.ACCOUNT_GROUP_INFO_NOT_EXIST_EXCEPTION);
+            }
+        }
+    }
+
+
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    public Response batchDeleteAccountOrgsIdNotMembers(List<String> ids) {
+        Integer count = 0;
+        if (ids != null && ids.size() > 0) {
+            for (String id : ids) {
+                //1、删除组织架构
+                AccountOrg accountOrg = accountOrgService.lambdaQuery()
+                        .eq(AccountOrg::getId, id)
+                        .one();
+                if (accountOrg == null) {
+                    return Response.fail(EnumAccountStatusCode.ACCOUNT_ORG_NOT_EXIST_EXCEPTION);
+                }
+                LambdaUpdateWrapper<AccountOrg> orgWrapper = Wrappers.lambdaUpdate(AccountOrg.class);
+                orgWrapper.set(AccountOrg::getDeleted, true)
+                        .eq(AccountOrg::getId, id);
+                boolean flag1 = accountOrgService.update(orgWrapper);
+                if (!flag1) {
+                    return Response.fail(EnumAccountStatusCode.ACCOUNT_ORG_UPDATE_FAIL_EXCEPTION);
+                }
+                //2、删除组织信息
+                AccountGroupInfo accountGroupInfo = accountGroupInfoService.lambdaQuery()
+                        .eq(AccountGroupInfo::getOrgId, id)
+                        .one();
+                if (accountGroupInfo != null) {
+                    LambdaUpdateWrapper<AccountGroupInfo> infoWrapper = Wrappers.lambdaUpdate(AccountGroupInfo.class);
+                    infoWrapper.set(AccountGroupInfo::getDeleted, true)
+                            .eq(AccountGroupInfo::getOrgId, id);
+                    boolean flag3 = accountGroupInfoService.update(infoWrapper);
+                    if (!flag3) {
+                        return Response.fail(EnumAccountStatusCode.ACCOUNT_GROUP_INFO_NOT_EXIST_EXCEPTION);
+                    }
+                }
+                count++;
+            }
+        }
+        return Response.ok(count);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response batchDeleteAccountOrgs(List<String> ids) {
         Integer count = 0;
         if (ids != null && ids.size() > 0) {
