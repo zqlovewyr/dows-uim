@@ -291,6 +291,19 @@ public class AccountOrgBiz implements AccountOrgApi {
     }
 
     @Override
+    public Response<AccountOrgVo> getAccountOrgByName(String name) {
+        AccountOrg model = accountOrgService.lambdaQuery()
+                .eq(AccountOrg::getOrgName, name)
+                .one();
+        AccountOrgVo vo = new AccountOrgVo();
+        if (model != null) {
+            BeanUtils.copyProperties(model, vo);
+            vo.setId(model.getId().toString());
+        }
+        return Response.ok(vo);
+    }
+
+    @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public void deleteAccountOrgById(String id) {
         //1、删除组织架构

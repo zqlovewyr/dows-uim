@@ -786,6 +786,19 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     @Override
+    public Response<Boolean> updateOrgById(AccountGroupDTO accountGroupDTO) {
+        AccountGroup accountGroup = accountGroupService.lambdaQuery()
+                .eq(AccountGroup::getId, Long.valueOf(accountGroupDTO.getId()))
+                .one();
+        LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
+        groupWrapper.set(AccountGroup::getOrgId, accountGroupDTO.getOrgId())
+                .set(AccountGroup::getOrgName, accountGroupDTO.getOrgName())
+                .eq(AccountGroup::getId, accountGroup.getId());
+        boolean flag = accountGroupService.update(groupWrapper);
+        return Response.ok(flag);
+    }
+
+    @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteAccountGroup(String id) {
         AccountGroup accountGroup = accountGroupService.lambdaQuery()

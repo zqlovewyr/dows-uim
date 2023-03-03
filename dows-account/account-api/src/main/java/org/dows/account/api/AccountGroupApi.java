@@ -83,6 +83,13 @@ public interface AccountGroupApi {
     Response<Map<String,Object>> updateAccountGroupById(AccountGroupDTO accountGroupDTO);
 
     /**
+     * 编辑 账号-组-成员-机构
+     *
+     * @param accountGroupDTO
+     */
+    Response<Boolean> updateOrgById(AccountGroupDTO accountGroupDTO);
+
+    /**
      * 删除 账号-组-成员
      *
      * @param id

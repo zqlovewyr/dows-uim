@@ -107,4 +107,7 @@ public class UserProfileVo {
 
     @ApiModelProperty("档案主体ID")
     private String principalId;
+
+    @ApiModelProperty("用户ID")
+    private String userId;
 }

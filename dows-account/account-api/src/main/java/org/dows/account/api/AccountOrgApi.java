@@ -61,6 +61,13 @@ public interface AccountOrgApi {
     /**
      * 查看 机构-实例
      *
+     * @param name
+     */
+    Response<AccountOrgVo> getAccountOrgByName(String name);
+
+    /**
+     * 查看 机构-实例
+     *
      * @param pId
      */
     Response<List<AccountOrgVo>> getAccountOrgByPId(String pId);

@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -19,8 +21,10 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @ApiModel(value = "AccountOrgDTO对象", description = "账号-组织架构")
-public class AccountOrgDTO {
+public class AccountOrgDTO implements Serializable {
+    private static final long serialVersionUID = 4496765086642042824L;
 
     @ApiModelProperty(value = "主键Id")
     private String id;
