@@ -19,7 +19,7 @@ public interface AccountUserApi {
     Response<Long> createAccountUser(AccountUserDTO accountUserDTO);
 
     /**
-     * 插入 账号与用户关系
+     * 根据账户id 获取用户信息
      *
      * @param accountId
      */

@@ -43,6 +43,9 @@ public class UserInstanceDTO {
     @ApiModelProperty("性别")
     private String gender;
 
+    @ApiModelProperty("头像")
+    private String avatar;
+
     @ApiModelProperty("用户ID集合")
     private Set<String> userIds;
 
