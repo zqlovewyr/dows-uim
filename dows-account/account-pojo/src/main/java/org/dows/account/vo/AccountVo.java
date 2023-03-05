@@ -10,6 +10,7 @@ import org.dows.account.util.MyConstant;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @ApiModel(value = "客户信息", description = "客户信息")
@@ -52,7 +53,7 @@ public class AccountVo {
 
     @ApiModelProperty(value = "最近下单时间")
     @JsonFormat(pattern = MyConstant.DEFAULT_DATE_FORMAT)
-    private LocalDate lastOrderTime;
+    private Date lastOrderTime;
 
     @ApiModelProperty(value = "总订单量")
     private Integer totalOrderNum;
@@ -74,7 +75,7 @@ public class AccountVo {
 
     @ApiModelProperty(value = "生日")
     @JsonFormat(pattern = MyConstant.DEFAULT_DATE_FORMAT)
-    private LocalDate birthday;
+    private Date birthday;
 
     @ApiModelProperty(value = "学历")
     private String education;
@@ -87,20 +88,10 @@ public class AccountVo {
 
     @ApiModelProperty(value = "注册时间")
     @JsonFormat(pattern = MyConstant.DEFAULT_DATE_TIME_FORMAT)
-    private LocalDateTime createTime;
+    private Date createTime;
 
     @ApiModelProperty(value = "年龄")
     private Integer age;
 
-    public Integer getAge() {
-        return BirthdayUtil.getAge(this.birthday);
-    }
 
-    public String getShengXiao() {
-        return BirthdayUtil.getChineseZodiac(this.birthday);
-    }
-
-    public String getConstellation() {
-        return BirthdayUtil.getConstellation(this.birthday);
-    }
 }
