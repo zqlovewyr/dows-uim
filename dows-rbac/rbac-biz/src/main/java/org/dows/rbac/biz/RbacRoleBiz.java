@@ -68,7 +68,9 @@ public class RbacRoleBiz implements RbacRoleApi {
     @Override
     public Response<IPage<RbacRoleVo>> customRbacRoleList(RbacRoleDTO rbacRoleDTO) {
         LambdaQueryWrapper<RbacRole> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(rbacRoleDTO.getRolePid() != null, RbacRole::getPid, rbacRoleDTO.getRolePid())
+        queryWrapper.in(rbacRoleDTO.getIds() != null, RbacRole::getId, rbacRoleDTO.getIds())
+                .eq(rbacRoleDTO.getId() != null, RbacRole::getId, rbacRoleDTO.getId())
+                .like(rbacRoleDTO.getRolePid() != null, RbacRole::getPid, rbacRoleDTO.getRolePid())
                 .like(StringUtils.isNotEmpty(rbacRoleDTO.getRoleName()), RbacRole::getRoleName, rbacRoleDTO.getRoleName())
                 .eq(StringUtils.isNotEmpty(rbacRoleDTO.getNameLetter()), RbacRole::getNameLetters, rbacRoleDTO.getNameLetter())
                 .like(StringUtils.isNotEmpty(rbacRoleDTO.getRoleCode()), RbacRole::getRoleCode, rbacRoleDTO.getRoleCode())

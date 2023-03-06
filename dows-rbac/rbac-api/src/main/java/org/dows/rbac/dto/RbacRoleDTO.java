@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @description: RBAC-角色(RbacRole)DTO类
@@ -30,9 +31,11 @@ public class RbacRoleDTO implements Serializable {
     @ApiModelProperty(value = "账号角色ID")
     private Long id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty(value = "角色父id 角色组")
     private Long rolePid;
+
+    @ApiModelProperty(value = "账号角色ID集合")
+    private Set<Long> ids;
 
     @ApiModelProperty(value = "角色名")
     private String roleName;
