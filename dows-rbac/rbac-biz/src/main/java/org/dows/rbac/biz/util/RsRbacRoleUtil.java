@@ -1,9 +1,13 @@
 package org.dows.rbac.biz.util;
 
-import org.dows.rbac.vo.RbacRoleVo;
 import org.dows.rbac.entity.RbacRole;
+import org.dows.rbac.vo.RbacRoleVo;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author runsix
@@ -36,20 +40,30 @@ public class RsRbacRoleUtil {
             return null;
         } else {
             return RbacRole
-                    .builder()
-                    .id(rbacRoleVO.getId())
-                    .pid(rbacRoleVO.getPid())
-                    .roleName(rbacRoleVO.getRoleName())
-                    .nameLetters(rbacRoleVO.getNameLetters())
-                    .roleCode(rbacRoleVO.getRoleCode())
-                    .roleIcon(rbacRoleVO.getRoleIcon())
-                    .descr(rbacRoleVO.getDescr())
-                    .appId(rbacRoleVO.getAppId())
-                    .tenantId(rbacRoleVO.getTenantId())
-                    .inherit(rbacRoleVO.getInherit())
-                    .deleted(rbacRoleVO.getDeleted())
-                    .dt(rbacRoleVO.getDt())
-                    .build();
+                .builder()
+                .id(rbacRoleVO.getId())
+                .pid(rbacRoleVO.getPid())
+                .roleName(rbacRoleVO.getRoleName())
+                .nameLetters(rbacRoleVO.getNameLetters())
+                .roleCode(rbacRoleVO.getRoleCode())
+                .roleIcon(rbacRoleVO.getRoleIcon())
+                .descr(rbacRoleVO.getDescr())
+                .appId(rbacRoleVO.getAppId())
+                .tenantId(rbacRoleVO.getTenantId())
+                .inherit(rbacRoleVO.getInherit())
+                .deleted(rbacRoleVO.getDeleted())
+                .dt(rbacRoleVO.getDt())
+                .build();
         }
+    }
+
+    /**
+     * @author zhuchenmin
+     */
+    public static List<RbacRoleVo> buildVOs(Collection<RbacRole> entities) {
+        if (null == entities) {
+            return Collections.emptyList();
+        }
+        return entities.stream().map(RsRbacRoleUtil::rbacRole2VO).collect(Collectors.toList());
     }
 }

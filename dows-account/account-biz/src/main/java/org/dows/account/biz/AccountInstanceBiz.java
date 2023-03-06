@@ -20,6 +20,7 @@ import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
 import org.dows.account.biz.exception.OrgException;
+import org.dows.account.biz.util.AccountInstanceUtil;
 import org.dows.account.biz.util.AccountUtil;
 import org.dows.account.biz.util.JwtUtil;
 import org.dows.account.biz.util.ReflectUtil;
@@ -28,6 +29,7 @@ import org.dows.account.entity.*;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
+import org.dows.framework.api.exceptions.BizException;
 import org.dows.rbac.api.RbacRoleApi;
 import org.dows.rbac.vo.RbacRoleVo;
 import org.dows.user.api.api.UserInstanceApi;
@@ -863,12 +865,47 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         }
         //5、获取机构实例
         AccountGroup accountGroup = accountGroupService.lambdaQuery()
-                .eq(AccountGroup::getAccountId, id)
-                .one();
+            .eq(AccountGroup::getAccountId, id)
+            .one();
         if (accountGroup != null) {
             model.setOrgId(accountGroup.getOrgId());
             model.setOrgName(accountGroup.getOrgName());
         }
         return Response.ok(model);
+    }
+
+    @Override
+    public Response<Boolean> updateAccountInstance(AccountInstanceDTO dto) {
+        //1、修改账号-实例
+        AccountInstance accountInstance = AccountInstanceUtil.buildEntity(dto);
+        boolean flag = accountInstanceService.lambdaUpdate()
+            .eq(AccountInstance::getAccountId, dto.getAccountId())
+            .update(accountInstance);
+        if (!flag) {
+            return Response.fail(EnumAccountStatusCode.ACCOUNT_UPDATE_FAIL_EXCEPTION);
+        }
+        return Response.ok(true);
+    }
+
+    // 根据分布式的账户ID查询账户实例
+    public Response<AccountInstanceVo> getByAccountId(String accountId) {
+        if (!org.springframework.util.StringUtils.hasText(accountId)) {
+            throw new BizException("参数账号必填");
+        }
+        AccountInstance account = accountInstanceService.lambdaQuery().eq(AccountInstance::getAccountId, accountId).one();
+        return Response.ok(AccountInstanceUtil.buildVo(account));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Response<Boolean> batchResetPwd(AccountInstanceDTO accountInstanceDTO) {
+        Set<String> accountIds = accountInstanceDTO.getAccountIds();
+        boolean tag = false;
+        if (null != accountIds && !accountIds.isEmpty()) {
+            tag = accountInstanceService.lambdaUpdate()
+                .set(AccountInstance::getPassword, accountInstanceDTO.getPassword())
+                .eq(AccountInstance::getAccountId, accountIds)
+                .update();
+        }
+        return Response.ok(tag);
     }
 }

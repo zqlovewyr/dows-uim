@@ -5,6 +5,8 @@ import org.dows.account.dto.AccountGroupInfoDTO;
 import org.dows.account.dto.AccountOrgGroupDTO;
 import org.dows.account.vo.AccountGroupInfoVo;
 import org.dows.framework.api.Response;
+import org.dows.framework.api.exceptions.BizException;
+
 import java.util.List;
 
 /**
@@ -65,7 +67,6 @@ public interface AccountGroupInfoApi {
      */
     Response<Boolean> deleteAccountGroupInfoById(String id);
 
-
     /**
      * 批量删除 账号-组-实例
      *
@@ -73,4 +74,7 @@ public interface AccountGroupInfoApi {
      */
     Response<Boolean> batchDeleteGroupInfos(List<String> ids);
 
+    Response<AccountGroupInfoVo> updateGroupInfo(AccountGroupInfoDTO dto);
+
+    Response<AccountGroupInfoVo> createGroupInfo(AccountGroupInfoDTO dto) throws BizException;
 }
