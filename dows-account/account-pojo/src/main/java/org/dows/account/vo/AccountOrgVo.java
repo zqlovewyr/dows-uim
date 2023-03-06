@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -88,6 +89,12 @@ public class AccountOrgVo implements Serializable {
 
     @ApiModelProperty(value = "组织下-账号")
     private List<AccountGroupVo> accountGroupList;
+
+    @ApiModelProperty(value = "有效时间(开始时间)")
+    private Date indate;
+
+    @ApiModelProperty(value = "有效时间(失效时间)")
+    private Date expdate;
 
 }
 
