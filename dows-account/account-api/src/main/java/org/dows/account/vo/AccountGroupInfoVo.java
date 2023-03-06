@@ -87,7 +87,7 @@ public class AccountGroupInfoVo {
     private String profile;
 
     @ApiModelProperty("组织类型")
-    private Integer orgType;
+    private String orgType;
 
     @ApiModelProperty("是否逻辑删除")
     private Boolean deleted;

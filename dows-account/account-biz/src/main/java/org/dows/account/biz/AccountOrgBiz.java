@@ -114,7 +114,7 @@ public class AccountOrgBiz implements AccountOrgApi {
         if (flag == false) {
             return Response.fail(EnumAccountStatusCode.ORG_CREATE_FAIL_EXCEPTION);
         }
-        return Response.ok(model.getId());
+        return Response.ok(model.getId().toString());
     }
 
     public IPage<AccountOrgVo> teacherPageAccountOrg(String accountId, String appId, Integer pageNo, Integer pageSize) {

@@ -7,7 +7,6 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -34,9 +33,7 @@ import org.dows.rbac.vo.RbacRoleVo;
 import org.dows.user.api.api.UserInstanceApi;
 import org.dows.user.api.dto.UserInstanceDTO;
 import org.dows.user.api.vo.UserInstanceVo;
-import org.dows.user.entity.UserInstance;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -193,11 +190,11 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             accountInstance.setPassword("123456");
         }
         // 判断是否已存在该账户，并且不能创建为superadmin的超管
-        if(accountInstance.getAccountName().contains("super")){
+        if (accountInstance.getAccountName().contains("super")) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_SUPER_NOT_ALLOW_EXCEPTION);
         }
-        AccountInstance model = accountInstanceService.lambdaQuery().eq(AccountInstance::getAccountName,accountInstance.getAccountName()).one();
-        if(model != null){
+        AccountInstance model = accountInstanceService.lambdaQuery().eq(AccountInstance::getAccountName, accountInstance.getAccountName()).one();
+        if (model != null) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_EXIST_EXCEPTION);
         }
         accountInstanceService.save(accountInstance);
@@ -468,7 +465,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         //5、编辑jwt加密
         Map<String, Object> claim = new HashMap<>();
         claim.put("accountId", accountInstance.getId());
-        claim.put("accountName",accountInstance.getAccountName());
+        claim.put("accountName", accountInstance.getAccountName());
         Date expireDate = new Date(System.currentTimeMillis() + 100 * 60 * 60 * 1000);
         String token = JwtUtil.createJWT(claim, expireDate, BaseConstant.PROPERTIES_JWT_KEY);
         Map<String, Object> map = new HashMap<>();
@@ -506,7 +503,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     accountIds.add(accountRole.getPrincipalId());
                 });
             }
-            if(accountIds.size() == 0){
+            if (accountIds.size() == 0) {
                 accountIds.add("fill");
             }
         }
@@ -525,7 +522,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     accountIds.add(accountRole.getPrincipalId());
                 });
             }
-            if(accountIds.size() == 0){
+            if (accountIds.size() == 0) {
                 accountIds.add("fill");
             }
         }
@@ -551,7 +548,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     }
                 });
             }
-            if(accountIds.size() == 0){
+            if (accountIds.size() == 0) {
                 accountIds.add("fill");
             }
         }
@@ -573,7 +570,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     }
                 });
             }
-            if(accountIds.size() == 0){
+            if (accountIds.size() == 0) {
                 accountIds.add("fill");
             }
         }
@@ -594,7 +591,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     }
                 });
             }
-            if(accountIds.size() == 0){
+            if (accountIds.size() == 0) {
                 accountIds.add("fill");
             }
         }
@@ -612,7 +609,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     accountIds.add(model.getId().toString());
                 });
             }
-            if(accountIds.size() == 0){
+            if (accountIds.size() == 0) {
                 accountIds.add("fill");
             }
         }
@@ -631,7 +628,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                         accountIds.add(group.getAccountId());
                     });
                 }
-                if(accountIds.size() == 0){
+                if (accountIds.size() == 0) {
                     accountIds.add("fill");
                 }
             });
@@ -651,13 +648,21 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                         accountIds.add(group.getAccountId());
                     });
                 }
-                if(accountIds.size() == 0){
+                if (accountIds.size() == 0) {
                     accountIds.add("fill");
                 }
             });
         }
-        if(accountInstanceDTO.getAccountIds() != null && accountInstanceDTO.getAccountIds().size() > 0){
-            accountIds.addAll(accountInstanceDTO.getAccountIds());
+        if (accountInstanceDTO.getAccountIds() != null && accountInstanceDTO.getAccountIds().size() > 0) {
+            if (accountIds != null && accountIds.size() > 0){
+                //取交集
+                HashSet<String> resSet = new HashSet<>();
+                resSet.addAll(accountIds);
+                resSet.retainAll(accountInstanceDTO.getAccountIds());
+            } else{
+                //否则全部查询
+                accountIds.addAll(accountInstanceDTO.getAccountIds());
+            }
         }
 
         //6、查询列表
@@ -833,10 +838,10 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 .accountName(accountInstance.getAccountName())
                 .password(accountInstance.getPassword())
                 .build();
-        if(StringUtils.isNotEmpty(accountInstance.getPhone())){
+        if (StringUtils.isNotEmpty(accountInstance.getPhone())) {
             model.setPhone(accountInstance.getPhone());
         }
-        if(accountInstance.getStatus() != null){
+        if (accountInstance.getStatus() != null) {
             model.setStatus(accountInstance.getStatus().toString());
         }
         //2、通过账户和用户关联表找到对应的用户ID

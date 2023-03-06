@@ -222,14 +222,16 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
         AccountGroupInfo groupInfo = accountGroupInfoService.getOne(queryWrapper);
         //复制属性
         AccountGroupInfoVo vo = new AccountGroupInfoVo();
-        BeanUtils.copyProperties(groupInfo, vo);
-        //获取允许最大成员数、头像、描述、有效时间、组织类型、状态等
-        AccountOrg accountOrg = accountOrgService.lambdaQuery()
-                .eq(AccountOrg::getId, vo.getOrgId())
-                .one();
-        BeanUtils.copyProperties(accountOrg, vo);
-        vo.setId(accountOrg.getId().toString());
-        vo.setGroupDescr(groupInfo.getDescr());
+        if (groupInfo != null) {
+            BeanUtils.copyProperties(groupInfo, vo);
+            //获取允许最大成员数、头像、描述、有效时间、组织类型、状态等
+            AccountOrg accountOrg = accountOrgService.lambdaQuery()
+                    .eq(AccountOrg::getId, vo.getOrgId())
+                    .one();
+            BeanUtils.copyProperties(accountOrg, vo);
+            vo.setId(accountOrg.getId().toString());
+            vo.setGroupDescr(groupInfo.getDescr());
+        }
         return Response.ok(vo);
     }
 

@@ -58,7 +58,7 @@ public class AccountOrgGroupDTO {
     private String orgDescr;
 
     @ApiModelProperty("组织架构类型")
-    private Integer orgType;
+    private String orgType;
 
     @ApiModelProperty("组织架构排序")
     private Integer sorted;
