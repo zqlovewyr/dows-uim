@@ -65,7 +65,7 @@ public class AccountOrg implements CrudEntity {
     private String descr;
 
     @ApiModelProperty("组织类型")
-    private Integer orgType;
+    private String orgType;
 
     @ApiModelProperty("排序")
     private Integer sorted;

@@ -66,7 +66,7 @@ public class AccountOrgDTO implements Serializable {
     private Long rbacRoleId;
 
     @ApiModelProperty("组织类型")
-    private Integer orgType;
+    private String orgType;
 
     @ApiModelProperty("排序")
     private Integer sorted;
