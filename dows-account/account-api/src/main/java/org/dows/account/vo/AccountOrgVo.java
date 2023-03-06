@@ -77,4 +77,10 @@ public class AccountOrgVo {
 
     @ApiModelProperty(value = "组织下-账号集合")
     private List<AccountGroupVo> accountGroupList;
+
+    @ApiModelProperty(value = "有效时间(开始时间)")
+    private Date indate;
+
+    @ApiModelProperty(value = "有效时间(失效时间)")
+    private Date expdate;
 }

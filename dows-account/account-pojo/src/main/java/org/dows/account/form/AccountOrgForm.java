@@ -71,5 +71,11 @@ public class AccountOrgForm implements Serializable {
     @ApiModelProperty("允许最大成员数")
     private Integer maxNumber;
 
+    @ApiModelProperty(value = "有效时间(开始时间)")
+    private Date indate;
+
+    @ApiModelProperty(value = "有效时间(失效时间)")
+    private Date expdate;
+
 }
 
