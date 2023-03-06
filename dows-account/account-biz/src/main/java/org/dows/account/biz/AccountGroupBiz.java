@@ -11,16 +11,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountGroupApi;
+import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
 import org.dows.account.biz.util.RangeUtil;
-import org.dows.account.biz.util.ReflectUtil;
 import org.dows.account.dto.AccountGroupDTO;
-import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.entity.*;
 import org.dows.account.service.*;
 import org.dows.account.vo.AccountGroupVo;
-import org.dows.account.vo.AccountOrgVo;
 import org.dows.account.vo.NormalDataVo;
 import org.dows.framework.api.Response;
 import org.dows.rbac.api.RbacRoleApi;
@@ -37,9 +35,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -824,7 +820,7 @@ public class AccountGroupBiz implements AccountGroupApi {
             }
             LambdaUpdateWrapper<AccountGroup> groupWrapper = Wrappers.lambdaUpdate(AccountGroup.class);
             groupWrapper.set(AccountGroup::getDeleted, true)
-                    .eq(AccountGroup::getId, Long.valueOf(id));
+                .eq(AccountGroup::getId, Long.valueOf(id));
             boolean flag = accountGroupService.update(groupWrapper);
             if (flag) {
                 count++;

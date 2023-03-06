@@ -2,9 +2,12 @@ package org.dows.rbac.api;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dows.framework.api.Response;
+import org.dows.rbac.PageBean;
 import org.dows.rbac.dto.RbacRoleDTO;
+import org.dows.rbac.vo.RbacRoleSearchVO;
 import org.dows.rbac.vo.RbacRoleVo;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import java.util.List;
 
 /**
@@ -43,4 +46,11 @@ public interface RbacRoleApi {
      * @param rbacRoleDTO
      */
     Response<Boolean> updateRbacRoleById(RbacRoleDTO rbacRoleDTO);
+
+    /**
+     * 筛选数据
+     *
+     * @author zhuchenmin
+     */
+    Response<PageBean<RbacRoleVo>> filterData(RbacRoleSearchVO searchVO, Long pageNo, Long pageSize);
 }

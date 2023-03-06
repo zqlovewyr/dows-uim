@@ -27,6 +27,7 @@ import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountOrgService;
 import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
+import org.dows.framework.api.exceptions.BizException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -472,5 +473,56 @@ public class AccountOrgBiz implements AccountOrgApi {
             }
         }
         return Response.ok(count);
+    }
+
+    @Override
+    public Response<String> createOrg(AccountOrgDTO accountOrgDTO) {
+        //1、 校验该组织是否已存在
+        AccountOrg accountOrg = accountOrgService.lambdaQuery()
+            .eq(AccountOrg::getOrgName, accountOrgDTO.getOrgName())
+            .eq(AccountOrg::getOrgCode, accountOrgDTO.getOrgCode())
+            .one();
+        if (accountOrg != null) {
+            throw new AccountException(EnumAccountStatusCode.ORG_EXIST_EXCEPTION);
+        }
+        //2、创建组织
+        AccountOrg model = new AccountOrg();
+        BeanUtils.copyProperties(accountOrgDTO, model);
+        String orgId = String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID));
+        model.setOrgId(orgId);
+        boolean flag = accountOrgService.save(model);
+        if (!flag) {
+            return Response.fail(EnumAccountStatusCode.ORG_CREATE_FAIL_EXCEPTION);
+        }
+        return Response.ok(orgId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Response<Object> updateOrg(AccountOrgDTO accountOrgDTO) {
+        AccountOrg accountOrg = new AccountOrg();
+        BeanUtils.copyProperties(accountOrgDTO, accountOrg);
+        boolean flag = accountOrgService.lambdaUpdate().eq(AccountOrg::getOrgId, accountOrgDTO.getOrgId()).update(accountOrg);
+        return flag ? Response.ok(Collections.emptyMap()) : Response.fail(EnumAccountStatusCode.ORG_CREATE_FAIL_EXCEPTION);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Response<Boolean> removeByOrgIds(Set<String> orgIds) {
+        if (null == orgIds || orgIds.isEmpty()) {
+            throw new BizException("操作机构ID至少有一个");
+        }
+        boolean remove = accountOrgService.lambdaUpdate().eq(AccountOrg::getOrgId, orgIds).remove();
+        if (!remove) {
+            return Response.fail("机构移除失败");
+        }
+        remove = accountGroupInfoService.lambdaUpdate().in(AccountGroupInfo::getOrgId, orgIds).remove();
+        if (!remove) {
+            return Response.fail("用户组移除失败");
+        }
+        remove = accountGroupService.lambdaUpdate().in(AccountGroup::getOrgId, orgIds).remove();
+        if (!remove) {
+            return Response.fail("用户-组关系移除失败");
+        }
+        return Response.ok(true);
     }
 }

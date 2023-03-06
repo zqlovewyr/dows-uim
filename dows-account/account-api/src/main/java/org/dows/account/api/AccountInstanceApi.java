@@ -5,7 +5,8 @@ import org.dows.account.dto.AccountInstanceDTO;
 import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.*;
+
+import java.util.List;
 
 /**
  * 账号-实例维度信息(AccountInstance)Api接口
@@ -89,4 +90,8 @@ public interface AccountInstanceApi {
      * @param id
      */
     Response<AccountInstanceVo> getAccountInstanceById(String id);
+
+    Response<Boolean> updateAccountInstance(AccountInstanceDTO dto);
+
+    Response<Boolean> batchResetPwd(AccountInstanceDTO accountInstanceDTO);
 }

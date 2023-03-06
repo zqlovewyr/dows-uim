@@ -5,7 +5,9 @@ import org.dows.account.dto.AccountOrgDTO;
 import org.dows.account.dto.TreeAccountOrgDTO;
 import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
+
 import java.util.List;
+import java.util.Set;
 
 /**
  * 账号-组织架构维度信息(AccountGroup)Api接口
@@ -95,4 +97,10 @@ public interface AccountOrgApi {
      * 批量删除 机构-实例 不删除成员
      */
     Response batchDeleteAccountOrgsIdNotMembers(List<String> ids);
+
+    Response<String> createOrg(AccountOrgDTO accountOrgDTO);
+
+    Response<Object> updateOrg(AccountOrgDTO accountOrgDTO);
+
+    Response<Boolean> removeByOrgIds(Set<String> orgIds);
 }

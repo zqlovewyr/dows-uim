@@ -14,6 +14,7 @@ import org.dows.account.api.AccountGroupInfoApi;
 import org.dows.account.biz.constant.BaseConstant;
 import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
+import org.dows.account.biz.util.AccountGroupInfoUtil;
 import org.dows.account.biz.util.IDUtil;
 import org.dows.account.dto.AccountGroupInfoDTO;
 import org.dows.account.dto.AccountOrgGroupDTO;
@@ -24,7 +25,9 @@ import org.dows.account.service.AccountGroupInfoService;
 import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountOrgService;
 import org.dows.account.vo.AccountGroupInfoVo;
+import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
+import org.dows.framework.api.exceptions.BizException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -49,6 +52,8 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
     private final AccountOrgService accountOrgService;
 
     private final AccountGroupService accountGroupService;
+
+    private final AccountInstanceBiz accountInstanceBiz;
 
     /**
      * 自定义账号-机构-组 列表
@@ -282,14 +287,63 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
             //1、删除组织架构
             LambdaUpdateWrapper<AccountOrg> orgWrapper = Wrappers.lambdaUpdate(AccountOrg.class);
             orgWrapper.set(AccountOrg::getDeleted, true)
-                    .eq(AccountOrg::getId, item);
+                .eq(AccountOrg::getId, item);
             accountOrgService.update(orgWrapper);
             //2、删除组-实例
             LambdaUpdateWrapper<AccountGroupInfo> groupWrapper = Wrappers.lambdaUpdate(AccountGroupInfo.class);
             groupWrapper.set(AccountGroupInfo::getDeleted, true)
-                    .eq(AccountGroupInfo::getOrgId, item);
+                .eq(AccountGroupInfo::getOrgId, item);
             accountGroupInfoService.update(groupWrapper);
         });
         return Response.ok(true);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Response<AccountGroupInfoVo> createGroupInfo(AccountGroupInfoDTO dto) throws BizException {
+        /**静态验证*/
+        AccountGroupInfoUtil.validateCreateDTO(dto);
+        String accountId = dto.getAccountId();
+        AccountInstanceVo accountInstanceVo = accountInstanceBiz.getByAccountId(accountId).getData();
+        // 账户ID填写值了就进行验证
+        if (null == accountInstanceVo) {
+            throw new BizException("未查询到用户组负责人账户");
+        }
+        // 创建时需要做的操作:生成新的分布式ID
+        dto.setGroupInfoId(String.valueOf(IDUtil.getId(BaseConstant.WORKER_ID)));
+        dto.setOwner(accountInstanceVo.getAccountName());
+        AccountGroupInfo accountGroupInfo = AccountGroupInfoUtil.buildEntity(dto);
+        boolean flag = accountGroupInfoService.save(accountGroupInfo);
+        if (!flag) {
+            throw new AccountException(EnumAccountStatusCode.GROUP_INFO_CREATE_FAIL_EXCEPTION);
+        }
+        return Response.ok(AccountGroupInfoUtil.buildVo(accountGroupInfo));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Response<AccountGroupInfoVo> updateGroupInfo(AccountGroupInfoDTO dto) {
+        /**用户组可以任意创建*/
+        /**静态验证*/
+        AccountGroupInfoUtil.validateUpdateDTO(dto);
+
+        /**动态验证*/
+        String accountId = dto.getAccountId();
+        if (org.springframework.util.StringUtils.hasText(accountId)) {
+            // 账户ID填写值了就进行验证
+            AccountInstanceVo data = accountInstanceBiz.getByAccountId(accountId).getData();
+            if (null == data) {
+                throw new BizException("未查询到用户组负责人账户");
+            }
+        }
+        AccountGroupInfo accountGroupInfo = AccountGroupInfoUtil.buildEntity(dto);
+        // 根据指定分布式ID进行更新
+        boolean flag = accountGroupInfoService.lambdaUpdate()
+            .eq(AccountGroupInfo::getGroupInfoId, dto.getGroupInfoId())
+            .update(accountGroupInfo);
+        if (!flag) {
+            throw new AccountException(EnumAccountStatusCode.GROUP_INFO_CREATE_FAIL_EXCEPTION);
+        }
+        return Response.ok(AccountGroupInfoUtil.buildVo(accountGroupInfo));
     }
 }
