@@ -35,6 +35,9 @@ public class AccountGroupInfoVo {
     @ApiModelProperty("组织架构当前人数")
     private Integer num;
 
+    @ApiModelProperty("允许最大成员数")
+    private Integer maxNumber;
+
     @ApiModelProperty("邮编")
     private String postal;
 
