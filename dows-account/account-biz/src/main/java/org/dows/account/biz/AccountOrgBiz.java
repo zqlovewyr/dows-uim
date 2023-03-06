@@ -291,9 +291,10 @@ public class AccountOrgBiz implements AccountOrgApi {
     }
 
     @Override
-    public Response<AccountOrgVo> getAccountOrgByName(String name) {
+    public Response<AccountOrgVo> getAccountOrgByNameAndPid(String name,String pId) {
         AccountOrg model = accountOrgService.lambdaQuery()
                 .eq(AccountOrg::getOrgName, name)
+                .eq(AccountOrg::getPid,pId)
                 .one();
         AccountOrgVo vo = new AccountOrgVo();
         if (model != null) {

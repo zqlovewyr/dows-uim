@@ -94,4 +94,10 @@ public class AccountGroupInfoVo {
 
     @ApiModelProperty("省级行政区-地级行政区")
     private String absoluteArea;
+
+    @ApiModelProperty(value = "有效时间(开始时间)")
+    private Date indate;
+
+    @ApiModelProperty(value = "有效时间(失效时间)")
+    private Date expdate;
 }
