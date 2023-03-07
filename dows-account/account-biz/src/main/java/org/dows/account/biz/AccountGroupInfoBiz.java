@@ -109,7 +109,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      * @param accountGroupInfoDTO
      */
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+//    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Long> insertAccountGroupInfo(AccountGroupInfoDTO accountGroupInfoDTO) {
         //1、判断该组是否存在
         AccountGroupInfo groupInfo = accountGroupInfoService.lambdaQuery()

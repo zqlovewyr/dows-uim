@@ -97,7 +97,7 @@ public class AccountOrgBiz implements AccountOrgApi {
      * @param accountOrgDTO single accountOrgDTO
      * @return AccountOrgVo
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+//    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response createAccountOrg(@RequestBody AccountOrgDTO accountOrgDTO) {
         //1、 校验该组织是否已存在
         AccountOrg accountOrg = accountOrgService.lambdaQuery()
