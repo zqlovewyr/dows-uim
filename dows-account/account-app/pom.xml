@@ -21,6 +21,12 @@
             <artifactId>account-config</artifactId>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>org.dows.cloud</groupId>-->
+<!--            <artifactId>auth-config</artifactId>-->
+<!--            <version>20220701-SNAPSHOT</version>-->
+<!--        </dependency>-->
+
     </dependencies>
 
 
