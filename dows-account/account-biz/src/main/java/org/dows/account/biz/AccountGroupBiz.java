@@ -256,7 +256,7 @@ public class AccountGroupBiz implements AccountGroupApi {
             }
             if (userContactList != null && userContactList.size() > 0) {
                 userContactList.forEach(userContact -> {
-                    userIds.add(userContact.getId().toString());
+                    userIds.add(userContact.getId());
                 });
             }
             if (userIds.size() == 0) {
