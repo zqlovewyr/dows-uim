@@ -82,7 +82,6 @@ public class AccountRoleBiz implements AccountRoleApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> updateAccountRoleById(AccountRoleDTO accountRoleDTO) {
         AccountRole role = new AccountRole();
         BeanUtils.copyProperties(accountRoleDTO, role);

@@ -33,7 +33,6 @@ public class UserEducationBiz implements UserEducationApi {
     private final UserEducationService userEducationService;
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> insertUserEducation(UserEducationDTO userEducationDTO) {
         UserEducation userEducation = new UserEducation();
         BeanUtils.copyProperties(userEducationDTO, userEducation);
@@ -59,7 +58,6 @@ public class UserEducationBiz implements UserEducationApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> updateUserEducationById(UserEducationDTO userEducationDTO) {
         UserEducation userEducation = new UserEducation();
         BeanUtils.copyProperties(userEducationDTO, userEducation);
@@ -72,7 +70,6 @@ public class UserEducationBiz implements UserEducationApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteUserEducationById(String id) {
         //1、获取对应数据
         UserEducation userEducation = userEducationService.getById(id);

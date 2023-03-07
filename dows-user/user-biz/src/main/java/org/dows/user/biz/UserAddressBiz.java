@@ -35,7 +35,6 @@ public class UserAddressBiz implements UserAddressApi {
     private final UserAddressService userAddressService;
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> insertUserAddress(UserAddressDTO userAddressDTO) {
         UserAddress userAddress = new UserAddress();
         BeanUtils.copyProperties(userAddressDTO, userAddress);
@@ -61,7 +60,6 @@ public class UserAddressBiz implements UserAddressApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> updateUserAddressById(UserAddressDTO userAddressDTO) {
         UserAddress userAddress = new UserAddress();
         BeanUtils.copyProperties(userAddressDTO, userAddress);
@@ -74,7 +72,6 @@ public class UserAddressBiz implements UserAddressApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteUserAddressById(String id) {
         boolean flag = false;
         //1、获取对应数据

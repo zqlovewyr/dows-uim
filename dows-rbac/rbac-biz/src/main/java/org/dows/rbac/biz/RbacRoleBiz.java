@@ -112,7 +112,6 @@ public class RbacRoleBiz implements RbacRoleApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> updateRbacRoleById(RbacRoleDTO rbacRoleDTO) {
         RbacRole role = new RbacRole();
         BeanUtils.copyProperties(rbacRoleDTO, role);

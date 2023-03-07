@@ -81,7 +81,6 @@ public class AccountInstanceBiz implements AccountInstanceApi {
      * 7.save accountGroup if orgId exist
      * 8.convert entity to vo and return
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<AccountInstanceVo> createAccountInstance1(AccountInstanceDTO accountInstanceDTO) {
         accountInstanceDTO = AccountUtil.validateAndTrimAccountInstanceDTO(accountInstanceDTO);
         /* runsix:1.check whether accountIdentifier queried by appId & identifier exist */
@@ -156,7 +155,6 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         return Response.ok(accountInstanceVo);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<AccountInstanceVo> createAccountInstance(AccountInstanceDTO accountInstanceDTO) {
         accountInstanceDTO = AccountUtil.validateAndTrimAccountInstanceDTO(accountInstanceDTO);
         /* runsix:1.check whether accountIdentifier queried by appId & identifier exist */
@@ -299,7 +297,6 @@ public class AccountInstanceBiz implements AccountInstanceApi {
      * 7.batch save accountRole if rbacRoleId exist
      * 8.batch save accountGroup if orgId exist
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public void batchCreateAccountInstance(List<AccountInstanceDTO> accountInstanceDTOList) {
         accountInstanceDTOList.parallelStream().forEach(AccountUtil::validateAndTrimAccountInstanceDTO);
         /* runsix:1.check whether input appId & identifier duplicated */
@@ -430,7 +427,6 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         accountGroupService.saveBatch(accountGroupList);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public void batchRegister(MultipartFile file, String appId, Long rbacRoleId, String accountOrgOrgId, String password, String avatar, String source, String phone) {
         Response<List<AccountInstanceDTO>> accountInstanceDTOListByFile = getAccountInstanceDTOListByFile(
                 file, appId, rbacRoleId, accountOrgOrgId, password, avatar, source, phone);
@@ -438,7 +434,6 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response login(AccountInstanceDTO accountInstanceDTO) {
         //1、获取账户是否存在
         LambdaQueryWrapper<AccountInstance> queryWrapper = new LambdaQueryWrapper<>();
@@ -739,7 +734,6 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response updateAccountInstanceById(AccountInstanceDTO accountInstanceDTO) {
         //1、修改账号-实例
         AccountInstance account = new AccountInstance();
@@ -788,7 +782,6 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteAccountInstanceById(Long id) {
         LambdaUpdateWrapper<AccountInstance> instanceWrapper = Wrappers.lambdaUpdate(AccountInstance.class);
         instanceWrapper.set(AccountInstance::getDeleted, true)
@@ -798,7 +791,6 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public void batchDeleteAccountInstances(List<String> ids) {
         ids.forEach(id -> {
             LambdaUpdateWrapper<AccountInstance> instanceWrapper = Wrappers.lambdaUpdate(AccountInstance.class);
@@ -894,7 +886,6 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         return Response.ok(AccountInstanceUtil.buildVo(account));
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public Response<Boolean> batchResetPwd(AccountInstanceDTO accountInstanceDTO) {
         Set<String> accountIds = accountInstanceDTO.getAccountIds();
         boolean tag = false;

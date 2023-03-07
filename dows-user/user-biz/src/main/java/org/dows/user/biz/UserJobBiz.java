@@ -30,8 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 @DS("uim")
 public class UserJobBiz implements UserJobApi {
     private final UserJobService userJobService;
+
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> insertUserJob(UserJobDTO userJobDTO) {
         UserJob userJob = new UserJob();
         BeanUtils.copyProperties(userJobDTO, userJob);
@@ -57,7 +57,6 @@ public class UserJobBiz implements UserJobApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> updateUserJobById(UserJobDTO userJobDTO) {
         UserJob userJob = new UserJob();
         BeanUtils.copyProperties(userJobDTO, userJob);
@@ -70,7 +69,6 @@ public class UserJobBiz implements UserJobApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteUserJobById(String id) {
         //1、获取对应数据
         UserJob userJob = userJobService.getById(id);

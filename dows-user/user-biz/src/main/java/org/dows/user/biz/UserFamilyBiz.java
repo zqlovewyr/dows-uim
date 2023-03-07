@@ -370,7 +370,6 @@ public class UserFamilyBiz implements UserFamilyApi {
      * @param userFamilyDTO
      */
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> insertUserFamily(UserFamilyDTO userFamilyDTO) {
         UserFamily model = new UserFamily();
         BeanUtils.copyProperties(userFamilyDTO, model);
@@ -391,7 +390,6 @@ public class UserFamilyBiz implements UserFamilyApi {
      * @param userFamilyDTO
      */
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> updateUserFamilyById(UserFamilyDTO userFamilyDTO) {
         UserFamily userFamily = new UserFamily();
         BeanUtils.copyProperties(userFamilyDTO, userFamily);
@@ -404,7 +402,6 @@ public class UserFamilyBiz implements UserFamilyApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public void batchDeleteUserFamilys(List<String> ids) {
         ids.forEach(id -> {
             LambdaUpdateWrapper<UserFamily> familyWrapper = Wrappers.lambdaUpdate(UserFamily.class);
@@ -565,7 +562,6 @@ public class UserFamilyBiz implements UserFamilyApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteUserFamilyById(String id) {
         //1、获取对应数据
         UserFamily userFamily = userFamilyService.getById(id);

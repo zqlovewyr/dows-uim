@@ -109,7 +109,6 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      * @param accountGroupInfoDTO
      */
     @Override
-//    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Long> insertAccountGroupInfo(AccountGroupInfoDTO accountGroupInfoDTO) {
         //1、判断该组是否存在
         AccountGroupInfo groupInfo = accountGroupInfoService.lambdaQuery()
@@ -136,8 +135,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      *
      * @param accountOrgGroupDTOs
      */
-    @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    @Override)
     public Response<Boolean> batchInsertAccountGroupInfo(List<AccountOrgGroupDTO> accountOrgGroupDTOs) {
         AtomicBoolean flag = new AtomicBoolean(true);
         //1、插入组织架构表
@@ -177,7 +175,6 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      * @param accountGroupInfoDTO
      */
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response updateAccountGroupInfo(AccountGroupInfoDTO accountGroupInfoDTO) {
         //1、更新组-实例表
         LambdaQueryWrapper<AccountGroupInfo> queryWrapper = new LambdaQueryWrapper<>();
@@ -246,7 +243,6 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      * @param id
      */
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteAccountGroupInfoById(String id) {
         //1、获取对应数据
         AccountGroupInfo groupInfo = accountGroupInfoService.getById(id);
@@ -280,7 +276,6 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      * @param ids
      */
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> batchDeleteGroupInfos(List<String> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return Response.ok(false);
@@ -301,7 +296,6 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Response<AccountGroupInfoVo> createGroupInfo(AccountGroupInfoDTO dto) throws BizException {
         /**静态验证*/
         AccountGroupInfoUtil.validateCreateDTO(dto);
@@ -323,7 +317,6 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Response<AccountGroupInfoVo> updateGroupInfo(AccountGroupInfoDTO dto) {
         /**用户组可以任意创建*/
         /**静态验证*/

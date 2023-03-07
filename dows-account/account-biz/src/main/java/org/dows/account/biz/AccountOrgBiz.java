@@ -53,7 +53,6 @@ public class AccountOrgBiz implements AccountOrgApi {
      *
      * @param treeAccountOrgDto recursion TreeDto
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public void createTreeAccountOrg(TreeAccountOrgDTO treeAccountOrgDto) {
         // step1:check static rule
         AccountUtil.validateAccountOrgDTO(treeAccountOrgDto);
@@ -97,7 +96,6 @@ public class AccountOrgBiz implements AccountOrgApi {
      * @param accountOrgDTO single accountOrgDTO
      * @return AccountOrgVo
      */
-//    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response createAccountOrg(@RequestBody AccountOrgDTO accountOrgDTO) {
         //1、 校验该组织是否已存在
         AccountOrg accountOrg = accountOrgService.lambdaQuery()
@@ -258,7 +256,6 @@ public class AccountOrgBiz implements AccountOrgApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public void updateAccountOrgById(AccountOrgDTO accountOrgDTO) {
         AccountOrg accountOrg = new AccountOrg();
         BeanUtils.copyProperties(accountOrgDTO, accountOrg);
@@ -312,7 +309,6 @@ public class AccountOrgBiz implements AccountOrgApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public void deleteAccountOrgById(String id) {
         //1、删除组织架构
         AccountOrg accountOrg = accountOrgService.lambdaQuery()
@@ -357,7 +353,6 @@ public class AccountOrgBiz implements AccountOrgApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public void deleteAccountOrgByIdNotMember(String id) {
         //1、删除组织架构
         AccountOrg accountOrg = accountOrgService.lambdaQuery()
@@ -391,7 +386,6 @@ public class AccountOrgBiz implements AccountOrgApi {
 
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response batchDeleteAccountOrgsIdNotMembers(List<String> ids) {
         Integer count = 0;
         if (ids != null && ids.size() > 0) {
@@ -430,7 +424,6 @@ public class AccountOrgBiz implements AccountOrgApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response batchDeleteAccountOrgs(List<String> ids) {
         Integer count = 0;
         if (ids != null && ids.size() > 0) {
@@ -504,7 +497,6 @@ public class AccountOrgBiz implements AccountOrgApi {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Response<Object> updateOrg(AccountOrgDTO accountOrgDTO) {
         AccountOrg accountOrg = new AccountOrg();
         BeanUtils.copyProperties(accountOrgDTO, accountOrg);
@@ -512,7 +504,6 @@ public class AccountOrgBiz implements AccountOrgApi {
         return flag ? Response.ok(Collections.emptyMap()) : Response.fail(EnumAccountStatusCode.ORG_CREATE_FAIL_EXCEPTION);
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public Response<Boolean> removeByOrgIds(Set<String> orgIds) {
         if (null == orgIds || orgIds.isEmpty()) {
             throw new BizException("操作机构ID至少有一个");

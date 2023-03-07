@@ -32,7 +32,6 @@ public class AccountUserBiz implements AccountUserApi {
     private final AccountUserService accountUserService;
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Long> createAccountUser(AccountUserDTO accountUserDTO) {
         //1、 校验该账户对应的用户是否已存在
         AccountUser accountUser = accountUserService.lambdaQuery()

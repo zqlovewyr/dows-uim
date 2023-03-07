@@ -30,8 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 @DS("uim")
 public class UserExtinfoBiz implements UserExtinfoApi {
     private final UserExtinfoService userExtinfoService;
+
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> insertUserExtinfo(UserExtinfoDTO userExtinfoDTO) {
         UserExtinfo userExtinfo = new UserExtinfo();
         BeanUtils.copyProperties(userExtinfoDTO, userExtinfo);
@@ -57,7 +57,6 @@ public class UserExtinfoBiz implements UserExtinfoApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> updateUserExtinfoById(UserExtinfoDTO userExtinfoDTO) {
         UserExtinfo userExtinfo = new UserExtinfo();
         BeanUtils.copyProperties(userExtinfoDTO, userExtinfo);
@@ -70,7 +69,6 @@ public class UserExtinfoBiz implements UserExtinfoApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteUserExtinfoById(String id) {
         //1、获取对应数据
         UserExtinfo userExtinfo = userExtinfoService.getById(id);

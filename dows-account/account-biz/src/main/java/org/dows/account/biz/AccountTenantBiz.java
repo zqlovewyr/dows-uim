@@ -27,7 +27,6 @@ public class AccountTenantBiz implements AccountTenantApi {
     private AccountTenantService accountTenantService;
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> createAccountTenant(AccountTenantDTO accountTenantDTO) {
         AccountTenant accountTenant = new AccountTenant();
         BeanUtils.copyProperties(accountTenantDTO,accountTenant);

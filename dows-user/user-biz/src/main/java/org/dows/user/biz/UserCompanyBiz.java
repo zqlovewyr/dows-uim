@@ -30,8 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 @DS("uim")
 public class UserCompanyBiz implements UserCompanyApi {
     private final UserCompanyService userCompanyService;
+
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> insertUserCompany(UserCompanyDTO userCompanyDTO) {
         UserCompany userCompany = new UserCompany();
         BeanUtils.copyProperties(userCompanyDTO, userCompany);
@@ -57,7 +57,6 @@ public class UserCompanyBiz implements UserCompanyApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> updateUserCompanyById(UserCompanyDTO userCompanyDTO) {
         UserCompany userCompany = new UserCompany();
         BeanUtils.copyProperties(userCompanyDTO, userCompany);
@@ -70,7 +69,6 @@ public class UserCompanyBiz implements UserCompanyApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteUserCompanyById(String id) {
         //1、获取对应数据
         UserCompany userCompany = userCompanyService.getById(id);

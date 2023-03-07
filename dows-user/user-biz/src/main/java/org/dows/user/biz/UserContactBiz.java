@@ -40,7 +40,6 @@ public class UserContactBiz implements UserContactApi {
     private final UserContactService userContactService;
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> insertUserContact(UserContactDTO userContactDTO) {
         UserContact userContact = new UserContact();
         BeanUtils.copyProperties(userContactDTO, userContact);
@@ -89,7 +88,6 @@ public class UserContactBiz implements UserContactApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> updateUserContactById(UserContactDTO userContactDTO) {
         UserContact userContact = new UserContact();
         BeanUtils.copyProperties(userContactDTO, userContact);
@@ -102,7 +100,6 @@ public class UserContactBiz implements UserContactApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteUserContactById(String id) {
         //1、获取对应数据
         UserContact userContact = userContactService.getById(id);

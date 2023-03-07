@@ -112,7 +112,6 @@ public class AccountGroupBiz implements AccountGroupApi {
      *
      * @param accountGroupDTOs account-groups
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> batchInsertGroup(List<AccountGroupDTO> accountGroupDTOs) {
         AtomicBoolean flag = new AtomicBoolean(true);
         if (CollectionUtils.isEmpty(accountGroupDTOs)) {
@@ -427,7 +426,6 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Map<String, Object>> insertOrUpdateAccountGroup(AccountGroupDTO accountGroupDTO) {
         Map<String, Object> map = new HashMap<>();
         //1、创建账号实例
@@ -502,7 +500,6 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Object> batchDeleteGroupMembers(List<AccountGroupDTO> accountGroupDTOs) {
         if (CollectionUtils.isEmpty(accountGroupDTOs)) {
             return Response.ok(false);
@@ -725,7 +722,6 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Map<String, Object>> updateAccountGroupById(AccountGroupDTO accountGroupDTO) {
         Map<String, Object> map = new HashMap<>();
         //1、更新账号实例
@@ -798,7 +794,6 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteAccountGroup(String id) {
         AccountGroup accountGroup = accountGroupService.lambdaQuery()
                 .eq(AccountGroup::getId, id)
@@ -811,7 +806,6 @@ public class AccountGroupBiz implements AccountGroupApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response batchDeleteGroups(List<String> ids) {
         Integer count = 0;
         for (String id : ids) {
