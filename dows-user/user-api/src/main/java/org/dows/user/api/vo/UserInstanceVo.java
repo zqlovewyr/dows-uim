@@ -69,6 +69,9 @@ public class UserInstanceVo {
     @ApiModelProperty("时间戳")
     private Date dt;
 
+    @ApiModelProperty("建档时间")
+    private Date principalDt;
+
     @ApiModelProperty(value = "是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
 

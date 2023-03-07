@@ -19,10 +19,9 @@ import org.dows.user.enums.EnumUserStatusCode;
 import org.dows.user.exception.UserException;
 import org.dows.user.service.UserInstanceService;
 import org.dows.user.util.IDUtil;
+import org.dows.user.util.ReflectUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +46,7 @@ public class UserInstanceBiz implements UserInstanceApi {
     @Override
     public Response<IPage<UserInstanceVo>> userInstanceUnionList(UserInstanceDTO userInstanceDTO) {
         LambdaQueryWrapper<UserInstance> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper
-                .in(userInstanceDTO.getIds() != null && userInstanceDTO.getIds().size() > 0, UserInstance::getId, userInstanceDTO.getIds())
+        queryWrapper.in(userInstanceDTO.getIds() != null && userInstanceDTO.getIds().size() > 0, UserInstance::getId, userInstanceDTO.getIds())
                 .in(userInstanceDTO.getUserIds() != null && userInstanceDTO.getUserIds().size() > 0, UserInstance::getUserId, userInstanceDTO.getUserIds())
                 .and(StringUtils.isNotEmpty(userInstanceDTO.getNameNoPhone()), t -> t.like(UserInstance::getName, userInstanceDTO.getNameNoPhone()).or().like(UserInstance::getIdNo, userInstanceDTO.getNameNoPhone()).or().like(UserInstance::getPhone, userInstanceDTO.getNameNoPhone()))
                 .like(StringUtils.isNotEmpty(userInstanceDTO.getName()), UserInstance::getName, userInstanceDTO.getName())
@@ -107,7 +105,6 @@ public class UserInstanceBiz implements UserInstanceApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<String> insertUserInstance(UserInstanceDTO userInstanceDTO) {
         UserInstance userInstance = new UserInstance();
         BeanUtils.copyProperties(userInstanceDTO, userInstance);
@@ -120,7 +117,18 @@ public class UserInstanceBiz implements UserInstanceApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    public Response<Boolean> checkUserInstance(String idNo) {
+        //通过身份证号校验是否已存在
+        UserInstance instance = userInstanceService.lambdaQuery()
+                .eq(UserInstance::getIdNo, idNo)
+                .one();
+        if (instance != null && !ReflectUtil.isObjectNull(instance)) {
+            throw new UserException(EnumUserStatusCode.USER_EXIST_EXCEPTION);
+        }
+        return Response.ok(true);
+    }
+
+    @Override
     public Response<String> updateUserInstance(UserInstanceDTO userInstanceDTO) {
         UserInstance userInstance = new UserInstance();
         BeanUtils.copyProperties(userInstanceDTO, userInstance);
@@ -145,6 +153,20 @@ public class UserInstanceBiz implements UserInstanceApi {
     }
 
     @Override
+    public Response<UserInstanceVo> getUserInstanceByIdNo(String idNo) {
+        UserInstance instance = userInstanceService.lambdaQuery()
+                .eq(UserInstance::getIdNo, idNo)
+                .one();
+        //复制属性
+        UserInstanceVo vo = new UserInstanceVo();
+        if (instance != null) {
+            BeanUtils.copyProperties(instance, vo);
+            vo.setId(instance.getId().toString());
+        }
+        return Response.ok(vo);
+    }
+
+    @Override
     public Response<List<UserInstanceVo>> getUserInstanceFilterList(UserInstanceDTO userInstanceDTO) {
         List<UserInstance> userInstanceList = userInstanceService.lambdaQuery()
                 .like(StringUtils.isNotEmpty(userInstanceDTO.getName()), UserInstance::getName, userInstanceDTO.getName())
@@ -164,7 +186,6 @@ public class UserInstanceBiz implements UserInstanceApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response<Boolean> deleteUserInstanceById(String id) {
         //1、获取对应数据
         UserInstance userInstance = userInstanceService.getById(id);
@@ -179,7 +200,6 @@ public class UserInstanceBiz implements UserInstanceApi {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public Response deleteUserInstances(List<String> ids) {
         Integer count = 0;
         for (String id : ids) {

@@ -30,6 +30,13 @@ public interface UserInstanceApi {
     Response<String> insertUserInstance(UserInstanceDTO userInstanceDTO);
 
     /**
+     * 校验 用户-实例
+     *
+     * @param idNo
+     */
+    Response<Boolean> checkUserInstance(String idNo);
+
+    /**
      * 编辑 用户-实例
      */
     Response<String> updateUserInstance(UserInstanceDTO userInstanceDTO);
@@ -40,6 +47,13 @@ public interface UserInstanceApi {
      * @param id
      */
     Response<UserInstanceVo> getUserInstanceById(String id);
+
+    /**
+     * 查看 用户-实例
+     *
+     * @param idNo
+     */
+    Response<UserInstanceVo> getUserInstanceByIdNo(String idNo);
 
     /**
      * 查看 用户-实例

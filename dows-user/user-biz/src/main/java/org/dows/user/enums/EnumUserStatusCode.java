@@ -37,7 +37,8 @@ public enum EnumUserStatusCode implements StatusCode {
     USER_ADDRESS_IS_NOT_EXIST_EXCEPTION(500024, "该用户家庭关系不存在"),
     USER_CONTACT_UPDATE_FAIL_EXCEPTION(500025, "更新用户联系人信息失败"),
     USER_CONTACT_CREATE_FAIL_EXCEPTION(500026, "创建用户联系人信息失败"),
-    USER_CONTACT_IS_NOT_EXIST_EXCEPTION(500027, "该用户联系人不存在");
+    USER_CONTACT_IS_NOT_EXIST_EXCEPTION(500027, "该用户联系人不存在"),
+    USER_EXIST_EXCEPTION(500028, "该用户已存在，请勿重复创建");
     final Integer code;
     final String descr;
 }
