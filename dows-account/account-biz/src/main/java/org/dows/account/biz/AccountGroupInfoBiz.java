@@ -135,7 +135,7 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
      *
      * @param accountOrgGroupDTOs
      */
-    @Override)
+    @Override
     public Response<Boolean> batchInsertAccountGroupInfo(List<AccountOrgGroupDTO> accountOrgGroupDTOs) {
         AtomicBoolean flag = new AtomicBoolean(true);
         //1、插入组织架构表
