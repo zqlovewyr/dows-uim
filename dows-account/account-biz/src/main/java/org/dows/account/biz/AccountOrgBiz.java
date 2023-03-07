@@ -173,7 +173,13 @@ public class AccountOrgBiz implements AccountOrgApi {
             }
         }
         if (accountOrgDTO.getIds() != null && accountOrgDTO.getIds().size() > 0) {
-            ids.addAll(accountOrgDTO.getIds());
+            if (ids != null && ids.size() > 0){
+                //取交集
+                ids.retainAll(accountOrgDTO.getIds());
+            } else{
+                //否则全部查询
+                ids.addAll(accountOrgDTO.getIds());
+            }
         }
 
         LambdaQueryWrapper<AccountOrg> queryWrapper = new LambdaQueryWrapper<>();

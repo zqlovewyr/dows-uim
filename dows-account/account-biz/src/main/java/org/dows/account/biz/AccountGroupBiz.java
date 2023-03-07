@@ -441,6 +441,9 @@ public class AccountGroupBiz implements AccountGroupApi {
         if (model != null) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_EXIST_EXCEPTION);
         }
+        if(StringUtils.isEmpty(accountInstance.getPassword())){
+            accountInstance.setPassword("123456");
+        }
         boolean accountFlag = accountInstanceService.saveOrUpdate(accountInstance);
         if (accountFlag == false) {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_CREATE_FAIL_EXCEPTION);

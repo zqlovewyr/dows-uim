@@ -658,9 +658,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         if (accountInstanceDTO.getAccountIds() != null && accountInstanceDTO.getAccountIds().size() > 0) {
             if (accountIds != null && accountIds.size() > 0){
                 //取交集
-                HashSet<String> resSet = new HashSet<>();
-                resSet.addAll(accountIds);
-                resSet.retainAll(accountInstanceDTO.getAccountIds());
+                accountIds.retainAll(accountInstanceDTO.getAccountIds());
             } else{
                 //否则全部查询
                 accountIds.addAll(accountInstanceDTO.getAccountIds());
