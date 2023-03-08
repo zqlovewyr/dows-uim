@@ -1,4 +1,4 @@
-package org.dows.account.boot;
+package org.dows.auth.boot;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
