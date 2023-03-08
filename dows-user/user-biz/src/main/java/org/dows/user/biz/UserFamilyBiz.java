@@ -447,16 +447,23 @@ public class UserFamilyBiz implements UserFamilyApi {
                 userIds.add("fill");
             }
         }
-        if(userFamilyDTO.getIds() != null && userFamilyDTO.getIds().size() > 0){
-            familyIds.addAll(userFamilyDTO.getIds());
+
+        if (userFamilyDTO.getIds() != null && userFamilyDTO.getIds().size() > 0) {
+            if (familyIds != null && familyIds.size() > 0){
+                //取交集
+                familyIds.retainAll(userFamilyDTO.getIds());
+            } else{
+                //否则全部查询
+                familyIds.addAll(userFamilyDTO.getIds());
+            }
         }
         //3、获取以户主为主体的家庭信息
         LambdaQueryWrapper<UserFamily> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(userFamilyDTO.getParentId()), UserFamily::getParentId, userFamilyDTO.getParentId())
                 .eq(StringUtils.isNotEmpty(userFamilyDTO.getFamilyId()), UserFamily::getFamilyId, userFamilyDTO.getFamilyId())
-                .in(familyIds != null && familyIds.size() > 0 && !familyIds.contains("fill"), UserFamily::getId, familyIds)
+                .in(familyIds != null && familyIds.size() > 0, UserFamily::getId, familyIds)
                 .eq(StringUtils.isNotEmpty(userFamilyDTO.getUserId()), UserFamily::getUserId, userFamilyDTO.getUserId())
-                .in(userIds != null && userIds.size() > 0 && !userIds.contains("fill"), UserFamily::getUserId, userIds)
+                .in(userIds != null && userIds.size() > 0, UserFamily::getUserId, userIds)
                 .eq(StringUtils.isNotEmpty(userFamilyDTO.getMemberId()), UserFamily::getMemberId, userFamilyDTO.getMemberId())
                 .like(StringUtils.isNotEmpty(userFamilyDTO.getRelation()), UserFamily::getRelation, userFamilyDTO.getRelation())
                 .eq(UserFamily::getHouseholder, 1)

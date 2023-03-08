@@ -120,4 +120,7 @@ public class UserFamilyVo {
     @ApiModelProperty("上三代")
     private List<UserFamilyDTO> parent;
 
+    @ApiModelProperty("所属健管师")
+    private String healthManager;
+
 }

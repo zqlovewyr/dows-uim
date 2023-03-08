@@ -11,4 +11,6 @@ public class BaseConstant {
     public static final String PROPERTIES_JWT_KEY = "findsoft.token.jwtkey";
 
     public static final String HEALTH_MANAGEMENT_ENGINEER = "健管师";
+
+    public static final String ORG_ADMIN = "管理员";
 }
