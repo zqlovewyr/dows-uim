@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Administrator
@@ -77,4 +78,10 @@ public class AccountInstanceVo implements Serializable {
 
     @ApiModelProperty("账号绑定的唯一手机号(可更换)")
     private String phone;
+
+    @ApiModelProperty(value = "结束时间")
+    private Date expdate;
+
+    @ApiModelProperty(value = "开始时间")
+    private Date indate;
 }

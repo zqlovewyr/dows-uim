@@ -741,6 +741,8 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         account.setPhone(accountInstanceDTO.getPhone());
         account.setPassword(accountInstanceDTO.getPassword());
         account.setId(Long.valueOf(accountInstanceDTO.getId()));
+        account.setIndate(accountInstanceDTO.getIndate());
+        account.setExpdate(accountInstanceDTO.getExpdate());
         boolean flag1 = accountInstanceService.updateById(account);
         if (flag1 == false) {
             return Response.fail(EnumAccountStatusCode.ACCOUNT_UPDATE_FAIL_EXCEPTION);
@@ -830,6 +832,8 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 .id(accountInstance.getId().toString())
                 .accountName(accountInstance.getAccountName())
                 .password(accountInstance.getPassword())
+                .indate(accountInstance.getIndate())
+                .expdate(accountInstance.getExpdate())
                 .build();
         if (StringUtils.isNotEmpty(accountInstance.getPhone())) {
             model.setPhone(accountInstance.getPhone());
