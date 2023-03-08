@@ -21,7 +21,7 @@ import java.util.Date;
 @ApiModel(value = "AccountRoleVo对象", description = "账号-角色信息")
 public class AccountRoleVo {
     @ApiModelProperty("自增主键ID")
-    private Long id;
+    private String id;
 
     @ApiModelProperty("角色ID")
     private String roleId;

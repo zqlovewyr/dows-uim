@@ -68,6 +68,7 @@ public class AccountRoleBiz implements AccountRoleApi {
         AccountRoleVo vo = new AccountRoleVo();
         if (accountRole != null) {
             BeanUtils.copyProperties(accountRole, vo);
+            vo.setId(accountRole.getId().toString());
         }
         return Response.ok(vo);
     }
@@ -78,6 +79,7 @@ public class AccountRoleBiz implements AccountRoleApi {
         //复制属性
         AccountRoleVo vo = new AccountRoleVo();
         BeanUtils.copyProperties(accountRole, vo);
+        vo.setId(accountRole.getId().toString());
         return Response.ok(vo);
     }
 
