@@ -16,11 +16,11 @@ public class AccountInstanceUtil {
             .accountId(Long.parseLong(entity.getAccountId()))
             .accountName(entity.getAccountName())
             .avatar(entity.getAvatar())
-            .id(entity.getId())
+            .id(entity.getId().toString())
             .password(entity.getPassword())
             .phone(entity.getPhone())
             .source(entity.getSource())
-            .status(entity.getStatus().toString())
+            .status(entity.getStatus())
             .build();
     }
 

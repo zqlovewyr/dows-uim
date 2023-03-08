@@ -826,7 +826,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             throw new AccountException(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);
         }
         AccountInstanceVo model = AccountInstanceVo.builder()
-                .id(Long.valueOf(accountInstance.getId()))
+                .id(accountInstance.getId().toString())
                 .accountName(accountInstance.getAccountName())
                 .password(accountInstance.getPassword())
                 .build();
@@ -834,7 +834,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             model.setPhone(accountInstance.getPhone());
         }
         if (accountInstance.getStatus() != null) {
-            model.setStatus(accountInstance.getStatus().toString());
+            model.setStatus(accountInstance.getStatus());
         }
         //2、通过账户和用户关联表找到对应的用户ID
         AccountUser accountUser = accountUserService.lambdaQuery()
