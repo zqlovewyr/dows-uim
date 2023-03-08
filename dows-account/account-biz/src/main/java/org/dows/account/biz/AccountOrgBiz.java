@@ -233,10 +233,23 @@ public class AccountOrgBiz implements AccountOrgApi {
                 AccountOrgVo vo = new AccountOrgVo();
                 BeanUtils.copyProperties(model, vo);
                 String orgId = model.getId().toString();
+                Integer num = 0;
                 //获取机构人数
-                Integer num = accountGroupService.lambdaQuery()
+                Integer numOrg = accountGroupService.lambdaQuery()
                         .eq(AccountGroup::getOrgId, orgId)
                         .list().size();
+                num += numOrg;
+                //获取机构下面的团队
+                List<AccountOrgVo> orgVoList = this.getAccountOrgByPId(orgId).getData();
+                //获取团队下面的成员
+                if(orgVoList != null && orgVoList.size() > 0){
+                    for (AccountOrgVo accountOrgVo : orgVoList) {
+                            Integer numTeam = accountGroupService.lambdaQuery()
+                                    .eq(AccountGroup::getOrgId, accountOrgVo.getId())
+                                    .list().size();
+                        num += numTeam;
+                    }
+                }
                 vo.setCurrentNum(num);
                 //获取当前负责人电话
                 AccountGroupInfo info = groupInfoService.lambdaQuery().eq(AccountGroupInfo::getOrgId, orgId).one();

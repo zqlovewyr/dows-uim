@@ -681,6 +681,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             instancePage.getRecords().forEach(model -> {
                 AccountInstanceVo vo = new AccountInstanceVo();
                 BeanUtils.copyProperties(model, vo);
+                vo.setId(model.getId().toString());
                 //7.1、设置姓名、性别
                 //7.1、1 根据accountId获取userId
                 AccountUser user = accountUserService.lambdaQuery()
@@ -843,7 +844,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         if (accountUser != null) {
             UserInstanceVo vo = userInstanceApi.getUserInstanceById(accountUser.getUserId()).getData();
             model.setUserName(vo.getName());
-            BeanUtils.copyProperties(vo, model);
+            BeanUtils.copyProperties(vo, model,new String[]{"id"});
         }
         //4、获取角色实例
         AccountRole accountRole = accountRoleService.lambdaQuery()

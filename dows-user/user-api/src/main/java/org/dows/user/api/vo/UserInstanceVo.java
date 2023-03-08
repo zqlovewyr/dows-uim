@@ -72,6 +72,9 @@ public class UserInstanceVo {
     @ApiModelProperty("建档时间")
     private Date principalDt;
 
+    @ApiModelProperty("所属健管师")
+    private String healthManager;
+
     @ApiModelProperty(value = "是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
 
