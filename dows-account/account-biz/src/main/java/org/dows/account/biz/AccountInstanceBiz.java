@@ -240,6 +240,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         /* runsix:8.convert entity to vo and return */
         AccountInstanceVo accountInstanceVo = new AccountInstanceVo();
         BeanUtils.copyProperties(accountInstance, accountInstanceVo);
+        accountInstanceVo.setId(accountInstance.getId().toString());
         accountInstanceVo.setAccountId(Long.parseLong(accountInstance.getAccountId()));
         return Response.ok(accountInstanceVo);
     }
@@ -737,12 +738,12 @@ public class AccountInstanceBiz implements AccountInstanceApi {
     @Override
     public Response updateAccountInstanceById(AccountInstanceDTO accountInstanceDTO) {
         //1、修改账号-实例
-        AccountInstance account = new AccountInstance();
-        account.setPhone(accountInstanceDTO.getPhone());
-        account.setPassword(accountInstanceDTO.getPassword());
-        account.setId(Long.valueOf(accountInstanceDTO.getId()));
-        account.setIndate(accountInstanceDTO.getIndate());
-        account.setExpdate(accountInstanceDTO.getExpdate());
+        AccountInstance account = new AccountInstance().builder().phone(accountInstanceDTO.getPhone())
+                .password(accountInstanceDTO.getPassword())
+                .id(Long.valueOf(accountInstanceDTO.getId()))
+                .indate(accountInstanceDTO.getIndate())
+                .status(accountInstanceDTO.getStatus())
+                .expdate(accountInstanceDTO.getExpdate()).build();
         boolean flag1 = accountInstanceService.updateById(account);
         if (flag1 == false) {
             return Response.fail(EnumAccountStatusCode.ACCOUNT_UPDATE_FAIL_EXCEPTION);
@@ -751,12 +752,16 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         AccountUser accountUser = accountUserService.lambdaQuery()
                 .eq(AccountUser::getAccountId, account.getId().toString())
                 .one();
-        //2、修改用户-实例
-        UserInstanceDTO user = new UserInstanceDTO();
-        user.setName(accountInstanceDTO.getUserName());
-        user.setGender(accountInstanceDTO.getGender());
-        user.setId(accountUser.getUserId());
-        return userInstanceApi.updateUserInstance(user);
+        //3、修改用户-实例
+        String userId = "";
+        if(StringUtils.isNotEmpty(accountInstanceDTO.getUserName()) || StringUtils.isNotEmpty(accountInstanceDTO.getGender())) {
+            UserInstanceDTO user = new UserInstanceDTO().builder()
+                    .name(accountInstanceDTO.getUserName())
+                    .gender(accountInstanceDTO.getGender())
+                    .id(accountUser.getUserId()).build();
+            userId = userInstanceApi.updateUserInstance(user).getData();
+        }
+        return Response.ok(userId);
     }
 
     @Override
