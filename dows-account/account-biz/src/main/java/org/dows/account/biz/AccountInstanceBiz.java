@@ -452,7 +452,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         if (accountInstance.getIndate() != null && accountInstance.getExpdate() != null) {
             //判断当前登录时间是否有效期内
             Date now = new Date();
-            if (accountInstance.getIndate().getTime() >= now.getTime() || accountInstance.getExpdate().getTime() <= now.getTime()) {
+            if (accountInstance.getIndate().getTime() > now.getTime() || accountInstance.getExpdate().getTime() < now.getTime()) {
                 return Response.fail(EnumAccountStatusCode.ACCOUNT_NOT_IN_VALIDITY_EXCEPTION);
             }
         }
