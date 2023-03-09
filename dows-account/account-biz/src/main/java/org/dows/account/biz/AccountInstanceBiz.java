@@ -1,5 +1,7 @@
 package org.dows.account.biz;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.listener.ReadListener;
@@ -7,6 +9,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -20,13 +23,11 @@ import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
 import org.dows.account.biz.exception.OrgException;
-import org.dows.account.biz.util.AccountInstanceUtil;
-import org.dows.account.biz.util.AccountUtil;
-import org.dows.account.biz.util.JwtUtil;
-import org.dows.account.biz.util.ReflectUtil;
+import org.dows.account.biz.util.*;
 import org.dows.account.dto.AccountInstanceDTO;
 import org.dows.account.entity.*;
 import org.dows.account.service.*;
+import org.dows.account.vo.AccountInstanceSearchVO;
 import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
 import org.dows.framework.api.exceptions.BizException;
@@ -929,5 +930,81 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     .update();
         }
         return Response.ok(tag);
+    }
+
+    public Response<IPage<AccountInstanceVo>> searchAccountInstance(AccountInstanceSearchVO vo, Long pageNo, Long pageSize, LinkedHashMap<String, Boolean> columnOrderMap) {
+        Set<String> accountIds = vo.getAccountIds();
+        String accountName = vo.getAccountName();
+        Integer status = vo.getStatus();
+        String appId = vo.getAppId();
+        String roleId = vo.getRoleId();
+        String orgId = vo.getOrgId();
+        /**以上字段条件均可为空*/
+
+        LambdaQueryWrapper<AccountInstance> wrapper = new LambdaQueryWrapper<>();
+
+        if (StrUtil.isNotBlank(accountName)) {
+            wrapper.like(AccountInstance::getAccountName, accountName);
+        }
+        if (Objects.nonNull(status)) {
+            wrapper.eq(AccountInstance::getStatus, status);
+        }
+        if (StrUtil.isNotBlank(appId)) {
+            wrapper.eq(AccountInstance::getAppId, appId);
+        }
+        /*用来限制account的范围*/
+        Set<String> rangeAccountIds = new HashSet<>();
+        // 分布式ID集合精确匹配
+        if (CollUtil.isNotEmpty(accountIds)) {
+            rangeAccountIds.addAll(accountIds);
+        }
+        if (StrUtil.isNotBlank(roleId)) {
+            /*如果需要根据角色区分*/
+            List<AccountRole> list = accountRoleService.lambdaQuery()
+                /*只是需要主体ID*/
+                .select(AccountRole::getPrincipalId)
+                .eq(AccountRole::getRoleId, roleId)
+                .eq(AccountRole::getPrincipalType, AccountRoleUtil.PrincipalType.INDIVIDUAL).list();
+            //收集该角色下的用户主题ID
+            list.forEach(e -> rangeAccountIds.add(e.getPrincipalId()));
+        }
+
+        if (StrUtil.isNotBlank(orgId)) {
+            /*如果需要根据机构区分*/
+            List<AccountGroup> list = accountGroupService.lambdaQuery()
+                /*只是需要账户ID*/
+                .select(AccountGroup::getAccountId)
+                .eq(AccountGroup::getOrgId, roleId).list();
+            //收集该角色下的用户主题ID
+            list.forEach(e -> rangeAccountIds.add(e.getAccountId()));
+        }
+
+        // 最后 将需要限制范围的accountIds(若不为空,则加入账户ID限制条件中)
+        if (CollUtil.isNotEmpty(rangeAccountIds)) {
+            wrapper.in(AccountInstance::getAccountId, rangeAccountIds);
+        }
+        Page<AccountInstance> page = new Page<>(pageNo, pageSize);
+        // 如果有排序需求
+        if (CollUtil.isNotEmpty(columnOrderMap)) {
+            columnOrderMap.forEach((k, v) -> page.addOrder(new OrderItem(k, v)));
+        }
+        Page<AccountInstance> accountPage = accountInstanceService.page(page, wrapper);
+        return Response.ok(accountPage.convert(AccountInstanceUtil::buildVo));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Response<Boolean> removeAccountByAccountIds(Set<String> accountIds) throws BizException {
+        if (CollUtil.isNotEmpty(accountIds)) {
+            boolean remove = accountInstanceService.lambdaUpdate().in(AccountInstance::getAccountId, accountIds).remove();
+            if (!remove) {
+                throw new BizException("账户移除失败");
+            }
+            remove = accountIdentifierService.lambdaUpdate().in(AccountIdentifier::getAccountId, accountIds).remove();
+            if (!remove) {
+                throw new BizException("登录签名移除失败");
+            }
+            return Response.ok(true);
+        }
+        return Response.ok(false);
     }
 }

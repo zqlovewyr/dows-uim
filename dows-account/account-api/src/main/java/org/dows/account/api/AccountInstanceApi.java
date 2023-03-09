@@ -2,11 +2,15 @@ package org.dows.account.api;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dows.account.dto.AccountInstanceDTO;
+import org.dows.account.vo.AccountInstanceSearchVO;
 import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
+import org.dows.framework.api.exceptions.BizException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 账号-实例维度信息(AccountInstance)Api接口
@@ -29,9 +33,8 @@ public interface AccountInstanceApi {
      */
     Response<AccountInstanceVo> createAccountInstance(AccountInstanceDTO accountInstanceDTO);
 
-
-    Response<List<AccountInstanceDTO>> getAccountInstanceDTOListByFile(MultipartFile file, String appId, Long rbacRoleId, String accountOrgOrgId, String password, String avatar, String source, String phone);
-
+    Response<List<AccountInstanceDTO>> getAccountInstanceDTOListByFile(MultipartFile file, String appId, Long rbacRoleId, String accountOrgOrgId, String password, String avatar,
+        String source, String phone);
 
     void batchCreateAccountInstance(List<AccountInstanceDTO> accountInstanceDTOList);
 
@@ -94,4 +97,14 @@ public interface AccountInstanceApi {
     Response<Boolean> updateAccountInstance(AccountInstanceDTO dto);
 
     Response<Boolean> batchResetPwd(AccountInstanceDTO accountInstanceDTO);
+
+    /**
+     * @author zhuchenmin
+     */
+    Response<IPage<AccountInstanceVo>> searchAccountInstance(AccountInstanceSearchVO vo, Long pageNo, Long pageSize, LinkedHashMap<String, Boolean> columnOrderMap);
+
+    /**
+     * @author zhuchenmin
+     */
+    Response<Boolean> removeAccountByAccountIds(Set<String> accountIds) throws BizException;
 }
