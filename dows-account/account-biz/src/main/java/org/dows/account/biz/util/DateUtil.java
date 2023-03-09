@@ -2,8 +2,10 @@ package org.dows.account.biz.util;
 
 import org.apache.commons.lang3.time.DateUtils;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -124,4 +126,17 @@ public class DateUtil {
         return calendar.getTime();
     }
 
+    //11、0点转换为23时59分59秒
+    public static Date zeroTo23(Date time){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = formatter.format(time);
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime endDate = LocalDateTime.parse(dateString,df);
+        //将 endTime 加一天再减一秒
+        LocalDateTime localDateTime = endDate.plusDays(1);
+        //减一秒
+        LocalDateTime endDateTime = localDateTime.minusSeconds(1);
+        Date date = Date.from( endDateTime.atZone( ZoneId.systemDefault()).toInstant());
+        return date;
+    }
 }
