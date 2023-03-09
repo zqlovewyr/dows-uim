@@ -10,7 +10,7 @@ import org.dows.account.vo.AccountInstanceVo;
 public class AccountInstanceUtil {
     public static AccountInstanceVo buildVo(AccountInstance entity) {
         if (null == entity) {
-            return null;
+            return new AccountInstanceVo();
         }
         return AccountInstanceVo.builder()
             .accountId(Long.parseLong(entity.getAccountId()))
@@ -29,7 +29,7 @@ public class AccountInstanceUtil {
             .accountId(dto.getAccountId())
             .accountName(dto.getAccountName())
             .avatar(dto.getAvatar())
-            .id(Long.valueOf(dto.getId()))
+            .id(dto.getId() == null ? null : Long.valueOf(dto.getId()))
             .password(dto.getPassword())
             .phone(dto.getPhone())
             .source(dto.getSource())
