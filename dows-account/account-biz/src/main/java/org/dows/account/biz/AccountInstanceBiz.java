@@ -38,8 +38,6 @@ import org.dows.user.api.vo.UserInstanceVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -449,12 +447,37 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             return Response.fail(EnumAccountStatusCode.ACCOUNT_STATUS_INVALID_EXCEPTION);
         }
         //3、判断账户是否在有效期内
-        if (accountInstance.getIndate() != null && accountInstance.getExpdate() != null) {
-            //判断当前登录时间是否有效期内
-            Date now = new Date();
-            if (accountInstance.getIndate().getTime() > now.getTime() || accountInstance.getExpdate().getTime() < now.getTime()) {
-                return Response.fail(EnumAccountStatusCode.ACCOUNT_NOT_IN_VALIDITY_EXCEPTION);
+        //3.1、判断是否满足机构有效期或者自己有效期
+        Date now = new Date();
+        boolean timeFlag = false;
+        Date orgIndate = null;
+        Date orgExpdate = null;
+        AccountGroup accountGroup = accountGroupService.lambdaQuery().eq(AccountGroup::getAccountId, String.valueOf(accountInstance.getId())).one();
+        if (accountGroup != null && !ReflectUtil.isObjectNull(accountGroup)) {
+            AccountOrg accountOrg = accountOrgService.lambdaQuery().eq(AccountOrg::getId, Long.valueOf(accountGroup.getOrgId())).one();
+            if (accountOrg != null && !ReflectUtil.isObjectNull(accountOrg)) {
+                orgIndate = accountOrg.getIndate();
+                orgExpdate = accountOrg.getExpdate();
             }
+        }
+        //如果两个有效期都为空，则直接永久有效
+        if(accountInstance.getIndate() == null && accountInstance.getExpdate() == null && orgIndate == null && orgExpdate == null){
+            timeFlag = true;
+        }
+        //判断是否属于自己有效期
+        if (accountInstance.getIndate() != null && accountInstance.getExpdate() != null) {
+            if (accountInstance.getIndate().before(now) && accountInstance.getExpdate().after(now)) {
+                timeFlag = true;
+            }
+        }
+        //判断是否属于机构有效期
+        if (orgIndate != null && orgExpdate != null) {
+            if (orgIndate.before(now) && orgExpdate.after(now)) {
+                timeFlag = true;
+            }
+        }
+        if (!timeFlag) {
+            return Response.fail(EnumAccountStatusCode.ACCOUNT_NOT_IN_VALIDITY_EXCEPTION);
         }
         //4、使用RSA解密
         if (!accountInstance.getPassword().equals(accountInstanceDTO.getPassword())) {
@@ -652,10 +675,10 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             });
         }
         if (accountInstanceDTO.getAccountIds() != null && accountInstanceDTO.getAccountIds().size() > 0) {
-            if (accountIds != null && accountIds.size() > 0){
+            if (accountIds != null && accountIds.size() > 0) {
                 //取交集
                 accountIds.retainAll(accountInstanceDTO.getAccountIds());
-            } else{
+            } else {
                 //否则全部查询
                 accountIds.addAll(accountInstanceDTO.getAccountIds());
             }
@@ -754,7 +777,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 .one();
         //3、修改用户-实例
         String userId = "";
-        if(StringUtils.isNotEmpty(accountInstanceDTO.getUserName()) || StringUtils.isNotEmpty(accountInstanceDTO.getGender())) {
+        if (StringUtils.isNotEmpty(accountInstanceDTO.getUserName()) || StringUtils.isNotEmpty(accountInstanceDTO.getGender())) {
             UserInstanceDTO user = new UserInstanceDTO().builder()
                     .name(accountInstanceDTO.getUserName())
                     .gender(accountInstanceDTO.getGender())
@@ -853,7 +876,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         if (accountUser != null) {
             UserInstanceVo vo = userInstanceApi.getUserInstanceById(accountUser.getUserId()).getData();
             model.setUserName(vo.getName());
-            BeanUtils.copyProperties(vo, model,new String[]{"id"});
+            BeanUtils.copyProperties(vo, model, new String[]{"id"});
         }
         //4、获取角色实例
         AccountRole accountRole = accountRoleService.lambdaQuery()
@@ -865,8 +888,8 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         }
         //5、获取机构实例
         AccountGroup accountGroup = accountGroupService.lambdaQuery()
-            .eq(AccountGroup::getAccountId, id)
-            .one();
+                .eq(AccountGroup::getAccountId, id)
+                .one();
         if (accountGroup != null) {
             model.setOrgId(accountGroup.getOrgId());
             model.setOrgName(accountGroup.getOrgName());
@@ -879,8 +902,8 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         //1、修改账号-实例
         AccountInstance accountInstance = AccountInstanceUtil.buildEntity(dto);
         boolean flag = accountInstanceService.lambdaUpdate()
-            .eq(AccountInstance::getAccountId, dto.getAccountId())
-            .update(accountInstance);
+                .eq(AccountInstance::getAccountId, dto.getAccountId())
+                .update(accountInstance);
         if (!flag) {
             return Response.fail(EnumAccountStatusCode.ACCOUNT_UPDATE_FAIL_EXCEPTION);
         }
@@ -901,9 +924,9 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         boolean tag = false;
         if (null != accountIds && !accountIds.isEmpty()) {
             tag = accountInstanceService.lambdaUpdate()
-                .set(AccountInstance::getPassword, accountInstanceDTO.getPassword())
-                .eq(AccountInstance::getAccountId, accountIds)
-                .update();
+                    .set(AccountInstance::getPassword, accountInstanceDTO.getPassword())
+                    .eq(AccountInstance::getAccountId, accountIds)
+                    .update();
         }
         return Response.ok(tag);
     }
