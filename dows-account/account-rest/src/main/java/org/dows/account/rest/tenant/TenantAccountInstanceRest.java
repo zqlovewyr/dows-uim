@@ -12,6 +12,7 @@ import org.dows.account.biz.dto.AccountInstanceResDTO;
 import org.dows.account.form.AccountUserResForm;
 import org.dows.account.query.AccountInstanceQuery;
 import org.dows.account.vo.AccountInstanceResVo;
+import org.dows.auth.biz.context.SecurityUtils;
 import org.dows.framework.api.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +57,8 @@ public class TenantAccountInstanceRest {
     @ApiOperation(value = "根据数据id获取详情")
     public Response<AccountInstanceResVo> getInfo(
             @ApiParam(required = true, value = "id") @PathVariable("id") Long id){
-        return Response.ok(accountInstanceBiz.getAccountInstanceInfo(id));
+        String accountId = SecurityUtils.getAccountId();
+        return Response.ok(accountInstanceBiz.getAccountInstanceInfo(accountId));
     }
     @DeleteMapping(
             path = {"/{id}"}
@@ -64,7 +66,8 @@ public class TenantAccountInstanceRest {
     @ApiOperation(value = "删除用户数据")
     public Response<Boolean> deleteById(
             @ApiParam(required = true, value = "id") @PathVariable("id") Long id){
-        return Response.ok(accountInstanceBiz.deleteById(id));
+        String account = SecurityUtils.getAccountId();
+        return Response.ok(accountInstanceBiz.deleteById(account));
     }
 }
 

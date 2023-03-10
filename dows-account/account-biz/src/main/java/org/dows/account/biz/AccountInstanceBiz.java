@@ -68,19 +68,19 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         IPage<AccountInstanceResVo> listByPage = accountInstanceService.getListByPage(page,query);
         return listByPage;
     }
-    public AccountInstanceResVo getAccountInstanceInfo(Long id){
+    public AccountInstanceResVo getAccountInstanceInfo(String accountId){
         AccountInstanceQuery query = new AccountInstanceQuery();
         Page<AccountInstanceResVo> page = new Page<>(query.getOffset(), query.getSize());
-        query.setId(id);
+        query.setAccountId(accountId);
         IPage<AccountInstanceResVo> listByPage = accountInstanceService.getListByPage(page,query);
         return listByPage.getRecords().get(0);
     }
-    public Boolean deleteById(Long id){
+    public Boolean deleteById(String accountId){
 
-        AccountInstance accountInstance = accountInstanceService.lambdaQuery().select(AccountInstance::getAccountId).eq(AccountInstance::getId,id).oneOpt().orElseThrow(() -> {
+        AccountInstance accountInstance = accountInstanceService.lambdaQuery().select(AccountInstance::getId).eq(AccountInstance::getAccountId,accountId).oneOpt().orElseThrow(() -> {
             throw new OrgException("删除失败，数据不存在");
         });
-        String accountId = accountInstance.getAccountId();
+//        String accountId = accountInstance.getAccountId();
         AccountIdentifier accountIdentifier = new AccountIdentifier();
         Map<String, Object> columnMap = new HashMap<>();
         columnMap.put("account_id",accountId);
@@ -93,7 +93,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         accountUserInfoService.removeByMap(columnMap);
         accountUserService.removeByMap(columnMap);
         accountTenantService.removeByMap(columnMap);
-        return  accountInstanceService.removeById(id);
+        return  accountInstanceService.removeById(accountInstance.getId());
     }
     /**
      * runsix method process

@@ -20,17 +20,17 @@ public interface AccountInstanceApi {
     IPage<AccountInstanceResVo> getAccountInstanceListPage(AccountInstanceQuery query);
 
     /**
-     * 根据id查询
-     * @param id
+     * 根据accountId查询
+     * @param accountId
      * @return
      */
-    AccountInstanceResVo getAccountInstanceInfo(Long id);
+    AccountInstanceResVo getAccountInstanceInfo(String accountId);
 
     /**
      * 根据id删除
-     * @param id
+     * @param accountId
      * @return
      */
-    Boolean deleteById(Long id);
+    Boolean deleteById(String accountId);
 
 }
