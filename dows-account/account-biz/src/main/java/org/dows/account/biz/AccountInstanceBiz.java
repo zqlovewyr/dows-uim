@@ -39,6 +39,7 @@ import org.dows.user.api.vo.UserInstanceVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -80,17 +81,18 @@ public class AccountInstanceBiz implements AccountInstanceApi {
      * 7.save accountGroup if orgId exist
      * 8.convert entity to vo and return
      */
-    public Response<AccountInstanceVo> createAccountInstance1(AccountInstanceDTO accountInstanceDTO) {
+    @Override
+    public Response<AccountInstanceVo> createAccountW(AccountInstanceDTO accountInstanceDTO) {
         accountInstanceDTO = AccountUtil.validateAndTrimAccountInstanceDTO(accountInstanceDTO);
         /* runsix:1.check whether accountIdentifier queried by appId & identifier exist */
         accountIdentifierService.lambdaQuery()
-                .select(AccountIdentifier::getId)
-                .eq(AccountIdentifier::getAppId, accountInstanceDTO.getAppId())
-                .eq(AccountIdentifier::getIdentifier, accountInstanceDTO.getIdentifier())
-                .oneOpt()
-                .ifPresent((a) -> {
-                    throw new AccountException(EnumAccountStatusCode.ACCOUNT_EXIST_EXCEPTION);
-                });
+            .select(AccountIdentifier::getId)
+            .eq(AccountIdentifier::getAppId, accountInstanceDTO.getAppId())
+            .eq(AccountIdentifier::getIdentifier, accountInstanceDTO.getIdentifier())
+            .oneOpt()
+            .ifPresent((a) -> {
+                throw new AccountException(EnumAccountStatusCode.ACCOUNT_EXIST_EXCEPTION);
+            });
         /* runsix:2.check whether rbacRoleId exist */
         RbacRoleVo rbacRoleVO = null;
         if (Objects.nonNull(accountInstanceDTO.getRbacRoleId())) {
@@ -101,8 +103,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         AccountOrg accountOrg = null;
         if (StringUtils.isNotBlank(accountInstanceDTO.getAccountOrgOrgId())) {
             accountOrg = accountOrgService.lambdaQuery()
-                    .select(AccountOrg::getId, AccountOrg::getOrgName)
-                    .eq(AccountOrg::getId, accountInstanceDTO.getAccountOrgOrgId())
+                .eq(AccountOrg::getOrgId, accountInstanceDTO.getAccountOrgOrgId())
                     .oneOpt()
                     .orElseThrow(() -> {
                         throw new OrgException(EnumAccountStatusCode.ORG_NOT_EXIST_EXCEPTION);
@@ -117,21 +118,22 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         /* runsix:4.save accountIdentifier */
         AccountIdentifier accountIdentifier = new AccountIdentifier();
         BeanUtils.copyProperties(accountInstanceDTO, accountIdentifier);
-        accountIdentifier.setAccountId(accountInstance.getId().toString());
+        accountIdentifier.setAccountId(accountInstance.getAccountId());
         accountIdentifierService.save(accountIdentifier);
 
         /* runsix:6.save accountRole if rbacRoleId exist */
         if (Objects.nonNull(rbacRoleVO)) {
             accountRoleService.save(
-                    AccountRole
-                            .builder()
-                            .roleId(accountInstanceDTO.getRbacRoleId().toString())
-                            .roleName(rbacRoleVO.getRoleName())
-                            .roleCode(rbacRoleVO.getRoleCode())
-                            .principalType(EnumAccountRolePrincipalType.PERSONAL.getCode())
-                            .principalId(accountInstance.getAccountId())
-                            .principalName(accountInstanceDTO.getAccountName())
-                            .build()
+                AccountRole
+                    .builder()
+                    .roleId(accountInstanceDTO.getRbacRoleId().toString())
+                    .roleName(rbacRoleVO.getRoleName())
+                    .roleCode(rbacRoleVO.getRoleCode())
+                    .status(accountInstance.getStatus())
+                    .principalType(EnumAccountRolePrincipalType.PERSONAL.getCode())
+                    .principalId(accountInstance.getAccountId())
+                    .principalName(accountInstanceDTO.getAccountName())
+                    .build()
             );
         }
         /* runsix:7.save accountGroup if orgId exist */
