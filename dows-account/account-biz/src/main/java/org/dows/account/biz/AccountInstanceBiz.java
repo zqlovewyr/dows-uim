@@ -484,7 +484,12 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         }
         //如果两边都有有效期，以更早的结束时间,最晚开始时间为准
         if (accountInstance.getIndate() != null && accountInstance.getExpdate() != null && orgIndate != null && orgExpdate != null) {
-            getDateRangeCoincidence(accountInstance.getIndate(),accountInstance.getExpdate(),orgIndate,orgExpdate);
+            Date[] date = getDateRangeCoincidence(accountInstance.getIndate(),accountInstance.getExpdate(),orgIndate,orgExpdate);
+            if(date != null && date.length > 0){
+                if (date[0].before(now) && date[1].after(now)) {
+                    timeFlag = true;
+                }
+            }
         }
         if (!timeFlag) {
             return Response.fail(EnumAccountStatusCode.ACCOUNT_NOT_IN_VALIDITY_EXCEPTION);
