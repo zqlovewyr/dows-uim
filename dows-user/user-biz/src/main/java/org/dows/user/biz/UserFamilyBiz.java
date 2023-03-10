@@ -493,8 +493,10 @@ public class UserFamilyBiz implements UserFamilyApi {
                 UserFamilyVo entity = new UserFamilyVo().builder().build()
                         .setId(family.getId().toString())
                         .setFamilyId(family.getFamilyId())
+                        .setPhone(userInstance.getPhone())
                         .setHouseholderName(userInstance.getName())
                         .setIdNo(userInstance.getIdNo())
+                        .setCommunity(userDwelling.getCommunity())
                         .setResidential(userAddress.getAddress())
                         .setCommunity(userDwelling.getCommunity());
                 voList.add(entity);
