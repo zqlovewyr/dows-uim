@@ -1,9 +1,12 @@
 package org.dows.account.biz;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -24,17 +27,15 @@ import org.dows.account.entity.AccountOrg;
 import org.dows.account.service.AccountGroupInfoService;
 import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountOrgService;
+import org.dows.account.vo.AccountGroupInfoSearchVO;
 import org.dows.account.vo.AccountGroupInfoVo;
 import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
 import org.dows.framework.api.exceptions.BizException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -54,6 +55,8 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
     private final AccountGroupService accountGroupService;
 
     private final AccountInstanceBiz accountInstanceBiz;
+
+    private final AccountGroupBiz accountGroupBiz;
 
     /**
      * 自定义账号-机构-组 列表
@@ -340,5 +343,40 @@ public class AccountGroupInfoBiz implements AccountGroupInfoApi {
             throw new AccountException(EnumAccountStatusCode.GROUP_INFO_CREATE_FAIL_EXCEPTION);
         }
         return Response.ok(AccountGroupInfoUtil.buildVo(accountGroupInfo));
+    }
+
+    @Override
+    public Response<IPage<AccountGroupInfoVo>> searchGroupInfo(AccountGroupInfoSearchVO vo, Long pageNo, Long pageSize, LinkedHashMap<String, Boolean> columnOrderMap)
+        throws Exception {
+
+        Set<String> accountIds = vo.getAccountIds();
+        String groupInfoName = vo.getGroupInfoName();
+        Set<String> orgIds = vo.getOrgIds();
+        String orgName = vo.getOrgName();
+        Integer status = vo.getStatus();
+
+        LambdaQueryWrapper<AccountGroupInfo> wrapper = new LambdaQueryWrapper<>();
+        if (CollUtil.isNotEmpty(accountIds)) {
+            wrapper.in(AccountGroupInfo::getAccountId, accountIds);
+        }
+        if (StrUtil.isNotBlank(groupInfoName)) {
+            wrapper.like(AccountGroupInfo::getGroupInfoName, groupInfoName);
+        }
+        if (CollUtil.isNotEmpty(orgIds)) {
+            wrapper.in(AccountGroupInfo::getOrgId, orgIds);
+        }
+        if (StrUtil.isNotBlank(orgName)) {
+            wrapper.like(AccountGroupInfo::getOrgName, orgName);
+        }
+        if (Objects.nonNull(status)) {
+            wrapper.eq(AccountGroupInfo::getStatus, status);
+        }
+        Page<AccountGroupInfo> searchPage = new Page<>(pageNo, pageSize);
+        // 如果有排序需求
+        if (CollUtil.isNotEmpty(columnOrderMap)) {
+            columnOrderMap.forEach((k, v) -> searchPage.addOrder(new OrderItem(k, v)));
+        }
+        Page<AccountGroupInfo> accountPage = accountGroupInfoService.page(searchPage, wrapper);
+        return Response.ok(accountPage.convert(AccountGroupInfoUtil::buildVo));
     }
 }

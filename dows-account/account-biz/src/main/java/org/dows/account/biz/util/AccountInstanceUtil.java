@@ -21,6 +21,7 @@ public class AccountInstanceUtil {
             .phone(entity.getPhone())
             .source(entity.getSource())
             .status(entity.getStatus())
+            .dt(entity.getDt())
             .build();
     }
 

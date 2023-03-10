@@ -1,9 +1,12 @@
 package org.dows.account.biz;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -14,10 +17,12 @@ import org.dows.account.api.AccountGroupApi;
 import org.dows.account.biz.enums.EnumAccountRolePrincipalType;
 import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
+import org.dows.account.biz.util.AccountGroupUtil;
 import org.dows.account.biz.util.RangeUtil;
 import org.dows.account.dto.AccountGroupDTO;
 import org.dows.account.entity.*;
 import org.dows.account.service.*;
+import org.dows.account.vo.AccountGroupSearchVO;
 import org.dows.account.vo.AccountGroupVo;
 import org.dows.account.vo.NormalDataVo;
 import org.dows.framework.api.Response;
@@ -33,8 +38,6 @@ import org.dows.user.entity.UserContact;
 import org.dows.user.entity.UserInstance;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -824,5 +827,38 @@ public class AccountGroupBiz implements AccountGroupApi {
             }
         }
         return Response.ok(count);
+    }
+
+    @Override
+    public Response<IPage<AccountGroupVo>> searchAccountGroup(AccountGroupSearchVO searchVO, long pageNo, long pageSize, LinkedHashMap<String, Boolean> columnOrderMap) {
+        Set<String> accountIds = searchVO.getAccountIds();
+        Set<String> orgIds = searchVO.getOrgIds();
+        Set<String> appIds = searchVO.getAppIds();
+        String accountName = searchVO.getAccountName();
+        String orgName = searchVO.getOrgName();
+
+        LambdaQueryWrapper<AccountGroup> wrapper = new LambdaQueryWrapper<>();
+        if (CollUtil.isNotEmpty(accountIds)) {
+            wrapper.in(AccountGroup::getAccountId, accountIds);
+        }
+        if (CollUtil.isNotEmpty(orgIds)) {
+            wrapper.in(AccountGroup::getOrgId, orgIds);
+        }
+        if (CollUtil.isNotEmpty(appIds)) {
+            wrapper.in(AccountGroup::getAppId, appIds);
+        }
+        if (StrUtil.isNotBlank(accountName)) {
+            wrapper.like(AccountGroup::getAccountName, accountName);
+        }
+        if (StrUtil.isNotBlank(orgName)) {
+            wrapper.like(AccountGroup::getOrgName, orgName);
+        }
+        Page<AccountGroup> searchPage = new Page<>(pageNo, pageSize);
+        Page<AccountGroup> page = accountGroupService.page(searchPage, wrapper);
+        // 如果有排序需求
+        if (CollUtil.isNotEmpty(columnOrderMap)) {
+            columnOrderMap.forEach((k, v) -> searchPage.addOrder(new OrderItem(k, v)));
+        }
+        return Response.ok(page.convert(AccountGroupUtil::buildVo));
     }
 }

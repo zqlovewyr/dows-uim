@@ -3,10 +3,12 @@ package org.dows.account.api;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dows.account.dto.AccountGroupInfoDTO;
 import org.dows.account.dto.AccountOrgGroupDTO;
+import org.dows.account.vo.AccountGroupInfoSearchVO;
 import org.dows.account.vo.AccountGroupInfoVo;
 import org.dows.framework.api.Response;
 import org.dows.framework.api.exceptions.BizException;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -77,4 +79,6 @@ public interface AccountGroupInfoApi {
     Response<AccountGroupInfoVo> updateGroupInfo(AccountGroupInfoDTO dto);
 
     Response<AccountGroupInfoVo> createGroupInfo(AccountGroupInfoDTO dto) throws BizException;
+
+    Response<IPage<AccountGroupInfoVo>> searchGroupInfo(AccountGroupInfoSearchVO vo, Long pageNo, Long pageSize, LinkedHashMap<String, Boolean> columnOrderMap) throws Exception;
 }
