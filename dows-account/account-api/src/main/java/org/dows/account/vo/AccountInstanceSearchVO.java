@@ -28,8 +28,8 @@ public class AccountInstanceSearchVO implements Serializable {
     /**
      * todo 可能还有跨表的字段需求
      */
-    @ApiModelProperty(value = "角色ID", notes = "来源<account_role>与<rbac_role>表")
+    @ApiModelProperty(value = "角色ID", notes = "来源<account_role>与<rbac_role>表 <column>id  ")
     private String roleId;
-    @ApiModelProperty(value = "机构ID", notes = "来源<account_org>与<account_group>表")
+    @ApiModelProperty(value = "机构ID", notes = "来源<account_org>与<account_group>表 <column>org_id")
     private String orgId;
 }
