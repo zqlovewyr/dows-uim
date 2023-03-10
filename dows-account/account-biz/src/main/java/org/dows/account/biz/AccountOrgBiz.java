@@ -162,7 +162,7 @@ public class AccountOrgBiz implements AccountOrgApi {
         if (StringUtils.isNotEmpty(accountOrgDTO.getOwner())) {
             List<AccountGroupInfo> groupInfoList = accountGroupInfoService.lambdaQuery()
                     .select(AccountGroupInfo::getOrgId)
-                    .eq(AccountGroupInfo::getOwner, accountOrgDTO.getOwner())
+                    .like(AccountGroupInfo::getOwner, accountOrgDTO.getOwner())
                     .list();
             if (groupInfoList != null && groupInfoList.size() > 0) {
                 groupInfoList.forEach(accountGroupInfo -> {
