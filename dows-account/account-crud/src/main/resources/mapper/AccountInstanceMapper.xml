@@ -345,7 +345,7 @@
 
         <if test="accountInstanceTenantBo.frequencyType == 2">
             select '1-6次' as count, count(1) as preCount from (
-                select account_id from order_instance oi
+                select oi.account_id from order_instance oi
                 left join account_instance ai on oi.account_id=ai.account_id
                 left join store_instance si on si.store_id = ai.store_id
                 <where>
@@ -386,7 +386,7 @@
         </if>
         <if test="accountInstanceTenantBo.frequencyType == 3">
             select '6-12次' as count, count(1) as preCount from (
-            select account_id from order_instance oi
+            select oi.account_id from order_instance oi
             left join account_instance ai on oi.account_id=ai.account_id
             left join store_instance si on si.store_id = ai.store_id
             <where>
@@ -427,7 +427,7 @@
         </if>
         <if test="accountInstanceTenantBo.frequencyType == 4">
             select '12次以上' as count, count(1) as preCount from (
-            select account_id from order_instance oi
+            select oi.account_id from order_instance oi
             left join account_instance ai on oi.account_id=ai.account_id
             left join store_instance si on si.store_id = ai.store_id
             <where>
@@ -471,7 +471,7 @@
     <select id="selectAccountConsumptionTenantStatisticsCapacity" parameterType="org.dows.account.bo.AccountInstanceTenantBo" resultType="org.dows.account.vo.AccountConsumptionVo">
 
             select count(1) as preCount from (
-            select account_id from order_instance oi
+            select oi.account_id from order_instance oi
             left join iff_setting itt on oi.store_id = itt.store_id
             left join account_instance ai on oi.account_id=ai.account_id
             left join store_instance si on si.store_id = ai.store_id

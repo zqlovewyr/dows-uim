@@ -38,8 +38,12 @@ spring:
       on-profile: sit
   redis:
 #    测试环境集群：host: redis-sit.mid.io，# 测试环境redis 有问题
-    host: ${REDIS_HOST:101.35.194.46}
+    host: ${REDIS_HOST:82.157.53.10}
     port: 6379
+    # 数据库索引
+    database: 8
+    # 密码
+    password: ZBCY@app9876
     jedis:
       pool:
         max-active: 10000
