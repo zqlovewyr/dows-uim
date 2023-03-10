@@ -169,14 +169,20 @@ public class AccountOrgBiz implements AccountOrgApi {
                     ids.add(accountGroupInfo.getOrgId());
                 });
             }
+            if (ids.size() == 0) {
+                ids.add("fill");
+            }
         }
-        if (accountOrgDTO.getIds() != null && accountOrgDTO.getIds().size() > 0) {
+        if (accountOrgDTO.getIds() != null &&  accountOrgDTO.getIds().size() > 0) {
             if (ids != null && ids.size() > 0){
                 //取交集
                 ids.retainAll(accountOrgDTO.getIds());
             } else{
                 //否则全部查询
                 ids.addAll(accountOrgDTO.getIds());
+            }
+            if(ids == null || ids.size() == 0){
+                ids.add("fill");
             }
         }
 

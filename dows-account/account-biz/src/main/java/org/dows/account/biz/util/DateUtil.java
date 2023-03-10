@@ -139,4 +139,12 @@ public class DateUtil {
         Date date = Date.from( endDateTime.atZone( ZoneId.systemDefault()).toInstant());
         return date;
     }
+
+    //11、时间加8个小时
+    public Date dayAd8(Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR,calendar.get(Calendar.HOUR) + 8);
+        return calendar.getTime();
+    }
 }

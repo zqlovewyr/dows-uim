@@ -39,6 +39,7 @@ import org.dows.user.api.vo.UserInstanceVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -465,17 +466,22 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         if(accountInstance.getIndate() == null && accountInstance.getExpdate() == null && orgIndate == null && orgExpdate == null){
             timeFlag = true;
         }
-        //判断是否属于自己有效期
-        if (accountInstance.getIndate() != null && accountInstance.getExpdate() != null) {
+
+        //如果机构有效期未填，以自己的有效期为准
+        if (orgIndate == null && orgIndate == null && accountInstance.getIndate() != null && accountInstance.getExpdate() != null) {
             if (accountInstance.getIndate().before(now) && accountInstance.getExpdate().after(now)) {
                 timeFlag = true;
             }
         }
-        //判断是否属于机构有效期
-        if (orgIndate != null && orgExpdate != null) {
+        //如果自己未填有效期，以机构有效期为准
+        if (accountInstance.getIndate() == null && accountInstance.getExpdate() == null && orgIndate != null && orgExpdate != null) {
             if (orgIndate.before(now) && orgExpdate.after(now)) {
                 timeFlag = true;
             }
+        }
+        //如果两边都有有效期，以更早的结束时间,最晚开始时间为准
+        if (accountInstance.getIndate() != null && accountInstance.getExpdate() != null && orgIndate != null && orgExpdate != null) {
+            getDateRangeCoincidence(accountInstance.getIndate(),accountInstance.getExpdate(),orgIndate,orgExpdate);
         }
         if (!timeFlag) {
             return Response.fail(EnumAccountStatusCode.ACCOUNT_NOT_IN_VALIDITY_EXCEPTION);
@@ -507,6 +513,36 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             map.put("role", "member");
         }
         return Response.ok(map);
+    }
+
+    /**
+     * 获取两个时间的交叉时间
+     * @param begindate1
+     * @param enddate1
+     * @param begindate2
+     * @param enddate2
+     * @return
+     */
+    public static Date[] getDateRangeCoincidence(Date begindate1,Date enddate1,Date begindate2,Date enddate2){
+        //（b1---【b2-----e2】--e1）
+        if(begindate1.compareTo(begindate2)<=0&&enddate1.compareTo(enddate2)>=0){
+            return new Date[]{ begindate2,enddate2};
+        }
+        else if (begindate1.compareTo(begindate2)>=0&&enddate1.compareTo(enddate2)<=0){
+            return new Date[]{ begindate1,enddate1};
+        }
+        //【b2---(b1---e2】----e1)
+        else if(begindate1.compareTo(begindate2)>=0&&begindate1.compareTo(enddate2)<=0 &&
+                enddate2.compareTo(begindate1)<=0){
+            return new Date[]{ begindate1,enddate2};
+        }
+        //（b1---【b2---e1）----e2】
+        else if (begindate1.compareTo(begindate2)<=0&&enddate1.compareTo(enddate2)<=0 &&
+                enddate1.compareTo(begindate2)>=0){
+            return new Date[]{ begindate2,enddate1};
+        }
+        return null;
+
     }
 
     @Override
