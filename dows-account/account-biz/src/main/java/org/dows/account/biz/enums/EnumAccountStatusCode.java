@@ -40,7 +40,8 @@ public enum EnumAccountStatusCode implements StatusCode {
     ACCOUNT_TENANT_CREATE_FAIL_EXCEPTION(400028, "创建账号租户关系失败"),
     ORG_EXIST_EXCEPTION(400029, "该名称已被组织架构或团队占用"),
     ACCOUNT_SUPER_NOT_ALLOW_EXCEPTION(400030, "请勿创建带有super字样的账户"),
-    ILLEGAL_ORG_DESC_EXCEPTION(400031, "团队描述最多支持400个字符");
+    ILLEGAL_ORG_DESC_EXCEPTION(400031, "团队描述最多支持400个字符"),
+    ACCOUNT_OR_PASSWORD_WRONG(400032, "账户或密码错误");
     final Integer code;
     final String descr;
 }

@@ -445,7 +445,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 .eq(StringUtils.isNotEmpty(accountInstanceDTO.getPassword()), AccountInstance::getPassword, accountInstanceDTO.getPassword());
         AccountInstance accountInstance = accountInstanceService.getOne(queryWrapper);
         if (accountInstance == null) {
-            return Response.fail(EnumAccountStatusCode.ACCOUNT_NOT_EXIST_EXCEPTION);
+            return Response.fail(EnumAccountStatusCode.ACCOUNT_OR_PASSWORD_WRONG);
         }
         //2、判断账户状态
         if (accountInstance.getStatus() == AccountConstant.STATUS_N) {
