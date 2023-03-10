@@ -91,4 +91,11 @@ public interface UserFamilyApi {
      * @param id
      */
     Response<Boolean> deleteUserFamilyById(String id);
+
+    /**
+     * 判断该用户是否已经是户主
+     *
+     * @param userInstanceId
+     */
+    Response<UserFamilyVo> checkUserIsFamilyHouseHolder(String userInstanceId);
 }

@@ -581,4 +581,21 @@ public class UserFamilyBiz implements UserFamilyApi {
                 .eq(UserFamily::getId, id);
         return Response.ok(userFamilyService.update(familyWrapper));
     }
+
+    @Override
+    public Response<UserFamilyVo> checkUserIsFamilyHouseHolder(String userInstanceId) {
+        UserFamily userFamily = userFamilyService.lambdaQuery()
+                .eq(UserFamily::getUserId, userInstanceId)
+                .eq(UserFamily::getHouseholder,true)
+                .one();
+        UserFamilyVo vo = new UserFamilyVo();
+        if(userFamily != null) {
+            //复制属性
+            if (userFamily != null) {
+                BeanUtils.copyProperties(userFamily, vo);
+                vo.setId(userFamily.getId().toString());
+            }
+        }
+        return Response.ok(vo);
+    }
 }
