@@ -112,4 +112,5 @@ public interface AccountInstanceApi {
      * 创建用户实例(重新使用 @author runsix 的业务代码)
      */
     Response<AccountInstanceVo> createAccountW(AccountInstanceDTO dto);
+    
 }

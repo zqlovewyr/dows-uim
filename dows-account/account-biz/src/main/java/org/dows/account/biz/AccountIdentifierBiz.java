@@ -42,4 +42,12 @@ public class AccountIdentifierBiz implements AccountIdentifierApi {
         ).collect(Collectors.toList());
         return res;
     }
+
+    @Override
+    public boolean removeByAccountIds(Set<String> accountIds) {
+        if (null != accountIds && !accountIds.isEmpty()) {
+            return accountIdentifierService.lambdaUpdate().in(AccountIdentifier::getAccountId, accountIds).remove();
+        }
+        return false;
+    }
 }

@@ -80,6 +80,8 @@ public class AccountInstanceBiz implements AccountInstanceApi {
      * 6.save accountRole if rbacRoleId exist
      * 7.save accountGroup if orgId exist
      * 8.convert entity to vo and return
+     * <p>
+     * 2023年3月10日11:49:43  ricky recommit this method to save the accountId from other create method
      */
     @Override
     public Response<AccountInstanceVo> createAccountW(AccountInstanceDTO accountInstanceDTO) {
@@ -967,8 +969,17 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 .select(AccountRole::getPrincipalId)
                 .eq(AccountRole::getRoleId, roleId)
                 .eq(AccountRole::getPrincipalType, AccountRoleUtil.PrincipalType.INDIVIDUAL).list();
-            //收集该角色下的用户主题ID
-            list.forEach(e -> rangeAccountIds.add(e.getPrincipalId()));
+            if (list.isEmpty()) {
+                return Response.ok(new Page<>());
+            }
+            Set<String> collect = list.stream().map(AccountRole::getPrincipalId).collect(Collectors.toSet());
+            if (CollUtil.isNotEmpty(rangeAccountIds)) {
+                // 若原来就有前置限定的账户ID，则取交集
+                rangeAccountIds.retainAll(collect);
+            } else {
+                //收集该角色下的用户主题ID
+                rangeAccountIds.addAll(collect);
+            }
         }
 
         if (StrUtil.isNotBlank(orgId)) {
@@ -977,20 +988,29 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                 /*只是需要账户ID*/
                 .select(AccountGroup::getAccountId)
                 .eq(AccountGroup::getOrgId, roleId).list();
-            //收集该角色下的用户主题ID
-            list.forEach(e -> rangeAccountIds.add(e.getAccountId()));
+            if (list.isEmpty()) {
+                return Response.ok(new Page<>());
+            }
+            Set<String> collect = list.stream().map(AccountGroup::getAccountId).collect(Collectors.toSet());
+            if (CollUtil.isNotEmpty(rangeAccountIds)) {
+                // 若原来就有前置限定的账户ID，则取交集
+                rangeAccountIds.retainAll(collect);
+            } else {
+                //收集该角色下的用户主题ID
+                rangeAccountIds.addAll(collect);
+            }
         }
 
         // 最后 将需要限制范围的accountIds(若不为空,则加入账户ID限制条件中)
         if (CollUtil.isNotEmpty(rangeAccountIds)) {
             wrapper.in(AccountInstance::getAccountId, rangeAccountIds);
         }
-        Page<AccountInstance> page = new Page<>(pageNo, pageSize);
+        Page<AccountInstance> searchPage = new Page<>(pageNo, pageSize);
         // 如果有排序需求
         if (CollUtil.isNotEmpty(columnOrderMap)) {
-            columnOrderMap.forEach((k, v) -> page.addOrder(new OrderItem(k, v)));
+            columnOrderMap.forEach((k, v) -> searchPage.addOrder(new OrderItem(k, v)));
         }
-        Page<AccountInstance> accountPage = accountInstanceService.page(page, wrapper);
+        Page<AccountInstance> accountPage = accountInstanceService.page(searchPage, wrapper);
         return Response.ok(accountPage.convert(AccountInstanceUtil::buildVo));
     }
 
@@ -1001,10 +1021,9 @@ public class AccountInstanceBiz implements AccountInstanceApi {
             if (!remove) {
                 throw new BizException("账户移除失败");
             }
-            remove = accountIdentifierService.lambdaUpdate().in(AccountIdentifier::getAccountId, accountIds).remove();
-            if (!remove) {
-                throw new BizException("登录签名移除失败");
-            }
+            accountIdentifierService.lambdaUpdate().in(AccountIdentifier::getAccountId, accountIds).remove();
+            accountRoleService.lambdaUpdate().in(AccountRole::getPrincipalId, accountIds).remove();
+            accountUserService.lambdaUpdate().in(AccountUser::getAccountId, accountIds).remove();
             return Response.ok(true);
         }
         return Response.ok(false);
