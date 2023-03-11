@@ -1,5 +1,6 @@
 package org.dows.account.config;
 
+import org.dows.auth.boot.HeaderInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -7,10 +8,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import java.util.List;
 
@@ -67,13 +65,21 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //    }
 //
 //
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        //registry.addInterceptor();
-//        registry.addInterceptor(new HeaderInterceptor());
-//    }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        // 注册拦截器
+        registry.addInterceptor(getHeaderInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/acc/doLogin");
+    }
 
-
+    /**
+     * 自定义请求头拦截器
+     */
+    public HeaderInterceptor getHeaderInterceptor()
+    {
+        return new HeaderInterceptor();
+    }
     /**
      * 跨域处理
      *

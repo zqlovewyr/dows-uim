@@ -3,12 +3,12 @@ package org.dows.account.rest.user;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.biz.AccountBiz;
 import org.dows.account.query.AccountQuery;
 import org.dows.account.vo.AccountVo;
+import org.dows.auth.biz.context.SecurityUtils;
 import org.dows.framework.api.Response;
 import org.dows.marketing.form.MarketCouponQueryForm;
 import org.dows.marketing.form.MarketListCouponVo;
@@ -36,10 +36,10 @@ public class AccountRest {
         return accountBiz.getAccuntListPage(accountQuery);
     }
 
-    @GetMapping("{accountId}/info")
+    @GetMapping("/info")
     @ApiOperation(value = "根据客户账号id获取详情")
-    public Response<AccountVo> getInfo(
-            @ApiParam(required = true, value = "账号id") @PathVariable("accountId") String accountId){
+    public Response<AccountVo> getInfo(){
+        String accountId = SecurityUtils.getAccountId();
         return Response.ok(accountBiz.getInfoByAccountId(accountId));
     }
 

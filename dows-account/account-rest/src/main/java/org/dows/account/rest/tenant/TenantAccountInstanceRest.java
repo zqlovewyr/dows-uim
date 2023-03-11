@@ -53,19 +53,15 @@ public class TenantAccountInstanceRest {
         }
     }
 
-    @GetMapping("{id}/info")
+    @GetMapping("/info")
     @ApiOperation(value = "根据数据id获取详情")
-    public Response<AccountInstanceResVo> getInfo(
-            @ApiParam(required = true, value = "id") @PathVariable("id") Long id){
+    public Response<AccountInstanceResVo> getInfo(){
         String accountId = SecurityUtils.getAccountId();
         return Response.ok(accountInstanceBiz.getAccountInstanceInfo(accountId));
     }
-    @DeleteMapping(
-            path = {"/{id}"}
-    )
     @ApiOperation(value = "删除用户数据")
-    public Response<Boolean> deleteById(
-            @ApiParam(required = true, value = "id") @PathVariable("id") Long id){
+    @PostMapping(value = "/deleteByAccountId")
+    public Response<Boolean> deleteById(){
         String account = SecurityUtils.getAccountId();
         return Response.ok(accountInstanceBiz.deleteById(account));
     }
