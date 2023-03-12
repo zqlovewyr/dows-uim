@@ -15,6 +15,8 @@ import java.util.List;
 @EnableWebMvc
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+    /** 不需要拦截地址 */
+    public static final String[] excludeUrls = { "/swagger-ui/**", "/favicon.ico", "/swagger-ui.html","/webjars/**","doc.html","/doc.html#/**","doc.html#/**","/templates/**","/swagger-resources/**","/*/api-docs" };
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(0, new MappingJackson2HttpMessageConverter());
@@ -70,6 +72,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // 注册拦截器
         registry.addInterceptor(getHeaderInterceptor())
                 .addPathPatterns("/**")
+                .excludePathPatterns(excludeUrls)
                 .excludePathPatterns("/acc/doLogin");
     }
 

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.dows.account.util.MyConstant;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -72,6 +73,10 @@ public class AccountInstanceResVo implements Serializable {
 
     @ApiModelProperty(value = "工作时长")
     private String jobHours;
+
+    @ApiModelProperty(value = "时间戳/创建时间")
+    @JsonFormat(pattern = MyConstant.DEFAULT_DATE_FORMAT)
+    private Date createTime;
 
 }
 
