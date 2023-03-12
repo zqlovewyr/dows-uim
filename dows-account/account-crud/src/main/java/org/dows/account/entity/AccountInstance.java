@@ -12,6 +12,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.dows.framework.crud.mybatis.CrudEntity;
 
+import java.util.Date;
+
 /**
  * 账号-实例(AccountInstance)实体类
  *
@@ -67,8 +69,8 @@ public class AccountInstance implements CrudEntity {
     @ApiModelProperty("是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
 
-//    @ApiModelProperty("")
-//    private Date dt;
+    @ApiModelProperty("")
+    private Date dt;
 
 }
 

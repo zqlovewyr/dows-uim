@@ -76,6 +76,7 @@ public class AccountBiz implements AccountUserApi {
             return null;
         }
         BeanUtil.copyProperties(accountInstance, accountVo);
+        accountVo.setCreateTime(accountInstance.getDt());
         AccountUserInfo accountUserInfo = accountUserInfoService.lambdaQuery()
                 .eq(AccountUserInfo::getAccountId, accountId)
                 .one();
