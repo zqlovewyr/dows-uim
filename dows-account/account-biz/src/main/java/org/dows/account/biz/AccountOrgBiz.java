@@ -1,9 +1,12 @@
 package org.dows.account.biz;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -15,6 +18,7 @@ import org.dows.account.api.AccountOrgApi;
 import org.dows.account.biz.constant.BaseConstant;
 import org.dows.account.biz.enums.EnumAccountStatusCode;
 import org.dows.account.biz.exception.AccountException;
+import org.dows.account.biz.util.AccountOrgUtil;
 import org.dows.account.biz.util.AccountUtil;
 import org.dows.account.biz.util.IDUtil;
 import org.dows.account.dto.AccountOrgDTO;
@@ -25,12 +29,12 @@ import org.dows.account.entity.AccountOrg;
 import org.dows.account.service.AccountGroupInfoService;
 import org.dows.account.service.AccountGroupService;
 import org.dows.account.service.AccountOrgService;
+import org.dows.account.vo.AccountOrgSearchVO;
 import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
 import org.dows.framework.api.exceptions.BizException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -516,10 +520,24 @@ public class AccountOrgBiz implements AccountOrgApi {
     }
 
     @Override
-    public Response<Object> updateOrg(AccountOrgDTO accountOrgDTO) {
+    @Transactional(rollbackFor = Exception.class)
+    public Response<Object> updateOrg(AccountOrgDTO accountOrgDTO) throws BizException {
+        String orgId = accountOrgDTO.getOrgId();
+        if (StrUtil.isBlank(orgId)) {
+            throw new BizException("更新组织必须提供组织ID");
+        }
+        AccountOrg existedOrg = accountOrgService.lambdaQuery().eq(AccountOrg::getOrgId, orgId).one();
+        if (null == existedOrg) {
+            throw new BizException("当前更新的组织不存在");
+        }
+        String orgNewName = accountOrgDTO.getOrgName();
+        if (!existedOrg.getOrgName().equals(orgNewName)) {
+            // 如果组织名称发生变化
+            accountGroupService.lambdaUpdate().eq(AccountGroup::getOrgId, orgId).set(AccountGroup::getOrgName, orgNewName).update();
+        }
         AccountOrg accountOrg = new AccountOrg();
         BeanUtils.copyProperties(accountOrgDTO, accountOrg);
-        boolean flag = accountOrgService.lambdaUpdate().eq(AccountOrg::getOrgId, accountOrgDTO.getOrgId()).update(accountOrg);
+        boolean flag = accountOrgService.lambdaUpdate().eq(AccountOrg::getOrgId, orgId).update(accountOrg);
         return flag ? Response.ok(Collections.emptyMap()) : Response.fail(EnumAccountStatusCode.ORG_CREATE_FAIL_EXCEPTION);
     }
 
@@ -540,5 +558,39 @@ public class AccountOrgBiz implements AccountOrgApi {
             return Response.fail("用户-组关系移除失败");
         }
         return Response.ok(true);
+    }
+
+    @Override
+    public Response<IPage<AccountOrgVo>> searchAccountOrg(AccountOrgSearchVO vo, long pageNo, long pageSize, LinkedHashMap<String, Boolean> columnOrderMap) {
+        Set<String> appIds = vo.getAppIds();
+        Set<String> orgIds = vo.getOrgIds();
+        Integer status = vo.getStatus();
+        String orgName = vo.getOrgName();
+        String tenantId = vo.getTenantId();
+
+        LambdaQueryWrapper<AccountOrg> wrapper = new LambdaQueryWrapper<>();
+        if (CollUtil.isNotEmpty(appIds)) {
+            wrapper.in(AccountOrg::getAppId, appIds);
+        }
+        if (CollUtil.isNotEmpty(orgIds)) {
+            wrapper.in(AccountOrg::getOrgId, orgIds);
+        }
+        if (StrUtil.isNotBlank(orgName)) {
+            wrapper.like(AccountOrg::getOrgName, orgName);
+        }
+        if (StrUtil.isNotBlank(tenantId)) {
+            wrapper.eq(AccountOrg::getTenantId, tenantId);
+        }
+        if (Objects.nonNull(status)) {
+            wrapper.eq(AccountOrg::getStatus, status);
+        }
+
+        Page<AccountOrg> searchPage = new Page<>(pageNo, pageSize);
+        // 如果有排序需求
+        if (CollUtil.isNotEmpty(columnOrderMap)) {
+            columnOrderMap.forEach((k, v) -> searchPage.addOrder(new OrderItem(k, v)));
+        }
+        Page<AccountOrg> accountPage = accountOrgService.page(searchPage, wrapper);
+        return Response.ok(accountPage.convert(AccountOrgUtil::buildVO));
     }
 }

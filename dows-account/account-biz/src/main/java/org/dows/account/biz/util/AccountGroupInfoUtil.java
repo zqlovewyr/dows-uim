@@ -75,7 +75,7 @@ public class AccountGroupInfoUtil {
      */
     public static void validateCreateDTO(AccountGroupInfoDTO dto) throws BizException {
         String accountId = dto.getAccountId();
-        if (org.springframework.util.StringUtils.hasText(accountId)) {
+        if (!org.springframework.util.StringUtils.hasText(accountId)) {
             throw new BizException("创建用户组信息时负责人账户ID参数必填");
         }
     }

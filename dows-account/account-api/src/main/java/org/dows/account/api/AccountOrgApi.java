@@ -3,9 +3,11 @@ package org.dows.account.api;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dows.account.dto.AccountOrgDTO;
 import org.dows.account.dto.TreeAccountOrgDTO;
+import org.dows.account.vo.AccountOrgSearchVO;
 import org.dows.account.vo.AccountOrgVo;
 import org.dows.framework.api.Response;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -103,4 +105,6 @@ public interface AccountOrgApi {
     Response<Object> updateOrg(AccountOrgDTO accountOrgDTO);
 
     Response<Boolean> removeByOrgIds(Set<String> orgIds);
+
+    Response<IPage<AccountOrgVo>> searchAccountOrg(AccountOrgSearchVO vo, long pageNo, long pageSize, LinkedHashMap<String, Boolean> columnOrderMap);
 }
