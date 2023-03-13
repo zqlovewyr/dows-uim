@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +24,9 @@ import java.util.List;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "AccountOrgVo对象", description = "账号-组织架构维度信息")
-public class AccountOrgVo {
+public class AccountOrgVo implements Serializable {
+    private static final long serialVersionUID = -99474169347524042L;
+
     @ApiModelProperty(value = "账号-组ID")
     private String id;
 
@@ -67,7 +71,7 @@ public class AccountOrgVo {
     private String sorted;
 
     @ApiModelProperty("状态")
-    private String status;
+    private Integer status;
 
     @ApiModelProperty("允许最大成员数")
     private Integer maxNumber;
@@ -83,4 +87,16 @@ public class AccountOrgVo {
 
     @ApiModelProperty(value = "有效时间(失效时间)")
     private Date expdate;
+
+    @ApiModelProperty(value = "联系电话")
+    private String telePhone;
+
+    @ApiModelProperty(value = "机构人数")
+    private Integer currentNum;
+
+    @ApiModelProperty("团队负责人名称")
+    private String ownerName;
+
+    @ApiModelProperty("团队描述")
+    private String groupDescr;
 }
