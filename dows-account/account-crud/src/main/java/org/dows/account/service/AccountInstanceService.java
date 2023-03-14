@@ -44,6 +44,7 @@ public interface AccountInstanceService extends MybatisCrudService<AccountInstan
 
     List<AccountConsumptionVo> selectAccountConsumptionTenantStatistics(AccountInstanceTenantBo accountInstanceTenantBo);
 
+    List<String> queryAccountIdList(String keyword);
 
 }
 

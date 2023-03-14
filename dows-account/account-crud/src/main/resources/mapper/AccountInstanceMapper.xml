@@ -562,4 +562,17 @@
 
     </select>
 
+    <select id="queryAccountIdList" resultType="String">
+        SELECT
+        t1.account_id
+        FROM
+        account_instance t1
+        WHERE 1=1
+
+        <if test="keyword != null and keyword != ''">
+            AND (phone like concat('%',#{keyword},'%') or account_name like concat('%',#{keyword},'%'))
+        </if>
+    </select>
+
+
 </mapper>

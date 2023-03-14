@@ -239,5 +239,9 @@ public class AccountInstanceServiceImpl extends MybatisCrudServiceImpl<AccountIn
         return vos;
     }
 
+    @Override
+    public List<String> queryAccountIdList(String keyword) {
+        return null;
+    }
 }
 

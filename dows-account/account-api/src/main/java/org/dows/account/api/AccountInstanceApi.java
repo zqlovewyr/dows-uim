@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dows.account.query.AccountInstanceQuery;
 import org.dows.account.vo.AccountInstanceResVo;
 
+import java.util.List;
+
 /**
  * 账号-实例维度信息(AccountInstance)Api接口
  *
@@ -32,5 +34,12 @@ public interface AccountInstanceApi {
      * @return
      */
     Boolean deleteById(String accountId);
+
+    /**
+     * 模糊查询accountId
+     * @param keyword
+     * @return
+     */
+    List<String> queryAccountIdList(String keyword);
 
 }

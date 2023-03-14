@@ -95,6 +95,12 @@ public class AccountInstanceBiz implements AccountInstanceApi {
         accountTenantService.removeByMap(columnMap);
         return  accountInstanceService.removeById(accountInstance.getId());
     }
+
+    @Override
+    public List<String> queryAccountIdList(String keyword) {
+        return null;
+    }
+
     /**
      * runsix method process
      * 1.check whether accountIdentifier queried by appId & identifier exist
