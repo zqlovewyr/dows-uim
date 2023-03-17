@@ -7,6 +7,7 @@ import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.listener.ReadListener;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -457,7 +458,7 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     .update();
 
             accountUserInfoService.lambdaUpdate()
-                    .set(AccountUserInfo::getSex,accountInstanceDTO.getGender())
+                    .set(ObjectUtils.isNotEmpty(accountInstanceDTO.getGender()),AccountUserInfo::getSex,accountInstanceDTO.getGender())
                     .set(AccountUserInfo::getName,accountInstanceDTO.getName())
                     .set(AccountUserInfo::getJob,accountInstanceDTO.getJob())
                     .set(AccountUserInfo::getEntryTime,accountInstanceDTO.getEntryTime())
@@ -468,11 +469,14 @@ public class AccountInstanceBiz implements AccountInstanceApi {
                     .eq(AccountUserInfo::getAccountId,accountInstanceDTO.getAccountId())
                     .update();
 
-            accountGroupService.lambdaUpdate()
-                    .set(AccountGroup::getOrgId,accountInstanceDTO.getOrgId())
-                    .set(AccountGroup::getOrgName,accountOrg.getOrgName())
-                    .eq(AccountGroup::getAccountId,accountInstanceDTO.getAccountId())
-                    .update();
+            if (StringUtils.isNoneBlank(accountInstanceDTO.getOrgId())) {
+                accountGroupService.lambdaUpdate()
+                        .set(AccountGroup::getOrgId,accountInstanceDTO.getOrgId())
+                        .set(AccountGroup::getOrgName,accountOrg.getOrgName())
+                        .eq(AccountGroup::getAccountId,accountInstanceDTO.getAccountId())
+                        .update();
+            }
+
 
             accountInstance = accountInstanceService.lambdaQuery().eq(AccountInstance::getAccountId, accountInstanceDTO.getAccountId())
                     .one();

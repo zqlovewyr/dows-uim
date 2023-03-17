@@ -3,6 +3,7 @@ package org.dows.account.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.dows.account.bo.AccountInstanceTenantBo;
@@ -46,12 +47,14 @@ public class AccountInstanceServiceImpl extends MybatisCrudServiceImpl<AccountIn
     public IPage<AccountInstanceResVo> getListByPage(IPage<AccountInstanceResVo> page, AccountInstanceQuery accountInstanceQuery) {
         IPage<AccountInstanceResVo> list = accountInstanceMapper.selectAccountInstancePage(page, accountInstanceQuery);
         list.getRecords().stream().forEach(m ->{
-            if(m.getSex() == 1){ // 男
-                m.setSexStr("男");
-            }else if(m.getSex() == 2){
-                m.setSexStr("女");
-            }else {
-                m.setSexStr("未知");
+            if(ObjectUtils.isNotEmpty(m.getSex())){
+                if(m.getSex() == 1){ // 男
+                    m.setSexStr("男");
+                }else if(m.getSex() == 2){
+                    m.setSexStr("女");
+                }else {
+                    m.setSexStr("未知");
+                }
             }
 
             if(StringUtils.isNotBlank(m.getIdentifier())){
