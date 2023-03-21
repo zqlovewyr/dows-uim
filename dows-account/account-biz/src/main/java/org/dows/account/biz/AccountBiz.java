@@ -14,6 +14,7 @@ import org.dows.account.entity.AccountUserInfo;
 import org.dows.account.entity.IffSetting;
 import org.dows.account.query.AccountCountTenantQuery;
 import org.dows.account.query.AccountQuery;
+import org.dows.account.service.AccountAddressService;
 import org.dows.account.service.AccountInstanceService;
 import org.dows.account.service.AccountUserInfoService;
 import org.dows.account.service.IffSettingService;
@@ -32,6 +33,8 @@ import org.dows.order.vo.OrderTaPackVo;
 import org.dows.order.vo.OrderTaTableVo;
 import org.dows.order.vo.OrderTaTakeOutVo;
 import org.dows.order.vo.OrderTaVo;
+import org.dows.store.api.response.StoreResponse;
+import org.dows.store.biz.StoreInstanceBiz;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -54,6 +57,10 @@ public class AccountBiz implements AccountUserApi {
     @Autowired
     private MarketCouponBiz marketCouponBiz;
 
+    @Autowired
+    private AccountAddressService accountAddressService;
+    @Autowired
+    private StoreInstanceBiz storeInstanceBiz;
     @Lazy
     @Autowired
     private OrderInstanceBizApiService orderInstanceBizApiService;
@@ -254,5 +261,13 @@ public class AccountBiz implements AccountUserApi {
             iffSettings.add(setting);
         });
         return iffSettingService.saveBatch(iffSettings);
+    }
+
+    @Override
+    public StoreResVo getStoreById(String storeId) {
+        StoreResVo resVo = new StoreResVo();
+        StoreResponse response =storeInstanceBiz.getStoreById(storeId);
+        BeanUtils.copyProperties(response,resVo);
+        return resVo;
     }
 }

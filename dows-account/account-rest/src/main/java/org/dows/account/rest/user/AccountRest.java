@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dows.account.biz.AccountBiz;
 import org.dows.account.query.AccountQuery;
 import org.dows.account.vo.AccountVo;
+import org.dows.account.vo.StoreResVo;
 import org.dows.auth.biz.context.SecurityUtils;
 import org.dows.framework.api.Response;
 import org.dows.marketing.form.MarketCouponQueryForm;
@@ -15,6 +16,8 @@ import org.dows.marketing.form.MarketListCouponVo;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+// import org.dows.auth.biz.context.SecurityUtils;
 
 @Api(tags = "API-客户")
 @Slf4j
@@ -40,6 +43,7 @@ public class AccountRest {
     @ApiOperation(value = "根据客户账号id获取详情")
     public Response<AccountVo> getInfo(){
         String accountId = SecurityUtils.getAccountId();
+        // String accountId = "";
         return Response.ok(accountBiz.getInfoByAccountId(accountId));
     }
 
@@ -47,5 +51,12 @@ public class AccountRest {
     @ApiOperation(value = "用户分页优惠券列表")
     public Response<IPage<MarketListCouponVo>> selectAccountCouponPage(@RequestBody MarketCouponQueryForm accountCouponForm){
         return Response.ok(accountBiz.getCouponList(accountCouponForm));
+    }
+
+    @GetMapping("/getStoreById")
+    @ApiOperation(value = "根据客户账号id获取详情")
+    public Response<StoreResVo> getStoreById(String storeId){
+         String accountId = SecurityUtils.getAccountId();
+        return Response.ok(accountBiz.getStoreById(storeId));
     }
 }

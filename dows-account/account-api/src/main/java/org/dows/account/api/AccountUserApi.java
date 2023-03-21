@@ -148,4 +148,11 @@ public interface AccountUserApi {
      */
     Boolean saveIffSettingList(List<IffSettingBo> iffSettingBos,String storeId,Integer ruleNum);
 
+    /**
+     * 获取店铺信息
+     * @param storeId
+     * @return
+     */
+    StoreResVo getStoreById(String storeId);
+
 }
