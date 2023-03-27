@@ -3,6 +3,7 @@ package org.dows.user.entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -11,7 +12,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.dows.framework.crud.mybatis.CrudEntity;
-
 import java.util.Date;
 
 /**
@@ -27,6 +27,7 @@ import java.util.Date;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "UserInstance对象", description = "用户-实例")
 public class UserInstance implements CrudEntity {
@@ -42,11 +43,20 @@ public class UserInstance implements CrudEntity {
     @ApiModelProperty("姓名")
     private String name;
 
+    @ApiModelProperty("性别")
+    private String gender;
+
+    @ApiModelProperty("头像")
+    private String avatar;
+
     @ApiModelProperty("身份证号")
     private String idNo;
 
     @ApiModelProperty("年龄")
     private String age;
+
+    @ApiModelProperty("手机号")
+    private String phone;
 
     @ApiModelProperty("名族")
     private String nation;
@@ -60,11 +70,8 @@ public class UserInstance implements CrudEntity {
     @ApiModelProperty("生日")
     private Date birthday;
 
-    @ApiModelProperty("有效时间（开始时间）")
-    private Date indate;
-
-    @ApiModelProperty("失效时间（失效时间）")
-    private Date expdate;
+    @ApiModelProperty("租户ID")
+    private String tenantId;
 
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("时间戳")

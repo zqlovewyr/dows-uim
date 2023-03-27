@@ -1,40 +1,35 @@
-package org.dows.user.form;
+package org.dows.user.api.vo;
 
-import java.math.BigDecimal;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 用户-公司(UserCompany)表单
- *
- * @author lait.zhang
- * @since 2022-10-22 10:31:11
+ * @author Administrator
+ * @date 2023/2/8 13:39
  */
-@SuppressWarnings("serial")
 @Data
 @ToString
 @Builder
+@EqualsAndHashCode
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "UserCompanyForm 表单对象", description = "用户-公司")
-public class UserCompanyForm implements Serializable {
-    private static final long serialVersionUID = 603712486803296524L;
-    @JsonIgnore
-    private Long id;
+@ApiModel(value = "UserCompanyVo对象", description = "用户-公司信息")
+public class UserCompanyVo {
+
+    @ApiModelProperty("主键")
+    private String id;
 
     @ApiModelProperty("用户ID")
-    private Long userId;
+    private String userId;
 
     @ApiModelProperty("地址ID")
-    private Long adressId;
+    private String adressId;
 
     @ApiModelProperty("公司名称")
     private String companyName;
@@ -66,15 +61,9 @@ public class UserCompanyForm implements Serializable {
     @ApiModelProperty("注册资金")
     private BigDecimal regFund;
 
-    @JsonIgnore
+    @ApiModelProperty("逻辑删除")
     private Boolean deleted;
 
-    @ApiModelProperty("法人身份证正面")
-    private String legalPicFront;
-
-    @ApiModelProperty("法人身份证反面")
-    private String legalPicBack;
-
-
+    @ApiModelProperty("时间戳")
+    private Date dt;
 }
-

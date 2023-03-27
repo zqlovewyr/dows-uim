@@ -3,6 +3,7 @@ package org.dows.user.entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -27,6 +28,7 @@ import java.util.Date;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "UserFamily对象", description = "用户-家庭")
 public class UserFamily implements CrudEntity {
@@ -35,6 +37,9 @@ public class UserFamily implements CrudEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("主键")
     private Long id;
+
+    @ApiModelProperty("父ID")
+    private String parentId;
 
     @ApiModelProperty("家庭ID")
     private String familyId;

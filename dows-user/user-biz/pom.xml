@@ -22,5 +22,11 @@
             <artifactId>user-pojo</artifactId>
             <version>20220701-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>user-api</artifactId>
+            <version>20220701-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 </project>

@@ -1,42 +1,29 @@
-package org.dows.user.entity;
+package org.dows.user.api.dto;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
-import org.dows.framework.crud.mybatis.CrudEntity;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
 /**
- * 用户-联系人(UserContact)实体类
- *
- * @author lait.zhang
- * @since 2022-12-20 11:46:14
+ * @author Administrator
+ * @date 2023/2/1 18:38
  */
-@SuppressWarnings("serial")
 @Data
 @ToString
 @Builder
+@EqualsAndHashCode
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "UserContact对象", description = "用户-联系人")
-public class UserContact implements CrudEntity {
-    private static final long serialVersionUID = 960407450586745777L;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+@ApiModel(value = "UserContactDTO对象", description = "用户-联系方式")
+public class UserContactDTO {
     @ApiModelProperty("主键")
-    private Long id;
+    private String id;
 
     @ApiModelProperty("用户ID")
     private String userId;
@@ -59,15 +46,19 @@ public class UserContact implements CrudEntity {
     @ApiModelProperty("是否是自己")
     private Boolean self;
 
-    @JsonIgnore
-    @TableLogic
-    @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("逻辑删除")
     private Boolean deleted;
 
-    @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("时间戳")
     private Date dt;
 
-}
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "开始时间")
+    private Date startTime;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "结束时间")
+    private Date endTime;
+}

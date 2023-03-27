@@ -81,6 +81,11 @@ public class UserCompany implements CrudEntity {
     @ApiModelProperty("逻辑删除")
     private Boolean deleted;
 
+    @ApiModelProperty("法人身份证正面")
+    private String legalPicFront;
+
+    @ApiModelProperty("法人身份证反面")
+    private String legalPicBack;
 
 }
 

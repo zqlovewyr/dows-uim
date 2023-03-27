@@ -16,6 +16,15 @@
         <artifactId>user-pojo</artifactId>
         <version>20220701-SNAPSHOT</version>
     </dependency>
+    <dependency>
+        <groupId>org.dows.framework</groupId>
+        <artifactId>framework-api</artifactId>
+        <version>20220701-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus-core</artifactId>
+    </dependency>
 </dependencies>
 
 </project>

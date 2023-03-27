@@ -1,41 +1,28 @@
-package org.dows.user.entity;
+package org.dows.user.api.vo;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
-import org.dows.framework.crud.mybatis.CrudEntity;
+
 import java.util.Date;
 
 /**
- * 用户-住所(UserDwelling)实体类
- *
- * @author lait.zhang
- * @since 2022-12-20 11:46:14
+ * @author Administrator
+ * @date 2023/2/8 14:05
  */
-@SuppressWarnings("serial")
 @Data
 @ToString
 @Builder
+@EqualsAndHashCode
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "UserDwelling对象", description = "用户-住所")
-public class UserDwelling implements CrudEntity {
-    private static final long serialVersionUID = -10611924502007111L;
+@ApiModel(value = "UserDwellingVo对象", description = "用户-住所信息")
+public class UserDwellingVo {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("主键")
-    private Long id;
+    private String id;
 
     @ApiModelProperty("主体ID")
     private String principalId;
@@ -79,15 +66,9 @@ public class UserDwelling implements CrudEntity {
     @ApiModelProperty("厨房使用方式")
     private String kitchen;
 
-    @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("时间戳")
     private Date dt;
 
-    @JsonIgnore
-    @TableLogic
-    @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("逻辑删除")
     private Boolean deleted;
-
 }
-
