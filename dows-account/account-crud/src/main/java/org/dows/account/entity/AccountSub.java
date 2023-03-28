@@ -75,6 +75,9 @@ public class AccountSub implements CrudEntity {
     @ApiModelProperty("门店ID")
     private String storeId;
 
+    @ApiModelProperty("门店名称")
+    private String storeName;
+
     @ApiModelProperty("部门id")
     private String deptId;
 
