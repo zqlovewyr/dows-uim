@@ -1,6 +1,5 @@
 package org.dows.user.biz;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -43,7 +42,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-@DS("uim")
 public class UserFamilyBiz implements UserFamilyApi {
 
     private final UserFamilyService userFamilyService;

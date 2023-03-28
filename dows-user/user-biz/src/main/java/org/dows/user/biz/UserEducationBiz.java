@@ -1,6 +1,5 @@
 package org.dows.user.biz;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -10,16 +9,12 @@ import org.dows.framework.api.Response;
 import org.dows.user.api.api.UserEducationApi;
 import org.dows.user.api.dto.UserEducationDTO;
 import org.dows.user.api.vo.UserEducationVo;
-import org.dows.user.entity.UserCompany;
 import org.dows.user.entity.UserEducation;
-import org.dows.user.entity.UserJob;
 import org.dows.user.enums.EnumUserStatusCode;
 import org.dows.user.exception.UserException;
 import org.dows.user.service.UserEducationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Administrator
@@ -28,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-@DS("uim")
 public class UserEducationBiz implements UserEducationApi {
     private final UserEducationService userEducationService;
 

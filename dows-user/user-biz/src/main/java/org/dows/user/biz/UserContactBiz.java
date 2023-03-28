@@ -1,6 +1,5 @@
 package org.dows.user.biz;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -11,18 +10,12 @@ import org.dows.framework.api.Response;
 import org.dows.user.api.api.UserContactApi;
 import org.dows.user.api.dto.UserContactDTO;
 import org.dows.user.api.vo.UserContactVo;
-import org.dows.user.api.vo.UserJobVo;
-import org.dows.user.entity.UserAddress;
-import org.dows.user.entity.UserCompany;
 import org.dows.user.entity.UserContact;
-import org.dows.user.entity.UserJob;
 import org.dows.user.enums.EnumUserStatusCode;
 import org.dows.user.exception.UserException;
 import org.dows.user.service.UserContactService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +27,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-@DS("uim")
 public class UserContactBiz implements UserContactApi {
 
     private final UserContactService userContactService;
