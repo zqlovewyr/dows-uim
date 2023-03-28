@@ -13,6 +13,8 @@ import org.dows.account.service.AccountSubService;
 import org.dows.account.vo.AccountInstanceResVo;
 import org.dows.account.vo.AccountInstanceVo;
 import org.dows.framework.api.Response;
+import org.dows.store.api.StoreInstanceApi;
+import org.dows.store.util.RandomStrUtil;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -22,12 +24,24 @@ public class AccountSubBiz {
     private final AccountSubService accountSubService;
     private final AccountSubAuthService accountSubAuthService;
     private final AccountInstanceBiz accountInstanceBiz;
+    private final StoreInstanceApi storeInstanceApi;
 
     public Response saveorupdate(AccountSubForm form) {
         //新增子账号
         AccountInstanceResDTO accountInstanceResDTO = new AccountInstanceResDTO();
-        accountInstanceResDTO.setAccountName(form.getAccountName());
-        accountInstanceResDTO.setPassword(form.getPassword());
+        String accountName = form.getAccountName();
+        //自动生成账号密码
+        if (ObjectUtils.isEmpty(accountName)) {
+            accountName = RandomStrUtil.Z + RandomStrUtil.getRandomNo4(8);
+            form.setAccountName(accountName);
+        }
+        String password = form.getPassword();
+        if (ObjectUtils.isEmpty(password)) {
+            password = RandomStrUtil.DEFAULT_PASSWORD;
+            form.setPassword(password);
+        }
+        accountInstanceResDTO.setAccountName(accountName);
+        accountInstanceResDTO.setPassword(password);
         accountInstanceResDTO.setAccountType(3);
         accountInstanceResDTO.setGender(ObjectUtils.isNotEmpty(form.getSex()) ? form.getSex() : 0);
         if (ObjectUtils.isNotEmpty(form.getId())) {
@@ -39,6 +53,10 @@ public class AccountSubBiz {
         form.setAccountId(accountInstanceVo.getAccountId().toString());
         //新增账号层级关系
         AccountSub accountSub = BeanUtil.copyProperties(form, AccountSub.class);
+        //判断门店信息
+        if (ObjectUtils.isNotEmpty(accountSub.getStoreId())) {
+            accountSub.setStoreName(storeInstanceApi.getStoreById(accountSub.getStoreId()).getName());
+        }
         accountSubService.saveOrUpdate(accountSub);
         //新增账号权限
         AccountSubAuth accountSubAuth = AccountSubAuth.builder().accountId(accountInstanceVo.getAccountId().toString()).build();

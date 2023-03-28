@@ -40,11 +40,11 @@ public class AccountSubForm implements Serializable {
     private String accountId;
 
     @ApiModelProperty("账号名")
-    @NotBlank(message = "账号名不能为空！")
+//    @NotBlank(message = "账号名不能为空！")
     private String accountName;
 
     @ApiModelProperty("账号密码")
-    @NotBlank(message = "账号密码不能为空！")
+//    @NotBlank(message = "账号密码不能为空！")
     private String password;
 
     @ApiModelProperty("姓名")
@@ -61,6 +61,9 @@ public class AccountSubForm implements Serializable {
 
     @ApiModelProperty("门店ID")
     private String storeId;
+
+    @ApiModelProperty("门店名称")
+    private String storeName;
 
     @ApiModelProperty("部门id")
     private String deptId;
