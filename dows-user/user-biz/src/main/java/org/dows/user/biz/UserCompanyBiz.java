@@ -62,6 +62,20 @@ public class UserCompanyBiz implements UserCompanyApi {
     }
 
     @Override
+    public Response<UserCompanyVo> getUserCompany(UserCompanyDTO userCompanyDTO) {
+        UserCompany userCompany = userCompanyService.lambdaQuery()
+                .select(UserCompany::getCertNo, UserCompany::getCompanyCode, UserCompany::getId)
+                .eq(UserCompany::getCertNo, userCompanyDTO.getCertNo())
+                .one();
+        UserCompanyVo vo = new UserCompanyVo();
+        if (userCompany != null) {
+            BeanUtils.copyProperties(userCompany, vo);
+            vo.setId(userCompany.getId().toString());
+        }
+        return Response.ok(vo);
+    }
+
+    @Override
     public Response<String> updateUserCompanyById(UserCompanyDTO userCompanyDTO) {
         UserCompany userCompany = new UserCompany();
         BeanUtils.copyProperties(userCompanyDTO, userCompany);

@@ -29,6 +29,13 @@ public interface UserCompanyApi {
     Response<UserCompanyVo> getUserCompanyByUserId(String userId);
 
     /**
+     * 查看 用户-公司信息
+     *
+     * @param userCompanyDTO
+     */
+    Response<UserCompanyVo> getUserCompany(UserCompanyDTO userCompanyDTO);
+
+    /**
      * 编辑 用户-公司信息
      *
      * @param userCompanyDTO

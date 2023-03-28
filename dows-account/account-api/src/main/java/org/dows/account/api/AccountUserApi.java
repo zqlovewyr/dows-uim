@@ -1,10 +1,9 @@
 package org.dows.account.api;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.dows.account.bo.AccountCouponBo;
-import org.dows.account.bo.AccountInstanceTenantBo;
-import org.dows.account.bo.IffSettingBo;
+import org.dows.account.bo.*;
 import org.dows.account.vo.*;
+import org.dows.framework.api.Response;
 import org.dows.marketing.form.MarketCouponForm;
 import org.dows.marketing.form.MarketCouponQueryForm;
 import org.dows.marketing.form.MarketListCouponVo;
@@ -26,6 +25,12 @@ import java.util.Map;
  * @since 2021-09-10 15:41:36
  */
 public interface AccountUserApi {
+    /**
+     * 更新账户用户关联信息表
+     * @param accountUserBo
+     * @return
+     */
+    Response<Boolean> updateAccountUser(AccountUserBo accountUserBo);
 
     /**
      * 根据accountId查询
@@ -154,5 +159,7 @@ public interface AccountUserApi {
      * @return
      */
     StoreResVo getStoreById(String storeId);
+
+
 
 }

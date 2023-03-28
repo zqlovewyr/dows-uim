@@ -1,5 +1,8 @@
 package org.dows.account.api;
 
+import org.dows.account.bo.AccountTenantBo;
+import org.dows.framework.api.Response;
+
 /**
  * 账号-租户维度信息(AccountTenant)Api接口
  *
@@ -8,5 +11,10 @@ package org.dows.account.api;
  */
 public interface AccountTenantApi {
 
-
+    /**
+     * 更新账户租户关联信息表
+     * @param accountTenantBo
+     * @return
+     */
+    Response<Boolean> updateAccountTenant(AccountTenantBo accountTenantBo);
 }

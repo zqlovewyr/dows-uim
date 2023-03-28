@@ -6,18 +6,13 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountUserApi;
-import org.dows.account.bo.AccountCouponBo;
-import org.dows.account.bo.AccountInstanceTenantBo;
-import org.dows.account.bo.IffSettingBo;
-import org.dows.account.entity.AccountInstance;
-import org.dows.account.entity.AccountUserInfo;
-import org.dows.account.entity.IffSetting;
+import org.dows.account.biz.dto.AccountTenantDTO;
+import org.dows.account.biz.dto.AccountUserDTO;
+import org.dows.account.bo.*;
+import org.dows.account.entity.*;
 import org.dows.account.query.AccountCountTenantQuery;
 import org.dows.account.query.AccountQuery;
-import org.dows.account.service.AccountAddressService;
-import org.dows.account.service.AccountInstanceService;
-import org.dows.account.service.AccountUserInfoService;
-import org.dows.account.service.IffSettingService;
+import org.dows.account.service.*;
 import org.dows.account.vo.*;
 import org.dows.framework.api.Response;
 import org.dows.framework.api.exceptions.BaseException;
@@ -64,6 +59,8 @@ public class AccountBiz implements AccountUserApi {
     @Lazy
     @Autowired
     private OrderInstanceBizApiService orderInstanceBizApiService;
+    @Autowired
+    private AccountUserService accountUserService;
 
     public Response getAccuntListPage(AccountQuery accountQuery){
         // TODO 消费金额和最后下单时间排序
@@ -72,7 +69,17 @@ public class AccountBiz implements AccountUserApi {
         IPage<AccountVo> listByPage = accountUserInfoService.getListByPage(page, accountQuery);
         return Response.ok(listByPage);
     }
-
+    @Override
+    public Response<Boolean> updateAccountUser(AccountUserBo accountUserBo){
+        AccountUserDTO accountUserDTO = new AccountUserDTO();
+        BeanUtil.copyProperties(accountUserBo,accountUserDTO);
+        boolean update = accountUserService.lambdaUpdate()
+                .set(AccountUser::getUserId, accountUserDTO.getUserId())
+                .set(AccountUser::getAppId, accountUserDTO.getAppId())
+                .eq(AccountUser::getAccountId, accountUserDTO.getAccountId())
+                .update();
+        return Response.ok(update);
+    }
     @Override
     public AccountVo getInfoByAccountId(String accountId){
         AccountVo accountVo = new AccountVo();
