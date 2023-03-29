@@ -4,12 +4,18 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.api.AccountUserApi;
-import org.dows.account.biz.dto.AccountTenantDTO;
 import org.dows.account.biz.dto.AccountUserDTO;
-import org.dows.account.bo.*;
-import org.dows.account.entity.*;
+import org.dows.account.bo.AccountCouponBo;
+import org.dows.account.bo.AccountInstanceTenantBo;
+import org.dows.account.bo.AccountUserBo;
+import org.dows.account.bo.IffSettingBo;
+import org.dows.account.entity.AccountInstance;
+import org.dows.account.entity.AccountUser;
+import org.dows.account.entity.AccountUserInfo;
+import org.dows.account.entity.IffSetting;
 import org.dows.account.query.AccountCountTenantQuery;
 import org.dows.account.query.AccountQuery;
 import org.dows.account.service.*;
@@ -80,6 +86,19 @@ public class AccountBiz implements AccountUserApi {
                 .update();
         return Response.ok(update);
     }
+
+    @Override
+    public Response<AccountUserVo> getAccountUser(AccountUserBo accountUserBo) {
+        AccountUserDTO accountUserDTO = new AccountUserDTO();
+        BeanUtil.copyProperties(accountUserBo,accountUserDTO);
+        AccountUser accountUser = accountUserService.lambdaQuery()
+                .eq(AccountUser::getUserId, accountUserDTO.getUserId())
+                .one();
+        AccountUserVo accountUserVo = new AccountUserVo();
+        BeanUtil.copyProperties(accountUser,accountUserVo);
+        return Response.ok(accountUserVo);
+    }
+
     @Override
     public AccountVo getInfoByAccountId(String accountId){
         AccountVo accountVo = new AccountVo();

@@ -16,6 +16,11 @@
             <artifactId>crud-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.dows.framework</groupId>
+            <artifactId>framework-api</artifactId>
+            <version>20220701-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>account-pojo</artifactId>
         </dependency>

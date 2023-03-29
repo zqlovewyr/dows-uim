@@ -1,6 +1,7 @@
 package org.dows.account.api;
 
 import org.dows.account.bo.AccountTenantBo;
+import org.dows.account.vo.AccountTenantVo;
 import org.dows.framework.api.Response;
 
 /**
@@ -17,4 +18,11 @@ public interface AccountTenantApi {
      * @return
      */
     Response<Boolean> updateAccountTenant(AccountTenantBo accountTenantBo);
+
+    /**
+     * 查询账户租户关联信息表
+     * @param accountTenantBo
+     * @return
+     */
+    Response<AccountTenantVo> getAccountTenant(AccountTenantBo accountTenantBo);
 }

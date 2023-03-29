@@ -7,6 +7,7 @@ import org.dows.account.biz.dto.AccountTenantDTO;
 import org.dows.account.bo.AccountTenantBo;
 import org.dows.account.entity.AccountTenant;
 import org.dows.account.service.AccountTenantService;
+import org.dows.account.vo.AccountTenantVo;
 import org.dows.framework.api.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,18 @@ public class AccountTenantBiz implements AccountTenantApi {
                 .eq(AccountTenant::getAccountId, accountTenantDTO.getAccountId())
                 .update();
         return Response.ok(update);
+    }
+
+    @Override
+    public Response<AccountTenantVo> getAccountTenant(AccountTenantBo accountTenantBo) {
+        AccountTenantDTO accountTenantDTO = new AccountTenantDTO();
+        BeanUtil.copyProperties(accountTenantBo,accountTenantDTO);
+        AccountTenant accountTenant = accountTenantService.lambdaQuery()
+                .eq(AccountTenant::getAccountId, accountTenantDTO.getAccountId())
+                .one();
+        AccountTenantVo accountTenantVo = new AccountTenantVo();
+        BeanUtil.copyProperties(accountTenant,accountTenantVo);
+        return Response.ok(accountTenantVo);
     }
 
 }
