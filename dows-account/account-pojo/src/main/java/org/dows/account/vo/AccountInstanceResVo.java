@@ -64,6 +64,13 @@ public class AccountInstanceResVo implements Serializable {
 
     @ApiModelProperty(value = "门店名称")
     private String storeName;
+
+    @ApiModelProperty("店铺类型 1大店 2小店")
+    private Integer storeType;
+
+    @ApiModelProperty("b门店编号 6位 199 999- 99999")
+    private String storeNo;
+
     @ApiModelProperty(value = "部门名称")
     private String orgName;
     @ApiModelProperty(value = "角色名称")

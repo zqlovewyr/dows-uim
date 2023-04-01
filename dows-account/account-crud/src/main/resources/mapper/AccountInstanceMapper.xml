@@ -34,6 +34,8 @@
         t1.store_id,
         t1.dt as create_time,
         t6.name as store_name,
+        t6.store_type as 'store_type',
+        t6.store_no as 'store_no',
         t2.name,
         t2.sex,
         t5.identifier,
