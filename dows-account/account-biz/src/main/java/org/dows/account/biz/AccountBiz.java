@@ -1,6 +1,7 @@
 package org.dows.account.biz;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -92,7 +93,8 @@ public class AccountBiz implements AccountUserApi {
         AccountUserDTO accountUserDTO = new AccountUserDTO();
         BeanUtil.copyProperties(accountUserBo,accountUserDTO);
         AccountUser accountUser = accountUserService.lambdaQuery()
-                .eq(AccountUser::getUserId, accountUserDTO.getUserId())
+                .eq(!ObjectUtil.isEmpty(accountUserDTO.getAppId()),AccountUser::getAppId, accountUserDTO.getAppId())
+                .eq(!ObjectUtil.isEmpty(accountUserDTO.getUserId()),AccountUser::getUserId, accountUserDTO.getUserId())
                 .one();
         AccountUserVo accountUserVo = new AccountUserVo();
         BeanUtil.copyProperties(accountUser,accountUserVo);
