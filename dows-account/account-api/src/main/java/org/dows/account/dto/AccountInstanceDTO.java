@@ -38,6 +38,10 @@ public class AccountInstanceDTO implements Serializable {
     private Set<String> accountIds;
 //    @ExcelProperty(value = "用户姓名")
     private String accountName;
+
+    @ApiModelProperty("账号区分：1、总控端2、总部端、3、门店端APP4、小程序流量用户")
+    private Integer accountType;
+
     private String password;
     private String avatar;
     private String source;

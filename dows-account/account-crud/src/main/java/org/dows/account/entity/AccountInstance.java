@@ -3,7 +3,6 @@ package org.dows.account.entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
@@ -32,7 +31,7 @@ import java.util.Date;
 public class AccountInstance implements CrudEntity {
     private static final long serialVersionUID = 471265538286310949L;
 
-/*    @JsonFormat(shape = JsonFormat.Shape.STRING)*/
+    /*    @JsonFormat(shape = JsonFormat.Shape.STRING)*/
     @ApiModelProperty("自增主键ID")
     private Long id;
 
@@ -41,6 +40,9 @@ public class AccountInstance implements CrudEntity {
 
     @ApiModelProperty("账号名")
     private String accountName;
+
+    @ApiModelProperty("账号区分：1、总控端2、总部端、3、门店端APP4、小程序流量用户")
+    private Integer accountType;
 
     @ApiModelProperty("账号密码")
     private String password;
