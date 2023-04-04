@@ -24,7 +24,6 @@ import java.util.Date;
 public class AccountUserDTO implements Serializable {
     private static final long serialVersionUID = 548565194603481884L;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty("自增主键ID")
     private Long id;
 
