@@ -40,8 +40,6 @@ public class AccountUserBo {
     @ApiModelProperty("是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
 
-    @ApiModelProperty("")
-    private Date dt;
 
 }
 

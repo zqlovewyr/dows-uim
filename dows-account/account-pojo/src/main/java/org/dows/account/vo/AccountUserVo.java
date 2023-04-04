@@ -28,7 +28,6 @@ public class AccountUserVo implements Serializable {
     @ApiModelProperty(value = "主键")
     //主键ID
     //@JsonSerialize(using= ToStringSerializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
     @ApiModelProperty(value = "账号id")
@@ -40,11 +39,8 @@ public class AccountUserVo implements Serializable {
     @ApiModelProperty(value = "租户ID")
     private String tenantId;
 
-    @ApiModelProperty(value = "乐观锁, 默认: 0")
-    private Integer ver;
-
-    @ApiModelProperty(value = "时间戳/创建时间")
-    private Date dt;
+    @ApiModelProperty(value = "应用ID")
+    private String appId;
 
     @ApiModelProperty(value = "是否逻辑删除: 0 未删除(false), 1 已删除(true); 默认: 0")
     private Boolean deleted;
