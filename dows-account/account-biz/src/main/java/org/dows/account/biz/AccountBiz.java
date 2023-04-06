@@ -23,11 +23,13 @@ import org.dows.account.service.*;
 import org.dows.account.vo.*;
 import org.dows.framework.api.Response;
 import org.dows.framework.api.exceptions.BaseException;
-import org.dows.marketing.MarketCouponBiz;
+import org.dows.marketing.api.MarketCouponApi;
 import org.dows.marketing.form.MarketCouponForm;
 import org.dows.marketing.form.MarketCouponQueryForm;
-import org.dows.marketing.vo.MarketListCouponVo;
+import org.dows.marketing.form.MarketUserCouponListForm;
 import org.dows.marketing.form.SentCouponForm;
+import org.dows.marketing.vo.MarketListCouponVo;
+import org.dows.marketing.vo.MarketUserListCouponVo;
 import org.dows.order.api.OrderInstanceBizApiService;
 import org.dows.order.form.OrderTaPageForm;
 import org.dows.order.form.OrderTaTypeForm;
@@ -57,7 +59,7 @@ public class AccountBiz implements AccountUserApi {
     @Autowired
     private IffSettingService iffSettingService;
     @Autowired
-    private MarketCouponBiz marketCouponBiz;
+    private MarketCouponApi marketCouponApi;
 
     @Autowired
     private AccountAddressService accountAddressService;
@@ -190,7 +192,7 @@ public class AccountBiz implements AccountUserApi {
         marketCouponQueryForm.setStoreId(Long.valueOf(accountCouponBo.getStoreId()));
         marketCouponQueryForm.setCategoryCode(12001);
         marketCouponQueryForm.setSize(1000);
-        IPage<MarketListCouponVo> page = marketCouponBiz.getCouponList(marketCouponQueryForm);
+        IPage<MarketListCouponVo> page = marketCouponApi.getCouponList(marketCouponQueryForm);
         List<AccountCouponVo> list = new ArrayList<>();
         page.getRecords().stream().forEach(item ->{
             AccountCouponVo accountCouponVo = new AccountCouponVo();
@@ -203,17 +205,17 @@ public class AccountBiz implements AccountUserApi {
 
     @Override
     public Boolean addOrUpdateCoupon(MarketCouponForm couponForm) {
-        return marketCouponBiz.addOrUpdateCoupon(couponForm);
+        return marketCouponApi.addOrUpdateCoupon(couponForm);
     }
 
     @Override
     public Boolean senCoupon(SentCouponForm sentCoupon) {
-        return marketCouponBiz.senCoupon(sentCoupon);
+        return marketCouponApi.senCoupon(sentCoupon);
     }
 
     @Override
     public IPage<MarketListCouponVo> getCouponList(MarketCouponQueryForm queryForm) {
-        return marketCouponBiz.getCouponList(queryForm);
+        return marketCouponApi.getCouponList(queryForm);
     }
 
 
@@ -297,5 +299,16 @@ public class AccountBiz implements AccountUserApi {
         StoreResponse response =storeInstanceBiz.getStoreById(storeId);
         BeanUtils.copyProperties(response,resVo);
         return resVo;
+    }
+
+    public UserAssetPointsAndCouponVo selectAssetPointsAndCoupon(String storeId) {
+        UserAssetPointsAndCouponVo vo = new UserAssetPointsAndCouponVo();
+        MarketUserCouponListForm form = new MarketUserCouponListForm();
+        form.setSize(Integer.MAX_VALUE);
+        form.setUseStatus(0);
+        IPage<MarketUserListCouponVo> page = marketCouponApi.getUserCouponList(form);
+        int couponCount = (int )page.getRecords().stream().filter(item -> item.getStoreIds().contains(Long.valueOf(storeId))).count();
+        vo.setCouponCount(couponCount);
+        return vo;
     }
 }

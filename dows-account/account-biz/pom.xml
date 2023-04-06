@@ -30,7 +30,7 @@
         </dependency>
         <dependency>
             <groupId>org.dows.saas</groupId>
-            <artifactId>marketing-biz</artifactId>
+            <artifactId>marketing-api</artifactId>
             <version>20220701-SNAPSHOT</version>
         </dependency>
         <dependency>

@@ -3,12 +3,14 @@ package org.dows.account.rest.user;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.account.biz.AccountBiz;
 import org.dows.account.query.AccountQuery;
 import org.dows.account.vo.AccountVo;
 import org.dows.account.vo.StoreResVo;
+import org.dows.account.vo.UserAssetPointsAndCouponVo;
 import org.dows.auth.biz.context.SecurityUtils;
 import org.dows.framework.api.Response;
 import org.dows.marketing.form.MarketCouponQueryForm;
@@ -58,5 +60,12 @@ public class AccountRest {
     public Response<StoreResVo> getStoreById(String storeId){
          String accountId = SecurityUtils.getAccountId();
         return Response.ok(accountBiz.getStoreById(storeId));
+    }
+
+
+    @GetMapping("/selectAssetPointsAndCoupon")
+    @ApiOperation(value = "获取用户储蓄卡积分优惠券余额")
+    public Response<UserAssetPointsAndCouponVo> selectAssetPointsAndCoupon(String storeId){
+        return Response.ok(accountBiz.selectAssetPointsAndCoupon(storeId));
     }
 }
