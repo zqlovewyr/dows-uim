@@ -59,6 +59,7 @@ public class AccountBiz implements AccountUserApi {
     @Autowired
     private IffSettingService iffSettingService;
     @Autowired
+    @Lazy
     private MarketCouponApi marketCouponApi;
 
     @Autowired
