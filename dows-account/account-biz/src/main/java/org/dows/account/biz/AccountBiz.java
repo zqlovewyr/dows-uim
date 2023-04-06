@@ -26,7 +26,7 @@ import org.dows.framework.api.exceptions.BaseException;
 import org.dows.marketing.MarketCouponBiz;
 import org.dows.marketing.form.MarketCouponForm;
 import org.dows.marketing.form.MarketCouponQueryForm;
-import org.dows.marketing.form.MarketListCouponVo;
+import org.dows.marketing.vo.MarketListCouponVo;
 import org.dows.marketing.form.SentCouponForm;
 import org.dows.order.api.OrderInstanceBizApiService;
 import org.dows.order.form.OrderTaPageForm;

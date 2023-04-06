@@ -12,7 +12,7 @@ import org.dows.account.vo.StoreResVo;
 import org.dows.auth.biz.context.SecurityUtils;
 import org.dows.framework.api.Response;
 import org.dows.marketing.form.MarketCouponQueryForm;
-import org.dows.marketing.form.MarketListCouponVo;
+import org.dows.marketing.vo.MarketListCouponVo;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

@@ -9,7 +9,7 @@ import org.dows.account.vo.*;
 import org.dows.framework.api.Response;
 import org.dows.marketing.form.MarketCouponForm;
 import org.dows.marketing.form.MarketCouponQueryForm;
-import org.dows.marketing.form.MarketListCouponVo;
+import org.dows.marketing.vo.MarketListCouponVo;
 import org.dows.marketing.form.SentCouponForm;
 import org.dows.order.form.OrderTaPageForm;
 import org.dows.order.form.OrderTaTypeForm;
