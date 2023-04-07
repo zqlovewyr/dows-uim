@@ -17,6 +17,7 @@ import org.dows.order.vo.OrderTaPackVo;
 import org.dows.order.vo.OrderTaTableVo;
 import org.dows.order.vo.OrderTaTakeOutVo;
 import org.dows.order.vo.OrderTaVo;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import java.util.Map;
  * @author VX:PN15855012581
  * @since 2021-09-10 15:41:36
  */
+@Component
 public interface AccountUserApi {
     /**
      * 更新账户用户关联信息表
